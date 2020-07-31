@@ -1,75 +1,60 @@
+using Autofac;
+using DevPlatform.Core.Configuration;
+using DevPlatform.Core.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
 namespace DevPlatform.Api
 {
+    /// <summary>
+    /// Represents startup class of application
+    /// </summary>
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        #region Fields
+
+        private readonly IConfiguration _configuration;
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        private IEngine _engine;
+        private DevPlatformConfig _devPlatformConfig;
+
+        #endregion
+
+        #region Ctor
+
+        public Startup(IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
         {
-            Configuration = configuration;
+            _configuration = configuration;
+            _webHostEnvironment = webHostEnvironment;
         }
 
-        public IConfiguration Configuration { get; }
+        #endregion
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        /// <summary>
+        /// Add services to the application and configure service provider
+        /// </summary>
+        /// <param name="services">Collection of service descriptors</param>
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
-            // In production, the Angular files will be served from this directory
-            services.AddSpaStaticFiles(configuration =>
-            {
-                configuration.RootPath = "ClientApp/dist";
-            });
+            (_engine, _devPlatformConfig) = services.ConfigureApplicationServices(_configuration, _webHostEnvironment);
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void ConfigureContainer(ContainerBuilder builder)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-            }
+            _engine.RegisterDependencies(builder, _devPlatformConfig);
+        }
 
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
-            if (!env.IsDevelopment())
-            {
-                app.UseSpaStaticFiles();
-            }
+        /// <summary>
+        /// Configure the application HTTP request pipeline
+        /// </summary>
+        /// <param name="application">Builder for configuring an application's request pipeline</param>
+        public void Configure(IApplicationBuilder application)
+        {
+            application.ConfigureRequestPipeline();
 
-            app.UseRouting();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller}/{action=Index}/{id?}");
-            });
-
-            app.UseSpa(spa =>
-            {
-                // To learn more about options for serving an Angular SPA from ASP.NET Core,
-                // see https://go.microsoft.com/fwlink/?linkid=864501
-
-                spa.Options.SourcePath = "ClientApp";
-
-                if (env.IsDevelopment())
-                {
-                    spa.UseAngularCliServer(npmScript: "start");
-                }
-            });
+            application.StartEngine();
         }
     }
 }

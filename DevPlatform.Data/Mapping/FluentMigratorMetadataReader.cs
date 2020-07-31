@@ -1,13 +1,15 @@
-﻿using DevPlatform.Core.Entities;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using LinqToDB.Mapping;
 using System.Linq;
 using System.Reflection;
 using FluentMigrator.Expressions;
 using LinqToDB.Metadata;
+using DevPlatform.Data.Migrations;
+using DevPlatform.Core.Infrastructure;
 using LinqToDB.SqlQuery;
-using System.Text;
+using DevPlatform.Core;
+using DevPlatform.Core.Entities;
 
 namespace DevPlatform.Data.Mapping
 {
@@ -59,7 +61,7 @@ namespace DevPlatform.Data.Mapping
                     Length = column.Size ?? 0,
                     Precision = column.Precision ?? 0,
                     IsIdentity = column.IsIdentity,
-                    DataType = new SqlDataType((memberInfo as PropertyInfo)?.PropertyType ?? typeof(string)).DataType
+                    DataType = new SqlDataType((memberInfo as PropertyInfo)?.PropertyType ?? typeof(string)).Type.DataType
                 };
             });
 

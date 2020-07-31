@@ -3,9 +3,6 @@ using DevPlatform.Core.Configuration;
 using DevPlatform.Core.Infrastructure;
 using DevPlatform.Core.Infrastructure.DependencyManagement;
 using DevPlatform.Data;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DevPlatform.Framework.Infrastructure
 {
@@ -28,6 +25,9 @@ namespace DevPlatform.Framework.Infrastructure
 
             //repositories
             builder.RegisterGeneric(typeof(RepositoryBase<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
+
+            //services will be implemented here
+            //builder.RegisterType<NotificationService>().As<INotificationService>().InstancePerLifetimeScope();
         }
     }
 }

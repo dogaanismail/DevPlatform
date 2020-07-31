@@ -8,6 +8,7 @@ using System.Threading;
 using DevPlatform.Common.Helpers;
 using DevPlatform.Core.Entities;
 using DevPlatform.Core.Infrastructure;
+using DevPlatform.Data.Migrations;
 using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.DataProvider;

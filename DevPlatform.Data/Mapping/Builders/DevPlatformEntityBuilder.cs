@@ -10,7 +10,7 @@ namespace DevPlatform.Data.Mapping.Builders
     /// <remarks>
     /// "Entity type <see cref="TEntity"/>" is needed to determine the right entity builder for a specific entity type
     /// </remarks>
-    public abstract class DevPlatformEntityBuilder<TEntity> : IEntityBuilder where TEntity : BaseEntity
+    public abstract class DevPlatformEntityBuilder<TEntity> : IEntityBuilder where TEntity : IEntity
     {
         /// <summary>
         /// Apply entity configuration

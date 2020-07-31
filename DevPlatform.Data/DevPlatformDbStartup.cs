@@ -1,5 +1,10 @@
 ﻿using DevPlatform.Core.Infrastructure;
+using DevPlatform.Data.Migrations;
 using FluentMigrator;
+using FluentMigrator.Runner;
+using FluentMigrator.Runner.Conventions;
+using FluentMigrator.Runner.Initialization;
+using FluentMigrator.Runner.Processors;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,11 +35,11 @@ namespace DevPlatform.Data
             services
                 // add common FluentMigrator services
                 .AddFluentMigratorCore()
-                .AddScoped<IProcessorAccessor, NopProcessorAccessor>()
+                .AddScoped<IProcessorAccessor, DevPlatformProcessorAccessor>()
                 // set accessor for the connection string
                 .AddScoped<IConnectionStringAccessor>(x => DataSettingsManager.LoadSettings())
                 .AddScoped<IMigrationManager, MigrationManager>()
-                .AddSingleton<IConventionSet, NopConventionSet>()
+                .AddSingleton<IConventionSet, DevPlatformConventionSet>()
                 .ConfigureRunner(rb =>
                     rb.WithVersionTable(new MigrationVersionInfo()).AddSqlServer().AddMySql5()
                         // define the assembly containing the migrations
