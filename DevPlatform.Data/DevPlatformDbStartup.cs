@@ -1,15 +1,18 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using DevPlatform.Core.Infrastructure;
+using FluentMigrator;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DevPlatform.Data
 {
     /// <summary>
     /// Represents object for the configuring DB context on application startup
     /// </summary>
-    public class DevPlatformDbStartup : INopStartup
+    public class DevPlatformDbStartup : IDevPlatformStartup
     {
         /// <summary>
         /// Add and configure any of the middleware

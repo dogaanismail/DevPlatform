@@ -1,7 +1,9 @@
 ﻿using DevPlatform.Core.Entities;
+using DevPlatform.Data.Mapping;
 using FluentMigrator.Builders.Create.Table;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Text;
 
 namespace DevPlatform.Data.Extensions
@@ -20,7 +22,8 @@ namespace DevPlatform.Data.Extensions
         /// <param name="onDelete">Behavior for DELETEs</param>
         /// <typeparam name="TPrimary"></typeparam>
         /// <returns>Set column options or create a new column or set a foreign key cascade rule</returns>
-        public static ICreateTableColumnOptionOrForeignKeyCascadeOrWithColumnSyntax ForeignKey<TPrimary>(this ICreateTableColumnOptionOrWithColumnSyntax column, string primaryTableName = null, string primaryColumnName = null, Rule onDelete = Rule.Cascade) where TPrimary : BaseEntity
+        public static ICreateTableColumnOptionOrForeignKeyCascadeOrWithColumnSyntax ForeignKey<TPrimary>(this ICreateTableColumnOptionOrWithColumnSyntax column, 
+            string primaryTableName = null, string primaryColumnName = null, Rule onDelete = Rule.Cascade) where TPrimary : BaseEntity
         {
             if (string.IsNullOrEmpty(primaryTableName))
                 primaryTableName = NameCompatibilityManager.GetTableName(typeof(TPrimary));

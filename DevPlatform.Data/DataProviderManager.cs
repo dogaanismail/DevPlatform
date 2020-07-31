@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevPlatform.Core.Infrastructure;
+using System;
 
 namespace DevPlatform.Data
 {

@@ -1,13 +1,17 @@
 ﻿using DevPlatform.Core.Entities;
+using DevPlatform.Core.Infrastructure;
 using DevPlatform.Data.Mapping;
 using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.DataProvider;
 using LinqToDB.Mapping;
 using LinqToDB.Tools;
+using StackExchange.Profiling;
+using StackExchange.Profiling.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
@@ -93,11 +97,7 @@ namespace DevPlatform.Data
             if (!DataSettingsManager.DatabaseIsInstalled)
                 return dbConnection;
 
-            var storeSettings = EngineContext.Current.Resolve<StoreInformationSettings>();
-
-            LinqToDB.Common.Configuration.AvoidSpecificDataProviderAPI = storeSettings.DisplayMiniProfilerInPublicStore;
-
-            return storeSettings.DisplayMiniProfilerInPublicStore ? new ProfiledDbConnection((DbConnection)dbConnection, MiniProfiler.Current) : dbConnection;
+            return dbConnection;
         }
 
         /// <summary>

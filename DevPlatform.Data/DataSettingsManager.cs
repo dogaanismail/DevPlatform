@@ -1,6 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using DevPlatform.Core;
+using DevPlatform.Core.Infrastructure;
+using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -26,19 +27,19 @@ namespace DevPlatform.Data
         /// <param name="reloadSettings">Whether to reload data, if they already loaded</param>
         /// <param name="fileProvider">File provider</param>
         /// <returns>Data settings</returns>
-        public static DataSettings LoadSettings(string filePath = null, bool reloadSettings = false, INopFileProvider fileProvider = null)
+        public static DataSettings LoadSettings(string filePath = null, bool reloadSettings = false, IDevPlatformFileProvider fileProvider = null)
         {
             if (!reloadSettings && Singleton<DataSettings>.Instance != null)
                 return Singleton<DataSettings>.Instance;
 
             fileProvider ??= CommonHelper.DefaultFileProvider;
-            filePath ??= fileProvider.MapPath(NopDataSettingsDefaults.FilePath);
+            filePath ??= fileProvider.MapPath(DevPlatformDataSettingsDefaults.FilePath);
 
             //check whether file exists
             if (!fileProvider.FileExists(filePath))
             {
-                //if not, try to parse the file that was used in previous nopCommerce versions
-                filePath = fileProvider.MapPath(NopDataSettingsDefaults.ObsoleteFilePath);
+                //if not, try to parse the file that was used in previous devPlatform versions
+                filePath = fileProvider.MapPath(DevPlatformDataSettingsDefaults.ObsoleteFilePath);
                 if (!fileProvider.FileExists(filePath))
                     return new DataSettings();
 
@@ -96,12 +97,12 @@ namespace DevPlatform.Data
         /// </summary>
         /// <param name="settings">Data settings</param>
         /// <param name="fileProvider">File provider</param>
-        public static void SaveSettings(DataSettings settings, INopFileProvider fileProvider = null)
+        public static void SaveSettings(DataSettings settings, IDevPlatformFileProvider fileProvider = null)
         {
             Singleton<DataSettings>.Instance = settings ?? throw new ArgumentNullException(nameof(settings));
 
             fileProvider ??= CommonHelper.DefaultFileProvider;
-            var filePath = fileProvider.MapPath(NopDataSettingsDefaults.FilePath);
+            var filePath = fileProvider.MapPath(DevPlatformDataSettingsDefaults.FilePath);
 
             //create file if not exists
             fileProvider.CreateFile(filePath);

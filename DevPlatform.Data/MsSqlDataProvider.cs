@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using DevPlatform.Core.Entities;
+using DevPlatform.Core.Infrastructure;
 using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.DataProvider;
@@ -162,7 +163,7 @@ namespace DevPlatform.Data
         /// </summary>
         /// <param name="fileProvider">File provider</param>
         /// <param name="filePath">Path to the file</param>
-        protected void ExecuteSqlScriptFromFile(INopFileProvider fileProvider, string filePath)
+        protected void ExecuteSqlScriptFromFile(IDevPlatformFileProvider fileProvider, string filePath)
         {
             filePath = fileProvider.MapPath(filePath);
             if (!fileProvider.FileExists(filePath))
@@ -193,8 +194,8 @@ namespace DevPlatform.Data
             migrationManager.ApplyUpMigrations();
 
             //create stored procedures 
-            var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
-            ExecuteSqlScriptFromFile(fileProvider, NopDataDefaults.SqlServerStoredProceduresFilePath);
+            var fileProvider = EngineContext.Current.Resolve<IDevPlatformFileProvider>();
+            ExecuteSqlScriptFromFile(fileProvider, DevPlatformDataDefaults.SqlServerStoredProceduresFilePath);
         }
 
         /// <summary>
@@ -297,23 +298,23 @@ namespace DevPlatform.Data
         /// </summary>
         /// <param name="nopConnectionString">Connection string info</param>
         /// <returns>Connection string</returns>
-        public virtual string BuildConnectionString(INopConnectionStringInfo nopConnectionString)
+        public virtual string BuildConnectionString(IDevPlatformConnectionStringInfo connectionStringInfo)
         {
-            if (nopConnectionString is null)
-                throw new ArgumentNullException(nameof(nopConnectionString));
+            if (connectionStringInfo is null)
+                throw new ArgumentNullException(nameof(connectionStringInfo));
 
             var builder = new SqlConnectionStringBuilder
             {
-                DataSource = nopConnectionString.ServerName,
-                InitialCatalog = nopConnectionString.DatabaseName,
+                DataSource = connectionStringInfo.ServerName,
+                InitialCatalog = connectionStringInfo.DatabaseName,
                 PersistSecurityInfo = false,
-                IntegratedSecurity = nopConnectionString.IntegratedSecurity
+                IntegratedSecurity = connectionStringInfo.IntegratedSecurity
             };
 
-            if (!nopConnectionString.IntegratedSecurity)
+            if (!connectionStringInfo.IntegratedSecurity)
             {
-                builder.UserID = nopConnectionString.Username;
-                builder.Password = nopConnectionString.Password;
+                builder.UserID = connectionStringInfo.Username;
+                builder.Password = connectionStringInfo.Password;
             }
 
             return builder.ConnectionString;

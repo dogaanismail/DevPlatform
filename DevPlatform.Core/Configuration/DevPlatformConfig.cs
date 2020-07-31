@@ -3,7 +3,7 @@
 namespace DevPlatform.Core.Configuration
 {
     /// <summary>
-    /// Represents startup Nop configuration parameters
+    /// Represents startup devPlatform configuration parameters
     /// </summary>
     public partial class DevPlatformConfig
     {
@@ -98,7 +98,7 @@ namespace DevPlatform.Core.Configuration
         public bool DisableSampleDataDuringInstallation { get; set; }
 
         /// <summary>
-        /// Gets or sets a list of plugins ignored during nopCommerce installation
+        /// Gets or sets a list of plugins ignored during devPlatform installation
         /// </summary>
         public string PluginsIgnoredDuringInstallation { get; set; }
 

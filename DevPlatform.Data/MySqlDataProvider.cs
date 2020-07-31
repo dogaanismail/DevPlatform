@@ -5,7 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using DevPlatform.Common.Helpers;
 using DevPlatform.Core.Entities;
+using DevPlatform.Core.Infrastructure;
 using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.DataProvider;
@@ -78,7 +80,7 @@ namespace DevPlatform.Data
         /// </summary>
         /// <param name="fileProvider">File provider</param>
         /// <param name="filePath">Path to the file</param>
-        protected void ExecuteSqlScriptFromFile(INopFileProvider fileProvider, string filePath)
+        protected void ExecuteSqlScriptFromFile(IDevPlatformFileProvider fileProvider, string filePath)
         {
             filePath = fileProvider.MapPath(filePath);
             if (!fileProvider.FileExists(filePath))
@@ -212,8 +214,8 @@ namespace DevPlatform.Data
             migrationManager.ApplyUpMigrations();
 
             //create stored procedures 
-            var fileProvider = EngineContext.Current.Resolve<INopFileProvider>();
-            ExecuteSqlScriptFromFile(fileProvider, NopDataDefaults.MySQLStoredProceduresFilePath);
+            var fileProvider = EngineContext.Current.Resolve<DevPlatformFileProvider>();
+            ExecuteSqlScriptFromFile(fileProvider, DevPlatformDataDefaults.MySQLStoredProceduresFilePath);
         }
 
         /// <summary>
@@ -291,7 +293,7 @@ namespace DevPlatform.Data
         /// <summary>
         /// Build the connection string
         /// </summary>
-        /// <param name="nopConnectionString">Connection string info</param>
+        /// <param name="connectionStringInfo">Connection string info</param>
         /// <returns>Connection string</returns>
         public virtual string BuildConnectionString(IDevPlatformConnectionStringInfo connectionStringInfo)
         {
@@ -348,7 +350,7 @@ namespace DevPlatform.Data
         /// <summary>
         /// MySql data provider
         /// </summary>
-        protected override IDataProvider LinqToDbDataProvider => new MySqlDataProvider();
+        protected override IDataProvider LinqToDbDataProvider => new MySqlDataProvider(CurrentConnectionString);
 
         /// <summary>
         /// Gets allowed a limit input value of the data for hashing functions, returns 0 if not limited
