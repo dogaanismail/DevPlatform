@@ -60,7 +60,8 @@ namespace DevPlatform.Core.Infrastructure
             //we startup this interface even for not installed plugins. 
             //otherwise, DbContext initializers won't run and a plugin installation won't work
             var instances = startupTasks
-                .Select(startupTask => (IStartupTask)Activator.CreateInstance(startupTask));
+                .Select(startupTask => (IStartupTask)Activator.CreateInstance(startupTask))
+                .OrderBy(startupTask => startupTask.Order);
 
             //execute tasks
             foreach (var task in instances)
@@ -85,7 +86,8 @@ namespace DevPlatform.Core.Infrastructure
 
             //create and sort instances of dependency registrars
             var instances = dependencyRegistrars
-                .Select(dependencyRegistrar => (IDependencyRegistrar)Activator.CreateInstance(dependencyRegistrar));
+                .Select(dependencyRegistrar => (IDependencyRegistrar)Activator.CreateInstance(dependencyRegistrar))
+                .OrderBy(startupTask => startupTask.Order);
 
             //register all provided dependencies
             foreach (var dependencyRegistrar in instances)
@@ -153,7 +155,8 @@ namespace DevPlatform.Core.Infrastructure
 
             //create and sort instances of startup configurations
             var instances = startupConfigurations
-                .Select(startup => (IDevPlatformStartup)Activator.CreateInstance(startup));
+                .Select(startup => (IDevPlatformStartup)Activator.CreateInstance(startup))
+            .OrderBy(startup => startup.Order);
 
             //configure services
             foreach (var instance in instances)
@@ -161,12 +164,6 @@ namespace DevPlatform.Core.Infrastructure
 
             //register mapper configurations
             //AddAutoMapper(services, _typeFinder);
-
-            //run startup tasks
-            RunStartupTasks(_typeFinder);
-
-            //resolve assemblies here. otherwise, plugins can throw an exception when rendering views
-            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
         }
 
         /// <summary>
@@ -183,7 +180,8 @@ namespace DevPlatform.Core.Infrastructure
 
             //create and sort instances of startup configurations
             var instances = startupConfigurations
-                .Select(startup => (IDevPlatformStartup)Activator.CreateInstance(startup));
+                .Select(startup => (IDevPlatformStartup)Activator.CreateInstance(startup))
+            .OrderBy(startup => startup.Order);
 
             //configure request pipeline
             foreach (var instance in instances)

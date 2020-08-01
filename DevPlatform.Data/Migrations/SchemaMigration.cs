@@ -1,4 +1,9 @@
-﻿using FluentMigrator;
+﻿using DevPlatform.Core.Domain.Chat;
+using DevPlatform.Core.Domain.Friendship;
+using DevPlatform.Core.Domain.Identity;
+using DevPlatform.Core.Domain.Notification;
+using DevPlatform.Core.Domain.Portal;
+using FluentMigrator;
 
 namespace DevPlatform.Data.Migrations
 {
@@ -23,7 +28,19 @@ namespace DevPlatform.Data.Migrations
         public override void Up()
         {
             //TODO
-            //_migrationManager.BuildTable<ForumPost>(Create);
+            _migrationManager.BuildTable<ChatGroup>(Create);
+            _migrationManager.BuildTable<ChatGroupUser>(Create);
+            _migrationManager.BuildTable<ChatMessage>(Create);
+            _migrationManager.BuildTable<Friend>(Create);
+            _migrationManager.BuildTable<FriendRequest>(Create);
+            _migrationManager.BuildTable<AppUser>(Create);
+            _migrationManager.BuildTable<AppUserDetail>(Create);
+            _migrationManager.BuildTable<UserNotification>(Create);
+            _migrationManager.BuildTable<Post>(Create);
+            _migrationManager.BuildTable<PostComment>(Create);
+            _migrationManager.BuildTable<PostImage>(Create);
+            _migrationManager.BuildTable<PostVideo>(Create);
+
         }
     }
 }

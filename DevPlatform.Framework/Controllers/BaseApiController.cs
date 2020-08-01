@@ -1,16 +1,14 @@
-﻿using System.Net;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
 namespace DevPlatform.Framework.Controllers
 {
     [Route("api/[controller]")]
     //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public class BaseController : ControllerBase
+    public class BaseApiController : Controller
     {
         //public ResultModel Result;
 
-        public BaseController() : base()
+        public BaseApiController() 
         {
             //Result = ResultModel.Success();
         }

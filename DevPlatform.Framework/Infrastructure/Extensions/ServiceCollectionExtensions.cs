@@ -3,14 +3,18 @@ using DevPlatform.Core.Configuration;
 using DevPlatform.Core.Domain.Identity;
 using DevPlatform.Core.Infrastructure;
 using DevPlatform.Data;
+using LinqToDB.Identity;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Text;
 
@@ -81,6 +85,41 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
             return config;
         }
 
+
+        /// <summary>
+        /// Add and configure MVC for the application
+        /// </summary>
+        /// <param name="services">Collection of service descriptors</param>
+        /// <returns>A builder for configuring MVC services</returns>
+        public static IMvcBuilder AddDevPlatformMvc(this IServiceCollection services)
+        {
+            //add basic MVC feature
+            var mvcBuilder = services.AddControllersWithViews();
+
+            services.AddResponseCompression(
+               options => options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[]
+                               {
+                                    "image/jpeg",
+                                    "image/png",
+                                    "image/gif"
+                               }));
+
+            //Angular
+            services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/dist/"; });
+
+            services.AddMvc(opt =>
+            {
+                opt.EnableEndpointRouting = false;
+                //opt.Filters.Add(typeof(ValidateModelAttribute));
+            });
+            //.AddFluentValidation(fvc => fvc.RegisterValidatorsFromAssemblyContaining<Startup>());
+
+            //register controllers as services, it'll allow to override them
+            mvcBuilder.AddControllersAsServices();
+
+            return mvcBuilder;
+        }
+
         /// <summary>
         /// Register HttpContextAccessor
         /// </summary>
@@ -96,7 +135,7 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
         /// <param name="services">Collection of service descriptors</param>
         public static void AddDevPlatformAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddIdentity<AppUser, IdentityRole<int>>(options =>
+            services.AddIdentity<AppUser, LinqToDB.Identity.IdentityRole<int>>(options =>
             {
                 options.Password.RequireDigit = true;
                 options.Password.RequiredLength = 4;
@@ -112,7 +151,7 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
                 //options.Lockout.MaxFailedAccessAttempts = 5;
                 //options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(3);
 
-            }).AddLinqToDBStores<ApplicationDbContext>()
+            }).AddLinqToDBStores(new DefaultConnectionFactory())
                 .AddDefaultTokenProviders();
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
@@ -124,153 +163,6 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
             //services.ConfigureJwtAuthorization();
         }
 
-        /// <summary>
-        /// Add and configure MVC for the application
-        /// </summary>
-        /// <param name="services">Collection of service descriptors</param>
-        /// <returns>A builder for configuring MVC services</returns>
-        public static IMvcBuilder AddNopMvc(this IServiceCollection services)
-        {
-            //add basic MVC feature
-            var mvcBuilder = services.AddControllersWithViews();
 
-            mvcBuilder.AddRazorRuntimeCompilation();
-
-            var nopConfig = services.BuildServiceProvider().GetRequiredService<NopConfig>();
-            if (nopConfig.UseSessionStateTempDataProvider)
-            {
-                //use session-based temp data provider
-                mvcBuilder.AddSessionStateTempDataProvider();
-            }
-            else
-            {
-                //use cookie-based temp data provider
-                mvcBuilder.AddCookieTempDataProvider(options =>
-                {
-                    options.Cookie.Name = $"{NopCookieDefaults.Prefix}{NopCookieDefaults.TempDataCookie}";
-
-                    //whether to allow the use of cookies from SSL protected page on the other store pages which are not
-                    options.Cookie.SecurePolicy = DataSettingsManager.DatabaseIsInstalled && EngineContext.Current.Resolve<IStoreContext>().CurrentStore.SslEnabled
-                        ? CookieSecurePolicy.SameAsRequest : CookieSecurePolicy.None;
-                });
-            }
-
-            services.AddRazorPages();
-
-            //MVC now serializes JSON with camel case names by default, use this code to avoid it
-            mvcBuilder.AddNewtonsoftJson(options => options.SerializerSettings.ContractResolver = new DefaultContractResolver());
-
-            //add custom display metadata provider
-            mvcBuilder.AddMvcOptions(options => options.ModelMetadataDetailsProviders.Add(new NopMetadataProvider()));
-
-            //add custom model binder provider (to the top of the provider list)
-            mvcBuilder.AddMvcOptions(options => options.ModelBinderProviders.Insert(0, new NopModelBinderProvider()));
-
-            //add fluent validation
-            mvcBuilder.AddFluentValidation(configuration =>
-            {
-                //register all available validators from Nop assemblies
-                var assemblies = mvcBuilder.PartManager.ApplicationParts
-                    .OfType<AssemblyPart>()
-                    .Where(part => part.Name.StartsWith("Nop", StringComparison.InvariantCultureIgnoreCase))
-                    .Select(part => part.Assembly);
-                configuration.RegisterValidatorsFromAssemblies(assemblies);
-
-                //implicit/automatic validation of child properties
-                configuration.ImplicitlyValidateChildProperties = true;
-            });
-
-            //register controllers as services, it'll allow to override them
-            mvcBuilder.AddControllersAsServices();
-
-            return mvcBuilder;
-        }
-
-        /// <summary>
-        /// Register custom RedirectResultExecutor
-        /// </summary>
-        /// <param name="services">Collection of service descriptors</param>
-        public static void AddNopRedirectResultExecutor(this IServiceCollection services)
-        {
-            //we use custom redirect executor as a workaround to allow using non-ASCII characters in redirect URLs
-            services.AddSingleton<IActionResultExecutor<RedirectResult>, NopRedirectResultExecutor>();
-        }
-
-        /// <summary>
-        /// Add and configure MiniProfiler service
-        /// </summary>
-        /// <param name="services">Collection of service descriptors</param>
-        public static void AddNopMiniProfiler(this IServiceCollection services)
-        {
-            //whether database is already installed
-            if (!DataSettingsManager.DatabaseIsInstalled)
-                return;
-
-            services.AddMiniProfiler(miniProfilerOptions =>
-            {
-                //use memory cache provider for storing each result
-                ((MemoryCacheStorage)miniProfilerOptions.Storage).CacheDuration = TimeSpan.FromMinutes(60);
-
-                //whether MiniProfiler should be displayed
-                miniProfilerOptions.ShouldProfile = request =>
-                    EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerInPublicStore;
-
-                //determine who can access the MiniProfiler results
-                miniProfilerOptions.ResultsAuthorize = request =>
-                    !EngineContext.Current.Resolve<StoreInformationSettings>().DisplayMiniProfilerForAdminOnly ||
-                    EngineContext.Current.Resolve<IPermissionService>().Authorize(StandardPermissionProvider.AccessAdminPanel);
-            });
-        }
-
-        /// <summary>
-        /// Add and configure WebMarkupMin service
-        /// </summary>
-        /// <param name="services">Collection of service descriptors</param>
-        public static void AddNopWebMarkupMin(this IServiceCollection services)
-        {
-            //check whether database is installed
-            if (!DataSettingsManager.DatabaseIsInstalled)
-                return;
-
-            services
-                .AddWebMarkupMin(options =>
-                {
-                    options.AllowMinificationInDevelopmentEnvironment = true;
-                    options.AllowCompressionInDevelopmentEnvironment = true;
-                    options.DisableMinification = !EngineContext.Current.Resolve<CommonSettings>().EnableHtmlMinification;
-                    options.DisableCompression = true;
-                    options.DisablePoweredByHttpHeaders = true;
-                })
-                .AddHtmlMinification(options =>
-                {
-                    options.CssMinifierFactory = new NUglifyCssMinifierFactory();
-                    options.JsMinifierFactory = new NUglifyJsMinifierFactory();
-                })
-                .AddXmlMinification(options =>
-                {
-                    var settings = options.MinificationSettings;
-                    settings.RenderEmptyTagsWithSpace = true;
-                    settings.CollapseTagsWithoutContent = true;
-                });
-        }
-
-        /// <summary>
-        /// Add and configure default HTTP clients
-        /// </summary>
-        /// <param name="services">Collection of service descriptors</param>
-        public static void AddNopHttpClients(this IServiceCollection services)
-        {
-            //default client
-            services.AddHttpClient(NopHttpDefaults.DefaultHttpClient).WithProxy();
-
-            //client to request current store
-            services.AddHttpClient<StoreHttpClient>();
-
-            //client to request nopCommerce official site
-            services.AddHttpClient<NopHttpClient>().WithProxy();
-
-            //client to request reCAPTCHA service
-            services.AddHttpClient<CaptchaHttpClient>().WithProxy();
-        }
     }
 }

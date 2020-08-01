@@ -22,5 +22,10 @@ namespace DevPlatform.Core.Infrastructure
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         void Configure(IApplicationBuilder application);
 
+        /// <summary>
+        /// Gets order of this startup configuration implementation
+        /// </summary>
+        int Order { get; }
+
     }
 }

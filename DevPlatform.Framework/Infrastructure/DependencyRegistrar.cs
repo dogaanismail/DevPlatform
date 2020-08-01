@@ -3,6 +3,8 @@ using DevPlatform.Core.Configuration;
 using DevPlatform.Core.Infrastructure;
 using DevPlatform.Core.Infrastructure.DependencyManagement;
 using DevPlatform.Data;
+using DevPlatform.Data.Migrations;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace DevPlatform.Framework.Infrastructure
 {
@@ -28,6 +30,13 @@ namespace DevPlatform.Framework.Infrastructure
 
             //services will be implemented here
             //builder.RegisterType<NotificationService>().As<INotificationService>().InstancePerLifetimeScope();
+
+            builder.RegisterType<ActionContextAccessor>().As<IActionContextAccessor>().InstancePerLifetimeScope();
         }
+
+        /// <summary>
+        /// Gets order of this dependency registrar implementation
+        /// </summary>
+        public int Order => 0;
     }
 }

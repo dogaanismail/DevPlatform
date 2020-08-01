@@ -54,5 +54,10 @@ namespace DevPlatform.Data
         {
         }
 
+        /// <summary>
+        /// Gets order of this startup configuration implementation
+        /// </summary>
+        public int Order => 10;
+
     }
 }

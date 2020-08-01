@@ -127,7 +127,7 @@ namespace DevPlatform.Core.Infrastructure
                 try
                 {
                     var an = AssemblyName.GetAssemblyName(dllPath);
-                    if (Matches(an.FullName) && !loadedAssemblyNames.Contains(an.FullName))
+                    if (Matches(an.FullName) && !loadedAssemblyNames.Contains(an.FullName) && an.Name != "DevPlatform.Api.Views")
                     {
                         App.Load(an);
                     }

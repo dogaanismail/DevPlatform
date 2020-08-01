@@ -15,5 +15,10 @@ namespace DevPlatform.Core.Infrastructure.DependencyManagement
         /// <param name="typeFinder">Type finder</param>
         /// <param name="config">Config</param>
         void Register(ContainerBuilder builder, ITypeFinder typeFinder, DevPlatformConfig config);
+
+        /// <summary>
+        /// Gets order of this dependency registrar implementation
+        /// </summary>
+        int Order { get; }
     }
 }

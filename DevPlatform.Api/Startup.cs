@@ -1,6 +1,7 @@
 using Autofac;
 using DevPlatform.Core.Configuration;
 using DevPlatform.Core.Infrastructure;
+using DevPlatform.Framework.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -53,8 +54,6 @@ namespace DevPlatform.Api
         public void Configure(IApplicationBuilder application)
         {
             application.ConfigureRequestPipeline();
-
-            application.StartEngine();
         }
     }
 }

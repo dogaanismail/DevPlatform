@@ -26,7 +26,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DevPlatform.Core\DevPlatform.Core.csproj" />
+    <ProjectReference Include="..\DevPlatform.Framework\DevPlatform.Framework.csproj" />
   </ItemGroup>
+
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
     <!-- Ensure Node.js is installed -->
