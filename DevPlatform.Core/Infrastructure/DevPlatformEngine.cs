@@ -72,7 +72,7 @@ namespace DevPlatform.Core.Infrastructure
         /// Register dependencies
         /// </summary>
         /// <param name="containerBuilder">Container builder</param>
-        /// <param name="nopConfig">Nop configuration parameters</param>
+        /// <param name="config">DevPlatform configuration parameters</param>
         public virtual void RegisterDependencies(ContainerBuilder containerBuilder, DevPlatformConfig config)
         {
             //register engine
@@ -146,7 +146,7 @@ namespace DevPlatform.Core.Infrastructure
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
         /// <param name="configuration">Configuration of the application</param>
-        /// <param name="nopConfig">Nop configuration parameters</param>
+        /// <param name="config">DevPlatform configuration parameters</param>
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration, DevPlatformConfig config)
         {
             //find startup configurations provided by other assemblies

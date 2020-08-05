@@ -138,7 +138,7 @@ namespace DevPlatform.Data
         /// <summary>
         /// Build the connection string
         /// </summary>
-        /// <param name="nopConnectionString">Connection string info</param>
+        /// <param name="connectionStringInfo">Connection string info</param>
         /// <returns>Connection string</returns>
         string BuildConnectionString(IDevPlatformConnectionStringInfo connectionStringInfo);
 

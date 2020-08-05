@@ -12,7 +12,7 @@ namespace DevPlatform.Data.Migrations
         private static readonly string[] _dateFormats = { "yyyy-MM-dd HH:mm:ss", "yyyy.MM.dd HH:mm:ss", "yyyy/MM/dd HH:mm:ss", "yyyy-MM-dd HH:mm:ss:fffffff", "yyyy.MM.dd HH:mm:ss:fffffff", "yyyy/MM/dd HH:mm:ss:fffffff" };
 
         /// <summary>
-        /// Initializes a new instance of the NopMigrationAttribute class
+        /// Initializes a new instance of the DevPlatformMigrationAttribute class
         /// </summary>
         /// <param name="dateTime">The migration date time string to convert on version</param>
         public DevPlatformMigrationAttribute(string dateTime) :
@@ -21,7 +21,7 @@ namespace DevPlatform.Data.Migrations
         }
 
         /// <summary>
-        /// Initializes a new instance of the NopMigrationAttribute class
+        /// Initializes a new instance of the DevPlatformMigrationAttribute class
         /// </summary>
         /// <param name="dateTime">The migration date time string to convert on version</param>
         /// <param name="description">The migration description</param>

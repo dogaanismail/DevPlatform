@@ -1,5 +1,5 @@
 ﻿{
-  "DataConnectionString": "Data Source=DESKTOP-B2VJH8F\\SQLEXPRESS;Initial Catalog=MyReleaseDB;Integrated Security=True",
+  "DataConnectionString": "Data Source=DESKTOP-AOIN62U\\SQLEXPRESS;Initial Catalog=MyReleaseDB;Integrated Security=True",
   "DataProvider": "sqlserver",
   "RawDataSettings": {}
 }

@@ -38,8 +38,8 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
             //most of API providers require TLS 1.2 nowadays
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
 
-            //add NopConfig configuration parameters
-            var nopConfig = services.ConfigureStartupConfig<DevPlatformConfig>(configuration.GetSection("devPlatform"));
+            //add DevPlatformConfig configuration parameters
+            var devPlatformConfig = services.ConfigureStartupConfig<DevPlatformConfig>(configuration.GetSection("devPlatform"));
 
             //add hosting configuration parameters
             services.ConfigureStartupConfig<HostingConfig>(configuration.GetSection("Hosting"));
@@ -53,9 +53,9 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
             //create engine and configure service provider
             var engine = EngineContext.Create();
 
-            engine.ConfigureServices(services, configuration, nopConfig);
+            engine.ConfigureServices(services, configuration, devPlatformConfig);
 
-            return (engine, nopConfig);
+            return (engine, devPlatformConfig);
         }
 
         /// <summary>

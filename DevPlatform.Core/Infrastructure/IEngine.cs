@@ -19,7 +19,7 @@ namespace DevPlatform.Core.Infrastructure
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
         /// <param name="configuration">Configuration of the application</param>
-        /// <param name="nopConfig">devPlatform configuration parameters</param>
+        /// <param name="config">devPlatform configuration parameters</param>
         void ConfigureServices(IServiceCollection services, IConfiguration configuration, DevPlatformConfig config);
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace DevPlatform.Core.Infrastructure
         /// Register dependencies
         /// </summary>
         /// <param name="containerBuilder">Container builder</param>
-        /// <param name="nopConfig">devPlatform configuration parameters</param>
+        /// <param name="config">devPlatform configuration parameters</param>
         void RegisterDependencies(ContainerBuilder containerBuilder, DevPlatformConfig config);
     }
 }

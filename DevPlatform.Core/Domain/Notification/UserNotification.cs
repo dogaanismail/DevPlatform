@@ -20,11 +20,11 @@ namespace DevPlatform.Core.Domain.Notification
         public int Type { get; set; }
 
         [Required]
-        [ForeignKey("UserNotification")]
+        [ForeignKey("UserNotifications")]
         public int SentTo { get; set; }
 
         public bool IsRead { get; set; }
 
-        public virtual AppUser Notification { get; set; }
+        public virtual AppUser UserNotifications { get; set; }
     }
 }

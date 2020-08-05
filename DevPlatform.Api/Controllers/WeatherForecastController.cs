@@ -22,7 +22,7 @@ namespace DevPlatform.Api.Controllers
             _logger = logger;
         }
 
-        [HttpGet]
+        [HttpGet("getweather")]
         public IEnumerable<WeatherForecast> Get()
         {
             var rng = new Random();

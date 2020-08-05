@@ -1,4 +1,5 @@
 ﻿using DevPlatform.Core.Domain.Chat;
+using DevPlatform.Core.Domain.Configuration;
 using DevPlatform.Core.Domain.Friendship;
 using DevPlatform.Core.Domain.Identity;
 using DevPlatform.Core.Domain.Notification;
@@ -27,20 +28,21 @@ namespace DevPlatform.Data.Migrations
         /// </summary>
         public override void Up()
         {
-            //TODO
+            //AppUser and AppUserDetail have to be created first!
+
+            _migrationManager.BuildTable<AppUser>(Create);
+            _migrationManager.BuildTable<AppUserDetail>(Create);
+            _migrationManager.BuildTable<Setting>(Create);
             _migrationManager.BuildTable<ChatGroup>(Create);
             _migrationManager.BuildTable<ChatGroupUser>(Create);
             _migrationManager.BuildTable<ChatMessage>(Create);
-            _migrationManager.BuildTable<Friend>(Create);
-            _migrationManager.BuildTable<FriendRequest>(Create);
-            _migrationManager.BuildTable<AppUser>(Create);
-            _migrationManager.BuildTable<AppUserDetail>(Create);
             _migrationManager.BuildTable<UserNotification>(Create);
             _migrationManager.BuildTable<Post>(Create);
             _migrationManager.BuildTable<PostComment>(Create);
             _migrationManager.BuildTable<PostImage>(Create);
             _migrationManager.BuildTable<PostVideo>(Create);
-
+            _migrationManager.BuildTable<Friend>(Create);
+            _migrationManager.BuildTable<FriendRequest>(Create);
         }
     }
 }

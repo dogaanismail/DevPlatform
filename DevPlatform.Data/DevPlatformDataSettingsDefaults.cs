@@ -6,7 +6,7 @@
     public static partial class DevPlatformDataSettingsDefaults
     {
         /// <summary>
-        /// Gets a path to the file that was used in old nopCommerce versions to contain data settings
+        /// Gets a path to the file that was used in old versions to contain data settings
         /// </summary>
         public static string ObsoleteFilePath => "~/App_Data/Settings.txt";
 

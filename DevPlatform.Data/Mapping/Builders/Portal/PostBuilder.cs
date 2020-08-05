@@ -9,7 +9,7 @@ namespace DevPlatform.Data.Mapping.Builders.Portal
         {
             table
                .WithColumn(nameof(Post.Text)).AsString(int.MaxValue).NotNullable()
-               .WithColumn(nameof(Post.PostType)).AsInt32().Nullable();
+               .WithColumn(nameof(Post.PostType)).AsInt32().NotNullable();
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -15,10 +16,11 @@ using LinqToDB.DataProvider;
 using LinqToDB.DataProvider.MySql;
 using LinqToDB.SqlQuery;
 using MySql.Data.MySqlClient;
+using MySqlDevPlatformProvider = LinqToDB.DataProvider.MySql.MySqlDataProvider;
 
 namespace DevPlatform.Data
 {
-    public class MySqlNopDataProvider : BaseDataProvider, IDevPlatformDataProvider
+    public class MySqlDataProvider : BaseDataProvider, IDevPlatformDataProvider
     {
         #region Fields
 
@@ -351,7 +353,7 @@ namespace DevPlatform.Data
         /// <summary>
         /// MySql data provider
         /// </summary>
-        protected override IDataProvider LinqToDbDataProvider => new MySqlDataProvider(CurrentConnectionString);
+        protected override IDataProvider LinqToDbDataProvider => new MySqlDevPlatformProvider(CurrentConnectionString);
 
         /// <summary>
         /// Gets allowed a limit input value of the data for hashing functions, returns 0 if not limited

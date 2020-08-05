@@ -19,7 +19,7 @@ namespace DevPlatform.Data
     /// <summary>
     /// Represents the MS SQL Server data provider
     /// </summary>
-    public partial class MsSqlNopDataProvider : BaseDataProvider, IDevPlatformDataProvider
+    public partial class MsSqlDataProvider : BaseDataProvider, IDevPlatformDataProvider
     {
         #region Utils
 
@@ -297,7 +297,7 @@ namespace DevPlatform.Data
         /// <summary>
         /// Build the connection string
         /// </summary>
-        /// <param name="nopConnectionString">Connection string info</param>
+        /// <param name="connectionStringInfo">Connection string info</param>
         /// <returns>Connection string</returns>
         public virtual string BuildConnectionString(IDevPlatformConnectionStringInfo connectionStringInfo)
         {

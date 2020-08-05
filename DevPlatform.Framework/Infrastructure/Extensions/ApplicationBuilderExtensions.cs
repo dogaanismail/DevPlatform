@@ -95,7 +95,7 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
         /// Adds the authentication middleware, which enables authentication capabilities.
         /// </summary>
         /// <param name="application">Builder for configuring an application's request pipeline</param>
-        //public static void UseNopAuthentication(this IApplicationBuilder application)
+        //public static void UseDevAuthentication(this IApplicationBuilder application)
         //{
         //    //check whether database is installed
         //    if (!DataSettingsManager.DatabaseIsInstalled)

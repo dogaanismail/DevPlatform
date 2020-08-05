@@ -20,9 +20,9 @@ namespace DevPlatform.Data
             switch (dataProviderType)
             {
                 case DataProviderType.SqlServer:
-                    return new MsSqlNopDataProvider();
+                    return new MsSqlDataProvider();
                 case DataProviderType.MySql:
-                    return new MySqlNopDataProvider();
+                    return new MySqlDataProvider();
                 default:
                     throw new Exception($"Not supported data provider name: '{dataProviderType}'");
             }

@@ -15,7 +15,7 @@ namespace DevPlatform.Core.Infrastructure
         [MethodImpl(MethodImplOptions.Synchronized)]
         public static IEngine Create()
         {
-            //create NopEngine as engine
+            //create DevPlatform as engine
             return Singleton<IEngine>.Instance ?? (Singleton<IEngine>.Instance = new DevPlatformEngine());
         }
 
