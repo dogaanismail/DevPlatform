@@ -5,6 +5,7 @@ using DevPlatform.Core.Domain.Identity;
 using DevPlatform.Core.Domain.Notification;
 using DevPlatform.Core.Domain.Portal;
 using FluentMigrator;
+using LinqToDB.Identity;
 
 namespace DevPlatform.Data.Migrations
 {
@@ -30,8 +31,14 @@ namespace DevPlatform.Data.Migrations
         {
             //AppUser and AppUserDetail have to be created first!
 
-            _migrationManager.BuildTable<AppUser>(Create);
             _migrationManager.BuildTable<AppUserDetail>(Create);
+            _migrationManager.BuildTable<AppUser>(Create);
+            _migrationManager.BuildTable<AppRole>(Create);
+            _migrationManager.BuildTable<AppUserClaim>(Create);
+            _migrationManager.BuildTable<AppRoleClaim>(Create);
+            _migrationManager.BuildTable<AppUserLogin>(Create);
+            _migrationManager.BuildTable<AppUserRole>(Create);
+            _migrationManager.BuildTable<AppUserToken>(Create);
             _migrationManager.BuildTable<Setting>(Create);
             _migrationManager.BuildTable<ChatGroup>(Create);
             _migrationManager.BuildTable<ChatGroupUser>(Create);

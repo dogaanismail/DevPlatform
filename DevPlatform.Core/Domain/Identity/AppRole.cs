@@ -1,12 +1,10 @@
 ﻿using DevPlatform.Core.Entities;
 using LinqToDB.Identity;
 using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DevPlatform.Core.Domain.Identity
 {
-    public class AppUser : IdentityUser<int>, IEntity
+    public class AppRole : IdentityRole<int>, IEntity
     {
         public DateTime CreatedDate { get; set; }
         public DateTime? ModifiedDate { get; set; }
@@ -14,11 +12,5 @@ namespace DevPlatform.Core.Domain.Identity
         public int? CreatedBy { get; set; }
         public int? ModifiedBy { get; set; }
         public int? StatusId { get; set; }
-
-        [Required]
-        [ForeignKey("UserDetail")]
-        public int DetailId { get; set; }
-
-        public virtual AppUserDetail UserDetail { get; set; }
     }
 }
