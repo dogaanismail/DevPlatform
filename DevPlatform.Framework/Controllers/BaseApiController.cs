@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using DevPlatform.Domain.Api;
+using DevPlatform.Domain.Common;
+using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace DevPlatform.Framework.Controllers
 {
@@ -6,25 +9,25 @@ namespace DevPlatform.Framework.Controllers
     //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class BaseApiController : Controller
     {
-        //public ResultModel Result;
+        public ResultModel Result;
 
-        public BaseApiController() 
+        public BaseApiController()
         {
-            //Result = ResultModel.Success();
+            Result = ResultModel.Success();
         }
 
-        //protected JsonResult OkResponse<T>(T data) where T : class
-        //{
-        //    var response = Response<T>.Create(HttpStatusCode.OK, data);
+        protected JsonResult OkResponse<T>(T data) where T : class
+        {
+            var response = Response<T>.Create(HttpStatusCode.OK, data);
 
-        //    return Json(response);
-        //}
+            return Json(response);
+        }
 
-        //protected JsonResult BadResponse<T>(T data) where T : class
-        //{
-        //    var response = Response<T>.Create(HttpStatusCode.BadRequest, data);
+        protected JsonResult BadResponse<T>(T data) where T : class
+        {
+            var response = Response<T>.Create(HttpStatusCode.BadRequest, data);
 
-        //    return Json(response);
-        //}
+            return Json(response);
+        }
     }
 }

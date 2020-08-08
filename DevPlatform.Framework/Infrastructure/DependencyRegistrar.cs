@@ -1,16 +1,11 @@
 ﻿using Autofac;
-using Autofac.Builder;
-using Autofac.Core;
 using DevPlatform.Core.Configuration;
 using DevPlatform.Core.Infrastructure;
 using DevPlatform.Core.Infrastructure.DependencyManagement;
+using DevPlatform.Core.Security;
 using DevPlatform.Data;
-using DevPlatform.Data.Migrations;
 using DevPlatform.Repository.Generic;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using System;
-using System.Collections.Generic;
-using System.Reflection;
 
 namespace DevPlatform.Framework.Infrastructure
 {
@@ -35,6 +30,7 @@ namespace DevPlatform.Framework.Infrastructure
             builder.RegisterGeneric(typeof(RepositoryBase<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
 
             //services will be implemented here
+            builder.RegisterType<TokenService>().As<ITokenService>().InstancePerLifetimeScope();
             //builder.RegisterType<NotificationService>().As<INotificationService>().InstancePerLifetimeScope();
 
             builder.RegisterType<ActionContextAccessor>().As<IActionContextAccessor>().InstancePerLifetimeScope();
@@ -114,9 +110,9 @@ namespace DevPlatform.Framework.Infrastructure
         //    public bool IsAdapterForIndividualComponents => false;
         //}
 
-            /// <summary>
-            /// Gets order of this dependency registrar implementation
-            /// </summary>
-            public int Order => 0;
+        /// <summary>
+        /// Gets order of this dependency registrar implementation
+        /// </summary>
+        public int Order => 0;
     }
 }

@@ -1,8 +1,12 @@
 ﻿using DevPlatform.Core;
+using DevPlatform.Core.Attributes;
 using DevPlatform.Core.Configuration;
 using DevPlatform.Core.Domain.Identity;
 using DevPlatform.Core.Infrastructure;
-using DevPlatform.Data;
+using DevPlatform.Core.Security.JwtSecurity;
+using DevPlatform.Domain.Api;
+using DevPlatform.Domain.Validation;
+using FluentValidation;
 using LinqToDB.Identity;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -13,10 +17,8 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Text;
 
 namespace DevPlatform.Framework.Infrastructure.Extensions
 {
@@ -91,11 +93,8 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
         /// <returns>A builder for configuring MVC services</returns>
-        public static IMvcBuilder AddDevPlatformMvc(this IServiceCollection services)
+        public static void AddDevPlatformMvc(this IServiceCollection services)
         {
-            //add basic MVC feature
-            var mvcBuilder = services.AddControllersWithViews();
-
             services.AddResponseCompression(
                options => options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[]
                                {
@@ -110,14 +109,9 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
             services.AddMvc(opt =>
             {
                 opt.EnableEndpointRouting = false;
-                //opt.Filters.Add(typeof(ValidateModelAttribute));
+                opt.Filters.Add(typeof(ValidateModelAttribute));
             });
             //.AddFluentValidation(fvc => fvc.RegisterValidatorsFromAssemblyContaining<Startup>());
-
-            //register controllers as services, it'll allow to override them
-            mvcBuilder.AddControllersAsServices();
-
-            return mvcBuilder;
         }
 
         /// <summary>
@@ -135,7 +129,7 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
         /// <param name="services">Collection of service descriptors</param>
         public static void AddDevPlatformAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddIdentity<AppUser, LinqToDB.Identity.IdentityRole<int>>(options =>
+            services.AddIdentity<AppUser, AppRole>(options =>
             {
                 options.Password.RequireDigit = true;
                 options.Password.RequiredLength = 4;
@@ -158,11 +152,20 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
 
             // Uncomment the following lines to enable logging in with third party login providers
 
-            //JwtTokenDefinitions.LoadFromConfiguration(configuration);
-            //services.ConfigureJwtAuthentication();
-            //services.ConfigureJwtAuthorization();
+            JwtTokenDefinitions.LoadFromConfiguration(configuration);
+            services.ConfigureJwtAuthentication();
+            services.ConfigureJwtAuthorization();
         }
 
+        /// <summary>
+        /// Adds the validators
+        /// </summary>
+        /// <param name="services"></param>
+        public static void AddMyValidator(this IServiceCollection services)
+        {
+            services.AddSingleton<IValidator<LoginApiRequest>, LoginApiRequestValidator>();
+            //services.AddSingleton<IValidator<PostCreateApi>, PostCreateApiValidator>();
+        }
 
     }
 }

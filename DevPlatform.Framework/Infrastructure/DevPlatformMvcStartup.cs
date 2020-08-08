@@ -1,15 +1,8 @@
 ﻿using DevPlatform.Core.Infrastructure;
-using DevPlatform.Core.Middlewares;
 using DevPlatform.Framework.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.ResponseCompression;
-using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Net.Http.Headers;
-using System.Linq;
 
 namespace DevPlatform.Framework.Infrastructure
 {
@@ -25,23 +18,17 @@ namespace DevPlatform.Framework.Infrastructure
         /// <param name="configuration">Configuration of the application</param>
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
-            services.AddResponseCompression(
-               options => options.MimeTypes = ResponseCompressionDefaults.MimeTypes.Concat(new[]
-                               {
-                                    "image/jpeg",
-                                    "image/png",
-                                    "image/gif"
-                               }));
+            //add mvc options and settings
+            services.AddDevPlatformMvc();
 
-            //Angular
-            services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/dist/"; });
+            //add options feature
+            services.AddOptions();
+          
+            //add Fluent Validation validator
+            services.AddMyValidator();
 
-            services.AddMvc(opt =>
-            {
-                opt.EnableEndpointRouting = false;
-                //opt.Filters.Add(typeof(ValidateModelAttribute));
-            });
-            //.AddFluentValidation(fvc => fvc.RegisterValidatorsFromAssemblyContaining<Startup>());
+            //add devPlatform Identity options
+            //services.AddDevPlatformAuthentication(configuration);
         }
 
         /// <summary>
@@ -50,45 +37,15 @@ namespace DevPlatform.Framework.Infrastructure
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public void Configure(IApplicationBuilder application)
         {
-            var env = EngineContext.Current.Resolve<IWebHostEnvironment>();
+            application.UseDevPlatformEnvironment();
 
-            if (env.IsDevelopment())
-            {
-                application.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                application.UseHsts();
-            }
+            application.UseDevPlatformExceptionHandler();
 
-            application.UseMiddleware<ErrorHandlingMiddleware>();
+            application.UseDevPlatformStaticFiles();
 
-            application.UseAuthentication();
+            application.UseDevPlatformAuthentication();
 
-            application.UseHttpsRedirection()
-              .UseResponseCompression()
-              .UseStaticFiles(new StaticFileOptions
-              {
-                  // 6 hour cache
-                  OnPrepareResponse =
-                      _ => _.Context.Response.Headers[HeaderNames.CacheControl] = "public,max-age=21600"
-              })
-              .UseSpaStaticFiles();
-
-            application.UseMvc()
-          .UseSpa(spa =>
-          {
-              // To learn more about options for serving an Angular SPA from ASP.NET Core,
-              // see https://go.microsoft.com/fwlink/?linkid=864501
-
-              spa.Options.SourcePath = "ClientApp";
-
-              if (env.IsDevelopment())
-              {
-                  spa.UseAngularCliServer(npmScript: "start");
-              }
-          });
+            application.UseAngular();
         }
 
         /// <summary>

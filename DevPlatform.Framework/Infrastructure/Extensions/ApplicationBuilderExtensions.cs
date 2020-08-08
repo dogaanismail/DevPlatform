@@ -33,22 +33,26 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public static void UseDevPlatformExceptionHandler(this IApplicationBuilder application)
         {
-            var devPlatformConfig = EngineContext.Current.Resolve<DevPlatformConfig>();
-            var webHostEnvironment = EngineContext.Current.Resolve<IWebHostEnvironment>();
-            var useDetailedExceptionPage = devPlatformConfig.DisplayFullErrorStack || webHostEnvironment.IsDevelopment();
+            application.UseMiddleware<ErrorHandlingMiddleware>();
+        }
 
-            if (useDetailedExceptionPage)
+        /// <summary>
+        /// Add environment
+        /// </summary>
+        /// <param name="application">Builder for configuring an application's request pipeline</param>
+        public static void UseDevPlatformEnvironment(this IApplicationBuilder application)
+        {
+            var env = EngineContext.Current.Resolve<IWebHostEnvironment>();
+
+            if (env.IsDevelopment())
             {
-                //get detailed exceptions for developing and testing purposes
                 application.UseDeveloperExceptionPage();
             }
             else
             {
-                //or use special exception handler
-                application.UseExceptionHandler("/Error/Error");
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                application.UseHsts();
             }
-
-            application.UseMiddleware<ErrorHandlingMiddleware>();
         }
 
         /// <summary>
@@ -82,13 +86,22 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
                 // To learn more about options for serving an Angular SPA from ASP.NET Core,
                 // see https://go.microsoft.com/fwlink/?linkid=864501
 
-                spa.Options.SourcePath = "FriendFinderSpa";
+                spa.Options.SourcePath = "ClientApp";
 
                 if (webHostEnvironment.IsDevelopment())
                 {
                     spa.UseAngularCliServer(npmScript: "start");
                 }
             });
+        }
+
+        /// <summary>
+        /// Configure static file serving
+        /// </summary>
+        /// <param name="application">Builder for configuring an application's request pipeline</param>
+        public static void UseDevPlatformAuthentication(this IApplicationBuilder application)
+        {
+            application.UseAuthentication();
         }
 
         /// <summary>
