@@ -1,4 +1,5 @@
 ﻿using DevPlatform.Core.Entities;
+using DevPlatform.Data;
 using LinqToDB;
 using LinqToDB.Data;
 using System;
@@ -7,7 +8,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Transactions;
 
-namespace DevPlatform.Data
+namespace DevPlatform.Repository.Generic
 {
     /// <summary>
     /// Represents the Entity repository

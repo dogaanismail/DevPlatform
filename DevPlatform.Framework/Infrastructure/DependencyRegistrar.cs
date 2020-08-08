@@ -6,6 +6,7 @@ using DevPlatform.Core.Infrastructure;
 using DevPlatform.Core.Infrastructure.DependencyManagement;
 using DevPlatform.Data;
 using DevPlatform.Data.Migrations;
+using DevPlatform.Repository.Generic;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using System;
 using System.Collections.Generic;

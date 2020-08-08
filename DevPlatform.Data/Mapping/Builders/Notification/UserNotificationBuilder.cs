@@ -10,10 +10,13 @@ namespace DevPlatform.Data.Mapping.Builders.Notification
     {
         public override void MapEntity(CreateTableExpressionBuilder table)
         {
+            #region Methods
             table
                .WithColumn(nameof(UserNotification.Title)).AsString(200).NotNullable()
                .WithColumn(nameof(UserNotification.Detail)).AsString(200).Nullable()
+               .WithColumn(nameof(UserNotification.DetailUrl)).AsString(200).Nullable()
                .WithColumn(nameof(UserNotification.SentTo)).AsInt32().ForeignKey<AppUser>(onDelete: Rule.Cascade);
+            #endregion
         }
     }
 }

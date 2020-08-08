@@ -9,7 +9,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DevPlatform.Entities\DevPlatform.Entities.csproj" />
+    <ProjectReference Include="..\DevPlatform.Core\DevPlatform.Core.csproj" />
+    <ProjectReference Include="..\DevPlatform.Data\DevPlatform.Data.csproj" />
   </ItemGroup>
 
 </Project>

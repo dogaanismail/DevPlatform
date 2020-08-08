@@ -17,8 +17,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevPlatform.Business", "Dev
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevPlatform.Domain", "DevPlatform.Domain\DevPlatform.Domain.csproj", "{78F5ABD6-389A-4DFE-A59F-34F58F3A7FE0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevPlatform.Entities", "DevPlatform.Entities\DevPlatform.Entities.csproj", "{86E31D0C-4684-4499-A514-793E3353D565}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevPlatform.Repository", "DevPlatform.Repository\DevPlatform.Repository.csproj", "{B80236DE-A820-4FA9-919F-76A36242D1C2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevPlatform.Core", "DevPlatform.Core\DevPlatform.Core.csproj", "{BE78919D-3948-4754-838D-3445A67E0619}"
@@ -31,9 +29,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevPlatform.Data", "DevPlat
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{59D9F9E7-96AC-401D-AE80-C51ECA70791B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevPlatform.Common", "DevPlatform.Common\DevPlatform.Common.csproj", "{6D52782F-D7CB-4071-A18E-9988E1ED9249}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevPlatform.Common", "DevPlatform.Common\DevPlatform.Common.csproj", "{6D52782F-D7CB-4071-A18E-9988E1ED9249}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevPlatform.Framework", "DevPlatform.Framework\DevPlatform.Framework.csproj", "{67A79D8D-1E57-4757-94C8-3CDBC2495A89}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevPlatform.Framework", "DevPlatform.Framework\DevPlatform.Framework.csproj", "{67A79D8D-1E57-4757-94C8-3CDBC2495A89}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,10 +47,6 @@ Global
 		{78F5ABD6-389A-4DFE-A59F-34F58F3A7FE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{78F5ABD6-389A-4DFE-A59F-34F58F3A7FE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{78F5ABD6-389A-4DFE-A59F-34F58F3A7FE0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{86E31D0C-4684-4499-A514-793E3353D565}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{86E31D0C-4684-4499-A514-793E3353D565}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{86E31D0C-4684-4499-A514-793E3353D565}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{86E31D0C-4684-4499-A514-793E3353D565}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B80236DE-A820-4FA9-919F-76A36242D1C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B80236DE-A820-4FA9-919F-76A36242D1C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B80236DE-A820-4FA9-919F-76A36242D1C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -88,7 +82,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{D3C853C7-6C55-4B86-B443-4FA2104E65EF} = {56A1B941-CE58-4D08-BEDB-14CF2E936D1B}
 		{78F5ABD6-389A-4DFE-A59F-34F58F3A7FE0} = {7F0AC8A8-FC64-4F41-971C-409E227D631A}
-		{86E31D0C-4684-4499-A514-793E3353D565} = {7F0AC8A8-FC64-4F41-971C-409E227D631A}
 		{B80236DE-A820-4FA9-919F-76A36242D1C2} = {7F0AC8A8-FC64-4F41-971C-409E227D631A}
 		{BE78919D-3948-4754-838D-3445A67E0619} = {4F54D422-0CA7-4102-A91C-F7A4CC304ACC}
 		{159545A3-2D2E-4273-AB6A-6F5135DB038F} = {7F51F3E5-C507-4A16-A711-15210D230A86}

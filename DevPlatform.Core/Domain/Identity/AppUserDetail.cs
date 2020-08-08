@@ -4,15 +4,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace DevPlatform.Core.Domain.Identity
 {
-    public class AppUserDetail : IEntity
+    public class AppUserDetail : BaseEntity
     {
-        public int Id { get; set; }
-        public DateTime CreatedDate { get; set; }
-        public DateTime? ModifiedDate { get; set; }
-        public int? CreatedBy { get; set; }
-        public int? ModifiedBy { get; set; }
-        public int? StatusId { get; set; }
-
         [MaxLength(50)]
         public string FirstName { get; set; }
 

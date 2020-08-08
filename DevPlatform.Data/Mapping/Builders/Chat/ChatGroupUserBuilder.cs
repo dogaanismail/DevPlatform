@@ -10,10 +10,12 @@ namespace DevPlatform.Data.Mapping.Builders.Chat
     {
         public override void MapEntity(CreateTableExpressionBuilder table)
         {
+            #region Methods
             table
               .WithColumn(nameof(ChatGroupUser.StatusId)).AsInt32().NotNullable()
               .WithColumn(nameof(ChatGroupUser.ChatGroupId)).AsInt32().NotNullable().ForeignKey<ChatGroup>(onDelete: Rule.Cascade)
               .WithColumn(nameof(ChatGroupUser.MemberId)).AsInt32().NotNullable().ForeignKey<AppUser>(onDelete: Rule.Cascade);
+            #endregion
         }
     }
 }

@@ -14,6 +14,7 @@
   <ItemGroup>
     <ProjectReference Include="..\DevPlatform.Core\DevPlatform.Core.csproj" />
     <ProjectReference Include="..\DevPlatform.Data\DevPlatform.Data.csproj" />
+    <ProjectReference Include="..\DevPlatform.Repository\DevPlatform.Repository.csproj" />
   </ItemGroup>
 
 </Project>

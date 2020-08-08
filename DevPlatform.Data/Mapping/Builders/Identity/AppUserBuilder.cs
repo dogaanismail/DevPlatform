@@ -10,7 +10,20 @@ namespace DevPlatform.Data.Mapping.Builders.Identity
         public override void MapEntity(CreateTableExpressionBuilder table)
         {
             table
-                .WithColumn(nameof(AppUser.UserName)).AsString(100).NotNullable()
+                .WithColumn(nameof(AppUser.UserName)).AsString(128).NotNullable()
+                .WithColumn(nameof(AppUser.NormalizedUserName)).AsString(128).NotNullable()
+                .WithColumn(nameof(AppUser.Email)).AsString(128).NotNullable()
+                .WithColumn(nameof(AppUser.NormalizedEmail)).AsString(128).NotNullable()
+                .WithColumn(nameof(AppUser.EmailConfirmed)).AsBoolean().NotNullable()
+                .WithColumn(nameof(AppUser.PasswordHash)).AsString(int.MaxValue).NotNullable()
+                .WithColumn(nameof(AppUser.SecurityStamp)).AsString(int.MaxValue).NotNullable()
+                .WithColumn(nameof(AppUser.ConcurrencyStamp)).AsString(int.MaxValue).NotNullable()
+                .WithColumn(nameof(AppUser.PhoneNumber)).AsString(int.MaxValue).NotNullable()
+                .WithColumn(nameof(AppUser.PhoneNumberConfirmed)).AsBoolean().Nullable()
+                .WithColumn(nameof(AppUser.TwoFactorEnabled)).AsBoolean().NotNullable()
+                .WithColumn(nameof(AppUser.LockoutEnd)).AsDateTimeOffset(7).Nullable()
+                .WithColumn(nameof(AppUser.LockoutEnabled)).AsBoolean().NotNullable()
+                .WithColumn(nameof(AppUser.AccessFailedCount)).AsInt32().NotNullable()
                 .WithColumn(nameof(AppUser.DetailId)).AsInt32().NotNullable().ForeignKey<AppUserDetail>(onDelete: Rule.Cascade);
         }
     }

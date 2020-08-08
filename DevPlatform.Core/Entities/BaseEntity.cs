@@ -1,4 +1,4 @@
-﻿using DevPlatform.Entities.Entities;
+﻿using DevPlatform.Core.Domain.Identity;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 
