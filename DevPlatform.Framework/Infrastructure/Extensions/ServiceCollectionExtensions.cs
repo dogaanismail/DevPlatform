@@ -4,6 +4,7 @@ using DevPlatform.Core.Configuration;
 using DevPlatform.Core.Domain.Identity;
 using DevPlatform.Core.Infrastructure;
 using DevPlatform.Core.Security.JwtSecurity;
+using DevPlatform.Data;
 using DevPlatform.Domain.Api;
 using DevPlatform.Domain.Validation;
 using FluentValidation;
@@ -16,7 +17,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Models;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 
@@ -124,12 +127,47 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
         }
 
         /// <summary>
+        /// Register HttpContextAccessor
+        /// </summary>
+        /// <param name="services">Collection of service descriptors</param>
+        public static void AddDevPlatformSwagger(this IServiceCollection services)
+        {
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "FriendFinder Api", Version = "1.0" });
+
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey
+                });
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Id = "Bearer", //The name of the previously defined security scheme.
+                                Type = ReferenceType.SecurityScheme
+                            }
+                        },
+                        new List<string>()
+                    }
+                });
+            });
+        }
+
+        /// <summary>
         /// Adds authentication service
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
         public static void AddDevPlatformAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddIdentity<AppUser, AppRole>(options =>
+            services.AddIdentity<AppUser, LinqToDB.Identity.IdentityRole>(options =>
             {
                 options.Password.RequireDigit = true;
                 options.Password.RequiredLength = 4;

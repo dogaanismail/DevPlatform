@@ -1,6 +1,7 @@
 ﻿using DevPlatform.Core.Entities;
 using LinqToDB;
 using LinqToDB.Data;
+using LinqToDB.DataProvider;
 using LinqToDB.Mapping;
 using System;
 using System.Collections.Generic;

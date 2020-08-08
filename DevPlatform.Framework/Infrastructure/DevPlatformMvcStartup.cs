@@ -23,12 +23,15 @@ namespace DevPlatform.Framework.Infrastructure
 
             //add options feature
             services.AddOptions();
-          
+
             //add Fluent Validation validator
             services.AddMyValidator();
 
             //add devPlatform Identity options
-            //services.AddDevPlatformAuthentication(configuration);
+            services.AddDevPlatformAuthentication(configuration);
+
+            //add devPlatform swagger
+            services.AddDevPlatformSwagger();
         }
 
         /// <summary>
@@ -45,7 +48,9 @@ namespace DevPlatform.Framework.Infrastructure
 
             application.UseDevPlatformAuthentication();
 
-            application.UseAngular();
+            application.UseDevPlatformSwagger();
+
+            application.UseAngular();          
         }
 
         /// <summary>

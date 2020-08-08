@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Net.Http.Headers;
+using Swashbuckle.AspNetCore.SwaggerUI;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -92,6 +93,23 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
                 {
                     spa.UseAngularCliServer(npmScript: "start");
                 }
+            });
+        }
+
+        /// <summary>
+        /// Configure static file serving
+        /// </summary>
+        /// <param name="application">Builder for configuring an application's request pipeline</param>
+        public static void UseDevPlatformSwagger(this IApplicationBuilder application)
+        {
+            application.UseSwagger();
+            application.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "FriendFinder.Api V1");
+                c.DocumentTitle = "Title";
+                c.DisplayOperationId();
+                c.DocExpansion(DocExpansion.None);
+
             });
         }
 
