@@ -5,9 +5,12 @@ using DevPlatform.Core.Domain.Identity;
 using DevPlatform.Core.Infrastructure;
 using DevPlatform.Core.Security.JwtSecurity;
 using DevPlatform.Data;
+using DevPlatform.Data.IdentityFactory;
 using DevPlatform.Domain.Api;
 using DevPlatform.Domain.Validation;
 using FluentValidation;
+using LinqToDB;
+using LinqToDB.DataProvider.SqlServer;
 using LinqToDB.Identity;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
@@ -167,7 +170,7 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
         /// <param name="services">Collection of service descriptors</param>
         public static void AddDevPlatformAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddIdentity<AppUser, LinqToDB.Identity.IdentityRole>(options =>
+            services.AddIdentity<AppUser, LinqToDB.Identity.IdentityRole<int>>(options =>
             {
                 options.Password.RequireDigit = true;
                 options.Password.RequiredLength = 4;
@@ -183,7 +186,8 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
                 //options.Lockout.MaxFailedAccessAttempts = 5;
                 //options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(3);
 
-            }).AddLinqToDBStores(new DefaultConnectionFactory())
+            }).AddLinqToDBStores<int, AppUserClaim, AppUserRole, AppUserLogin, AppUserToken, AppRoleClaim>(new
+            IdentityConnectionFactory(new SqlServerDataProvider(ProviderName.SqlServer, SqlServerVersion.v2017), "SqlServerIdentity", DataSettingsManager.LoadSettings().ConnectionString))
                 .AddDefaultTokenProviders();
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();

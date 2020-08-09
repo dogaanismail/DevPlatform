@@ -38,41 +38,35 @@ namespace DevPlatform.Api.Controllers
         [HttpPost("register")]
         public async Task<JsonResult> Register([FromBody] RegisterApiRequest model)
         {
-            using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            try
             {
-                try
+                if (model.RePassword != model.Password)
                 {
-                    if (model.RePassword != model.Password)
-                    {
-                        return BadResponse(ResultModel.Error("Repassword must match password"));
-                    }
-
-                    AppUser userEntity = new AppUser
-                    {
-                        UserName = model.UserName,
-                        Email = model.Email,
-                        CreatedDate = DateTime.Now,
-                        DetailId = 1
-                    };
-
-                    IdentityResult result = await _userManager.CreateAsync(userEntity, model.Password);
-                    if (!result.Succeeded)
-                    {
-                        Result.Status = false;
-                        Result.Message = string.Join(",", result.Errors.Select(x => x.Description));
-                        scope.Dispose();
-                        return BadResponse(Result);
-                    }
-                    scope.Complete();
-                    return OkResponse(Result);
+                    return BadResponse(ResultModel.Error("Repassword must match password"));
                 }
-                catch (Exception ex)
+
+                AppUser userEntity = new AppUser
                 {
-                    scope.Dispose();
+                    UserName = model.UserName,
+                    Email = model.Email,
+                    CreatedDate = DateTime.Now,
+                    DetailId = 1
+                };
+
+                IdentityResult result = await _userManager.CreateAsync(userEntity, model.Password);
+                if (!result.Succeeded)
+                {
                     Result.Status = false;
-                    Result.Message = ex.ToString();
+                    Result.Message = string.Join(",", result.Errors.Select(x => x.Description));
                     return BadResponse(Result);
                 }
+                return OkResponse(Result);
+            }
+            catch (Exception ex)
+            {
+                Result.Status = false;
+                Result.Message = ex.ToString();
+                return BadResponse(Result);
             }
         }
 
