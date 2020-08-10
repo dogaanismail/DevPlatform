@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LinqToDB.Mapping;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -6,15 +7,15 @@ namespace DevPlatform.Core.Entities
 {
     public interface IEntity
     {
-        [Required, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Required, Identity]
         [Key]
         int Id { get; set; }
 
-        [DataType(DataType.Date)]
+        [System.ComponentModel.DataAnnotations.DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         DateTime CreatedDate { get; set; }
 
-        [DataType(DataType.Date)]
+        [System.ComponentModel.DataAnnotations.DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         DateTime? ModifiedDate { get; set; }
 

@@ -2,6 +2,7 @@
 using FluentMigrator.Builders.Create.Table;
 using DevPlatform.Data.Extensions;
 using System.Data;
+using FluentMigrator.SqlServer;
 
 namespace DevPlatform.Data.Mapping.Builders.Identity
 {
@@ -11,6 +12,7 @@ namespace DevPlatform.Data.Mapping.Builders.Identity
         {
             #region Methods
             table
+            .WithColumn(nameof(AppUserRole.Id)).AsInt32().NotNullable().PrimaryKey().Identity(1, 1)
             .WithColumn(nameof(AppUserRole.UserId)).AsInt32().NotNullable().PrimaryKey().ForeignKey<AppUser>(onDelete: Rule.Cascade)
             .WithColumn(nameof(AppUserRole.RoleId)).AsInt32().NotNullable().PrimaryKey().ForeignKey<AppRole>(onDelete: Rule.Cascade);
             #endregion

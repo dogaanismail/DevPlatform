@@ -137,7 +137,7 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
         {
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "FriendFinder Api", Version = "1.0" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "devPlatform Api", Version = "1.0" });
 
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
@@ -170,7 +170,7 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
         /// <param name="services">Collection of service descriptors</param>
         public static void AddDevPlatformAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddIdentity<AppUser, LinqToDB.Identity.IdentityRole<int>>(options =>
+            services.AddIdentity<AppUser, AppRole>(options =>
             {
                 options.Password.RequireDigit = true;
                 options.Password.RequiredLength = 4;
@@ -179,10 +179,10 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
                 options.Password.RequireLowercase = false;
 
                 options.User.RequireUniqueEmail = true;
+                options.SignIn.RequireConfirmedEmail = false;
 
                 //TODO
                 //options.User.RequireUniqueEmail = true; 
-                //options.SignIn.RequireConfirmedEmail = true;
                 //options.Lockout.MaxFailedAccessAttempts = 5;
                 //options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(3);
 

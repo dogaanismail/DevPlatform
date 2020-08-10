@@ -69,6 +69,38 @@ namespace DevPlatform.Api.Controllers
             }
         }
 
+        /// <summary>
+        /// Member Login
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost("login")]
+        public async Task<JsonResult> Login([FromBody] LoginApiRequest model)
+        {
+            var user = _userManager.FindByNameAsync(model.UserName).Result;
+
+            var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, false);
+            if (result.Succeeded)
+            {
+                //var token = _tokenService.GenerateToken(new AppUserDto
+                //{
+                //    AppUserId = user.Id,
+                //    UserName = user.UserName,
+                //    CoverPhotoUrl = user.CoverPhotoUrl,
+                //    ProfilePhotoUrl = user.ProfilePhotoUrl,
+                //    UserPosts = user.UserPosts,
+                //    RegisteredDate = user.RegisteredDate
+                //});
+                return OkResponse(result);
+            }
+            else
+            {
+                Result.Status = false;
+                Result.Message = "Username or password are wrong !";
+                return BadResponse(Result);
+            }
+        }
+
         [HttpPost("logout")]
         public async Task<JsonResult> LogOut()
         {
