@@ -1,5 +1,5 @@
 ﻿using DevPlatform.Core.Entities;
-using LinqToDB.Identity;
+using DevPlatform.LinqToDB.Identity;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -8,6 +8,9 @@ namespace DevPlatform.Core.Domain.Identity
 {
     public class AppUser : IdentityUser<int>, IEntity
     {
+        [Required, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key]
+        public override int Id { get => base.Id; set => base.Id = value; }
         public DateTime CreatedDate { get; set; }
         public DateTime? ModifiedDate { get; set; }
 

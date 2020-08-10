@@ -1,8 +1,8 @@
-﻿using LinqToDB;
+﻿using DevPlatform.LinqToDB.Identity;
+using LinqToDB;
 using LinqToDB.Common;
 using LinqToDB.Data;
 using LinqToDB.DataProvider;
-using LinqToDB.Identity;
 using System.Collections.Generic;
 
 namespace DevPlatform.Data.IdentityFactory

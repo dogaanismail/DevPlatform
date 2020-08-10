@@ -49,8 +49,7 @@ namespace DevPlatform.Api.Controllers
                 {
                     UserName = model.UserName,
                     Email = model.Email,
-                    CreatedDate = DateTime.Now,
-                    DetailId = 1
+                    CreatedDate = DateTime.Now
                 };
 
                 IdentityResult result = await _userManager.CreateAsync(userEntity, model.Password);

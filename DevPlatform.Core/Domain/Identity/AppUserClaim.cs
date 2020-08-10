@@ -1,5 +1,5 @@
 ﻿using DevPlatform.Core.Entities;
-using LinqToDB.Identity;
+using DevPlatform.LinqToDB.Identity;
 using System;
 
 namespace DevPlatform.Core.Domain.Identity

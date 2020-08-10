@@ -5,7 +5,7 @@ using DevPlatform.Core.Domain.Identity;
 using DevPlatform.Core.Domain.Notification;
 using DevPlatform.Core.Domain.Portal;
 using FluentMigrator;
-using LinqToDB.Identity;
+
 
 namespace DevPlatform.Data.Migrations
 {

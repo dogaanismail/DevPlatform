@@ -33,6 +33,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevPlatform.Common", "DevPl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevPlatform.Framework", "DevPlatform.Framework\DevPlatform.Framework.csproj", "{67A79D8D-1E57-4757-94C8-3CDBC2495A89}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevPlatform.LinqToDB.Identity", "DevPlatform.LinqToDB.Identity\DevPlatform.LinqToDB.Identity.csproj", "{9F606FB8-6332-42DB-913D-DB669FEDCFB2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +77,10 @@ Global
 		{67A79D8D-1E57-4757-94C8-3CDBC2495A89}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{67A79D8D-1E57-4757-94C8-3CDBC2495A89}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{67A79D8D-1E57-4757-94C8-3CDBC2495A89}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F606FB8-6332-42DB-913D-DB669FEDCFB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F606FB8-6332-42DB-913D-DB669FEDCFB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F606FB8-6332-42DB-913D-DB669FEDCFB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F606FB8-6332-42DB-913D-DB669FEDCFB2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -89,6 +95,7 @@ Global
 		{8E6D2F68-CDD4-4FD4-A539-B61D832DD382} = {7F0AC8A8-FC64-4F41-971C-409E227D631A}
 		{6D52782F-D7CB-4071-A18E-9988E1ED9249} = {59D9F9E7-96AC-401D-AE80-C51ECA70791B}
 		{67A79D8D-1E57-4757-94C8-3CDBC2495A89} = {9030DB20-712B-4670-A3B3-75CC92B29346}
+		{9F606FB8-6332-42DB-913D-DB669FEDCFB2} = {4F54D422-0CA7-4102-A91C-F7A4CC304ACC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A2B5881A-218F-4515-925E-CD4D326ADBF3}

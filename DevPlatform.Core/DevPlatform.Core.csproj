@@ -7,7 +7,6 @@
   <ItemGroup>
     <PackageReference Include="Autofac" Version="5.2.0" />
     <PackageReference Include="linq2db" Version="3.0.1" />
-    <PackageReference Include="linq2db.Identity" Version="2.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.6" />
     <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.2.7" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
@@ -22,6 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\DevPlatform.Common\DevPlatform.Common.csproj" />
     <ProjectReference Include="..\DevPlatform.Domain\DevPlatform.Domain.csproj" />
+    <ProjectReference Include="..\DevPlatform.LinqToDB.Identity\DevPlatform.LinqToDB.Identity.csproj" />
   </ItemGroup>
 
   <ItemGroup>

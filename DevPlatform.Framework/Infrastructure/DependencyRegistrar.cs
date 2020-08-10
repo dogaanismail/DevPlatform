@@ -1,13 +1,10 @@
 ﻿using Autofac;
 using DevPlatform.Core.Configuration;
-using DevPlatform.Core.Domain.Identity;
 using DevPlatform.Core.Infrastructure;
 using DevPlatform.Core.Infrastructure.DependencyManagement;
 using DevPlatform.Core.Security;
 using DevPlatform.Data;
 using DevPlatform.Repository.Generic;
-using LinqToDB.Identity;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace DevPlatform.Framework.Infrastructure

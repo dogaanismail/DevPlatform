@@ -125,7 +125,7 @@ namespace DevPlatform.Data.Migrations
                     IsIdentity = true,
                     TableName = NameCompatibilityManager.GetTableName(type),
                     ModificationType = ColumnModificationType.Create,
-                    IsPrimaryKey = true
+                    IsPrimaryKey = true,
                 };
 
                 expression.Columns.Insert(0, pk);
