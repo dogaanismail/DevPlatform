@@ -23,6 +23,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Net;
 
@@ -51,6 +52,9 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
 
             //add hosting configuration parameters
             services.ConfigureStartupConfig<HostingConfig>(configuration.GetSection("Hosting"));
+
+            //add cloudinary configuration parameters
+            services.ConfigureStartupConfig<CloudinaryConfig>(configuration.GetSection("CloudinaryConfig"));
 
             //add accessor to HttpContext
             services.AddHttpContextAccessor();
@@ -208,6 +212,6 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
             services.AddSingleton<IValidator<LoginApiRequest>, LoginApiRequestValidator>();
             //services.AddSingleton<IValidator<PostCreateApi>, PostCreateApiValidator>();
         }
-
+    
     }
 }

@@ -1,12 +1,14 @@
 ﻿using DevPlatform.Domain.Api;
 using DevPlatform.Domain.Common;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 
 namespace DevPlatform.Framework.Controllers
 {
     [Route("api/[controller]")]
-    //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class BaseApiController : Controller
     {
         public ResultModel Result;

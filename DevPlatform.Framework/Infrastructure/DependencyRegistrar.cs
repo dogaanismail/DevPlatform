@@ -1,4 +1,6 @@
 ﻿using Autofac;
+using DevPlatform.Business.Interfaces;
+using DevPlatform.Business.Services;
 using DevPlatform.Core.Configuration;
 using DevPlatform.Core.Infrastructure;
 using DevPlatform.Core.Infrastructure.DependencyManagement;
@@ -30,8 +32,8 @@ namespace DevPlatform.Framework.Infrastructure
             builder.RegisterGeneric(typeof(RepositoryBase<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
 
             //services will be implemented here
-            builder.RegisterType<TokenService>().As<ITokenService>().InstancePerLifetimeScope();   
-            //builder.RegisterType<NotificationService>().As<INotificationService>().InstancePerLifetimeScope();
+            builder.RegisterType<TokenService>().As<ITokenService>().InstancePerLifetimeScope();
+            builder.RegisterType<PostService>().As<IPostService>().InstancePerLifetimeScope();
 
             builder.RegisterType<ActionContextAccessor>().As<IActionContextAccessor>().InstancePerLifetimeScope();
         }

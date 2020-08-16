@@ -9,14 +9,19 @@ namespace DevPlatform.Api.Controllers
     [ApiController]
     public class InstallDatabase : BaseApiController
     {
+        #region Fields
         private readonly IDevPlatformFileProvider _fileProvider;
         private readonly DevPlatformConfig _config;
+        #endregion
+
+        #region Ctor
 
         public InstallDatabase(IDevPlatformFileProvider fileProvider, DevPlatformConfig config)
         {
             _fileProvider = fileProvider;
             _config = config;
         }
+        #endregion
 
         [HttpGet("install")]
         public string InstallDb()
