@@ -1,5 +1,7 @@
 ﻿using DevPlatform.Core.Domain.Portal;
 using DevPlatform.Domain.Common;
+using DevPlatform.Domain.Dto;
+using System.Collections.Generic;
 
 namespace DevPlatform.Business.Interfaces
 {
@@ -12,19 +14,19 @@ namespace DevPlatform.Business.Interfaces
         /// Inserts a post
         /// </summary>
         /// <param name="post"></param>
-        ResultModel InsertPost(Post post);
+        ResultModel Create(Post post);
 
         /// <summary>
         /// Deletes a post
         /// </summary>
         /// <param name="post"></param>
-        void DeletePost(Post post);
+        void Delete(Post post);
 
         /// <summary>
         /// Updates a post
         /// </summary>
         /// <param name="post"></param>
-        void UpdatePost(Post post);
+        void Update(Post post);
 
         /// <summary>
         /// Gets a post by id
@@ -32,5 +34,32 @@ namespace DevPlatform.Business.Interfaces
         /// <param name="postId"></param>
         /// <returns></returns>
         Post GetById(int postId);
+
+        /// <summary>
+        /// Returns a post as Dto by PostId
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        PostListDto GetByIdAsDto(int id);
+
+        /// <summary>
+        /// Returns the post lists
+        /// </summary>
+        /// <returns></returns>
+        IEnumerable<PostListDto> GetPostList();
+
+        /// <summary>
+        /// Returns posts of user by userId
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        IEnumerable<Post> GetUserPostsByUserId(int userId);
+
+        /// <summary>
+        /// Returns posts of user by userId with dto
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        IEnumerable<PostListDto> GetUserPostsWithDto(int userId);
     }
 }

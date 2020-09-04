@@ -40,17 +40,23 @@ namespace DevPlatform.Framework.Infrastructure
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public void Configure(IApplicationBuilder application)
         {
+            //used for environment
             application.UseDevPlatformEnvironment();
 
+            //used for exceptionhandler
             application.UseDevPlatformExceptionHandler();
 
+            //used for static files
             application.UseDevPlatformStaticFiles();
 
+            //used for authentication
             application.UseDevPlatformAuthentication();
 
+            //used for swagger
             application.UseDevPlatformSwagger();
 
-            application.UseAngular();          
+            //used for angular
+            application.UseAngular();
         }
 
         /// <summary>

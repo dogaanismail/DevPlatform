@@ -6,6 +6,6 @@
         public string MemberName { get; set; }
         public string ProfilePhotoUrl { get; set; }
 
-        //TODO
+        //TODO: GroupMember Details might be refactored.
     }
 }

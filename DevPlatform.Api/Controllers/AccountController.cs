@@ -9,6 +9,9 @@ using DevPlatform.Domain.Api;
 using DevPlatform.Domain.Common;
 using DevPlatform.Domain.Dto;
 using DevPlatform.Framework.Controllers;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -20,13 +23,15 @@ namespace DevPlatform.Api.Controllers
         private readonly ITokenService _tokenService;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly UserManager<AppUser> _userManager;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         public AccountController(ITokenService tokenService, SignInManager<AppUser> signInManager,
-            UserManager<AppUser> userManager)
+            UserManager<AppUser> userManager, IHttpContextAccessor httpContextAccessor)
         {
             _tokenService = tokenService;
             _signInManager = signInManager;
             _userManager = userManager;
+            _httpContextAccessor = httpContextAccessor;
         }
         #endregion
 
@@ -75,6 +80,7 @@ namespace DevPlatform.Api.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost("login")]
+        [AllowAnonymous]
         public async Task<JsonResult> Login([FromBody] LoginApiRequest model)
         {
             var user = _userManager.FindByNameAsync(model.UserName).Result;

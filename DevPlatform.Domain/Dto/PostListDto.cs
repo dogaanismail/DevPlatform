@@ -15,7 +15,7 @@ namespace DevPlatform.Domain.Dto
         public int? PostType { get; set; }
         public List<PostCommentListDto> Comments { get; set; }
 
-        //TODO
+        //TODO: PostLikes might be implemented here.
 
         //postLikes
     }
