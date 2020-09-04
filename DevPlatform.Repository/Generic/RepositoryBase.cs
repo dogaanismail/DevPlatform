@@ -1,5 +1,6 @@
 ﻿using DevPlatform.Core.Entities;
 using DevPlatform.Data;
+using DevPlatform.Repository.Extensions;
 using LinqToDB;
 using LinqToDB.Data;
 using System;
@@ -167,6 +168,60 @@ namespace DevPlatform.Repository.Generic
         public virtual void Truncate(bool resetIdentity = false)
         {
             _dataProvider.GetTable<TEntity>().Truncate(resetIdentity);
+        }
+
+        /// <summary>
+        /// Returns an entity with includes
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="includes"></param>
+        /// <returns></returns>
+        public TEntity GetById(int id, Func<IIncludable<TEntity>, IIncludable> includes = null)
+        {
+            var query = _dataProvider.GetTable<TEntity>().AsQueryable();
+
+            if (includes != null)
+                query = query.IncludeMultiple(includes);
+
+            return query.Where(x => x.Id == id).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Returns entities with includes
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="includes"></param>
+        /// <returns></returns>
+        public List<TEntity> GetList(Expression<Func<TEntity, bool>> filter = null, Func<IIncludable<TEntity>, IIncludable> includes = null)
+        {
+            var query = _dataProvider.GetTable<TEntity>().AsQueryable();
+
+            if (filter != null)
+                query = query.Where(filter);
+
+            if (includes != null)
+                query = query.IncludeMultiple(includes);
+
+            return query.ToList();
+        }
+
+        /// <summary>
+        /// Finds an entity and returns with includes
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="includes"></param>
+        /// <returns></returns>
+        public IQueryable<TEntity> Find(Expression<Func<TEntity, bool>> filter = null, Func<IIncludable<TEntity>, IIncludable> includes = null)
+        {
+            var query = _dataProvider.GetTable<TEntity>().AsQueryable();
+
+            if (filter != null)
+                query = query.Where(filter);
+
+            if (includes != null)
+                query = query.IncludeMultiple(includes);
+
+            return query;
         }
 
         #endregion

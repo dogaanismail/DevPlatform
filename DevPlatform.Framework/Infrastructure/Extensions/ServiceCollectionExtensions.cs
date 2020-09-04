@@ -12,8 +12,8 @@ using DevPlatform.LinqToDB.Identity;
 using FluentValidation;
 using LinqToDB;
 using LinqToDB.DataProvider.SqlServer;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -23,7 +23,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Net;
 
@@ -181,20 +181,28 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = true;
                 options.Password.RequireLowercase = false;
-
                 options.User.RequireUniqueEmail = true;
                 options.SignIn.RequireConfirmedEmail = false;
 
-                //TODO
+                //TODO: The identity might be configured.
                 //options.User.RequireUniqueEmail = true; 
                 //options.Lockout.MaxFailedAccessAttempts = 5;
                 //options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(3);
 
             }).AddLinqToDBStores<int, AppUserClaim, AppUserRole, AppUserLogin, AppUserToken, AppRoleClaim>(new
             IdentityConnectionFactory(new SqlServerDataProvider(ProviderName.SqlServer, SqlServerVersion.v2017), "SqlServerIdentity", DataSettingsManager.LoadSettings().ConnectionString))
+            .AddUserStore<LinqToDB.Identity.UserStore<int, AppUser, AppRole, AppUserClaim, AppUserRole, AppUserLogin, AppUserToken>>()
+            .AddUserManager<UserManager<AppUser>>()
+            .AddRoleManager<RoleManager<AppRole>>()
                 .AddDefaultTokenProviders();
 
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
+            services.AddAuthentication()
+             .AddCookie(options =>
+             {
+                 options.Cookie.Name = "Interop";
+                 options.DataProtectionProvider =
+                     DataProtectionProvider.Create(new DirectoryInfo("C:\\Github\\Identity\\artifacts"));
+             });
 
             // Uncomment the following lines to enable logging in with third party login providers
 
@@ -212,6 +220,6 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
             services.AddSingleton<IValidator<LoginApiRequest>, LoginApiRequestValidator>();
             //services.AddSingleton<IValidator<PostCreateApi>, PostCreateApiValidator>();
         }
-    
+
     }
 }

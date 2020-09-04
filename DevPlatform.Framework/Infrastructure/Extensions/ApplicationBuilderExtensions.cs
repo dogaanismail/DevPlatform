@@ -1,5 +1,4 @@
-﻿using DevPlatform.Core.Configuration;
-using DevPlatform.Core.Infrastructure;
+﻿using DevPlatform.Core.Infrastructure;
 using DevPlatform.Core.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -8,9 +7,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Net.Http.Headers;
 using Swashbuckle.AspNetCore.SwaggerUI;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DevPlatform.Framework.Infrastructure.Extensions
 {
@@ -121,20 +117,5 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
         {
             application.UseAuthentication();
         }
-
-        /// <summary>
-        /// Adds the authentication middleware, which enables authentication capabilities.
-        /// </summary>
-        /// <param name="application">Builder for configuring an application's request pipeline</param>
-        //public static void UseDevAuthentication(this IApplicationBuilder application)
-        //{
-        //    //check whether database is installed
-        //    if (!DataSettingsManager.DatabaseIsInstalled)
-        //        return;
-
-        //    application.UseMiddleware<AuthenticationMiddleware>();
-        //}
-
-
     }
 }

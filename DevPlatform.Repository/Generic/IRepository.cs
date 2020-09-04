@@ -23,6 +23,22 @@ namespace DevPlatform.Repository.Generic
         TEntity GetById(object id);
 
         /// <summary>
+        /// Get entity by identifier with include entities
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="includes"></param>
+        /// <returns></returns>
+        TEntity GetById(int id, Func<IIncludable<TEntity>, IIncludable> includes = null);
+
+        /// <summary>
+        /// Finds an entity and returns with includes
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="includes"></param>
+        /// <returns></returns>
+        IQueryable<TEntity> Find(Expression<Func<TEntity, bool>> filter = null, Func<IIncludable<TEntity>, IIncludable> includes = null);
+
+        /// <summary>
         /// Insert entity
         /// </summary>
         /// <param name="entity">Entity</param>
@@ -86,6 +102,14 @@ namespace DevPlatform.Repository.Generic
         /// </summary>
         /// <param name="resetIdentity">Performs reset identity column</param>
         void Truncate(bool resetIdentity = false);
+
+        /// <summary>
+        /// Returns entities with includes
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <param name="includes"></param>
+        /// <returns></returns>
+        List<TEntity> GetList(Expression<Func<TEntity, bool>> filter = null, Func<IIncludable<TEntity>, IIncludable> includes = null);
 
         #endregion
 

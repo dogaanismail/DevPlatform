@@ -19,9 +19,10 @@ namespace DevPlatform.Core.Domain.Identity
         public int? ModifiedBy { get; set; }
         public int? StatusId { get; set; }
 
-        //[ForeignKey("UserDetail")]
-        //public int DetailId { get; set; }
+        [Required]
+        [ForeignKey("UserDetail")]
+        public int DetailId { get; set; }
 
-        //public virtual AppUserDetail UserDetail { get; set; }
+        public virtual AppUserDetail UserDetail { get; set; }
     }
 }
