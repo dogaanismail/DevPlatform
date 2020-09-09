@@ -19,14 +19,19 @@ namespace DevPlatform.Data.Mapping.Builders.Identity
                 .WithColumn(nameof(AppUser.EmailConfirmed)).AsBoolean().Nullable()
                 .WithColumn(nameof(AppUser.PasswordHash)).AsString(int.MaxValue).Nullable()
                 .WithColumn(nameof(AppUser.SecurityStamp)).AsString(int.MaxValue).NotNullable()
-                .WithColumn(nameof(AppUser.ConcurrencyStamp)).AsString(int.MaxValue).NotNullable()
+                .WithColumn(nameof(AppUser.ConcurrencyStamp)).AsString(int.MaxValue).Nullable()
                 .WithColumn(nameof(AppUser.PhoneNumber)).AsString(int.MaxValue).Nullable()
                 .WithColumn(nameof(AppUser.PhoneNumberConfirmed)).AsBoolean().Nullable()
                 .WithColumn(nameof(AppUser.TwoFactorEnabled)).AsBoolean().Nullable()
                 .WithColumn(nameof(AppUser.LockoutEnd)).AsDateTimeOffset(7).Nullable()
                 .WithColumn(nameof(AppUser.LockoutEnabled)).AsBoolean().Nullable()
-                .WithColumn(nameof(AppUser.AccessFailedCount)).AsInt32().Nullable();
-                //.WithColumn(nameof(AppUser.DetailId)).AsInt32().Nullable().ForeignKey<AppUserDetail>(onDelete: Rule.None);
+                .WithColumn(nameof(AppUser.AccessFailedCount)).AsInt32().Nullable()
+                .WithColumn(nameof(AppUser.CreatedBy)).AsInt32().Nullable().ForeignKey<AppUser>(onDelete: Rule.None)
+                .WithColumn(nameof(AppUser.ModifiedBy)).AsInt32().Nullable().ForeignKey<AppUser>(onDelete: Rule.None)
+                .WithColumn(nameof(AppUser.CreatedDate)).AsDateTime().NotNullable()
+                .WithColumn(nameof(AppUser.ModifiedDate)).AsDateTime().Nullable()
+                .WithColumn(nameof(AppUser.StatusId)).AsInt32().Nullable()
+                .WithColumn(nameof(AppUser.DetailId)).AsInt32().NotNullable().ForeignKey<AppUserDetail>(onDelete: Rule.None);
         }
     }
 }

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DevPlatform.Api.Controllers
 {
     [ApiController]
-    public class InstallDatabase : BaseApiController
+    public class InstallDatabaseController : BaseApiController
     {
         #region Fields
         private readonly IDevPlatformFileProvider _fileProvider;
@@ -16,7 +16,7 @@ namespace DevPlatform.Api.Controllers
 
         #region Ctor
 
-        public InstallDatabase(IDevPlatformFileProvider fileProvider, DevPlatformConfig config)
+        public InstallDatabaseController(IDevPlatformFileProvider fileProvider, DevPlatformConfig config)
         {
             _fileProvider = fileProvider;
             _config = config;

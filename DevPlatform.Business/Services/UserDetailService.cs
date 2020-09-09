@@ -2,7 +2,9 @@
 using DevPlatform.Core.Domain.Identity;
 using DevPlatform.Domain.Common;
 using DevPlatform.Domain.Dto;
+using DevPlatform.Repository.Extensions;
 using DevPlatform.Repository.Generic;
+using LinqToDB;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -17,6 +19,7 @@ namespace DevPlatform.Business.Services
     {
         #region Fields
         private readonly IRepository<AppUserDetail> _appUserDetailRepository;
+        private readonly IRepository<AppUser> _appUserRepository;
         private readonly UserManager<AppUser> _userManager;
         private readonly IUserService _userService;
         private readonly IPostService _postService;
@@ -25,12 +28,13 @@ namespace DevPlatform.Business.Services
         #region Ctor
         public UserDetailService(IRepository<AppUserDetail> appUserDetailRepository,
             IUserService userService, IPostService postService,
-            UserManager<AppUser> userManager)
+            UserManager<AppUser> userManager, IRepository<AppUser> appUserRepository)
         {
             _appUserDetailRepository = appUserDetailRepository;
             _userService = userService;
             _postService = postService;
             _userManager = userManager;
+            _appUserRepository = appUserRepository;
         }
         #endregion
 
@@ -59,18 +63,19 @@ namespace DevPlatform.Business.Services
             if (string.IsNullOrEmpty(userName))
                 throw new ArgumentNullException(nameof(userName));
 
-            var appUser = _userManager.Users.Where(x => x.UserName == userName).Include(y => y.UserDetail).FirstOrDefaultAsync().Result;
+            var appUser = _appUserRepository.Table.LoadWith(t => t.UserDetail).LoadWith(p => p.UserPosts).FirstOrDefault(x => x.UserName == userName);
 
-            AppUserDetailDto postListDto = new AppUserDetailDto
+            AppUserDetailDto dto = new AppUserDetailDto
             {
                 Id = appUser.Id,
                 UserName = appUser.UserName,
-                UserPosts = _postService.GetUserPostsWithDto(appUser.Id),
-                CoverPhotoUrl = appUser.UserDetail.CoverPhotoPath ?? null,
-                ProfilePhotoUrl = appUser.UserDetail.ProfilePhotoPath ?? null,
-                RegisteredDate = appUser.CreatedDate
+                CoverPhotoUrl = appUser.UserDetail.CoverPhotoPath,
+                ProfilePhotoUrl = appUser.UserDetail.ProfilePhotoPath,
+                RegisteredDate = appUser.CreatedDate,
+                UserPosts = _postService.GetUserPostsWithDto(appUser.Id)
             };
-            return postListDto;
+
+            return dto;
         }
 
         /// <summary>
@@ -84,7 +89,7 @@ namespace DevPlatform.Business.Services
             if (detailDto == null)
                 throw new ArgumentNullException(nameof(detailDto));
 
-            var appUser = _userManager.Users.Where(x => x.UserName == detailDto.UserName).Include(y => y.UserDetail).FirstOrDefaultAsync().Result;
+            var appUser = _userManager.Users.Where(x => x.UserName == detailDto.UserName).Include(y => y.UserDetail).FirstOrDefault();
             var detail = appUser.UserDetail;
 
             detail.FirstName = detailDto.FirstName;

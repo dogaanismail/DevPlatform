@@ -34,8 +34,13 @@ namespace DevPlatform.Framework.Infrastructure
             //services will be implemented here
             builder.RegisterType<TokenService>().As<ITokenService>().InstancePerLifetimeScope();
             builder.RegisterType<PostService>().As<IPostService>().InstancePerLifetimeScope();
+            builder.RegisterType<PostImageService>().As<IPostImageService>().InstancePerLifetimeScope();
+            builder.RegisterType<PostVideoService>().As<IPostVideoService>().InstancePerLifetimeScope();
             builder.RegisterType<UserService>().As<IUserService>().InstancePerLifetimeScope();
-
+            builder.RegisterType<UserDetailService>().As<IUserDetailService>().InstancePerLifetimeScope();
+            builder.RegisterType<ChatService>().As<IChatService>().InstancePerLifetimeScope();
+            builder.RegisterType<ChatGroupUserService>().As<IChatGroupUserService>().InstancePerLifetimeScope();
+            builder.RegisterType<ChatGroupService>().As<IChatGroupService>().InstancePerLifetimeScope();
             builder.RegisterType<ActionContextAccessor>().As<IActionContextAccessor>().InstancePerLifetimeScope();
         }
 

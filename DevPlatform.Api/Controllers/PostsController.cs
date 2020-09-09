@@ -53,6 +53,7 @@ namespace DevPlatform.Api.Controllers
                 ResultModel postModel = _postService.Create(newPost);
 
                 var user = _userManager.FindByNameAsync(_httpContextAccessor.HttpContext.User.Identity.Name).Result;
+                //var posts = _postService.GetUserPostsByUserId(user.Id);
                 var appuser = _userManager.FindByIdAsync(user.Id.ToString()).Result;
 
                 return OkResponse(new PostListDto

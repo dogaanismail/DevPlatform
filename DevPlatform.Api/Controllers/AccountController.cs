@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Transactions;
+using DevPlatform.Business.Interfaces;
 using DevPlatform.Core.Domain.Identity;
 using DevPlatform.Core.Security;
 using DevPlatform.Domain.Api;
@@ -19,19 +20,23 @@ namespace DevPlatform.Api.Controllers
 {
     public class AccountController : BaseApiController
     {
-        #region Ctor
+        #region Fields
         private readonly ITokenService _tokenService;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly UserManager<AppUser> _userManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IUserDetailService _userDetailService;
+        #endregion
 
+        #region Ctor
         public AccountController(ITokenService tokenService, SignInManager<AppUser> signInManager,
-            UserManager<AppUser> userManager, IHttpContextAccessor httpContextAccessor)
+            UserManager<AppUser> userManager, IHttpContextAccessor httpContextAccessor, IUserDetailService userDetailService)
         {
             _tokenService = tokenService;
             _signInManager = signInManager;
             _userManager = userManager;
             _httpContextAccessor = httpContextAccessor;
+            _userDetailService = userDetailService;
         }
         #endregion
 
@@ -50,11 +55,24 @@ namespace DevPlatform.Api.Controllers
                     return BadResponse(ResultModel.Error("Repassword must match password"));
                 }
 
+                AppUserDetail appUserDetail = new AppUserDetail
+                {
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    ProfilePhotoPath = "http://placehold.it/300x300",
+                    CoverPhotoPath = "http://placehold.it/1030x360"
+                };
+                ResultModel resultModel = _userDetailService.Create(appUserDetail);
+                if (!resultModel.Status)
+                {
+                    return BadResponse(resultModel);
+                }
+
                 AppUser userEntity = new AppUser
                 {
                     UserName = model.UserName,
                     Email = model.Email,
-                    CreatedDate = DateTime.Now
+                    DetailId = appUserDetail.Id
                 };
 
                 IdentityResult result = await _userManager.CreateAsync(userEntity, model.Password);
@@ -62,6 +80,7 @@ namespace DevPlatform.Api.Controllers
                 {
                     Result.Status = false;
                     Result.Message = string.Join(",", result.Errors.Select(x => x.Description));
+
                     return BadResponse(Result);
                 }
                 return OkResponse(Result);
@@ -81,23 +100,22 @@ namespace DevPlatform.Api.Controllers
         /// <returns></returns>
         [HttpPost("login")]
         [AllowAnonymous]
-        public async Task<JsonResult> Login([FromBody] LoginApiRequest model)
+        public JsonResult Login([FromBody] LoginApiRequest model)
         {
-            var user = _userManager.FindByNameAsync(model.UserName).Result;
-
-            var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, false);
+            var result =  _signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, false).Result;
+            var user = _userDetailService.GetUserDetailByUserName(model.UserName);
             if (result.Succeeded)
             {
-                //var token = _tokenService.GenerateToken(new AppUserDto
-                //{
-                //    AppUserId = user.Id,
-                //    UserName = user.UserName,
-                //    CoverPhotoUrl = user.CoverPhotoUrl,
-                //    ProfilePhotoUrl = user.ProfilePhotoUrl,
-                //    UserPosts = user.UserPosts,
-                //    RegisteredDate = user.RegisteredDate
-                //});
-                return OkResponse(result);
+                var token = _tokenService.GenerateToken(new AppUserDto
+                {
+                    AppUserId = user.Id,
+                    UserName = user.UserName,
+                    CoverPhotoUrl = user.CoverPhotoUrl,
+                    ProfilePhotoUrl = user.ProfilePhotoUrl,
+                    UserPosts = user.UserPosts, //TODO: must be refactored.
+                    RegisteredDate = user.RegisteredDate
+                });
+                return OkResponse(token);
             }
             else
             {

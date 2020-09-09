@@ -6,15 +6,12 @@ using LinqToDB.Data;
 using LinqToDB.DataProvider;
 using LinqToDB.Mapping;
 using LinqToDB.Tools;
-using StackExchange.Profiling;
-using StackExchange.Profiling.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
+using LinqToDBConfigurations = LinqToDB.Common;
 
 namespace DevPlatform.Data
 {
@@ -97,6 +94,7 @@ namespace DevPlatform.Data
             if (!DataSettingsManager.DatabaseIsInstalled)
                 return dbConnection;
 
+            LinqToDBConfigurations.Configuration.Linq.AllowMultipleQuery = true;
             return dbConnection;
         }
 
