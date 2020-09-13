@@ -99,7 +99,7 @@ namespace DevPlatform.Api.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost("login")]
-        [AllowAnonymous]
+        [Authorize]
         public JsonResult Login([FromBody] LoginApiRequest model)
         {
             var result =  _signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, false).Result;

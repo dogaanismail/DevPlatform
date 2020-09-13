@@ -18,22 +18,22 @@ namespace DevPlatform.Data.Mapping
 
         public Dictionary<(Type, string), string> ColumnName => new Dictionary<(Type, string), string>
         {
-            { (typeof(Post), "CreatedBy"), "CreatedBy_Id" },
-            { (typeof(Post), "ModifiedBy"), "ModifiedBy_Id" },
-            { (typeof(PostComment), "CreatedBy"), "CreatedBy_Id" },
-            { (typeof(PostComment), "ModifiedBy"), "ModifiedBy_Id" },
-            { (typeof(PostImage), "CreatedBy"), "CreatedBy_Id" },
-            { (typeof(PostImage), "ModifiedBy"), "ModifiedBy_Id" },
-            { (typeof(PostVideo), "CreatedBy"), "CreatedBy_Id" },
-            { (typeof(PostVideo), "ModifiedBy"), "ModifiedBy_Id" },
-            { (typeof(Friend), "CreatedBy"), "CreatedBy_Id" },
-            { (typeof(Friend), "ModifiedBy"), "ModifiedBy_Id" },
-            { (typeof(FriendRequest), "CreatedBy"), "CreatedBy_Id" },
-            { (typeof(FriendRequest), "ModifiedBy"), "ModifiedBy_Id" },
-            { (typeof(ChatGroup), "CreatedBy"), "CreatedBy_Id" },
-            { (typeof(ChatGroup), "ModifiedBy"), "ModifiedBy_Id" },
-            { (typeof(ChatMessage), "CreatedBy"), "CreatedBy_Id" },
-            { (typeof(ChatMessage), "ModifiedBy"), "ModifiedBy_Id" }
+            //{ (typeof(Post), "CreatedBy"), "CreatedBy_Id" },
+            //{ (typeof(Post), "ModifiedBy"), "ModifiedBy_Id" },
+            //{ (typeof(PostComment), "CreatedBy"), "CreatedBy_Id" },
+            //{ (typeof(PostComment), "ModifiedBy"), "ModifiedBy_Id" },
+            //{ (typeof(PostImage), "CreatedBy"), "CreatedBy_Id" },
+            //{ (typeof(PostImage), "ModifiedBy"), "ModifiedBy_Id" },
+            //{ (typeof(PostVideo), "CreatedBy"), "CreatedBy_Id" },
+            //{ (typeof(PostVideo), "ModifiedBy"), "ModifiedBy_Id" },
+            //{ (typeof(Friend), "CreatedBy"), "CreatedBy_Id" },
+            //{ (typeof(Friend), "ModifiedBy"), "ModifiedBy_Id" },
+            //{ (typeof(FriendRequest), "CreatedBy"), "CreatedBy_Id" },
+            //{ (typeof(FriendRequest), "ModifiedBy"), "ModifiedBy_Id" },
+            //{ (typeof(ChatGroup), "CreatedBy"), "CreatedBy_Id" },
+            //{ (typeof(ChatGroup), "ModifiedBy"), "ModifiedBy_Id" },
+            //{ (typeof(ChatMessage), "CreatedBy"), "CreatedBy_Id" },
+            //{ (typeof(ChatMessage), "ModifiedBy"), "ModifiedBy_Id" }
         };
     }
 }

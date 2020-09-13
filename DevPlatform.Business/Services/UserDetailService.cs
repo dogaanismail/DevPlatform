@@ -6,9 +6,10 @@ using DevPlatform.Repository.Extensions;
 using DevPlatform.Repository.Generic;
 using LinqToDB;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
+using DevPlatform.LinqToDB.Include;
+
 
 namespace DevPlatform.Business.Services
 {

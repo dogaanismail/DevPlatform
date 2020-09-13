@@ -1,6 +1,8 @@
 ﻿using DevPlatform.Core.Domain.Identity;
+using LinqToDB.Mapping;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
+using LinqToDBAssociation = LinqToDB.Mapping;
 
 namespace DevPlatform.Core.Entities
 {
@@ -14,7 +16,7 @@ namespace DevPlatform.Core.Entities
         public DateTime CreatedDate { get; set; }
 
         [ForeignKey("ModifiedUser")]  //ModifiedUser can be used in AdminUI.
-        public int? ModifiedBy { get; set; }
+        public virtual int? ModifiedBy { get; set; }
 
         public DateTime? ModifiedDate { get; set; }
         public int? StatusId { get; set; } //This can be Enumerations.
@@ -24,7 +26,9 @@ namespace DevPlatform.Core.Entities
             CreatedDate = DateTime.Now;
         }
 
+
         public virtual AppUser CreatedUser { get; set; }
+
         public virtual AppUser ModifiedUser { get; set; }
     }
 }

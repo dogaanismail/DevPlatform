@@ -33,5 +33,6 @@ namespace DevPlatform.Data.Mapping.Builders.Identity
                 .WithColumn(nameof(AppUser.StatusId)).AsInt32().Nullable()
                 .WithColumn(nameof(AppUser.DetailId)).AsInt32().NotNullable().ForeignKey<AppUserDetail>(onDelete: Rule.None);
         }
+
     }
 }
