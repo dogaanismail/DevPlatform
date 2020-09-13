@@ -7,7 +7,7 @@ namespace DevPlatform.Business.Interfaces
     /// <summary>
     /// Post comment service interface
     /// </summary>
-    public interface IPostCommentService
+    public partial interface IPostCommentService
     {
         /// <summary>
         /// Creates post comments for a post.

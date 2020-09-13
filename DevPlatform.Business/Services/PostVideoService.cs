@@ -9,7 +9,7 @@ namespace DevPlatform.Business.Services
     /// <summary>
     /// Post video service
     /// </summary>
-    public class PostVideoService : IPostVideoService
+    public partial class PostVideoService : IPostVideoService
     {
         #region Fields
         private readonly IRepository<PostVideo> _postVideoRepository;

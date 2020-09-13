@@ -7,7 +7,7 @@ namespace DevPlatform.Business.Interfaces
     /// <summary>
     /// Chatgroup interface
     /// </summary>
-    public interface IChatGroupService
+    public partial interface IChatGroupService
     {
         /// <summary>
         /// Creates a chat group.

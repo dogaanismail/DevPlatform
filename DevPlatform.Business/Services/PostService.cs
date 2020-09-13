@@ -113,6 +113,7 @@ namespace DevPlatform.Business.Services
             };
 
             return postListDto;
+            //TODO must be reverted to LoadWith LinqToDB extension method
         }
 
         /// <summary>
@@ -145,7 +146,7 @@ namespace DevPlatform.Business.Services
                         PostId = y.PostId
                     }).ToList()
 
-                    //TODO
+                    //TODO must be reverted to LoadWith LinqToDB extension method
                 }).OrderByDescending(sa => sa.CreatedDate).AsEnumerable();
 
             return data;
@@ -162,6 +163,7 @@ namespace DevPlatform.Business.Services
             .Include(a => a.PostVideos).Include(b => b.PostComments)
             .ThenInclude(tr => tr.CreatedUser).ThenInclude(hg => hg.UserDetail)
             .Include(t => t.CreatedUser).ThenInclude(e => e.UserDetail)).ToList();
+            //TODO must be reverted to LoadWith LinqToDB extension method
         }
 
         /// <summary>
@@ -195,7 +197,7 @@ namespace DevPlatform.Business.Services
                       PostId = y.PostId
                   }).ToList()
 
-                  //TODO
+                  //TODO must be reverted to LoadWith LinqToDB extension method
               }).OrderByDescending(sa => sa.CreatedDate).AsEnumerable();
 
             return data;

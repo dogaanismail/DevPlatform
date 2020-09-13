@@ -7,7 +7,7 @@ namespace DevPlatform.Business.Interfaces
     /// <summary>
     /// User detail service interface
     /// </summary>
-    public interface IUserDetailService
+    public partial interface IUserDetailService
     {
         /// <summary>
         /// Creates a user detail

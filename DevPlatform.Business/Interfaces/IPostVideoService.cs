@@ -6,7 +6,7 @@ namespace DevPlatform.Business.Interfaces
     /// <summary>
     /// Post video service interface
     /// </summary>
-    public interface IPostVideoService
+    public partial interface IPostVideoService
     {
         /// <summary>
         /// Creates post videos for a post

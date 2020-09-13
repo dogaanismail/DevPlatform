@@ -16,7 +16,7 @@ namespace DevPlatform.Business.Services
     /// <summary>
     /// Chatgroup service
     /// </summary>
-    public class ChatGroupService : IChatGroupService
+    public partial class ChatGroupService : IChatGroupService
     {
         #region Fields
         private readonly IRepository<ChatMessage> _chatRepository;

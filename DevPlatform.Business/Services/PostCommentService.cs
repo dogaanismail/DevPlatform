@@ -11,7 +11,7 @@ namespace DevPlatform.Business.Services
     /// <summary>
     /// Post comment service
     /// </summary>
-    public class PostCommentService : IPostCommentService
+    public partial class PostCommentService : IPostCommentService
     {
         #region Fields
         private readonly IRepository<PostComment> _postCommentRepository;

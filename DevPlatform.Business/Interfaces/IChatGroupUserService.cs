@@ -5,7 +5,7 @@ namespace DevPlatform.Business.Interfaces
     /// <summary>
     /// Chatgroup user interface
     /// </summary>
-    public interface IChatGroupUserService
+    public partial interface IChatGroupUserService
     {
         /// <summary>
         /// Returns chat groups by user Id.

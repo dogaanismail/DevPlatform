@@ -7,7 +7,7 @@ namespace DevPlatform.Business.Interfaces
     /// <summary>
     /// Chat service interface
     /// </summary>
-    public interface IChatService
+    public partial interface IChatService
     {
         /// <summary>
         /// Returns all chat messages in the system.

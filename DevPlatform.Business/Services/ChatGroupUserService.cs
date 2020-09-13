@@ -7,7 +7,7 @@ namespace DevPlatform.Business.Services
     /// <summary>
     /// Chatgorup user service
     /// </summary>
-    public class ChatGroupUserService : IChatGroupUserService
+    public partial class ChatGroupUserService : IChatGroupUserService
     {
         public ResultModel GetChatGroupUsers(int userId)
         {

@@ -6,7 +6,7 @@ namespace DevPlatform.Business.Interfaces
     /// <summary>
     /// Post image service interface
     /// </summary>
-    public interface IPostImageService
+    public partial interface IPostImageService
     {
         /// <summary>
         /// Creates post images for a post

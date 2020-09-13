@@ -16,7 +16,7 @@ namespace DevPlatform.Business.Services
     /// <summary>
     /// User detail service
     /// </summary>
-    public class UserDetailService : IUserDetailService
+    public partial class UserDetailService : IUserDetailService
     {
         #region Fields
         private readonly IRepository<AppUserDetail> _appUserDetailRepository;

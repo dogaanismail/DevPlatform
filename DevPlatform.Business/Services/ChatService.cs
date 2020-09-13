@@ -13,7 +13,7 @@ namespace DevPlatform.Business.Services
     /// <summary>
     /// Chat service interface
     /// </summary>
-    public class ChatService : IChatService
+    public partial class ChatService : IChatService
     {
         #region Fields
         private readonly IRepository<ChatMessage> _chatRepository;

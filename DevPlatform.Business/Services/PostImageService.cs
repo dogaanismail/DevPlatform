@@ -9,7 +9,7 @@ namespace DevPlatform.Business.Services
     /// <summary>
     /// Post image service
     /// </summary>
-    public class PostImageService : IPostImageService
+    public partial class PostImageService : IPostImageService
     {
         #region Fields
         private readonly IRepository<PostImage> _postImageRepository;
