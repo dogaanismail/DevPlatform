@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DevPlatform.Core.Domain.Notification
 {
-    public class UserNotification : BaseEntity
+    public partial class UserNotification : BaseEntity
     {
         [MaxLength(150)]
         public string Title { get; set; }

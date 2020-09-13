@@ -1,20 +1,38 @@
-﻿using DevPlatform.Core.Entities;
-using DevPlatform.LinqToDB.Identity;
+﻿using DevPlatform.Core.Domain.Identity.Interfaces;
+using DevPlatform.Core.Entities;
 using LinqToDB.Mapping;
-using System;
 using System.ComponentModel.DataAnnotations;
+using System.Security.Claims;
 
 namespace DevPlatform.Core.Domain.Identity
 {
-    public class AppRoleClaim : IdentityRoleClaim<int>, IEntity
+    public class AppRoleClaim : BaseEntity, IAppRoleClaim
     {
         [Required, Identity]
         [Key]
-        public override int Id { get => base.Id; set => base.Id = value; }
-        public DateTime CreatedDate { get; set; }
-        public DateTime? ModifiedDate { get; set; }
-        public int? CreatedBy { get; set; }
-        public int? ModifiedBy { get; set; }
-        public int? StatusId { get; set; }
+        public new int Id { get; set; }
+
+        public int RoleId { get; set; }
+        public string ClaimType { get; set; }
+        public string ClaimValue { get; set; }
+
+        /// <summary>
+        /// Reads the type and value from the Claim.
+        /// </summary>
+        /// <param name="other"></param>
+        public void InitializeFromClaim(Claim other)
+        {
+            ClaimType = other.Type;
+            ClaimValue = other.Value;
+        }
+
+        /// <summary>
+        /// Converts the entity into a Claim instance.
+        /// </summary>
+        /// <returns></returns>
+        public Claim ToClaim()
+        {
+            return new Claim(ClaimType, ClaimValue);
+        }
     }
 }

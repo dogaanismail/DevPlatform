@@ -49,6 +49,5 @@ namespace DevPlatform.Core.Domain.Identity
 
         [MaxLength(50)]
         public string Designation { get; set; }
-
     }
 }

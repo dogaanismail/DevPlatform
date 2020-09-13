@@ -1,5 +1,4 @@
 ﻿using DevPlatform.Core.Domain.Identity;
-using LinqToDB.Mapping;
 using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using LinqToDBAssociation = LinqToDB.Mapping;
@@ -26,9 +25,10 @@ namespace DevPlatform.Core.Entities
             CreatedDate = DateTime.Now;
         }
 
-
+        [LinqToDBAssociation.Association(ThisKey = nameof(Id), OtherKey = nameof(AppUser.Id), CanBeNull = true)]
         public virtual AppUser CreatedUser { get; set; }
 
+        [LinqToDBAssociation.Association(ThisKey = nameof(Id), OtherKey = nameof(AppUser.Id), CanBeNull = true)]
         public virtual AppUser ModifiedUser { get; set; }
     }
 }
