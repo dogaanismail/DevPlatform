@@ -1,4 +1,6 @@
-﻿using DevPlatform.Core.Domain.Portal;
+﻿using DevPlatform.Core.Domain.Chat;
+using DevPlatform.Core.Domain.Identity.Interfaces;
+using DevPlatform.Core.Domain.Portal;
 using DevPlatform.Core.Entities;
 using LinqToDB.Mapping;
 using System;
@@ -39,5 +41,23 @@ namespace DevPlatform.Core.Domain.Identity
 
         [LinqToDBAssociation.Association(ThisKey = nameof(Id), OtherKey = nameof(Post.CreatedBy), CanBeNull = true)]
         public virtual IEnumerable<Post> UserPosts { get; set; }
+
+        [LinqToDBAssociation.Association(ThisKey = nameof(Id), OtherKey = nameof(PostComment.CreatedBy), CanBeNull = true)]
+        public virtual IEnumerable<PostComment> UserComments { get; set; }
+
+        [LinqToDBAssociation.Association(ThisKey = nameof(Id), OtherKey = nameof(PostImage.CreatedBy), CanBeNull = true)]
+        public virtual IEnumerable<PostImage> UserPostImages { get; set; }
+
+        [LinqToDBAssociation.Association(ThisKey = nameof(Id), OtherKey = nameof(PostVideo.CreatedBy), CanBeNull = true)]
+        public virtual IEnumerable<PostVideo> UserPostVideos { get; set; }
+
+        [LinqToDBAssociation.Association(ThisKey = nameof(Id), OtherKey = nameof(AppUserRole.UserId), CanBeNull = true)]
+        public virtual IEnumerable<AppUserRole> UserRoles { get; set; }
+
+        [LinqToDBAssociation.Association(ThisKey = nameof(Id), OtherKey = nameof(ChatMessage.CreatedBy), CanBeNull = true)]
+        public virtual IEnumerable<ChatMessage> UserMessages { get; set; }
+
+        [LinqToDBAssociation.Association(ThisKey = nameof(Id), OtherKey = nameof(ChatGroupUser.MemberId), CanBeNull = true)]
+        public virtual IEnumerable<ChatGroup> UserChatGroups { get; set; }
     }
 }

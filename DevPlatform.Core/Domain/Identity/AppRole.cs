@@ -1,21 +1,18 @@
-﻿using DevPlatform.Core.Entities;
-using DevPlatform.LinqToDB.Identity;
+﻿using DevPlatform.Core.Domain.Identity.Interfaces;
+using DevPlatform.Core.Entities;
 using LinqToDB.Mapping;
-using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace DevPlatform.Core.Domain.Identity
 {
-    public class AppRole : IdentityRole<int>, IEntity
+    public class AppRole : BaseEntity, IAppRole
     {
         [Required, Identity]
         [Key]
-        public override int Id { get => base.Id; set => base.Id = value; }
+        public new int Id { get; set; }
 
-        public DateTime CreatedDate { get; set; }
-        public DateTime? ModifiedDate { get; set; }
-        public int? CreatedBy { get; set; }
-        public int? ModifiedBy { get; set; }
-        public int? StatusId { get; set; }      
+        public string Name { get; set; }
+        public string NormalizedName { get; set; }
+        public string ConcurrencyStamp { get; set; }
     }
 }

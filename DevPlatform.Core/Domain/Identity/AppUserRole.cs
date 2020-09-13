@@ -1,21 +1,16 @@
-﻿using DevPlatform.Core.Entities;
-using DevPlatform.LinqToDB.Identity;
+﻿using DevPlatform.Core.Domain.Identity.Interfaces;
+using DevPlatform.Core.Entities;
 using LinqToDB.Mapping;
-using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace DevPlatform.Core.Domain.Identity
 {
-    public class AppUserRole : IdentityUserRole<int>, IEntity
+    public class AppUserRole : BaseEntity, IAppUserRole
     {
         [Required, Identity]
         [Key]
-        public int Id { get; set; }
-
-        public DateTime CreatedDate { get; set; }
-        public DateTime? ModifiedDate { get; set; }
-        public int? CreatedBy { get; set; }
-        public int? ModifiedBy { get; set; }
-        public int? StatusId { get; set; }
+        public new int Id { get; set; }
+        public int UserId { get; set; }
+        public int RoleId { get; set; }
     }
 }

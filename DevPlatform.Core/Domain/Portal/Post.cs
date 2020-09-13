@@ -1,9 +1,10 @@
 ﻿using DevPlatform.Core.Entities;
 using System.Collections.Generic;
+using LinqToDBAssociation = LinqToDB.Mapping;
 
 namespace DevPlatform.Core.Domain.Portal
 {
-    public class Post : BaseEntity
+    public partial class Post : BaseEntity
     {
         public Post()
         {
@@ -14,8 +15,13 @@ namespace DevPlatform.Core.Domain.Portal
         public string Text { get; set; }
         public int? PostType { get; set; }
 
+        [LinqToDBAssociation.Association(ThisKey = nameof(Id), OtherKey = nameof(PostComment.Id), CanBeNull = true)]
         public virtual ICollection<PostComment> PostComments { get; set; }
+
+        [LinqToDBAssociation.Association(ThisKey = nameof(Id), OtherKey = nameof(PostImage.Id), CanBeNull = true)]
         public virtual ICollection<PostImage> PostImages { get; set; }
+
+        [LinqToDBAssociation.Association(ThisKey = nameof(Id), OtherKey = nameof(PostVideo.Id), CanBeNull = true)]
         public virtual ICollection<PostVideo> PostVideos { get; set; }
     }
 }
