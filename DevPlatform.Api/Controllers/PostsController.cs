@@ -25,16 +25,19 @@ namespace DevPlatform.Api.Controllers
         private Cloudinary _cloudinary;
         private UserManager<AppUser> _userManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IPostImageService _postImageService;
         #endregion
 
         #region Ctor
         public PostsController(IPostService postService, CloudinaryConfig cloudinaryOptions,
-            UserManager<AppUser> userManager, IHttpContextAccessor httpContextAccessor)
+            UserManager<AppUser> userManager, IHttpContextAccessor httpContextAccessor,
+            IPostImageService postImageService)
         {
             _postService = postService;
             _cloudinaryOptions = cloudinaryOptions;
             _userManager = userManager;
             _httpContextAccessor = httpContextAccessor;
+            _postImageService = postImageService;
         }
         #endregion
 
@@ -50,11 +53,22 @@ namespace DevPlatform.Api.Controllers
                     PostType = (int)PostTypeEnum.PostImage,
                     CreatedBy = 1
                 };
+
                 ResultModel postModel = _postService.Create(newPost);
+
+                var newImage = new PostImage
+                {
+                    ImageUrl = "dfffff",
+                    PostId = newPost.Id
+                };
+
+                ResultModel dd = _postImageService.Create(newImage);
 
                 var user = _userManager.FindByNameAsync(_httpContextAccessor.HttpContext.User.Identity.Name).Result;
                 //var posts = _postService.GetUserPostsByUserId(user.Id);
                 var appuser = _userManager.FindByIdAsync(user.Id.ToString()).Result;
+
+                var ddd = _postService.GetUserPostsByUserId(appuser.Id);
 
                 return OkResponse(new PostListDto
                 {

@@ -101,7 +101,7 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
             application.UseSwagger();
             application.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "FriendFinder.Api V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "DevPlatform.Api V1");
                 c.DocumentTitle = "Title";
                 c.DisplayOperationId();
                 c.DocExpansion(DocExpansion.None);

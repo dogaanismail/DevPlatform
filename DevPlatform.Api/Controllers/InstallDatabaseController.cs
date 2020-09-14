@@ -27,7 +27,7 @@ namespace DevPlatform.Api.Controllers
         public string InstallDb()
         {
             var dataProvider = DataProviderManager.GetDataProvider(DataProviderType.SqlServer);
-            var connectionString = "Data Source=DESKTOP-B2VJH8F\\SQLEXPRESS;Initial Catalog=MyReleaseDB;Integrated Security=True";
+            var connectionString = "Data Source=DESKTOP-AOIN62U\\SQLEXPRESS;Initial Catalog=MyReleaseDB;Integrated Security=True";
             DataSettingsManager.SaveSettings(new DataSettings
             {
                 DataProvider = DataProviderType.SqlServer,

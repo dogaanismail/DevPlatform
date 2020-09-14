@@ -2,13 +2,11 @@
 using DevPlatform.Core.Domain.Identity;
 using DevPlatform.Domain.Common;
 using DevPlatform.Domain.Dto;
-using DevPlatform.Repository.Extensions;
 using DevPlatform.Repository.Generic;
 using LinqToDB;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Linq;
-using DevPlatform.LinqToDB.Include;
 
 
 namespace DevPlatform.Business.Services
@@ -90,7 +88,7 @@ namespace DevPlatform.Business.Services
             if (detailDto == null)
                 throw new ArgumentNullException(nameof(detailDto));
 
-            var appUser = _userManager.Users.Where(x => x.UserName == detailDto.UserName).Include(y => y.UserDetail).FirstOrDefault();
+            var appUser = _userManager.Users.Where(x => x.UserName == detailDto.UserName).LoadWith(y => y.UserDetail).FirstOrDefault();
             var detail = appUser.UserDetail;
 
             detail.FirstName = detailDto.FirstName;
