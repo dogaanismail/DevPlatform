@@ -114,7 +114,7 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
                                }));
 
             //Angular
-            services.AddSpaStaticFiles(configuration => { configuration.RootPath = "ClientApp/dist/"; });
+            services.AddSpaStaticFiles(configuration => { configuration.RootPath = "DevPlatformSpa/dist/"; });
 
             services.AddMvc(opt =>
             {
