@@ -1,1 +1,3 @@
-/* You can add global styles to this file, and also import other style files */
+@import "assets/css/bulma.css";
+@import "assets/css/app.css";
+@import "assets/css/core.css";
