@@ -1,7 +1,10 @@
 ﻿using DevPlatform.Business.Interfaces;
 using DevPlatform.Core.Domain.Identity;
+using DevPlatform.Repository.Generic;
+using LinqToDB;
 using Microsoft.AspNetCore.Identity;
 using System;
+using System.Linq;
 
 namespace DevPlatform.Business.Services
 {
@@ -12,12 +15,14 @@ namespace DevPlatform.Business.Services
     {
         #region Fields
         private readonly UserManager<AppUser> _userManager;
+        private readonly IRepository<AppUser> _appUserRepository;
         #endregion
 
         #region Ctor
-        public UserService(UserManager<AppUser> userManager)
+        public UserService(UserManager<AppUser> userManager, IRepository<AppUser> appUserRepository)
         {
             _userManager = userManager;
+            _appUserRepository = appUserRepository;
         }
         #endregion
 
@@ -59,7 +64,8 @@ namespace DevPlatform.Business.Services
             if (string.IsNullOrEmpty(email))
                 throw new ArgumentNullException(nameof(email));
 
-            return _userManager.FindByEmailAsync(email).Result;
+            return _appUserRepository.Table.LoadWith(detail => detail.UserDetail)
+                 .Where(x => x.Email == email).FirstOrDefault();
         }
 
         /// <summary>
@@ -69,7 +75,8 @@ namespace DevPlatform.Business.Services
         /// <returns></returns>
         public AppUser FindById(int id)
         {
-            return _userManager.FindByIdAsync(id.ToString()).Result;
+            return _appUserRepository.Table.LoadWith(detail => detail.UserDetail)
+                .Where(x => x.Id == id).FirstOrDefault();
         }
 
         /// <summary>
@@ -82,7 +89,8 @@ namespace DevPlatform.Business.Services
             if (string.IsNullOrEmpty(userName))
                 throw new ArgumentNullException(nameof(userName));
 
-            return _userManager.FindByNameAsync(userName).Result;
+            return _appUserRepository.Table.LoadWith(detail => detail.UserDetail)
+                .Where(x => x.UserName == userName).FirstOrDefault();
         }
 
         /// <summary>

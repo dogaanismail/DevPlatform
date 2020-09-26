@@ -54,7 +54,7 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
             services.ConfigureStartupConfig<HostingConfig>(configuration.GetSection("Hosting"));
 
             //add cloudinary configuration parameters
-            services.ConfigureStartupConfig<CloudinaryConfig>(configuration.GetSection("CloudinaryConfig"));
+            services.ConfigureStartupConfig<CloudinaryConfig>(configuration.GetSection("CloudinarySettings"));
 
             //add accessor to HttpContext
             services.AddHttpContextAccessor();

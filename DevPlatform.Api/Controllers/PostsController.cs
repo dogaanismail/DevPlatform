@@ -13,6 +13,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
+using System.Net;
+using CloudinaryDotNet.Actions;
+using DevPlatform.Common.Helpers;
 
 namespace DevPlatform.Api.Controllers
 {
@@ -24,20 +27,32 @@ namespace DevPlatform.Api.Controllers
         private CloudinaryConfig _cloudinaryOptions;
         private Cloudinary _cloudinary;
         private UserManager<AppUser> _userManager;
+        private readonly IUserService _userService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IPostImageService _postImageService;
+        private readonly IPostVideoService _postVideoService;
         #endregion
 
         #region Ctor
         public PostsController(IPostService postService, CloudinaryConfig cloudinaryOptions,
             UserManager<AppUser> userManager, IHttpContextAccessor httpContextAccessor,
-            IPostImageService postImageService)
+            IPostImageService postImageService, IPostVideoService postVideoService,
+            IUserService userService)
         {
             _postService = postService;
             _cloudinaryOptions = cloudinaryOptions;
             _userManager = userManager;
             _httpContextAccessor = httpContextAccessor;
             _postImageService = postImageService;
+            _postVideoService = postVideoService;
+            _userService = userService;
+
+            Account account = new Account(
+              _cloudinaryOptions.CloudName,
+              _cloudinaryOptions.ApiKey,
+              _cloudinaryOptions.ApiSecret);
+
+            _cloudinary = new Cloudinary(account);
         }
         #endregion
 
@@ -47,38 +62,140 @@ namespace DevPlatform.Api.Controllers
         {
             try
             {
+                if (string.IsNullOrEmpty(model.Text))
+                {
+                    Result.Status = false;
+                    Result.Message = "You can not add a post without writing text ! ";
+                    return BadResponse(Result);
+                }
+                var appUser = _userService.FindByUserName(User.Identity.Name);
+                if (appUser == null)
+
+                {
+                    return BadResponse(new ResultModel
+                    {
+                        Status = false,
+                        Message = "User not found !"
+                    });
+                }
+
+                bool hasImage = CheckItemType.HasItemImage(model);
+                bool hasVideo = CheckItemType.HasItemVideo(model);
+                var imageUploadResult = new ImageUploadResult();
+                var videoUploadResult = new VideoUploadResult();
+
+                #region CloudinaryProcess
+
+                #region ImageUploadingProcess
+                if (hasImage)
+                {
+                    using (var stream = model.Photo.OpenReadStream())
+                    {
+                        var uploadParams = new ImageUploadParams
+                        {
+                            File = new FileDescription(model.Photo.Name, stream)
+                        };
+
+                        imageUploadResult = _cloudinary.Upload(uploadParams);
+                        if (imageUploadResult.Error != null)
+                        {
+                            return BadResponse(ResultModel.Error("The upload process can not be done !"));
+                        }
+                    }
+                }
+                #endregion
+
+                #region VideoUploadingProcess
+
+                if (hasVideo)
+                {
+                    using (var stream = model.Video.OpenReadStream())
+                    {
+                        var uploadParams = new VideoUploadParams
+                        {
+                            File = new FileDescription(model.Video.Name, stream)
+                        };
+
+                        videoUploadResult = _cloudinary.Upload(uploadParams);
+                        if (videoUploadResult.Error != null)
+                        {
+                            return BadResponse(ResultModel.Error("The upload process can not be done !"));
+                        }
+                    }
+                }
+
+                #endregion
+
+                #endregion
+
+                #region CRUD
+
                 var newPost = new Post
                 {
                     Text = model.Text,
-                    PostType = (int)PostTypeEnum.PostImage,
-                    CreatedBy = 1
+                    PostType = hasImage == true ? (int)PostTypeEnum.PostImage
+                    : hasVideo == true ? (int)PostTypeEnum.PostVideo
+                    : (int)PostTypeEnum.PostText,
+                    CreatedBy = appUser.Id
                 };
-
                 ResultModel postModel = _postService.Create(newPost);
 
-                var newImage = new PostImage
+                if (!postModel.Status)
                 {
-                    ImageUrl = "dfffff",
-                    PostId = newPost.Id
-                };
+                    return BadResponse(ResultModel.Error("The upload process can not be done !"));
+                }
 
-                ResultModel dd = _postImageService.Create(newImage);
+                #region PostImages
+                if (imageUploadResult != null && imageUploadResult.StatusCode == HttpStatusCode.OK)
+                {
+                    var postImages = new PostImage
+                    {
+                        PostId = newPost.Id,
+                        ImageUrl = imageUploadResult.Url.ToString()
+                    };
+                    ResultModel postImageModel = _postImageService.Create(postImages);
 
-                var user = _userManager.FindByNameAsync(_httpContextAccessor.HttpContext.User.Identity.Name).Result;
-                //var posts = _postService.GetUserPostsByUserId(user.Id);
-                var appuser = _userManager.FindByIdAsync(user.Id.ToString()).Result;
+                    if (!postImageModel.Status)
+                    {
+                        return BadResponse(ResultModel.Error("The upload process can not be done !"));
+                    }
+                }
 
-                var ddd = _postService.GetUserPostsByUserId(appuser.Id);
+                #endregion
+
+                #region PostVideos
+
+                if (videoUploadResult != null && videoUploadResult.StatusCode == HttpStatusCode.OK)
+                {
+                    var postVideos = new PostVideo
+                    {
+                        PostId = newPost.Id,
+                        VideoUrl = videoUploadResult.Url.ToString()
+                    };
+                    ResultModel postVideoModel = _postVideoService.Create(postVideos);
+
+                    if (!postVideoModel.Status)
+                    {
+                        return BadResponse(ResultModel.Error("The upload process can not be done !"));
+                    }
+                }
+
+                #endregion
+
+                #endregion
+
+                //TODO
+                //There must be an integration that returns the last post that has just been createad.
 
                 return OkResponse(new PostListDto
                 {
                     Id = newPost.Id,
                     Text = newPost.Text,
-                    ImageUrl = "gdgdg",
-                    CreatedByUserName = "fdf",
-                    CreatedByUserPhoto = "sf",
+                    ImageUrl = imageUploadResult.Url?.ToString(),
+                    CreatedByUserName = appUser.UserName,
+                    CreatedByUserPhoto = appUser.UserDetail.ProfilePhotoPath,
                     CreatedDate = newPost.CreatedDate,
-                    VideoUrl = "fsf",
+                    VideoUrl = videoUploadResult.Url?.ToString(),
                     PostType = newPost.PostType,
                     Comments = null
                 });

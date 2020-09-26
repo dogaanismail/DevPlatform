@@ -86,9 +86,11 @@ namespace DevPlatform.Business.Services
         /// <returns></returns>
         public PostListDto GetByIdAsDto(int id)
         {
-            Post getPost = _postRepository.Table.LoadWith(x => x.PostImages)
-                .LoadWith(x => x.PostVideos).LoadWith(x => x.PostComments).ThenLoad(x => x.CreatedUser)
-                .ThenLoad(x => x.UserDetail).LoadWith(x => x.CreatedUser).ThenLoad(x => x.UserDetail).FirstOrDefault(y => y.Id == id);
+            Post getPost = _postRepository.Table.
+                LoadWith(x => x.PostImages)
+                .LoadWith(x => x.PostVideos)
+                .LoadWith(x => x.PostComments).ThenLoad(x => x.CreatedUser).ThenLoad(x => x.UserDetail)
+                .LoadWith(x => x.CreatedUser).ThenLoad(x => x.UserDetail).FirstOrDefault(y => y.Id == id);
 
             PostListDto postListDto = new PostListDto
             {
