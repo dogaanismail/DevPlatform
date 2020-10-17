@@ -40,6 +40,8 @@ namespace DevPlatform.Api.Controllers
         }
         #endregion
 
+        #region Methods
+
         /// <summary>
         /// Member Register
         /// </summary>
@@ -134,6 +136,6 @@ namespace DevPlatform.Api.Controllers
             return OkResponse(Result);
         }
 
-
+        #endregion
     }
 }

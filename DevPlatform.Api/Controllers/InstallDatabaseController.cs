@@ -23,6 +23,8 @@ namespace DevPlatform.Api.Controllers
         }
         #endregion
 
+        #region Methods
+
         [HttpGet("install")]
         public string InstallDb()
         {
@@ -40,5 +42,7 @@ namespace DevPlatform.Api.Controllers
 
             return null;
         }
+
+        #endregion
     }
 }

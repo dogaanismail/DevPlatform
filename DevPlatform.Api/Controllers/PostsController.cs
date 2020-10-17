@@ -56,6 +56,8 @@ namespace DevPlatform.Api.Controllers
         }
         #endregion
 
+        #region Methods
+
         [HttpPost("createpost")]
         [AllowAnonymous]
         public JsonResult CreatePost([FromForm] PostCreateApi model)
@@ -207,5 +209,7 @@ namespace DevPlatform.Api.Controllers
                 return BadResponse(Result);
             }
         }
+
+        #endregion
     }
 }
