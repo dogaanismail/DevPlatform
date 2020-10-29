@@ -12,5 +12,8 @@ namespace DevPlatform.Domain.Enumerations
 
         [Display(Name = "POSTTEXT")]
         PostText = 3,
+
+        [Display(Name = "POSTGIF")]
+        PostGif = 3,
     }
 }

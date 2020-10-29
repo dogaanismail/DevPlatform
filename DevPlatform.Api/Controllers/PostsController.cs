@@ -31,13 +31,18 @@ namespace DevPlatform.Api.Controllers
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IPostImageService _postImageService;
         private readonly IPostVideoService _postVideoService;
+        private readonly IPostCommentService _postCommentService;
         #endregion
 
         #region Ctor
-        public PostsController(IPostService postService, CloudinaryConfig cloudinaryOptions,
-            UserManager<AppUser> userManager, IHttpContextAccessor httpContextAccessor,
-            IPostImageService postImageService, IPostVideoService postVideoService,
-            IUserService userService)
+        public PostsController(IPostService postService,
+            CloudinaryConfig cloudinaryOptions,
+            UserManager<AppUser> userManager,
+            IHttpContextAccessor httpContextAccessor,
+            IPostImageService postImageService,
+            IPostVideoService postVideoService,
+            IUserService userService,
+            IPostCommentService postCommentService)
         {
             _postService = postService;
             _cloudinaryOptions = cloudinaryOptions;
@@ -46,6 +51,7 @@ namespace DevPlatform.Api.Controllers
             _postImageService = postImageService;
             _postVideoService = postVideoService;
             _userService = userService;
+            _postCommentService = postCommentService;
 
             Account account = new Account(
               _cloudinaryOptions.CloudName,
@@ -208,6 +214,76 @@ namespace DevPlatform.Api.Controllers
                 Result.Message = ex.ToString();
                 return BadResponse(Result);
             }
+        }
+
+        [HttpGet("postlist")]
+        [AllowAnonymous]
+        public JsonResult GetPostList()
+        {
+            var data = _postService.GetPostList();
+            return OkResponse(data);
+        }
+
+        [HttpPost("createcomment")]
+        [Authorize]
+        public JsonResult CreatePostComment([FromBody] PostCommentCreateApi model)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(model.Text))
+                {
+                    Result.Status = false;
+                    Result.Message = "Comment text can not be null ! ";
+                    return BadResponse(Result);
+                }
+                else
+                {
+                    var commentPost = _postService.GetById(model.PostId);
+                    var appUser = _userService.FindByUserName(User.Identity.Name);
+                    if (appUser == null)
+                    {
+                        return BadResponse(new ResultModel
+                        {
+                            Status = false,
+                            Message = "User not found ! "
+                        });
+                    }
+
+                    PostComment newComment = new PostComment
+                    {
+                        PostId = model.PostId,
+                        Text = model.Text,
+                        CreatedBy = appUser.Id
+                    };
+
+                    ResultModel result = _postCommentService.Create(newComment);
+                    if (result.Status)
+                    {
+                        return OkResponse(new PostCommentListDto
+                        {
+                            Text = newComment.Text,
+                            Id = newComment.Id,
+                            PostId = newComment.PostId,
+                            CreatedDate = newComment.CreatedDate,
+                            CreatedByUserName = appUser.UserName,
+                            CreatedByUserPhoto = appUser.UserDetail.ProfilePhotoPath
+                        });
+                    }
+                    else
+                    {
+                        Result.Status = false;
+                        Result.Message = "Comment could not be added ! ";
+                        return BadResponse(Result);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Result.Status = false;
+                Result.Message = ex.ToString();
+                return BadResponse(Result);
+            }
+
         }
 
         #endregion

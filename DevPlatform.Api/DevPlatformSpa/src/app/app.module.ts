@@ -1,3 +1,4 @@
+import { ProfileModule } from './components/profile/profile.module';
 import { NavbarComponent } from './components/shared/navbar/navbar-layout/navbar.component';
 import { TimelineModule } from './components/timeline/timeline.module';
 import { BrowserModule } from '@angular/platform-browser';
@@ -13,7 +14,8 @@ import { AppComponent } from './app.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    TimelineModule
+    TimelineModule,
+    ProfileModule
   ],
   providers: [],
   bootstrap: [AppComponent]
