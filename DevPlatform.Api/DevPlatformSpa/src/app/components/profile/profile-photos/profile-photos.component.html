@@ -1,0 +1,573 @@
+<div class="view-wrapper">
+
+  <!-- Container -->
+  <div class="container is-custom">
+
+    <!-- Profile page main wrapper -->
+    <div id="profile-photos" class="view-wrap is-headless">
+      <div class="columns is-multiline no-margin">
+        <!-- Left side column -->
+        <div class="column is-paddingless">
+          <!-- Timeline Header -->
+          <!-- html/partials/pages/profile/timeline/timeline-header.html -->
+          <div class="cover-bg">
+            <img class="cover-image" src="https://via.placeholder.com/1600x460" data-demo-src="assets/img/demo/bg/4.png"
+              alt="">
+            <div class="avatar">
+              <img id="user-avatar" class="avatar-image" src="https://via.placeholder.com/300x300"
+                data-demo-src="assets/img/avatars/jenna.png" alt="">
+              <div class="avatar-button">
+                <i data-feather="plus"></i>
+              </div>
+              <div class="pop-button is-far-left has-tooltip modal-trigger" data-modal="change-profile-pic-modal"
+                data-placement="right" data-title="Change profile picture">
+                <a class="inner">
+                  <i data-feather="camera"></i>
+                </a>
+              </div>
+              <div id="follow-pop" class="pop-button pop-shift is-left has-tooltip" data-placement="top"
+                data-title="Subscription">
+                <a class="inner">
+                  <i class="inactive-icon" data-feather="bell"></i>
+                  <i class="active-icon" data-feather="bell-off"></i>
+                </a>
+              </div>
+              <div id="invite-pop" class="pop-button pop-shift is-center has-tooltip" data-placement="top"
+                data-title="Relationship">
+                <a href="#" class="inner">
+                  <i class="inactive-icon" data-feather="plus"></i>
+                  <i class="active-icon" data-feather="minus"></i>
+                </a>
+              </div>
+              <div id="chat-pop" class="pop-button is-right has-tooltip" data-placement="top" data-title="Chat">
+                <a class="inner">
+                  <i data-feather="message-circle"></i>
+                </a>
+              </div>
+              <div class="pop-button is-far-right has-tooltip" data-placement="right" data-title="Send message">
+                <a href="messages-inbox.html" class="inner">
+                  <i data-feather="mail"></i>
+                </a>
+              </div>
+            </div>
+            <div class="cover-overlay"></div>
+            <div class="cover-edit modal-trigger" data-modal="change-cover-modal">
+              <i class="mdi mdi-camera"></i>
+              <span>Edit cover image</span>
+            </div>
+            <!--/html/partials/pages/profile/timeline/dropdowns/timeline-mobile-dropdown.html-->
+            <div
+              class="dropdown is-spaced is-right is-accent dropdown-trigger timeline-mobile-dropdown is-hidden-desktop">
+              <div>
+                <div class="button">
+                  <i data-feather="more-vertical"></i>
+                </div>
+              </div>
+              <div class="dropdown-menu" role="menu">
+                <div class="dropdown-content">
+                  <a href="/profile-main.html" class="dropdown-item">
+                    <div class="media">
+                      <i data-feather="activity"></i>
+                      <div class="media-content">
+                        <h3>Timeline</h3>
+                        <small>Open Timeline.</small>
+                      </div>
+                    </div>
+                  </a>
+                  <a href="/profile-about.html" class="dropdown-item">
+                    <div class="media">
+                      <i data-feather="align-right"></i>
+                      <div class="media-content">
+                        <h3>About</h3>
+                        <small>See about info.</small>
+                      </div>
+                    </div>
+                  </a>
+                  <a href="/profile-friends.html" class="dropdown-item">
+                    <div class="media">
+                      <i data-feather="heart"></i>
+                      <div class="media-content">
+                        <h3>Friends</h3>
+                        <small>See friends.</small>
+                      </div>
+                    </div>
+                  </a>
+                  <a href="/profile-photos.html" class="dropdown-item">
+                    <div class="media">
+                      <i data-feather="image"></i>
+                      <div class="media-content">
+                        <h3>Photos</h3>
+                        <small>See all photos.</small>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="profile-menu is-hidden-mobile">
+            <div class="menu-start">
+              <a href="profile-main.html" class="button has-min-width">Timeline</a>
+              <a href="profile-about.html" class="button has-min-width">About</a>
+            </div>
+            <div class="menu-end">
+              <a id="profile-friends-link" href="profile-friends.html" class="button has-min-width">Friends</a>
+              <a href="profile-photos.html" class="button has-min-width">Photos</a>
+            </div>
+          </div>
+
+          <div class="profile-subheader">
+            <div class="subheader-start is-hidden-mobile">
+              <span>3.4K</span>
+              <span>Friends</span>
+            </div>
+            <div class="subheader-middle">
+              <h2>Jenna Davis</h2>
+              <span>Media Influencer</span>
+            </div>
+            <div class="subheader-end is-hidden-mobile">
+              <a class="button has-icon is-bold">
+                <i data-feather="clock"></i>
+                History
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="columns">
+        <div class="column">
+          <div class="box-heading">
+            <div class="dropdown photos-dropdown is-spaced is-neutral dropdown-trigger">
+              <div>
+                <div class="button">
+                  <span>All Pictures</span>
+                  <i data-feather="chevron-down"></i>
+                </div>
+              </div>
+              <div class="dropdown-menu" role="menu">
+                <div class="dropdown-content">
+                  <a href="#" class="dropdown-item">
+                    <div class="media">
+                      <i data-feather="tag"></i>
+                      <div class="media-content">
+                        <h3>Tagged Photos</h3>
+                        <small>Photos whith this user tagged.</small>
+                      </div>
+                    </div>
+                  </a>
+                  <a class="dropdown-item">
+                    <div class="media">
+                      <i data-feather="clock"></i>
+                      <div class="media-content">
+                        <h3>Recent</h3>
+                        <small>View most recent photos.</small>
+                      </div>
+                    </div>
+                  </a>
+                  <a class="dropdown-item">
+                    <div class="media">
+                      <i data-feather="heart"></i>
+                      <div class="media-content">
+                        <h3>Popular</h3>
+                        <small>View popular photos.</small>
+                      </div>
+                    </div>
+                  </a>
+                  <a class="dropdown-item">
+                    <div class="media">
+                      <i data-feather="book-open"></i>
+                      <div class="media-content">
+                        <h3>Albums</h3>
+                        <small>See all albums.</small>
+                      </div>
+                    </div>
+                  </a>
+                  <hr class="dropdown-divider">
+                  <a class="dropdown-item modal-trigger" data-modal="albums-modal">
+                                      <div class=" media">
+                    <i data-feather="plus"></i>
+                    <div class="media-content">
+                      <h3>Add Photos</h3>
+                      <small>Upload pictures.</small>
+                    </div>
+                </div>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="button-wrap">
+            <button type="button" class="button is-active">Recent</button>
+            <button type="button" class="button">Albums</button>
+          </div>
+        </div>
+
+        <div class="image-grid-wrap">
+          <div class="image-grid">
+
+            <!--Grid Row-->
+            <div class="image-row">
+              <!--Photo-->
+              <div class="flex-1 has-background-image" data-background="https://via.placeholder.com/1600x900"
+                data-demo-background="assets/img/demo/unsplash/3.jpg">
+                <div class="overlay"></div>
+                <div class="image-owner">
+                  <img class="avatar" src="https://via.placeholder.com/150x150"
+                    data-demo-src="assets/img/avatars/jenna.png" alt="">
+                  <div class="name">Jenna Davis</div>
+                </div>
+                <div class="photo-time">Aug 23, 2019</div>
+                <a class="photo-like">
+                  <div class="inner">
+                    <div class="like-overlay"></div>
+                    <i data-feather="heart"></i>
+                  </div>
+                </a>
+              </div>
+              <!--Photo-->
+              <div class="flex-1 has-background-image" data-background="https://via.placeholder.com/1600x900"
+                data-demo-background="assets/img/demo/unsplash/8.jpg">
+                <div class="overlay"></div>
+                <div class="image-owner">
+                  <img class="avatar" src="https://via.placeholder.com/150x150"
+                    data-demo-src="assets/img/avatars/stella.jpg" alt="">
+                  <div class="name">Stella Bergmann</div>
+                </div>
+                <div class="photo-time">Aug 19, 2019</div>
+                <a class="photo-like is-liked">
+                  <div class="inner">
+                    <div class="like-overlay"></div>
+                    <i data-feather="heart"></i>
+                  </div>
+                </a>
+              </div>
+              <!--Photo-->
+              <div class="flex-2 has-background-image" data-background="https://via.placeholder.com/1600x900"
+                data-demo-background="assets/img/demo/unsplash/4.jpg">
+                <div class="overlay"></div>
+                <div class="image-owner">
+                  <img class="avatar" src="https://via.placeholder.com/150x150"
+                    data-demo-src="assets/img/avatars/dan.jpg" alt="">
+                  <div class="name">Dan Walker</div>
+                </div>
+                <div class="photo-time">Aug 17, 2019</div>
+                <a class="photo-like is-liked">
+                  <div class="inner">
+                    <div class="like-overlay"></div>
+                    <i data-feather="heart"></i>
+                  </div>
+                </a>
+              </div>
+            </div>
+
+            <!--Grid Row-->
+            <div class="image-row">
+              <!--Photo-->
+              <div class="flex-1 has-background-image" data-background="https://via.placeholder.com/1600x900"
+                data-demo-background="assets/img/demo/unsplash/17.jpg">
+                <div class="overlay"></div>
+                <div class="image-owner">
+                  <img class="avatar" src="https://via.placeholder.com/150x150"
+                    data-demo-src="assets/img/avatars/jenna.png" alt="">
+                  <div class="name">Jenna Davis</div>
+                </div>
+                <div class="photo-time">Aug 15, 2019</div>
+                <a class="photo-like">
+                  <div class="inner">
+                    <div class="like-overlay"></div>
+                    <i data-feather="heart"></i>
+                  </div>
+                </a>
+              </div>
+              <!--Photo-->
+              <div class="flex-2 has-background-image" data-background="https://via.placeholder.com/1600x900"
+                data-demo-background="assets/img/demo/unsplash/14.jpg">
+                <div class="overlay"></div>
+                <div class="image-owner">
+                  <img class="avatar" src="https://via.placeholder.com/150x150"
+                    data-demo-src="assets/img/avatars/jenna.png" alt="">
+                  <div class="name">Jenna Davis</div>
+                </div>
+                <div class="photo-time">Aug 12, 2019</div>
+                <a class="photo-like">
+                  <div class="inner">
+                    <div class="like-overlay"></div>
+                    <i data-feather="heart"></i>
+                  </div>
+                </a>
+              </div>
+            </div>
+
+            <!--Grid Row-->
+            <div class="image-row">
+              <!--Photo-->
+              <div class="flex-2 has-background-image" data-background="https://via.placeholder.com/1600x900"
+                data-demo-background="assets/img/demo/unsplash/24.jpg">
+                <div class="overlay"></div>
+                <div class="image-owner">
+                  <img class="avatar" src="https://via.placeholder.com/150x150"
+                    data-demo-src="assets/img/avatars/jenna.png" alt="">
+                  <div class="name">Jenna Davis</div>
+                </div>
+                <div class="photo-time">Aug 12, 2019</div>
+                <a class="photo-like">
+                  <div class="inner">
+                    <div class="like-overlay"></div>
+                    <i data-feather="heart"></i>
+                  </div>
+                </a>
+              </div>
+              <!--Photo-->
+              <div class="flex-3 has-background-image" data-background="https://via.placeholder.com/1600x900"
+                data-demo-background="assets/img/demo/unsplash/20.jpg">
+                <div class="overlay"></div>
+                <div class="image-owner">
+                  <img class="avatar" src="https://via.placeholder.com/150x150"
+                    data-demo-src="assets/img/avatars/jenna.png" alt="">
+                  <div class="name">Jenna Davis</div>
+                </div>
+                <div class="photo-time">Aug 11, 2019</div>
+                <a class="photo-like">
+                  <div class="inner">
+                    <div class="like-overlay"></div>
+                    <i data-feather="heart"></i>
+                  </div>
+                </a>
+              </div>
+              <!--Photo-->
+              <div class="flex-2 has-background-image" data-background="https://via.placeholder.com/1600x900"
+                data-demo-background="assets/img/demo/unsplash/23.jpg">
+                <div class="overlay"></div>
+                <div class="image-owner">
+                  <img class="avatar" src="https://via.placeholder.com/150x150"
+                    data-demo-src="assets/img/avatars/jenna.png" alt="">
+                  <div class="name">Jenna Davis</div>
+                </div>
+                <div class="photo-time">Aug 09, 2019</div>
+                <a class="photo-like">
+                  <div class="inner">
+                    <div class="like-overlay"></div>
+                    <i data-feather="heart"></i>
+                  </div>
+                </a>
+              </div>
+            </div>
+
+            <!--Grid Row-->
+            <div class="image-row">
+              <div class="flex-1 has-background-image" data-background="https://via.placeholder.com/1600x900"
+                data-demo-background="assets/img/demo/unsplash/21.jpg">
+                <div class="overlay"></div>
+                <div class="image-owner">
+                  <img class="avatar" src="https://via.placeholder.com/150x150"
+                    data-demo-src="assets/img/avatars/milly.jpg" alt="">
+                  <div class="name">Milly Augustine</div>
+                </div>
+                <div class="photo-time">Aug 06, 2019</div>
+                <a class="photo-like is-liked">
+                  <div class="inner">
+                    <div class="like-overlay"></div>
+                    <i data-feather="heart"></i>
+                  </div>
+                </a>
+              </div>
+              <div class="flex-1 has-background-image" data-background="https://via.placeholder.com/1600x900"
+                data-demo-background="assets/img/demo/unsplash/28.jpg">
+                <div class="overlay"></div>
+                <div class="image-owner">
+                  <img class="avatar" src="https://via.placeholder.com/150x150"
+                    data-demo-src="assets/img/avatars/stella.jpg" alt="">
+                  <div class="name">Stella Bergmann</div>
+                </div>
+                <div class="photo-time">Aug 04, 2019</div>
+                <a class="photo-like is-liked">
+                  <div class="inner">
+                    <div class="like-overlay"></div>
+                    <i data-feather="heart"></i>
+                  </div>
+                </a>
+              </div>
+              <div class="flex-1 has-background-image" data-background="https://via.placeholder.com/1600x900"
+                data-demo-background="assets/img/demo/unsplash/35.jpg">
+                <div class="overlay"></div>
+                <div class="image-owner">
+                  <img class="avatar" src="https://via.placeholder.com/150x150"
+                    data-demo-src="assets/img/avatars/elise.jpg" alt="">
+                  <div class="name">Elise Walker</div>
+                </div>
+                <div class="photo-time">Aug 02, 2019</div>
+                <a class="photo-like is-liked">
+                  <div class="inner">
+                    <div class="like-overlay"></div>
+                    <i data-feather="heart"></i>
+                  </div>
+                </a>
+              </div>
+            </div>
+
+            <!--Grid Row-->
+            <div class="image-row">
+              <!--Photo-->
+              <div class="flex-2 has-background-image" data-background="https://via.placeholder.com/1600x900"
+                data-demo-background="assets/img/demo/unsplash/37.jpg">
+                <div class="overlay"></div>
+                <div class="image-owner">
+                  <img class="avatar" src="https://via.placeholder.com/150x150"
+                    data-demo-src="assets/img/avatars/jenna.png" alt="">
+                  <div class="name">Jenna Davis</div>
+                </div>
+                <div class="photo-time">Jul 29, 2019</div>
+                <a class="photo-like">
+                  <div class="inner">
+                    <div class="like-overlay"></div>
+                    <i data-feather="heart"></i>
+                  </div>
+                </a>
+              </div>
+              <!--Photo-->
+              <div class="flex-1 has-background-image" data-background="https://via.placeholder.com/1600x900"
+                data-demo-background="assets/img/demo/unsplash/32.jpg">
+                <div class="overlay"></div>
+                <div class="image-owner">
+                  <img class="avatar" src="https://via.placeholder.com/150x150"
+                    data-demo-src="assets/img/avatars/jenna.png" alt="">
+                  <div class="name">Jenna Davis</div>
+                </div>
+                <div class="photo-time">Jul 26, 2019</div>
+                <a class="photo-like">
+                  <div class="inner">
+                    <div class="like-overlay"></div>
+                    <i data-feather="heart"></i>
+                  </div>
+                </a>
+              </div>
+            </div>
+
+            <!--Grid Row-->
+            <div class="image-row">
+              <!--Photo-->
+              <div class="flex-2 has-background-image" data-background="https://via.placeholder.com/1600x900"
+                data-demo-background="assets/img/demo/unsplash/18.jpg">
+                <div class="overlay"></div>
+                <div class="image-owner">
+                  <img class="avatar" src="https://via.placeholder.com/150x150"
+                    data-demo-src="assets/img/avatars/jenna.png" alt="">
+                  <div class="name">Jenna Davis</div>
+                </div>
+                <div class="photo-time">Jul 24, 2019</div>
+                <a class="photo-like">
+                  <div class="inner">
+                    <div class="like-overlay"></div>
+                    <i data-feather="heart"></i>
+                  </div>
+                </a>
+              </div>
+              <!--Photo-->
+              <div class="flex-3 has-background-image" data-background="https://via.placeholder.com/1600x900"
+                data-demo-background="assets/img/demo/unsplash/19.jpg">
+                <div class="overlay"></div>
+                <div class="image-owner">
+                  <img class="avatar" src="https://via.placeholder.com/150x150"
+                    data-demo-src="assets/img/avatars/jenna.png" alt="">
+                  <div class="name">Jenna Davis</div>
+                </div>
+                <div class="photo-time">Jul 23, 2019</div>
+                <a class="photo-like">
+                  <div class="inner">
+                    <div class="like-overlay"></div>
+                    <i data-feather="heart"></i>
+                  </div>
+                </a>
+              </div>
+              <!--Photo-->
+              <div class="flex-2 has-background-image" data-background="https://via.placeholder.com/1600x900"
+                data-demo-background="assets/img/demo/unsplash/38.jpg">
+                <div class="overlay"></div>
+                <div class="image-owner">
+                  <img class="avatar" src="https://via.placeholder.com/150x150"
+                    data-demo-src="assets/img/avatars/jenna.png" alt="">
+                  <div class="name">Jenna Davis</div>
+                </div>
+                <div class="photo-time">Jul 21, 2019</div>
+                <a class="photo-like">
+                  <div class="inner">
+                    <div class="like-overlay"></div>
+                    <i data-feather="heart"></i>
+                  </div>
+                </a>
+              </div>
+            </div>
+
+            <!--Grid Row-->
+            <div class="image-row">
+              <!--Photo-->
+              <div class="flex-2 has-background-image" data-background="https://via.placeholder.com/1600x900"
+                data-demo-background="assets/img/demo/unsplash/22.jpg">
+                <div class="overlay"></div>
+                <div class="image-owner">
+                  <img class="avatar" src="https://via.placeholder.com/150x150"
+                    data-demo-src="assets/img/avatars/dan.jpg" alt="">
+                  <div class="name">Dan Walker</div>
+                </div>
+                <div class="photo-time">Jul 19, 2019</div>
+                <a class="photo-like is-liked">
+                  <div class="inner">
+                    <div class="like-overlay"></div>
+                    <i data-feather="heart"></i>
+                  </div>
+                </a>
+              </div>
+              <!--Photo-->
+              <div class="flex-1 has-background-image" data-background="https://via.placeholder.com/1600x900"
+                data-demo-background="assets/img/demo/unsplash/27.jpg">
+                <div class="overlay"></div>
+                <div class="image-owner">
+                  <img class="avatar" src="https://via.placeholder.com/150x150"
+                    data-demo-src="assets/img/avatars/jenna.png" alt="">
+                  <div class="name">Jenna Davis</div>
+                </div>
+                <div class="photo-time">Jul 19, 2019</div>
+                <a class="photo-like">
+                  <div class="inner">
+                    <div class="like-overlay"></div>
+                    <i data-feather="heart"></i>
+                  </div>
+                </a>
+              </div>
+              <!--Photo-->
+              <div class="flex-1 has-background-image" data-background="https://via.placeholder.com/1600x900"
+                data-demo-background="assets/img/demo/unsplash/34.jpg">
+                <div class="overlay"></div>
+                <div class="image-owner">
+                  <img class="avatar" src="https://via.placeholder.com/150x150"
+                    data-demo-src="assets/img/avatars/stella.jpg" alt="">
+                  <div class="name">Stella Bergmann</div>
+                </div>
+                <div class="photo-time">Jul 17, 2019</div>
+                <a class="photo-like is-liked">
+                  <div class="inner">
+                    <div class="like-overlay"></div>
+                    <i data-feather="heart"></i>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Load more photos -->
+          <div class=" load-more-wrap has-text-centered">
+            <a href="#" class="load-more-button">Load More</a>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+</div>

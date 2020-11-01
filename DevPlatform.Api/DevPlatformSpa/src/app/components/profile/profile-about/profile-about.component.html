@@ -1,0 +1,1327 @@
+<div class="view-wrapper">
+
+  <!-- Container -->
+  <div class="container is-custom">
+
+    <!-- Profile page main wrapper -->
+    <div id="profile-about" class="view-wrap is-headless">
+      <div class="columns is-multiline no-margin">
+        <!-- Left side column -->
+        <div class="column is-paddingless">
+          <!-- Timeline Header -->
+          <div class="cover-bg">
+            <img class="cover-image" src="https://via.placeholder.com/1600x460" data-demo-src="assets/img/demo/bg/4.png"
+              alt="">
+            <div class="avatar">
+              <img id="user-avatar" class="avatar-image" src="https://via.placeholder.com/300x300"
+                data-demo-src="assets/img/avatars/jenna.png" alt="">
+              <div class="avatar-button">
+                <i data-feather="plus"></i>
+              </div>
+              <div class="pop-button is-far-left has-tooltip modal-trigger" data-modal="change-profile-pic-modal"
+                data-placement="right" data-title="Change profile picture">
+                <a class="inner">
+                  <i data-feather="camera"></i>
+                </a>
+              </div>
+              <div id="follow-pop" class="pop-button pop-shift is-left has-tooltip" data-placement="top"
+                data-title="Subscription">
+                <a class="inner">
+                  <i class="inactive-icon" data-feather="bell"></i>
+                  <i class="active-icon" data-feather="bell-off"></i>
+                </a>
+              </div>
+              <div id="invite-pop" class="pop-button pop-shift is-center has-tooltip" data-placement="top"
+                data-title="Relationship">
+                <a href="#" class="inner">
+                  <i class="inactive-icon" data-feather="plus"></i>
+                  <i class="active-icon" data-feather="minus"></i>
+                </a>
+              </div>
+              <div id="chat-pop" class="pop-button is-right has-tooltip" data-placement="top" data-title="Chat">
+                <a class="inner">
+                  <i data-feather="message-circle"></i>
+                </a>
+              </div>
+              <div class="pop-button is-far-right has-tooltip" data-placement="right" data-title="Send message">
+                <a href="messages-inbox.html" class="inner">
+                  <i data-feather="mail"></i>
+                </a>
+              </div>
+            </div>
+            <div class="cover-overlay"></div>
+            <div class="cover-edit modal-trigger" data-modal="change-cover-modal">
+              <i class="mdi mdi-camera"></i>
+              <span>Edit cover image</span>
+            </div>
+            <!--/html/partials/pages/profile/timeline/dropdowns/timeline-mobile-dropdown.html-->
+            <div
+              class="dropdown is-spaced is-right is-accent dropdown-trigger timeline-mobile-dropdown is-hidden-desktop">
+              <div>
+                <div class="button">
+                  <i data-feather="more-vertical"></i>
+                </div>
+              </div>
+              <div class="dropdown-menu" role="menu">
+                <div class="dropdown-content">
+                  <a href="/profile-main.html" class="dropdown-item">
+                    <div class="media">
+                      <i data-feather="activity"></i>
+                      <div class="media-content">
+                        <h3>Timeline</h3>
+                        <small>Open Timeline.</small>
+                      </div>
+                    </div>
+                  </a>
+                  <a href="/profile-about.html" class="dropdown-item">
+                    <div class="media">
+                      <i data-feather="align-right"></i>
+                      <div class="media-content">
+                        <h3>About</h3>
+                        <small>See about info.</small>
+                      </div>
+                    </div>
+                  </a>
+                  <a href="/profile-friends.html" class="dropdown-item">
+                    <div class="media">
+                      <i data-feather="heart"></i>
+                      <div class="media-content">
+                        <h3>Friends</h3>
+                        <small>See friends.</small>
+                      </div>
+                    </div>
+                  </a>
+                  <a href="/profile-photos.html" class="dropdown-item">
+                    <div class="media">
+                      <i data-feather="image"></i>
+                      <div class="media-content">
+                        <h3>Photos</h3>
+                        <small>See all photos.</small>
+                      </div>
+                    </div>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="profile-menu is-hidden-mobile">
+            <div class="menu-start">
+              <a href="profile-main.html" class="button has-min-width">Timeline</a>
+              <a href="profile-about.html" class="button has-min-width">About</a>
+            </div>
+            <div class="menu-end">
+              <a id="profile-friends-link" href="profile-friends.html" class="button has-min-width">Friends</a>
+              <a href="profile-photos.html" class="button has-min-width">Photos</a>
+            </div>
+          </div>
+
+          <div class="profile-subheader">
+            <div class="subheader-start is-hidden-mobile">
+              <span>3.4K</span>
+              <span>Friends</span>
+            </div>
+            <div class="subheader-middle">
+              <h2>Jenna Davis</h2>
+              <span>Media Influencer</span>
+            </div>
+            <div class="subheader-end is-hidden-mobile">
+              <a class="button has-icon is-bold">
+                <i data-feather="clock"></i>
+                History
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="column">
+
+        <!-- About sections -->
+        <div class="profile-about side-menu">
+          <div class="left-menu">
+            <div class="left-menu-inner">
+              <div class="menu-item is-active" data-content="overview-content">
+                <div class="menu-icon">
+                  <i class="mdi mdi-progress-check"></i>
+                  <span>Overview</span>
+                </div>
+              </div>
+              <div class="menu-item" data-content="personal-content">
+                <div class="menu-icon">
+                  <i class="mdi mdi-apps"></i>
+                  <span>Personal Info</span>
+                </div>
+              </div>
+              <div class="menu-item" data-content="education-content">
+                <div class="menu-icon">
+                  <i class="mdi mdi-school"></i>
+                  <span>Education</span>
+                </div>
+              </div>
+              <div class="menu-item" data-content="job-content">
+                <div class="menu-icon">
+                  <i class="mdi mdi-briefcase-plus"></i>
+                  <span>Jobs</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="right-content">
+            <div id="overview-content" class="content-section is-active">
+              <div class="columns">
+                <div class="column">
+                  <!-- Work block -->
+                  <div class="flex-block">
+                    <img src="https://via.placeholder.com/400x400" data-demo-src="assets/img/icons/logos/slicer.svg"
+                      alt="" data-page-popover="4">
+                    <div class="flex-block-meta">
+                      <span>Works at <a>Slicer</a></span>
+                      <a class="action-link">Edit your professional info</a>
+                    </div>
+                    <div class="go-button">
+                      <i data-feather="arrow-right"></i>
+                    </div>
+                  </div>
+                  <!-- Education block -->
+                  <div class="flex-block">
+                    <img src="https://via.placeholder.com/400x400" data-demo-src="assets/img/icons/logos/brent.svg"
+                      alt="" data-page-popover="6">
+                    <div class="flex-block-meta">
+                      <span>Studied at <a>Brent University</a></span>
+                      <a class="action-link">Edit your education info</a>
+                    </div>
+                    <div class="go-button">
+                      <i data-feather="arrow-right"></i>
+                    </div>
+                  </div>
+                  <!-- Location block -->
+                  <div class="flex-block">
+                    <img src="https://via.placeholder.com/400x400" data-demo-src="assets/img/icons/logos/la.svg" alt=""
+                      data-page-popover="8">
+                    <div class="flex-block-meta">
+                      <span>Lives in <a>Los Angeles, CA</a></span>
+                      <a class="action-link">Edit your location</a>
+                    </div>
+                    <div class="go-button">
+                      <i data-feather="arrow-right"></i>
+                    </div>
+                  </div>
+                  <!-- Family block -->
+                  <div class="flex-block">
+                    <img src="https://via.placeholder.com/300x300" data-demo-src="assets/img/avatars/dan.jpg"
+                      data-user-popover="1" alt="">
+                    <div class="flex-block-meta">
+                      <span>Married to <a>Dan Walker</a></span>
+                      <a class="action-link">Edit your situation</a>
+                    </div>
+                    <div class="go-button">
+                      <i data-feather="arrow-right"></i>
+                    </div>
+                  </div>
+                </div>
+                <div class="column">
+                  <div class="about-summary">
+                    <div class="content">
+                      <h3>About Me</h3>
+                      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliter homines, aliter philosophos
+                        loqui putas oportere? Duo
+                        enim genera quae erant, fecit tria. Iubet igitur nos Pythius Apollo noscere nosmet ipsos. Hoc
+                        simile tandem est?
+                      </p>
+                      <p>Eam tum adesse, cum dolor omnis absit; Duo Reges: constructio interrete. </p>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div id="education-content" class="content-section">
+
+              <div id="education-glider" class="slider-timeline about-glider">
+                <!--Timeline Item-->
+                <div class="timeline-item">
+                  <div class="image-container">
+                    <img src="https://via.placeholder.com/800x600" alt=""
+                      data-demo-src="assets/img/demo/unsplash/popovers/pages/brent.jpg">
+                    <div class="logo-container">
+                      <img src="https://via.placeholder.com/150x150" alt=""
+                        data-demo-src="assets/img/icons/logos/brent.svg" data-page-popover="6">
+                    </div>
+                  </div>
+                  <h3>Master Degree</h3>
+                  <p>Brent University</p>
+                  <div class="more">
+                    <p>Lorem ipsum sit dolor amet is a dummy text used by typographers.</p>
+                  </div>
+                  <div class="date">
+                    Aug 2016
+                  </div>
+                </div>
+                <!--Timeline Item-->
+                <div class="timeline-item">
+                  <div class="image-container">
+                    <img src="https://via.placeholder.com/800x600" alt=""
+                      data-demo-src="assets/img/demo/unsplash/popovers/pages/drop.jpg">
+                    <div class="logo-container">
+                      <img src="https://via.placeholder.com/150x150" alt=""
+                        data-demo-src="assets/img/icons/logos/drop.svg" data-page-popover="10">
+                    </div>
+                  </div>
+                  <h3>Internship</h3>
+                  <p>Drop Cosmetics</p>
+                  <div class="more">
+                    <p>Lorem ipsum sit dolor amet is a dummy text used by typographers.</p>
+                  </div>
+                  <div class="date">
+                    May 2016
+                  </div>
+                </div>
+                <!--Timeline Item-->
+                <div class="timeline-item">
+                  <div class="image-container">
+                    <img src="https://via.placeholder.com/800x600" alt=""
+                      data-demo-src="assets/img/demo/unsplash/popovers/pages/quick-fashion.jpg">
+                    <div class="logo-container">
+                      <img src="https://via.placeholder.com/150x150" alt=""
+                        data-demo-src="assets/img/icons/logos/quick-fashion.svg" data-page-popover="11">
+                    </div>
+                  </div>
+                  <h3>Internship</h3>
+                  <p>Quick Fashion</p>
+                  <div class="more">
+                    <p>Lorem ipsum sit dolor amet is a dummy text used by typographers.</p>
+                  </div>
+                  <div class="date">
+                    Oct 2015
+                  </div>
+                </div>
+                <!--Timeline Item-->
+                <div class="timeline-item">
+                  <div class="image-container">
+                    <img src="https://via.placeholder.com/800x600" alt=""
+                      data-demo-src="assets/img/demo/unsplash/popovers/pages/brent.jpg">
+                    <div class="logo-container">
+                      <img src="https://via.placeholder.com/150x150" alt=""
+                        data-demo-src="assets/img/icons/logos/brent.svg" data-page-popover="6">
+                    </div>
+                  </div>
+                  <h3>Bachelor Degree</h3>
+                  <p>Brent University</p>
+                  <div class="more">
+                    <p>Lorem ipsum sit dolor amet is a dummy text used by typographers.</p>
+                  </div>
+                  <div class="date">
+                    Jul 2015
+                  </div>
+                </div>
+              </div>
+
+              <div id="slider-dots-education-glider" class="dots"></div>
+            </div>
+
+            <div id="job-content" class="content-section">
+              <!-- Timeline section -->
+              <div id="jobs-glider" class="slider-timeline about-glider">
+                <!--Timeline Item-->
+                <div class="timeline-item">
+                  <div class="image-container">
+                    <img src="https://via.placeholder.com/800x600" alt=""
+                      data-demo-src="assets/img/demo/unsplash/popovers/pages/slicer.jpg">
+                    <div class="logo-container">
+                      <img src="https://via.placeholder.com/150x150" alt=""
+                        data-demo-src="assets/img/icons/logos/slicer.svg" data-page-popover="4">
+                    </div>
+                  </div>
+                  <h3>Artistic Director</h3>
+                  <p>Slicer</p>
+                  <div class="more">
+                    <p>Lorem ipsum sit dolor amet is a dummy text used by typographers.</p>
+                  </div>
+                  <div class="date">
+                    Aug 2019
+                  </div>
+                </div>
+                <!--Timeline Item-->
+                <div class="timeline-item">
+                  <div class="image-container">
+                    <img src="https://via.placeholder.com/800x600" alt=""
+                      data-demo-src="assets/img/demo/unsplash/popovers/pages/cssninja.png">
+                    <div class="logo-container">
+                      <img src="https://via.placeholder.com/150x150" alt="" data-demo-src="assets/img/avatars/hanzo.svg"
+                        data-page-popover="5">
+                    </div>
+                  </div>
+                  <h3>Artistic Director</h3>
+                  <p>Css Ninja</p>
+                  <div class="more">
+                    <p>Lorem ipsum sit dolor amet is a dummy text used by typographers.</p>
+                  </div>
+                  <div class="date">
+                    Jan 2019
+                  </div>
+                </div>
+                <!--Timeline Item-->
+                <div class="timeline-item">
+                  <div class="image-container">
+                    <img src="https://via.placeholder.com/800x600" alt=""
+                      data-demo-src="assets/img/demo/unsplash/popovers/pages/lipflow.jpg">
+                    <div class="logo-container">
+                      <img src="https://via.placeholder.com/150x150" alt=""
+                        data-demo-src="assets/img/icons/logos/lipflow.svg" data-page-popover="9">
+                    </div>
+                  </div>
+                  <h3>Head of Sales</h3>
+                  <p>Lipflow</p>
+                  <div class="more">
+                    <p>Lorem ipsum sit dolor amet is a dummy text used by typographers.</p>
+                  </div>
+                  <div class="date">
+                    May 2018
+                  </div>
+                </div>
+                <!--Timeline Item-->
+                <div class="timeline-item">
+                  <div class="image-container">
+                    <img src="https://via.placeholder.com/800x600" alt=""
+                      data-demo-src="assets/img/demo/unsplash/popovers/pages/drop.jpg">
+                    <div class="logo-container">
+                      <img src="https://via.placeholder.com/150x150" alt=""
+                        data-demo-src="assets/img/icons/logos/drop.svg" data-page-popover="10">
+                    </div>
+                  </div>
+                  <h3>Manager</h3>
+                  <p>Drop Cosmetics</p>
+                  <div class="more">
+                    <p>Lorem ipsum sit dolor amet is a dummy text used by typographers.</p>
+                  </div>
+                  <div class="date">
+                    Oct 2018
+                  </div>
+                </div>
+                <!--Timeline Item-->
+                <div class="timeline-item">
+                  <div class="image-container">
+                    <img src="https://via.placeholder.com/800x600" alt=""
+                      data-demo-src="assets/img/demo/unsplash/popovers/pages/imdb.jpg">
+                    <div class="logo-container">
+                      <img src="https://via.placeholder.com/150x150" alt=""
+                        data-demo-src="assets/img/icons/logos/metamovies.svg" data-page-popover="9">
+                    </div>
+                  </div>
+                  <h3>Intern</h3>
+                  <p>Metamovies</p>
+                  <div class="more">
+                    <p>Lorem ipsum sit dolor amet is a dummy text used by typographers.</p>
+                  </div>
+                  <div class="date">
+                    May 2018
+                  </div>
+                </div>
+                <!--Timeline Item-->
+                <div class="timeline-item">
+                  <div class="image-container">
+                    <img src="https://via.placeholder.com/800x600" alt=""
+                      data-demo-src="assets/img/demo/unsplash/popovers/pages/quick-fashion.jpg">
+                    <div class="logo-container">
+                      <img src="https://via.placeholder.com/150x150" alt=""
+                        data-demo-src="assets/img/icons/logos/quick-fashion.svg" data-page-popover="9">
+                    </div>
+                  </div>
+                  <h3>Intern</h3>
+                  <p>Quick Fashion</p>
+                  <div class="more">
+                    <p>Lorem ipsum sit dolor amet is a dummy text used by typographers.</p>
+                  </div>
+                  <div class="date">
+                    Feb 2018
+                  </div>
+                </div>
+                <!--Timeline Item-->
+                <div class="timeline-item">
+                  <div class="image-container">
+                    <img src="https://via.placeholder.com/800x600" alt=""
+                      data-demo-src="assets/img/demo/unsplash/popovers/pages/nuclearjs.jpg">
+                    <div class="logo-container">
+                      <img src="https://via.placeholder.com/150x150" alt=""
+                        data-demo-src="assets/img/icons/logos/nuclearjs.svg" data-page-popover="9">
+                    </div>
+                  </div>
+                  <h3>Intern</h3>
+                  <p>Nuclearjs</p>
+                  <div class="more">
+                    <p>Lorem ipsum sit dolor amet is a dummy text used by typographers.</p>
+                  </div>
+                  <div class="date">
+                    Jan 2018
+                  </div>
+                </div>
+              </div>
+
+              <div id="slider-dots-jobs-glider" class="dots"></div>
+            </div>
+            <!-- Personal tab -->
+            <div id="personal-content" class="content-section">
+              <!-- Friends about card -->
+              <div class="about-card">
+                <!-- Header -->
+                <div class="header">
+                  <div class="icon-title">
+                    <i class="mdi mdi-account-group"></i>
+                    <h3>Friends</h3>
+                  </div>
+                  <div class="actions">
+                    <div class="button-wrapper">
+                      <a class="button">Invitations</a>
+                      <div class="indicator">
+                        <span>8</span>
+                      </div>
+                    </div>
+                    <!-- Dropdown -->
+                    <div class="dropdown is-spaced is-accent is-right dropdown-trigger">
+                      <div>
+                        <div class="button">
+                          <i data-feather="more-vertical"></i>
+                        </div>
+                      </div>
+                      <div class="dropdown-menu" role="menu">
+                        <div class="dropdown-content">
+                          <a href="#" class="dropdown-item">
+                            <div class="media">
+                              <i data-feather="smile"></i>
+                              <div class="media-content">
+                                <h3>Manage</h3>
+                                <small>Manage your friend list.</small>
+                              </div>
+                            </div>
+                          </a>
+                          <a class="dropdown-item">
+                            <div class="media">
+                              <i data-feather="search"></i>
+                              <div class="media-content">
+                                <h3>Find friends</h3>
+                                <small>Search for new friends.</small>
+                              </div>
+                            </div>
+                          </a>
+                          <hr class="dropdown-divider">
+                          <a href="#" class="dropdown-item">
+                            <div class="media">
+                              <i data-feather="eye"></i>
+                              <div class="media-content">
+                                <h3>View all</h3>
+                                <small>View all friends.</small>
+                              </div>
+                            </div>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="body">
+                  <div class="columns friends-columns is-multiline">
+                    <!-- Friend -->
+                    <div class="column is-6">
+                      <div class="friend-small-card">
+                        <img src="https://via.placeholder.com/150x150" data-demo-src="assets/img/avatars/nelly.png"
+                          data-user-popover="9" alt="">
+                        <div class="meta">
+                          <span>Nelly Schwartz</span>
+                          <span>182 Friends</span>
+                        </div>
+                        <!-- Dropdown -->
+                        <div class="dropdown is-spaced is-accent is-right dropdown-trigger">
+                          <div>
+                            <div class="button">
+                              <i data-feather="more-vertical"></i>
+                            </div>
+                          </div>
+                          <div class="dropdown-menu" role="menu">
+                            <div class="dropdown-content">
+                              <a href="#" class="dropdown-item">
+                                <div class="media">
+                                  <i data-feather="user"></i>
+                                  <div class="media-content">
+                                    <h3>View Profile</h3>
+                                    <small>Open this user profile.</small>
+                                  </div>
+                                </div>
+                              </a>
+                              <a class="dropdown-item">
+                                <div class="media">
+                                  <i data-feather="message-square"></i>
+                                  <div class="media-content">
+                                    <h3>Message</h3>
+                                    <small>Send a message to this user.</small>
+                                  </div>
+                                </div>
+                              </a>
+                              <hr class="dropdown-divider">
+                              <a href="#" class="dropdown-item">
+                                <div class="media">
+                                  <i data-feather="delete"></i>
+                                  <div class="media-content">
+                                    <h3>Unfriend</h3>
+                                    <small>Remove from friend list.</small>
+                                  </div>
+                                </div>
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Friend -->
+                    <div class="column is-6">
+                      <div class="friend-small-card">
+                        <img src="https://via.placeholder.com/150x150" data-demo-src="assets/img/avatars/mike.jpg"
+                          data-user-popover="12" alt="">
+                        <div class="meta">
+                          <span>Mike Lasalle</span>
+                          <span>91 Friends</span>
+                        </div>
+                        <!-- Dropdown -->
+                        <div class="dropdown is-spaced is-accent is-right dropdown-trigger">
+                          <div>
+                            <div class="button">
+                              <i data-feather="more-vertical"></i>
+                            </div>
+                          </div>
+                          <div class="dropdown-menu" role="menu">
+                            <div class="dropdown-content">
+                              <a href="#" class="dropdown-item">
+                                <div class="media">
+                                  <i data-feather="user"></i>
+                                  <div class="media-content">
+                                    <h3>View Profile</h3>
+                                    <small>Open this user profile.</small>
+                                  </div>
+                                </div>
+                              </a>
+                              <a class="dropdown-item">
+                                <div class="media">
+                                  <i data-feather="message-square"></i>
+                                  <div class="media-content">
+                                    <h3>Message</h3>
+                                    <small>Send a message to this user.</small>
+                                  </div>
+                                </div>
+                              </a>
+                              <hr class="dropdown-divider">
+                              <a href="#" class="dropdown-item">
+                                <div class="media">
+                                  <i data-feather="delete"></i>
+                                  <div class="media-content">
+                                    <h3>Unfriend</h3>
+                                    <small>Remove from friend list.</small>
+                                  </div>
+                                </div>
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Friend -->
+                    <div class="column is-6">
+                      <div class="friend-small-card">
+                        <img src="https://via.placeholder.com/150x150" data-demo-src="assets/img/avatars/stella.jpg"
+                          data-user-popover="2" alt="">
+                        <div class="meta">
+                          <span>Stella Bergmann</span>
+                          <span>547 Friends</span>
+                        </div>
+                        <!-- Dropdown -->
+                        <div class="dropdown is-spaced is-accent is-right dropdown-trigger">
+                          <div>
+                            <div class="button">
+                              <i data-feather="more-vertical"></i>
+                            </div>
+                          </div>
+                          <div class="dropdown-menu" role="menu">
+                            <div class="dropdown-content">
+                              <a href="#" class="dropdown-item">
+                                <div class="media">
+                                  <i data-feather="user"></i>
+                                  <div class="media-content">
+                                    <h3>View Profile</h3>
+                                    <small>Open this user profile.</small>
+                                  </div>
+                                </div>
+                              </a>
+                              <a class="dropdown-item">
+                                <div class="media">
+                                  <i data-feather="message-square"></i>
+                                  <div class="media-content">
+                                    <h3>Message</h3>
+                                    <small>Send a message to this user.</small>
+                                  </div>
+                                </div>
+                              </a>
+                              <hr class="dropdown-divider">
+                              <a href="#" class="dropdown-item">
+                                <div class="media">
+                                  <i data-feather="delete"></i>
+                                  <div class="media-content">
+                                    <h3>Unfriend</h3>
+                                    <small>Remove from friend list.</small>
+                                  </div>
+                                </div>
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Friend -->
+                    <div class="column is-6">
+                      <div class="friend-small-card">
+                        <img src="https://via.placeholder.com/150x150" data-demo-src="assets/img/avatars/david.jpg"
+                          data-user-popover="4" alt="">
+                        <div class="meta">
+                          <span>David Kim</span>
+                          <span>264 Friends</span>
+                        </div>
+                        <!-- Dropdown -->
+                        <div class="dropdown is-spaced is-accent is-right dropdown-trigger">
+                          <div>
+                            <div class="button">
+                              <i data-feather="more-vertical"></i>
+                            </div>
+                          </div>
+                          <div class="dropdown-menu" role="menu">
+                            <div class="dropdown-content">
+                              <a href="#" class="dropdown-item">
+                                <div class="media">
+                                  <i data-feather="user"></i>
+                                  <div class="media-content">
+                                    <h3>View Profile</h3>
+                                    <small>Open this user profile.</small>
+                                  </div>
+                                </div>
+                              </a>
+                              <a class="dropdown-item">
+                                <div class="media">
+                                  <i data-feather="message-square"></i>
+                                  <div class="media-content">
+                                    <h3>Message</h3>
+                                    <small>Send a message to this user.</small>
+                                  </div>
+                                </div>
+                              </a>
+                              <hr class="dropdown-divider">
+                              <a href="#" class="dropdown-item">
+                                <div class="media">
+                                  <i data-feather="delete"></i>
+                                  <div class="media-content">
+                                    <h3>Unfriend</h3>
+                                    <small>Remove from friend list.</small>
+                                  </div>
+                                </div>
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Friend -->
+                    <div class="column is-6">
+                      <div class="friend-small-card">
+                        <img src="https://via.placeholder.com/150x150" data-demo-src="assets/img/avatars/elise.jpg"
+                          data-user-popover="6" alt="">
+                        <div class="meta">
+                          <span>Elise Walker</span>
+                          <span>321 Friends</span>
+                        </div>
+                        <!-- Dropdown -->
+                        <div class="dropdown is-spaced is-accent is-right dropdown-trigger">
+                          <div>
+                            <div class="button">
+                              <i data-feather="more-vertical"></i>
+                            </div>
+                          </div>
+                          <div class="dropdown-menu" role="menu">
+                            <div class="dropdown-content">
+                              <a href="#" class="dropdown-item">
+                                <div class="media">
+                                  <i data-feather="user"></i>
+                                  <div class="media-content">
+                                    <h3>View Profile</h3>
+                                    <small>Open this user profile.</small>
+                                  </div>
+                                </div>
+                              </a>
+                              <a class="dropdown-item">
+                                <div class="media">
+                                  <i data-feather="message-square"></i>
+                                  <div class="media-content">
+                                    <h3>Message</h3>
+                                    <small>Send a message to this user.</small>
+                                  </div>
+                                </div>
+                              </a>
+                              <hr class="dropdown-divider">
+                              <a href="#" class="dropdown-item">
+                                <div class="media">
+                                  <i data-feather="delete"></i>
+                                  <div class="media-content">
+                                    <h3>Unfriend</h3>
+                                    <small>Remove from friend list.</small>
+                                  </div>
+                                </div>
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Friend -->
+                    <div class="column is-6">
+                      <div class="friend-small-card">
+                        <img src="https://via.placeholder.com/150x150" data-demo-src="assets/img/avatars/milly.jpg"
+                          data-user-popover="7" alt="">
+                        <div class="meta">
+                          <span>Milly Augustine</span>
+                          <span>264 Friends</span>
+                        </div>
+                        <!-- Dropdown -->
+                        <div class="dropdown is-spaced is-accent is-right dropdown-trigger">
+                          <div>
+                            <div class="button">
+                              <i data-feather="more-vertical"></i>
+                            </div>
+                          </div>
+                          <div class="dropdown-menu" role="menu">
+                            <div class="dropdown-content">
+                              <a href="#" class="dropdown-item">
+                                <div class="media">
+                                  <i data-feather="user"></i>
+                                  <div class="media-content">
+                                    <h3>View Profile</h3>
+                                    <small>Open this user profile.</small>
+                                  </div>
+                                </div>
+                              </a>
+                              <a class="dropdown-item">
+                                <div class="media">
+                                  <i data-feather="message-square"></i>
+                                  <div class="media-content">
+                                    <h3>Message</h3>
+                                    <small>Send a message to this user.</small>
+                                  </div>
+                                </div>
+                              </a>
+                              <hr class="dropdown-divider">
+                              <a href="#" class="dropdown-item">
+                                <div class="media">
+                                  <i data-feather="delete"></i>
+                                  <div class="media-content">
+                                    <h3>Unfriend</h3>
+                                    <small>Remove from friend list.</small>
+                                  </div>
+                                </div>
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Photos about card -->
+              <div class="about-card">
+                <!-- Header -->
+                <div class="header">
+                  <div class="icon-title">
+                    <i class="mdi mdi-camera"></i>
+                    <h3>Photos</h3>
+                  </div>
+                  <div class="actions">
+                    <div class="button-wrapper">
+                      <a class="button">Albums</a>
+                    </div>
+                    <!-- Dropdown -->
+                    <div class="dropdown is-spaced is-accent is-right dropdown-trigger">
+                      <div>
+                        <div class="button">
+                          <i data-feather="more-vertical"></i>
+                        </div>
+                      </div>
+                      <div class="dropdown-menu" role="menu">
+                        <div class="dropdown-content">
+                          <a href="#" class="dropdown-item">
+                            <div class="media">
+                              <i data-feather="user"></i>
+                              <div class="media-content">
+                                <h3>Of Me</h3>
+                                <small>View pictures of me.</small>
+                              </div>
+                            </div>
+                          </a>
+                          <a class="dropdown-item">
+                            <div class="media">
+                              <i data-feather="users"></i>
+                              <div class="media-content">
+                                <h3>With Me</h3>
+                                <small>View pictures with me.</small>
+                              </div>
+                            </div>
+                          </a>
+                          <hr class="dropdown-divider">
+                          <a class="dropdown-item">
+                            <div class="media">
+                              <i data-feather="upload-cloud"></i>
+                              <div class="media-content">
+                                <h3>Upload</h3>
+                                <small>Upload pictures from computer.</small>
+                              </div>
+                            </div>
+                          </a>
+                          <a class="dropdown-item">
+                            <div class="media">
+                              <i data-feather="plus"></i>
+                              <div class="media-content">
+                                <h3>Create Album</h3>
+                                <small>Create a new album.</small>
+                              </div>
+                            </div>
+                          </a>
+                          <hr class="dropdown-divider">
+                          <a href="#" class="dropdown-item">
+                            <div class="media">
+                              <i data-feather="image"></i>
+                              <div class="media-content">
+                                <h3>View all</h3>
+                                <small>View all photos.</small>
+                              </div>
+                            </div>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="body has-flex-list">
+                  <!-- Photos -->
+                  <div class="photo-list">
+                    <!-- Photo item -->
+                    <div class="photo-wrapper">
+                      <div class="photo-overlay"></div>
+                      <div class="small-like">
+                        <div class="inner">
+                          <div class="like-overlay"></div>
+                          <i data-feather="heart"></i>
+                        </div>
+                      </div>
+                      <img src="https://via.placeholder.com/400x400"
+                        data-demo-src="assets/img/demo/profile/about/photos/1.jpg" alt="">
+                    </div>
+                    <!-- Photo item -->
+                    <div class="photo-wrapper">
+                      <div class="photo-overlay"></div>
+                      <div class="small-like">
+                        <div class="inner">
+                          <div class="like-overlay"></div>
+                          <i data-feather="heart"></i>
+                        </div>
+                      </div>
+                      <img src="https://via.placeholder.com/400x400"
+                        data-demo-src="assets/img/demo/profile/about/photos/2.jpg" alt="">
+                    </div>
+                    <!-- Photo item -->
+                    <div class="photo-wrapper">
+                      <div class="photo-overlay"></div>
+                      <div class="small-like">
+                        <div class="inner">
+                          <div class="like-overlay"></div>
+                          <i data-feather="heart"></i>
+                        </div>
+                      </div>
+                      <img src="https://via.placeholder.com/400x400"
+                        data-demo-src="assets/img/demo/profile/about/photos/3.jpg" alt="">
+                    </div>
+                    <!-- Photo item -->
+                    <div class="photo-wrapper">
+                      <div class="photo-overlay"></div>
+                      <div class="small-like">
+                        <div class="inner">
+                          <div class="like-overlay"></div>
+                          <i data-feather="heart"></i>
+                        </div>
+                      </div>
+                      <img src="https://via.placeholder.com/400x400"
+                        data-demo-src="assets/img/demo/profile/about/photos/4.jpg" alt="">
+                    </div>
+                    <!-- Photo item -->
+                    <div class="photo-wrapper">
+                      <div class="photo-overlay"></div>
+                      <div class="small-like">
+                        <div class="inner">
+                          <div class="like-overlay"></div>
+                          <i data-feather="heart"></i>
+                        </div>
+                      </div>
+                      <img src="https://via.placeholder.com/400x400"
+                        data-demo-src="assets/img/demo/profile/about/photos/5.jpg" alt="">
+                    </div>
+                    <!-- Photo item -->
+                    <div class="photo-wrapper">
+                      <div class="photo-overlay"></div>
+                      <div class="small-like">
+                        <div class="inner">
+                          <div class="like-overlay"></div>
+                          <i data-feather="heart"></i>
+                        </div>
+                      </div>
+                      <img src="https://via.placeholder.com/400x400"
+                        data-demo-src="assets/img/demo/profile/about/photos/6.jpg" alt="">
+                    </div>
+                    <!-- Photo item -->
+                    <div class="photo-wrapper">
+                      <div class="photo-overlay"></div>
+                      <div class="small-like">
+                        <div class="inner">
+                          <div class="like-overlay"></div>
+                          <i data-feather="heart"></i>
+                        </div>
+                      </div>
+                      <img src="https://via.placeholder.com/400x400"
+                        data-demo-src="assets/img/demo/profile/about/photos/7.jpg" alt="">
+                    </div>
+                    <!-- Photo item -->
+                    <div class="photo-wrapper">
+                      <div class="photo-overlay"></div>
+                      <div class="small-like">
+                        <div class="inner">
+                          <div class="like-overlay"></div>
+                          <i data-feather="heart"></i>
+                        </div>
+                      </div>
+                      <img src="https://via.placeholder.com/400x400"
+                        data-demo-src="assets/img/demo/profile/about/photos/8.jpg" alt="">
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Videos about card -->
+              <div class="about-card">
+                <!-- Header -->
+                <div class="header">
+                  <div class="icon-title">
+                    <i class="mdi mdi-video"></i>
+                    <h3>Videos</h3>
+                  </div>
+                  <div class="actions">
+                    <div class="button-wrapper">
+                      <a class="button">All Videos</a>
+                    </div>
+                    <!-- Dropdown -->
+                    <div class="dropdown is-spaced is-accent is-right dropdown-trigger">
+                      <div>
+                        <div class="button">
+                          <i data-feather="more-vertical"></i>
+                        </div>
+                      </div>
+                      <div class="dropdown-menu" role="menu">
+                        <div class="dropdown-content">
+                          <a href="#" class="dropdown-item">
+                            <div class="media">
+                              <i data-feather="edit-3"></i>
+                              <div class="media-content">
+                                <h3>Manage</h3>
+                                <small>Manage your videos.</small>
+                              </div>
+                            </div>
+                          </a>
+                          <a class="dropdown-item">
+                            <div class="media">
+                              <i data-feather="plus"></i>
+                              <div class="media-content">
+                                <h3>Upload</h3>
+                                <small>Upload a new video.</small>
+                              </div>
+                            </div>
+                          </a>
+                          <hr class="dropdown-divider">
+                          <a href="#" class="dropdown-item">
+                            <div class="media">
+                              <i data-feather="settings"></i>
+                              <div class="media-content">
+                                <h3>Settings</h3>
+                                <small>Open video settings.</small>
+                              </div>
+                            </div>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="body has-flex-list">
+                  <!-- Videos -->
+                  <div class="video-list">
+                    <!-- Video item -->
+                    <div class="video-wrapper">
+                      <div class="video-overlay"></div>
+                      <div class="video-length">02:32</div>
+                      <div class="small-like">
+                        <div class="inner">
+                          <div class="like-overlay"></div>
+                          <i data-feather="heart"></i>
+                        </div>
+                      </div>
+                      <img src="https://via.placeholder.com/800x600"
+                        data-demo-src="assets/img/demo/profile/about/videos/1.jpg" alt="">
+                      <div class="video-button" data-video-id="LTrzSSf0YlA">
+                        <img src="assets/img/icons/video/play.svg" alt="">
+                      </div>
+                    </div>
+                    <!-- Video item -->
+                    <div class="video-wrapper">
+                      <div class="video-overlay"></div>
+                      <div class="video-length">00:49</div>
+                      <div class="small-like">
+                        <div class="inner">
+                          <div class="like-overlay"></div>
+                          <i data-feather="heart"></i>
+                        </div>
+                      </div>
+                      <img src="https://via.placeholder.com/800x600"
+                        data-demo-src="assets/img/demo/profile/about/videos/2.jpg" alt="">
+                      <div class="video-button">
+                        <img src="assets/img/icons/video/play.svg" alt="">
+                      </div>
+                    </div>
+                    <!-- Video item -->
+                    <div class="video-wrapper">
+                      <div class="video-overlay"></div>
+                      <div class="video-length">01:27</div>
+                      <div class="small-like">
+                        <div class="inner">
+                          <div class="like-overlay"></div>
+                          <i data-feather="heart"></i>
+                        </div>
+                      </div>
+                      <img src="https://via.placeholder.com/800x600"
+                        data-demo-src="assets/img/demo/profile/about/videos/3.jpg" alt="">
+                      <div class="video-button">
+                        <img src="assets/img/icons/video/play.svg" alt="">
+                      </div>
+                    </div>
+                    <!-- Video item -->
+                    <div class="video-wrapper">
+                      <div class="video-overlay"></div>
+                      <div class="video-length">12:32</div>
+                      <div class="small-like">
+                        <div class="inner">
+                          <div class="like-overlay"></div>
+                          <i data-feather="heart"></i>
+                        </div>
+                      </div>
+                      <img src="https://via.placeholder.com/800x600"
+                        data-demo-src="assets/img/demo/profile/about/videos/4.jpg" alt="">
+                      <div class="video-button">
+                        <img src="assets/img/icons/video/play.svg" alt="">
+                      </div>
+                    </div>
+                    <!-- Video item -->
+                    <div class="video-wrapper">
+                      <div class="video-overlay"></div>
+                      <div class="video-length">03:41</div>
+                      <div class="small-like">
+                        <div class="inner">
+                          <div class="like-overlay"></div>
+                          <i data-feather="heart"></i>
+                        </div>
+                      </div>
+                      <img src="https://via.placeholder.com/800x600"
+                        data-demo-src="assets/img/demo/profile/about/videos/5.jpg" alt="">
+                      <div class="video-button">
+                        <img src="assets/img/icons/video/play.svg" alt="">
+                      </div>
+                    </div>
+                    <!-- Video item -->
+                    <div class="video-wrapper">
+                      <div class="video-overlay"></div>
+                      <div class="video-length">01:13</div>
+                      <div class="small-like">
+                        <div class="inner">
+                          <div class="like-overlay"></div>
+                          <i data-feather="heart"></i>
+                        </div>
+                      </div>
+                      <img src="https://via.placeholder.com/800x600"
+                        data-demo-src="assets/img/demo/profile/about/videos/6.jpg" alt="">
+                      <div class="video-button">
+                        <img src="assets/img/icons/video/play.svg" alt="">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Places about card -->
+              <div class="about-card">
+                <!-- Header -->
+                <div class="header">
+                  <div class="icon-title">
+                    <i class="mdi mdi-map-outline"></i>
+                    <h3>Places</h3>
+                  </div>
+                  <div class="actions">
+                    <div class="button-wrapper">
+                      <a class="button">View All</a>
+                    </div>
+                    <!-- Dropdown -->
+                    <div class="dropdown is-spaced is-accent is-right dropdown-trigger">
+                      <div>
+                        <div class="button">
+                          <i data-feather="more-vertical"></i>
+                        </div>
+                      </div>
+                      <div class="dropdown-menu" role="menu">
+                        <div class="dropdown-content">
+                          <a href="#" class="dropdown-item">
+                            <div class="media">
+                              <i data-feather="clock"></i>
+                              <div class="media-content">
+                                <h3>Recent</h3>
+                                <small>Show recent places.</small>
+                              </div>
+                            </div>
+                          </a>
+                          <a class="dropdown-item">
+                            <div class="media">
+                              <i data-feather="map-pin"></i>
+                              <div class="media-content">
+                                <h3>Visited</h3>
+                                <small>Show visited places.</small>
+                              </div>
+                            </div>
+                          </a>
+                          <hr class="dropdown-divider">
+                          <a href="#" class="dropdown-item">
+                            <div class="media">
+                              <i data-feather="plus"></i>
+                              <div class="media-content">
+                                <h3>Add</h3>
+                                <small>Add a new place.</small>
+                              </div>
+                            </div>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="body has-flex-list">
+                  <!-- Places -->
+                  <div class="place-list">
+                    <!-- Place item -->
+                    <div class="place-wrapper">
+                      <img src="https://via.placeholder.com/800x600"
+                        data-demo-src="assets/img/demo/unsplash/places/16.jpg" alt="">
+                      <div class="foot">
+                        <a href="#" class="place-name">Melbourne</a>
+                        <div class="rating">
+                          <i class="is-checked" data-feather="star"></i>
+                          <i class="is-checked" data-feather="star"></i>
+                          <i class="is-checked" data-feather="star"></i>
+                          <i class="is-checked" data-feather="star"></i>
+                          <i class="is-checked" data-feather="star"></i>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Place item -->
+                    <div class="place-wrapper">
+                      <img src="https://via.placeholder.com/800x600"
+                        data-demo-src="assets/img/demo/unsplash/places/17.jpg" alt="">
+                      <div class="foot">
+                        <a href="#" class="place-name">Dany's Burgers</a>
+                        <div class="rating">
+                          <i class="is-checked" data-feather="star"></i>
+                          <i class="is-checked" data-feather="star"></i>
+                          <i class="is-checked" data-feather="star"></i>
+                          <i class="is-checked" data-feather="star"></i>
+                          <i data-feather="star"></i>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Place item -->
+                    <div class="place-wrapper">
+                      <img src="https://via.placeholder.com/800x600"
+                        data-demo-src="assets/img/demo/unsplash/places/18.jpg" alt="">
+                      <div class="foot">
+                        <a href="#" class="place-name">Vethnics Fashion</a>
+                        <div class="rating">
+                          <i class="is-checked" data-feather="star"></i>
+                          <i class="is-checked" data-feather="star"></i>
+                          <i class="is-checked" data-feather="star"></i>
+                          <i class="is-checked" data-feather="star"></i>
+                          <i class="is-checked" data-feather="star"></i>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Place item -->
+                    <div class="place-wrapper">
+                      <img src="https://via.placeholder.com/800x600"
+                        data-demo-src="assets/img/demo/unsplash/places/19.jpg" alt="">
+                      <div class="foot">
+                        <a href="#" class="place-name">The Smoothie Bar</a>
+                        <div class="rating">
+                          <i class="is-checked" data-feather="star"></i>
+                          <i class="is-checked" data-feather="star"></i>
+                          <i class="is-checked" data-feather="star"></i>
+                          <i class="is-checked" data-feather="star"></i>
+                          <i class="is-checked" data-feather="star"></i>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Place item -->
+                    <div class="place-wrapper">
+                      <img src="https://via.placeholder.com/800x600"
+                        data-demo-src="assets/img/demo/unsplash/places/20.jpg" alt="">
+                      <div class="foot">
+                        <a href="#" class="place-name">Eiffel Tower</a>
+                        <div class="rating">
+                          <i class="is-checked" data-feather="star"></i>
+                          <i class="is-checked" data-feather="star"></i>
+                          <i class="is-checked" data-feather="star"></i>
+                          <i class="is-checked" data-feather="star"></i>
+                          <i class="is-checked" data-feather="star"></i>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- Place item -->
+                    <div class="place-wrapper">
+                      <img src="https://via.placeholder.com/800x600"
+                        data-demo-src="assets/img/demo/unsplash/places/21.jpg" alt="">
+                      <div class="foot">
+                        <a href="#" class="place-name">Lennie's Fair</a>
+                        <div class="rating">
+                          <i class="is-checked" data-feather="star"></i>
+                          <i class="is-checked" data-feather="star"></i>
+                          <i class="is-checked" data-feather="star"></i>
+                          <i class="is-checked" data-feather="star"></i>
+                          <i class="is-checked" data-feather="star"></i>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
