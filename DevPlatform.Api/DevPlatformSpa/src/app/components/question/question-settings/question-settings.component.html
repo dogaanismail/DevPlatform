@@ -1,0 +1,99 @@
+<div class="view-wrapper">
+
+  <!-- /html/partials/pages/questions/questions-nav-menu.html -->
+  <div class="questions-nav">
+    <div class="inner is-scrollable">
+      <div class="container">
+        <app-question-menu-top></app-question-menu-top>
+      </div>
+    </div>
+  </div>
+
+  <!-- Question wrap -->
+  <div class="questions-wrap is-smaller">
+    <!-- Container -->
+    <div class="container">
+
+      <div class="columns is-show">
+
+        <div class="column is-3">
+          <app-question-menu-fixed></app-question-menu-fixed>
+        </div>
+
+        <div class="column is-6">
+          <div class="questions-settings">
+            <div class="settings-header">
+              <h2>Settings</h2>
+              <div class="control">
+                <input class="input is-rounded" type="text" placeholder="Search...">
+                <div class="search-icon">
+                  <i data-feather="search"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="settings-body">
+              <div class="switch-block">
+                <label class="f-switch is-accent">
+                  <input type="checkbox" class="is-switch" checked>
+                  <i></i>
+                </label>
+                <div class="meta">
+                  <span>New Question</span>
+                  <span>Receive a notification when someone you are following posts a new question.</span>
+                </div>
+              </div>
+              <div class="switch-block">
+                <label class="f-switch is-accent">
+                  <input type="checkbox" class="is-switch">
+                  <i></i>
+                </label>
+                <div class="meta">
+                  <span>New Answer</span>
+                  <span>Receive a notification when someone posts an answer to a question you asked.</span>
+                </div>
+              </div>
+              <div class="switch-block">
+                <label class="f-switch is-accent">
+                  <input type="checkbox" class="is-switch">
+                  <i></i>
+                </label>
+                <div class="meta">
+                  <span>Upvotes</span>
+                  <span>Receive notifications when your answers are being upvoted.</span>
+                </div>
+              </div>
+              <div class="switch-block">
+                <label class="f-switch is-primary">
+                  <input type="checkbox" class="is-switch">
+                  <i></i>
+                </label>
+                <div class="meta">
+                  <span>New Follower</span>
+                  <span>Receive a notification when someone starts following you.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="column is-3">
+          <div class="questions-side-card">
+            <img src="assets/img/icons/questions/help.svg" alt="">
+            <h4>Help center</h4>
+            <p>Having trouble? Please search our <a class="standard-link">Help Center</a> for a quick answer to your
+              problem.</p>
+          </div>
+
+          <div class="questions-side-card">
+            <img src="assets/img/icons/questions/assistance.svg" alt="">
+            <h4>24/7 Support</h4>
+            <p>Our Help Center didn't help? Please contact our 24/7 <a class="standard-link">Customer Assistance</a>
+              hotline.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

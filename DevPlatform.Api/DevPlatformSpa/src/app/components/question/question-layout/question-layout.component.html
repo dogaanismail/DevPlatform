@@ -1,0 +1,44 @@
+<div class="view-wrapper">
+
+  <!-- /html/partials/pages/questions/questions-nav-menu.html -->
+  <div class="questions-nav">
+    <div class="inner is-scrollable">
+      <div class="container">
+        <app-question-menu-top></app-question-menu-top>
+      </div>
+
+    </div>
+  </div>
+  <!-- Question wrap -->
+  <div class="questions-wrap is-smaller">
+    <!-- Container -->
+    <div class="container">
+
+      <div class="tabs question-tabs is-centered">
+        <app-question-categories></app-question-categories>
+      </div>
+
+      <div class="columns is-show">
+
+        <div class="column is-3">
+          <app-question-menu-fixed></app-question-menu-fixed>
+        </div>
+
+        <div class="column is-6">
+          <app-create-question>
+          </app-create-question>
+          <div class="question-content">
+
+            <app-question-posts></app-question-posts>
+
+            <!-- Load more -->
+            <div class=" load-more-wrap has-text-centered">
+              <a href="#" class="load-more-button">Load More</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -1,3 +1,4 @@
+import { QuestionModule } from './components/question/question.module';
 import { ProfileModule } from './components/profile/profile.module';
 import { NavbarComponent } from './components/shared/navbar/navbar-layout/navbar.component';
 import { TimelineModule } from './components/timeline/timeline.module';
@@ -15,7 +16,8 @@ import { AppComponent } from './app.component';
     BrowserModule,
     AppRoutingModule,
     TimelineModule,
-    ProfileModule
+    ProfileModule,
+    QuestionModule
   ],
   providers: [],
   bootstrap: [AppComponent]

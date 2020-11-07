@@ -17,7 +17,10 @@ const profileRoutes: Routes = [
         RouterModule.forChild(profileRoutes),
     ],
     declarations: [
-        ProfileLayoutComponent
+        ProfileLayoutComponent,
+        ProfileAboutComponent,
+        ProfilePhotosComponent,
+        ProfileFriendsComponent
     ]
 })
 export class ProfileModule { }
