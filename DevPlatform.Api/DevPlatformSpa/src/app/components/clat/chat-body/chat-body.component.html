@@ -1,0 +1,64 @@
+<div id="chat-body" class="chat-body is-opened">
+
+<app-chat-messages></app-chat-messages>
+
+  <!-- Compose message area -->
+  <div class="chat-action">
+    <div class="chat-action-inner">
+      <div class="control">
+        <textarea class="textarea comment-textarea" rows="1"></textarea>
+        <div class="dropdown compose-dropdown is-spaced is-accent is-up dropdown-trigger">
+          <div>
+            <div class="add-button">
+              <div class="button-inner">
+                <i data-feather="plus"></i>
+              </div>
+            </div>
+          </div>
+          <div class="dropdown-menu" role="menu">
+            <div class="dropdown-content">
+              <a href="#" class="dropdown-item">
+                <div class="media">
+                  <i data-feather="code"></i>
+                  <div class="media-content">
+                    <h3>Code snippet</h3>
+                    <small>Add and paste a code snippet.</small>
+                  </div>
+                </div>
+              </a>
+              <a class="dropdown-item">
+                <div class="media">
+                  <i data-feather="file-text"></i>
+                  <div class="media-content">
+                    <h3>Note</h3>
+                    <small>Add and paste a note.</small>
+                  </div>
+                </div>
+              </a>
+              <hr class="dropdown-divider">
+              <a class="dropdown-item">
+                <div class="media">
+                  <i data-feather="server"></i>
+                  <div class="media-content">
+                    <h3>Remote file</h3>
+                    <small>Add a file from a remote drive.</small>
+                  </div>
+                </div>
+              </a>
+              <a class="dropdown-item">
+                <div class="media">
+                  <i data-feather="monitor"></i>
+                  <div class="media-content">
+                    <h3>Local file</h3>
+                    <small>Add a file from your computer.</small>
+                  </div>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

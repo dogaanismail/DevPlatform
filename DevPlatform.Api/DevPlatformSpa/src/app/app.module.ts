@@ -9,6 +9,7 @@ import { NavbarComponent } from './components/shared/navbar/navbar-layout/navbar
 import { QuestionModule } from './components/question/question.module';
 import { ProfileModule } from './components/profile/profile.module';
 import { TimelineModule } from './components/timeline/timeline.module';
+import { ChatModule } from './components/clat/chat.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
@@ -26,7 +27,8 @@ import { AppRoutingModule } from './app-routing.module';
     AppRoutingModule,
     TimelineModule,
     ProfileModule,
-    QuestionModule
+    QuestionModule,
+    ChatModule
   ],
   providers: [],
   bootstrap: [AppComponent]
