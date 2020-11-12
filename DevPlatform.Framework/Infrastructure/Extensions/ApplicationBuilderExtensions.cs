@@ -1,6 +1,5 @@
 ﻿using DevPlatform.Core.Infrastructure;
 using DevPlatform.Core.Middlewares;
-using DevPlatform.Framework.Hubs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
@@ -8,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Net.Http.Headers;
 using Swashbuckle.AspNetCore.SwaggerUI;
+using static DevPlatform.Framework.Hubs.SignalRHubs;
 
 namespace DevPlatform.Framework.Infrastructure.Extensions
 {
