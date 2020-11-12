@@ -1,5 +1,6 @@
 ﻿using DevPlatform.Core.Infrastructure;
 using DevPlatform.Core.Middlewares;
+using DevPlatform.Framework.Hubs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
@@ -116,6 +117,19 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
         public static void UseDevPlatformAuthentication(this IApplicationBuilder application)
         {
             application.UseAuthentication();
+        }
+
+        /// <summary>
+        /// Adds DevPlatform Signalr Hubs
+        /// </summary>
+        /// <param name="services"></param>
+        public static void AddDevPlatformSignalR(this IApplicationBuilder application)
+        {
+            application.UseSignalR(routes =>
+            {
+                routes.MapHub<VideoNotificationHub>("/notificationHub");
+                //TODO: can be added other hubs
+            });
         }
     }
 }

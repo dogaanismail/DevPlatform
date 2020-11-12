@@ -32,6 +32,9 @@ namespace DevPlatform.Framework.Infrastructure
 
             //add devPlatform swagger
             services.AddDevPlatformSwagger();
+
+            //add devPlatform swagger
+            services.AddDevPlatFormSignalR();
         }
 
         /// <summary>
@@ -57,6 +60,9 @@ namespace DevPlatform.Framework.Infrastructure
 
             //used for angular
             application.UseAngular();
+
+            //used for signalR
+            application.AddDevPlatformSignalR();
         }
 
         /// <summary>

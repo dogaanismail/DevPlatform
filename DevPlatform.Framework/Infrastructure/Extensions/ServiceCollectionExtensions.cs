@@ -221,5 +221,13 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
             //services.AddSingleton<IValidator<PostCreateApi>, PostCreateApiValidator>();
         }
 
+        /// <summary>
+        /// Adds SignalR
+        /// </summary>
+        /// <param name="services"></param>
+        public static void AddDevPlatFormSignalR(this IServiceCollection services)
+        {
+            services.AddSignalR();
+        }
     }
 }
