@@ -94,6 +94,8 @@ namespace DevPlatform.Core.Infrastructure
                 dependencyRegistrar.Register(containerBuilder, _typeFinder, config);
         }
 
+        //TODO: Adding auto mapper has to be implemented here.
+
         /// <summary>
         /// Register and configure AutoMapper
         /// </summary>
@@ -161,6 +163,8 @@ namespace DevPlatform.Core.Infrastructure
             //configure services
             foreach (var instance in instances)
                 instance.ConfigureServices(services, configuration);
+
+            //TODO: AutoMapper has to be added here.
 
             //register mapper configurations
             //AddAutoMapper(services, _typeFinder);

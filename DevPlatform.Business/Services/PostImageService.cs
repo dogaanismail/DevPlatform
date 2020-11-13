@@ -3,6 +3,7 @@ using DevPlatform.Core.Domain.Portal;
 using DevPlatform.Domain.Common;
 using DevPlatform.Repository.Generic;
 using System;
+using System.Collections.Generic;
 
 namespace DevPlatform.Business.Services
 {
@@ -29,6 +30,20 @@ namespace DevPlatform.Business.Services
         /// <param name="createImageForPost"></param>
         /// <returns></returns>
         public ResultModel Create(PostImage createImageForPost)
+        {
+            if (createImageForPost == null)
+                throw new ArgumentNullException(nameof(createImageForPost));
+
+            _postImageRepository.Insert(createImageForPost);
+            return new ResultModel { Status = true, Message = "Create Process Success ! " };
+        }
+
+        /// <summary>
+        /// Creates posts by using bulk entities
+        /// </summary>
+        /// <param name="createImageForPost"></param>
+        /// <returns></returns>
+        public ResultModel Create(List<PostImage> createImageForPost)
         {
             if (createImageForPost == null)
                 throw new ArgumentNullException(nameof(createImageForPost));

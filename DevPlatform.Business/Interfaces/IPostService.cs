@@ -17,6 +17,12 @@ namespace DevPlatform.Business.Interfaces
         ResultModel Create(Post post);
 
         /// <summary>
+        /// Inserts posts by using bulk
+        /// </summary>
+        /// <param name="post"></param>
+        ResultModel Create(List<Post> posts);
+
+        /// <summary>
         /// Deletes a post
         /// </summary>
         /// <param name="post"></param>

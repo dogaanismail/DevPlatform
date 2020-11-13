@@ -68,6 +68,20 @@ namespace DevPlatform.Business.Services
         }
 
         /// <summary>
+        /// Inserts posts by using bulk
+        /// </summary>
+        /// <param name="posts"></param>
+        /// <returns></returns>
+        public ResultModel Create(List<Post> posts)
+        {
+            if (posts == null)
+                throw new ArgumentNullException(nameof(posts));
+
+            _postRepository.Insert(posts);
+            return new ResultModel { Status = true, Message = "Create Process Success ! " };
+        }
+
+        /// <summary>
         /// Updates a post
         /// </summary>
         /// <param name="post"></param>
