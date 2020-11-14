@@ -1,0 +1,93 @@
+<div class="view-wrapper is-full">
+
+  <div class="videos-wrapper is-home">
+
+    <!-- /html/partials/pages/videos/videos-sidebar.html -->
+    <app-story-sidebar></app-story-sidebar>
+
+
+    <!-- Homepage content -->
+    <div class="home-wrapper">
+
+      <div class="card">
+        <div class="card-heading is-bordered">
+          <h4>Stories</h4>
+          <div class="dropdown is-spaced is-neutral is-right dropdown-trigger">
+            <div>
+              <div class="button">
+                <i data-feather="more-vertical"></i>
+              </div>
+            </div>
+            <div class="dropdown-menu" role="menu">
+              <div class="dropdown-content">
+                <a href="#" class="dropdown-item">
+                  <div class="media">
+                    <i data-feather="tv"></i>
+                    <div class="media-content">
+                      <h3>Browse stories</h3>
+                      <small>View all recent stories.</small>
+                    </div>
+                  </div>
+                </a>
+                <a class="dropdown-item">
+                  <div class="media">
+                    <i data-feather="settings"></i>
+                    <div class="media-content">
+                      <h3>Settings</h3>
+                      <small>Access widget settings.</small>
+                    </div>
+                  </div>
+                </a>
+                <hr class="dropdown-divider">
+                <a href="#" class="dropdown-item">
+                  <div class="media">
+                    <i data-feather="trash-2"></i>
+                    <div class="media-content">
+                      <h3>Remove</h3>
+                      <small>Removes this widget from your feed.</small>
+                    </div>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card-body no-padding">
+          <app-story-list></app-story-list>
+        </div>
+      </div>
+
+      <!-- Home content -->
+      <div class="home-content">
+        <div class="collections-header">
+          <a class="is-active">Latest</a>
+          <a>Subscribed</a>
+          <a>Related</a>
+          <div class="search-button">
+            <i data-feather="search"></i>
+          </div>
+        </div>
+
+        <div class="collections-wrap is-active">
+
+          <!-- Collection -->
+          <div class="collection">
+            <div class="header">
+              <h4>Shows & Movies</h4>
+              <a>Show More</a>
+            </div>
+            <div class="video-collection">
+             <app-story-feed></app-story-feed>
+            </div>
+          </div>
+          
+         
+          <!-- Load more posts -->
+          <div class=" load-more-wrap has-text-centered">
+            <a href="#" class="load-more-button">Load More</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

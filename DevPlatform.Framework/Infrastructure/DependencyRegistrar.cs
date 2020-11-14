@@ -39,6 +39,7 @@ namespace DevPlatform.Framework.Infrastructure
             //services will be implemented here
             builder.RegisterType<TokenService>().As<ITokenService>().InstancePerLifetimeScope();
             builder.RegisterType<PostService>().As<IPostService>().InstancePerLifetimeScope();
+            builder.RegisterType<StoryService>().As<IStoryService>().InstancePerLifetimeScope();
             builder.RegisterType<PostImageService>().As<IPostImageService>().InstancePerLifetimeScope();
             builder.RegisterType<PostVideoService>().As<IPostVideoService>().InstancePerLifetimeScope();
             builder.RegisterType<UserService>().As<IUserService>().InstancePerLifetimeScope();
