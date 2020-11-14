@@ -13,6 +13,7 @@ import { ChatModule } from './components/clat/chat.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
+import { StoryModule } from './components/storie/story.module';
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import { AppRoutingModule } from './app-routing.module';
     TimelineModule,
     ProfileModule,
     QuestionModule,
-    ChatModule
+    ChatModule,
+    StoryModule
   ],
   providers: [],
   bootstrap: [AppComponent]
