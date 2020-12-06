@@ -23,6 +23,7 @@
     "@ngrx/effects": "^10.1.0",
     "@ngrx/store": "^10.1.0",
     "@ngrx/store-devtools": "^10.1.0",
+    "alertifyjs": "^1.13.1",
     "bulma": "^0.9.1",
     "lodash-es": "^4.17.15",
     "ng2-file-upload": "^1.4.0",

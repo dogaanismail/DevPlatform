@@ -25,9 +25,12 @@
             ],
             "styles": [
               "node_modules/bulma/css/bulma.css",
-              "src/styles.css"
+              "src/styles.css",
+              "node_modules/alertifyjs/build/css/alertify.min.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/alertifyjs/build/alertify.min.js"
+            ]
           },
           "configurations": {
             "production": {
