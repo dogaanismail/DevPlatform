@@ -24,42 +24,47 @@
           <h3 class="form-subtitle">Enter your credentials to sign in.</h3>
 
           <!--Form-->
-          <div class="login-form">
-            <div class="form-panel">
-              <div class="field">
-                <label>Email</label>
-                <div class="control">
-                  <input type="text" class="input" placeholder="Enter your email address">
-                </div>
-              </div>
-              <div class="field">
-                <label>Password</label>
-                <div class="control">
-                  <input type="password" class="input" placeholder="Enter your password">
-                </div>
-              </div>
-              <div class="field is-flex">
-                <div class="switch-block">
-                  <label class="f-switch">
-                    <input type="checkbox" class="is-switch">
-                    <i></i>
-                  </label>
-                  <div class="meta">
-                    <p>Remember me?</p>
+          <form #loginForm="ngForm" (ngSubmit)="login()">
+            <div class="login-form">
+              <div class="form-panel">
+                <div class="field">
+                  <label>Email</label>
+                  <div class="control">
+                    <input type="text" class="input" name="userName" [(ngModel)]="loginUser.userName"
+                      placeholder="Enter your username" required>
                   </div>
                 </div>
-                <a>Forgot Password?</a>
+                <div class="field">
+                  <label>Password</label>
+                  <div class="control">
+                    <input type="password" class="input" name="password" [(ngModel)]="loginUser.password"
+                      placeholder="Enter your password">
+                  </div>
+                </div>
+                <div class="field is-flex">
+                  <div class="switch-block">
+                    <label class="f-switch">
+                      <input id="rememberName" type="checkbox" name="rememberMe" [(ngModel)]="loginUser.rememberMe"
+                        class="is-switch" />
+                      <i></i>
+                    </label>
+                    <div class="meta">
+                      <p>Remember me?</p>
+                    </div>
+                  </div>
+                  <a>Forgot Password?</a>
+                </div>
+              </div>
+
+              <div class="buttons">
+                <button type="submit" [disabled]="!loginForm.valid" class="button is-solid primary-button is-fullwidth raise">Login</button>
+              </div>
+
+              <div class="account-link has-text-centered">
+                <a href="/signup.html">Don't have an account? Sign Up</a>
               </div>
             </div>
-
-            <div class="buttons">
-              <a class="button is-solid primary-button is-fullwidth raised">Login</a>
-            </div>
-
-            <div class="account-link has-text-centered">
-              <a href="/signup.html">Don't have an account? Sign Up</a>
-            </div>
-          </div>
+          </form>
         </div>
       </div>
     </div>

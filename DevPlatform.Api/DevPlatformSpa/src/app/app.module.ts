@@ -1,9 +1,19 @@
-
 /* Components */
 import { AppComponent } from './app.component';
 import { LoginComponent } from './components/authentication/login/login.component';
 import { RegisterComponent } from './components/authentication/register/register.component';
 import { NavbarComponent } from './components/shared/navbar/navbar-layout/navbar.component';
+
+/* NgRx */
+import { StoreModule, META_REDUCERS, MetaReducer, State, USER_PROVIDED_META_REDUCERS } from '@ngrx/store';
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
+import { EffectsModule } from '@ngrx/effects';
+import { UserEffects } from './core/ngrx/effects/user.effects';
+import { UserAccountEffects } from './core/ngrx/effects/user-account.effects';
+import { reducers } from './core/ngrx/states/app.state';
+
+/* Services */
+import { AlertifyService } from './services/alertify/alertify.service';
 
 /* Modules */
 import { QuestionModule } from './components/question/question.module';
@@ -13,7 +23,21 @@ import { ChatModule } from './components/clat/chat.module';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { StoryModule } from './components/storie/story.module';
+
+/* Store Mechanism */
+import { storageMetaReducer } from './core/store-infrastructure/storage-metareducer';
+import { StoreLocalStorageService } from './core/store-infrastructure/store-local-storage.service';
+import { ROOT_STORAGE_KEYS, ROOT_LOCAL_STORAGE_KEY } from './app.tokens';
+import { environment } from 'src/environments/environment';
+
+
+// factory meta-reducer configuration function
+export function getMetaReducers(saveKeys: string[], localStorageKey: string, storageService: StoreLocalStorageService): MetaReducer<State<any>>[] {
+  return [storageMetaReducer(saveKeys, localStorageKey, storageService)];
+}
 
 
 @NgModule({
@@ -26,13 +50,31 @@ import { StoryModule } from './components/storie/story.module';
   imports: [
     BrowserModule,
     AppRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
+    HttpClientModule,
     TimelineModule,
     ProfileModule,
     QuestionModule,
     ChatModule,
-    StoryModule
+    StoryModule,
+    StoreModule.forRoot(reducers),
+    EffectsModule.forRoot([]),
+    EffectsModule.forFeature(
+      [UserEffects, UserAccountEffects]
+    ),
+    StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production })
   ],
-  providers: [],
+  providers: [
+    AlertifyService,
+    { provide: ROOT_STORAGE_KEYS, useValue: ['users'], multi: true },
+    { provide: ROOT_LOCAL_STORAGE_KEY, useValue: '__app_storage__', multi: true },
+    {
+      provide: USER_PROVIDED_META_REDUCERS,
+      deps: [ROOT_STORAGE_KEYS, ROOT_LOCAL_STORAGE_KEY, StoreLocalStorageService],
+      useFactory: getMetaReducers,
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
