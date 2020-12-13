@@ -1,0 +1,118 @@
+<div class="signup-wrapper">
+
+  <div class="fake-nav">
+    <a href="/" class="logo">
+      <img src="../../../../assets/img/logo/friendkit-bold.svg" width="112" height="28" alt="">
+    </a>
+  </div>
+
+
+  <div class="process-bar-wrap">
+    <div class="process-bar">
+      <div class="progress-wrap">
+        <div class="track"></div>
+        <div class="bar"></div>
+        <div id="step-dot-1" class="dot is-first " [ngClass]="{'is-active is-current': activeStepIndex == 0}">
+          <i data-feather="smile"></i>
+        </div>
+        <div id="step-dot-2" class="dot is-second" [ngClass]="{'is-active is-current': activeStepIndex == 1}">
+          <i data-feather="user"></i>
+        </div>
+        <div id="step-dot-3" class="dot is-third" [ngClass]="{'is-active is-current': activeStepIndex == 2}">
+          <i data-feather="image"></i>
+        </div>
+        <div id="step-dot-4" class="dot is-fourth" [ngClass]="{'is-active is-current': activeStepIndex == 3}">
+          <i data-feather="lock"></i>
+        </div>
+        <div id="step-dot-5" class="dot is-fifth" [ngClass]="{'is-active is-current': activeStepIndex == 4}">
+          <i data-feather="flag"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="outer-panel">
+    <div class="outer-panel-inner">
+      <div class="process-title">
+        <h2 class="step-title is-active">{{ stepItems[activeStepIndex].label }}</h2>
+      </div>
+
+      <div class="process-panel-wrap is-active">
+        <div class="process-panel-wrap is-active">
+          <div class="form-panel">
+            <ng-container *ngFor="let form of masterForm; let i = index; trackBy: trackByFn">
+              <form action="" [formGroup]="masterForm[i]" *ngIf="i === activeStepIndex || masterForm.length === 1">
+
+                <div *ngFor="let field of formFields[i]; trackBy: trackByFn"
+                  [ngSwitch]="currentFormContent[i][field].type">
+
+                  <div class="field">
+                    <label [for]="field">{{ field  }}</label>
+
+                    <div class="control">
+                      <ng-container *ngSwitchCase="'textarea'">
+                        <textarea [id]="field" [formControlName]="field"
+                          [placeholder]="currentFormContent[i][field].placeholder"
+                          [class]="currentFormContent[i][field].class"></textarea>
+                      </ng-container>
+
+                      <ng-container *ngSwitchCase="'file'">
+                        <input type="file" (change)="onFileChange($event)" />
+                      </ng-container>
+
+                      <ng-container *ngSwitchCase="'select'">
+                        <select [formControlName]="field" [id]="field">
+                          <option value="">Select your Country</option>
+                          <option *ngFor="let option of currentFormContent[i][field].options; trackBy: trackByFn"
+                            [value]="option.name">{{ option.name }}</option>
+                        </select>
+                      </ng-container>
+
+                      <ng-container *ngSwitchDefault>
+                        <input [type]="currentFormContent[i][field].type" [formControlName]="field" [id]="field"
+                          [placeholder]="currentFormContent[i][field].placeholder"
+                          [class]="currentFormContent[i][field].class" />
+                      </ng-container>
+
+
+                      <p class="validation-error" *ngIf="
+                (masterForm[i].get(field).dirty ||
+                  masterForm[i].get(field).touched) &&
+                masterForm[i].get(field).invalid &&
+                masterForm[i].get(field).errors
+              ">
+                        {{ getValidationMessage(i, field) }}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+
+                <div class="preview-container" *ngIf="activeStepIndex === stepItems.length - 1">
+                  <ul>
+                    <li class="form-details-list" *ngFor="let field of masterFormFields; trackBy: trackByFn">
+                      <span class="text-bold">{{ field }}</span>
+                      <span>{{ formData[field] || 'N/A' }}</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div class="buttons">
+                  <button class="button is-rounded process-button" type="button" [disabled]="!activeStepIndex"
+                    (click)="goToStep('prev')">Previous</button>
+                  <button class="button is-fullwidth is-rounded" *ngIf="activeStepIndex === stepItems.length - 1"
+                    type="button" (click)="onFormSubmit()">Submit</button>
+                  <button class="button is-rounded process-button is-next" type="button"
+                    [disabled]="activeStepIndex === stepItems.length - 1 || masterForm[i].invalid"
+                    (click)="goToStep('next')">Next</button>
+                </div>
+              </form>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
