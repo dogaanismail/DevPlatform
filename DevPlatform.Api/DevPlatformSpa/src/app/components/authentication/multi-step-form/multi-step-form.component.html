@@ -48,17 +48,31 @@
                   [ngSwitch]="currentFormContent[i][field].type">
 
                   <div class="field">
-                    <label [for]="field">{{ field  }}</label>
+                    <label [for]="field">{{ field }}</label>
 
                     <div class="control">
+
                       <ng-container *ngSwitchCase="'textarea'">
                         <textarea [id]="field" [formControlName]="field"
                           [placeholder]="currentFormContent[i][field].placeholder"
                           [class]="currentFormContent[i][field].class"></textarea>
                       </ng-container>
 
+
                       <ng-container *ngSwitchCase="'file'">
-                        <input type="file" (change)="onFileChange($event)" />
+                        <div class="photo-upload">
+                          <div class="preview">
+                            <a class="upload-button">
+                              <i data-feather="plus"></i>
+                            </a>
+                            <img id="upload-preview" src="https://via.placeholder.com/150x150"
+                              data-demo-src="../../../../assets/img/avatars/avatar-w.png" alt="">
+                            <input type="file" class="dropzone is-hidden" (change)="onFileChange($event)" />
+                          </div>
+                          <div class="limitation">
+                            <small>Only images with a size lower than 3MB are allowed.</small>
+                          </div>
+                        </div>
                       </ng-container>
 
                       <ng-container *ngSwitchCase="'select'">

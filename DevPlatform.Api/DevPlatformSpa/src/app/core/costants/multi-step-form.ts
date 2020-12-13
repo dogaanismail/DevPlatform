@@ -1,61 +1,35 @@
-const COUNTRY_LIST = [
-    { name: 'United States of America', code: 'us' },
-    { name: 'United Kingdoms', code: 'gb' },
-    { name: 'India', code: 'in' }
-];
+import { FormGroup } from "@angular/forms";
+import { ConfirmedValidator } from "../validators/passsword-match.validators";
 
 const DATA_STEP_1 = {
-    firstName: { type: 'text', validations: {}, class: "input", errors: {}, placeholder: 'First Name' },
-    lastName: { type: 'text', validations: {}, errors: {}, class: "input", placeholder: 'Last Name' },
-    dateOfBirth: {
-        type: 'date',
-        validations: {},
-        errors: {},
-        placeholder: 'Date of Birth'
-    }
-};
-
-const DATA_STEP_2 = {
-    address: { type: 'textarea', validations: {}, class: "input", errors: {}, placeholder: 'Full Address' },
-    file: { type: 'file', validations: {}, class: "input", errors: {}, placeholder: 'Proof' },
-    country: {
-        type: 'select',
-        options: COUNTRY_LIST,
-        validations: {},
-        errors: {},
-        placeholder: 'Country'
-    }
-};
-
-const DATA_STEP_3 = {
-    phone: {
-        type: 'phone',
-        validations: {
-            pattern: /^\d{10}$/
-        },
-        errors: {
-            pattern: 'Please enter a valid phone number'
-        },
-        placeholder: 'Contact Number'
-    },
-    otp: {
-        type: 'number',
+    firstName: { type: 'text', validations: { required: true }, class: "input", errors: { required: 'This field can not be left blank' }, placeholder: 'Enter your first name' },
+    lastName: { type: 'text', validations: { required: true }, errors: { required: 'This field can not be left blank' }, class: "input", placeholder: 'Enter your last name' },
+    userName: { type: 'text', validations: { required: true }, errors: { required: 'This field can not be left blank' }, class: "input", placeholder: 'Enter your user name' },
+    email: {
+        type: 'text',
         validations: {
             required: true,
-            minLength: 4
+            pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
         },
         errors: {
-            required: 'This field can not be left blank',
-            minlength: 'Minimum length should be 4 characters'
-        },
-        placeholder: 'One Time Password'
+            pattern: 'Please enter a valid email address',
+            required: 'This field can not be left blank'
+        }, class: "input", placeholder: 'Enter your email address'
     }
+};
+
+
+const DATA_STEP_2 = {
+    password: {
+        type: 'password', validations: { required: true },
+        class: "input", errors: { required: 'This field can not be left blank' }, placeholder: 'Enter your password', validator: ConfirmedValidator('password', 'rePassword')
+    },
+    rePassword: { type: 'password', validations: { required: true }, class: "input", errors: { required: 'This field can not be left blank' }, placeholder: 'Enter your re-password' },
 };
 
 const STEP_ITEMS = [
-    { label: 'Step 1', data: DATA_STEP_1 },
-    { label: 'Step 2', data: DATA_STEP_2 },
-    { label: 'Step 3', data: DATA_STEP_3 },
+    { label: 'Tell us more about you.', data: DATA_STEP_1 },
+    { label: 'Secure your account.', data: DATA_STEP_2 },
     { label: 'Review & Submit', data: {} }
 ];
 
