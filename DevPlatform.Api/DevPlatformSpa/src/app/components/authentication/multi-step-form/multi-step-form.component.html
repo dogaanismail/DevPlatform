@@ -16,15 +16,9 @@
           <i data-feather="smile"></i>
         </div>
         <div id="step-dot-2" class="dot is-second" [ngClass]="{'is-active is-current': activeStepIndex == 1}">
-          <i data-feather="user"></i>
-        </div>
-        <div id="step-dot-3" class="dot is-third" [ngClass]="{'is-active is-current': activeStepIndex == 2}">
-          <i data-feather="image"></i>
-        </div>
-        <div id="step-dot-4" class="dot is-fourth" [ngClass]="{'is-active is-current': activeStepIndex == 3}">
           <i data-feather="lock"></i>
         </div>
-        <div id="step-dot-5" class="dot is-fifth" [ngClass]="{'is-active is-current': activeStepIndex == 4}">
+        <div id="step-dot-3" class="dot is-third" [ngClass]="{'is-active is-current': activeStepIndex == 2}">
           <i data-feather="flag"></i>
         </div>
       </div>
@@ -104,19 +98,20 @@
 
 
                 <div class="preview-container" *ngIf="activeStepIndex === stepItems.length - 1">
-                  <ul>
-                    <li class="form-details-list" *ngFor="let field of masterFormFields; trackBy: trackByFn">
-                      <span class="text-bold">{{ field }}</span>
-                      <span>{{ formData[field] || 'N/A' }}</span>
-                    </li>
-                  </ul>
+                  <img class="success-image" src="../../../../assets/img/illustrations/signup/mailbox.svg" alt="">
+                  <div class="success-text">
+                    <h3>Congratz, you successfully created your account.</h3>
+                    <p> We just sent you a confirmation email. PLease confirm your account within 24 hours.</p>
+                  </div>
                 </div>
 
                 <div class="buttons">
                   <button class="button is-rounded process-button" type="button" [disabled]="!activeStepIndex"
                     (click)="goToStep('prev')">Previous</button>
-                  <button class="button is-fullwidth is-rounded" *ngIf="activeStepIndex === stepItems.length - 1"
-                    type="button" (click)="onFormSubmit()">Submit</button>
+                  <div class="success-text"><button class="button is-fullwidth is-rounded"
+                      *ngIf="activeStepIndex === stepItems.length - 1" type="button"
+                      (click)="onFormSubmit()">Submit</button></div>
+
                   <button class="button is-rounded process-button is-next" type="button"
                     [disabled]="activeStepIndex === stepItems.length - 1 || masterForm[i].invalid"
                     (click)="goToStep('next')">Next</button>

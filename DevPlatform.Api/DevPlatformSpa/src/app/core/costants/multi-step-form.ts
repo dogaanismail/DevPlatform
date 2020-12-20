@@ -30,7 +30,7 @@ const DATA_STEP_2 = {
 const STEP_ITEMS = [
     { label: 'Tell us more about you.', data: DATA_STEP_1 },
     { label: 'Secure your account.', data: DATA_STEP_2 },
-    { label: 'Review & Submit', data: {} }
+    { label: 'You are all set. Ready?', data: {} }
 ];
 
 export { STEP_ITEMS }
