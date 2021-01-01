@@ -15,6 +15,9 @@ using LinqToDBConfigurations = LinqToDB.Common;
 
 namespace DevPlatform.Data
 {
+    /// <summary>
+    /// Base data provider abstract class
+    /// </summary>
     public abstract class BaseDataProvider
     {
         #region Utils

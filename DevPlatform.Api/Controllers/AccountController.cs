@@ -18,7 +18,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DevPlatform.Api.Controllers
 {
-    public class AccountController : BaseApiController
+    public partial class AccountController : BaseApiController
     {
         #region Fields
         private readonly ITokenService _tokenService;
@@ -48,7 +48,7 @@ namespace DevPlatform.Api.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost("register")]
-        public async Task<JsonResult> Register([FromBody] RegisterApiRequest model)
+        public virtual async Task<JsonResult> Register([FromBody] RegisterApiRequest model)
         {
             try
             {
@@ -102,7 +102,7 @@ namespace DevPlatform.Api.Controllers
         /// <returns></returns>
         [HttpPost("login")]
         [Authorize]
-        public JsonResult Login([FromBody] LoginApiRequest model)
+        public virtual JsonResult Login([FromBody] LoginApiRequest model)
         {
             var result =  _signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, false).Result;
             var user = _userDetailService.GetUserDetailByUserName(model.UserName);
@@ -128,7 +128,7 @@ namespace DevPlatform.Api.Controllers
         }
 
         [HttpPost("logout")]
-        public async Task<JsonResult> LogOut()
+        public virtual async Task<JsonResult> LogOut()
         {
             await _signInManager.SignOutAsync();
             Result.Status = true;

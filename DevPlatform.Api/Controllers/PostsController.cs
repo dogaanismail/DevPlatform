@@ -20,7 +20,7 @@ using DevPlatform.Common.Helpers;
 namespace DevPlatform.Api.Controllers
 {
     [ApiController]
-    public class PostsController : BaseApiController
+    public partial class PostsController : BaseApiController
     {
         #region Fields
         private readonly IPostService _postService;
@@ -66,7 +66,7 @@ namespace DevPlatform.Api.Controllers
 
         [HttpPost("createpost")]
         [AllowAnonymous]
-        public JsonResult CreatePost([FromForm] PostCreateApi model)
+        public virtual JsonResult CreatePost([FromForm] PostCreateApi model)
         {
             try
             {
@@ -226,7 +226,7 @@ namespace DevPlatform.Api.Controllers
 
         [HttpPost("createcomment")]
         [Authorize]
-        public JsonResult CreatePostComment([FromBody] PostCommentCreateApi model)
+        public virtual JsonResult CreatePostComment([FromBody] PostCommentCreateApi model)
         {
             try
             {

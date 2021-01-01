@@ -49,6 +49,7 @@ namespace DevPlatform.Framework.Infrastructure
             builder.RegisterType<ChatGroupService>().As<IChatGroupService>().InstancePerLifetimeScope();
             builder.RegisterType<ActionContextAccessor>().As<IActionContextAccessor>().InstancePerLifetimeScope();
             builder.RegisterType<SettingService>().As<ISettingService>().InstancePerLifetimeScope();
+            builder.RegisterType<AlbumService>().As<IAlbumService>().InstancePerLifetimeScope();
 
             //register all settings
             builder.RegisterSource(new SettingsSource());

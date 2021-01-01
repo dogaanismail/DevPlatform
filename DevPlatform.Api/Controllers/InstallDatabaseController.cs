@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DevPlatform.Api.Controllers
 {
     [ApiController]
-    public class InstallDatabaseController : BaseApiController
+    public partial class InstallDatabaseController : BaseApiController
     {
         #region Fields
         private readonly IDevPlatformFileProvider _fileProvider;
@@ -26,7 +26,7 @@ namespace DevPlatform.Api.Controllers
         #region Methods
 
         [HttpGet("install")]
-        public string InstallDb()
+        public virtual string InstallDb()
         {
             var dataProvider = DataProviderManager.GetDataProvider(DataProviderType.SqlServer);
             var connectionString = "Data Source=DESKTOP-AOIN62U\\SQLEXPRESS;Initial Catalog=MyReleaseDB;Integrated Security=True";

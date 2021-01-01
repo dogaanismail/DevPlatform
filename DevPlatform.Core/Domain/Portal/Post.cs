@@ -12,6 +12,7 @@ namespace DevPlatform.Core.Domain.Portal
             PostComments = new HashSet<PostComment>();
             PostVideos = new HashSet<PostVideo>();
         }
+
         public string Text { get; set; }
         public int? PostType { get; set; }
 
