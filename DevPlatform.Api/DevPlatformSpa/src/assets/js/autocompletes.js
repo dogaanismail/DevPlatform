@@ -115,7 +115,7 @@ $(document).ready(function () {
     var summary = '';
     var closeIcon = feather.icons.x.toSvg();
     var albumOptions = {
-      url: "assets/data/api/users/user-autocpl.json",
+      url: "../../assets/data/api/users/user-autocpl.json",
       getValue: "name",
       template: {
         type: "custom",
@@ -162,7 +162,7 @@ $(document).ready(function () {
     var html = '';
     var summary = '';
     var simpleUsersOptions = {
-      url: "assets/data/api/users/user-autocpl.json",
+      url: "../../assets/data/api/users/user-autocpl.json",
       getValue: "name",
       template: {
         type: "custom",
@@ -196,7 +196,7 @@ $(document).ready(function () {
     var html = '';
     var summary = '';
     var simpleGroupsOptions = {
-      url: "assets/data/api/groups/groups-autocpl.json",
+      url: "../../assets/data/api/groups/groups-autocpl.json",
       getValue: "name",
       template: {
         type: "custom",
@@ -230,7 +230,7 @@ $(document).ready(function () {
     var html = '';
     var summary = '';
     var simpleLocationsOptions = {
-      url: "assets/data/api/places/places-autocpl.json",
+      url: "../../assets/data/api/places/places-autocpl.json",
       getValue: "name",
       template: {
         type: "custom",

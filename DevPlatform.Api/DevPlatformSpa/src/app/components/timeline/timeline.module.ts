@@ -9,6 +9,10 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { TimelineCreatePostComponent } from './timeline-create-post/timeline-create-post.component';
 import { TimelineNewjobComponent } from './timeline-widgets/timeline-newjob/timeline-newjob.component';
+import { SharedModule } from 'src/app/shared/modules/shared.module';
+import { CreateAlbumModalComponent } from './modals/create-album-modal/create-album-modal.component';
+import { DropzoneModule } from 'ngx-dropzone-wrapper';
+
 
 const timelineRoutes: Routes = [
     { path: "timeline", component: TimelineLayoutComponent }
@@ -16,7 +20,9 @@ const timelineRoutes: Routes = [
 
 @NgModule({
     imports: [
+        SharedModule,
         RouterModule.forChild(timelineRoutes),
+        DropzoneModule
     ],
     declarations: [
         TimelineLayoutComponent,
@@ -27,7 +33,8 @@ const timelineRoutes: Routes = [
         TimelineNewjobComponent,
         TimelineBirthdayComponent,
         TimelineWeatherComponent,
-        TimelineActivityComponent
+        TimelineActivityComponent,
+        CreateAlbumModalComponent
 
     ]
 })
