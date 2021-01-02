@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalService } from 'src/app/services/modal.service';
+import { ModalService } from '../../../services/modal/modal.service';
 
 @Component({
   selector: 'app-timeline-create-post',

@@ -174,41 +174,44 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
         /// <param name="services">Collection of service descriptors</param>
         public static void AddDevPlatformAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
-            services.AddIdentity<AppUser, AppRole>(options =>
+            if (DataSettingsManager.DatabaseIsInstalled)
             {
-                options.Password.RequireDigit = true;
-                options.Password.RequiredLength = 4;
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequireUppercase = true;
-                options.Password.RequireLowercase = false;
-                options.User.RequireUniqueEmail = true;
-                options.SignIn.RequireConfirmedEmail = false;
+                services.AddIdentity<AppUser, AppRole>(options =>
+                {
+                    options.Password.RequireDigit = true;
+                    options.Password.RequiredLength = 4;
+                    options.Password.RequireNonAlphanumeric = false;
+                    options.Password.RequireUppercase = true;
+                    options.Password.RequireLowercase = false;
+                    options.User.RequireUniqueEmail = true;
+                    options.SignIn.RequireConfirmedEmail = false;
 
-                //TODO: The identity might be configured.
-                //options.User.RequireUniqueEmail = true; 
-                //options.Lockout.MaxFailedAccessAttempts = 5;
-                //options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(3);
+                    //TODO: The identity might be configured.
+                    //options.User.RequireUniqueEmail = true; 
+                    //options.Lockout.MaxFailedAccessAttempts = 5;
+                    //options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(3);
 
-            }).AddLinqToDBStores<int, AppUserClaim, AppUserRole, AppUserLogin, AppUserToken, AppRoleClaim>(new
-            IdentityConnectionFactory(new SqlServerDataProvider(ProviderName.SqlServer, SqlServerVersion.v2017), "SqlServerIdentity", DataSettingsManager.LoadSettings().ConnectionString))
-            .AddUserStore<LinqToDB.Identity.UserStore<int, AppUser, AppRole, AppUserClaim, AppUserRole, AppUserLogin, AppUserToken>>()
-            .AddUserManager<UserManager<AppUser>>()
-            .AddRoleManager<RoleManager<AppRole>>()
-                .AddDefaultTokenProviders();
+                }).AddLinqToDBStores<int, AppUserClaim, AppUserRole, AppUserLogin, AppUserToken, AppRoleClaim>(new
+                IdentityConnectionFactory(new SqlServerDataProvider(ProviderName.SqlServer, SqlServerVersion.v2017), "SqlServerIdentity", DataSettingsManager.LoadSettings().ConnectionString))
+                .AddUserStore<LinqToDB.Identity.UserStore<int, AppUser, AppRole, AppUserClaim, AppUserRole, AppUserLogin, AppUserToken>>()
+                .AddUserManager<UserManager<AppUser>>()
+                .AddRoleManager<RoleManager<AppRole>>()
+                    .AddDefaultTokenProviders();
 
-            services.AddAuthentication()
-             .AddCookie(options =>
-             {
-                 options.Cookie.Name = "Interop";
-                 options.DataProtectionProvider =
-                     DataProtectionProvider.Create(new DirectoryInfo("C:\\Github\\Identity\\artifacts"));
-             });
+                services.AddAuthentication()
+                 .AddCookie(options =>
+                 {
+                     options.Cookie.Name = "Interop";
+                     options.DataProtectionProvider =
+                         DataProtectionProvider.Create(new DirectoryInfo("C:\\Github\\Identity\\artifacts"));
+                 });
 
-            // Uncomment the following lines to enable logging in with third party login providers
+                // Uncomment the following lines to enable logging in with third party login providers
 
-            JwtTokenDefinitions.LoadFromConfiguration(configuration);
-            services.ConfigureJwtAuthentication();
-            services.ConfigureJwtAuthorization();
+                JwtTokenDefinitions.LoadFromConfiguration(configuration);
+                services.ConfigureJwtAuthentication();
+                services.ConfigureJwtAuthorization();
+            }
         }
 
         /// <summary>

@@ -1,4 +1,5 @@
-﻿using DevPlatform.Core.Domain.Chat;
+﻿using DevPlatform.Core.Domain.Album;
+using DevPlatform.Core.Domain.Chat;
 using DevPlatform.Core.Domain.Configuration;
 using DevPlatform.Core.Domain.Friendship;
 using DevPlatform.Core.Domain.Identity;
@@ -50,6 +51,8 @@ namespace DevPlatform.Data.Migrations
             _migrationManager.BuildTable<PostVideo>(Create);
             _migrationManager.BuildTable<Friend>(Create);
             _migrationManager.BuildTable<FriendRequest>(Create);
+            _migrationManager.BuildTable<Album>(Create);
+            _migrationManager.BuildTable<AlbumImage>(Create);
         }
     }
 }

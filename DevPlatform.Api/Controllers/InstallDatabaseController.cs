@@ -1,6 +1,7 @@
 ﻿using DevPlatform.Core.Configuration;
 using DevPlatform.Core.Infrastructure;
 using DevPlatform.Data;
+using DevPlatform.Domain.Common;
 using DevPlatform.Framework.Controllers;
 using Microsoft.AspNetCore.Mvc;
 
@@ -26,10 +27,10 @@ namespace DevPlatform.Api.Controllers
         #region Methods
 
         [HttpGet("install")]
-        public virtual string InstallDb()
+        public virtual JsonResult InstallDb()
         {
             var dataProvider = DataProviderManager.GetDataProvider(DataProviderType.SqlServer);
-            var connectionString = "Data Source=DESKTOP-AOIN62U\\SQLEXPRESS;Initial Catalog=MyReleaseDB;Integrated Security=True";
+            var connectionString = "Data Source=DESKTOP-B2VJH8F\\SQLEXPRESS;Initial Catalog=DevPlatformDB;Integrated Security=True";
             DataSettingsManager.SaveSettings(new DataSettings
             {
                 DataProvider = DataProviderType.SqlServer,
@@ -40,7 +41,13 @@ namespace DevPlatform.Api.Controllers
             dataProvider.CreateDatabase(string.Empty);
             dataProvider.InitializeDatabase();
 
-            return null;
+            if (DataSettingsManager.DatabaseIsInstalled)
+            {
+                Result.Status = true;
+                Result.Message = "Datase has been installed!";
+                return OkResponse(Result);                
+            }
+            return BadResponse(ResultModel.Error("The process can not be done !"));
         }
 
         #endregion

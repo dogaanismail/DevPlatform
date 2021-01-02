@@ -1,5 +1,5 @@
 import { Component, ElementRef, Input, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { ModalService } from '../../../services/modal.service';
+import { ModalService } from '../../../services/modal/modal.service';
 
 @Component({
   selector: 'app-generic-modal',
