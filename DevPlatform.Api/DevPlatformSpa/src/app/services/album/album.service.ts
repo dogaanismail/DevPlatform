@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
+import { AlbumCreate } from 'src/app/models/album/albumCreate';
 import { AuthService } from '../user/auth/auth.service';
 
 @Injectable({
@@ -9,17 +10,18 @@ import { AuthService } from '../user/auth/auth.service';
 })
 export class AlbumService {
 
-  constructor(private http: HttpClient,
+  constructor(private httpClient: HttpClient,
     private authService: AuthService) { }
 
-  private albumUrl = 'api/album/';
+  albumUrl = "api/album/";
 
-  createAlbum(album: any): Observable<any> {
+  createAlbum(post: AlbumCreate): Observable<AlbumCreate> {
     const headers = new HttpHeaders
       ({
-        "Authorization": "Bearer " + this.authService.getToken
+        "Authorization": "Bearer " + this.authService.getToken,
+        "Access-Control-Allow-Origin":'*'
       });
-    return this.http.post(this.albumUrl + "createalbum", album, { headers: headers })
+    return this.httpClient.post(this.albumUrl + "createalbum", post, { headers: headers })
       .pipe(
         tap((data: any) => {
         }),

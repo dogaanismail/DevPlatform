@@ -42,6 +42,7 @@ namespace DevPlatform.Framework.Infrastructure
             builder.RegisterType<StoryService>().As<IStoryService>().InstancePerLifetimeScope();
             builder.RegisterType<PostImageService>().As<IPostImageService>().InstancePerLifetimeScope();
             builder.RegisterType<PostVideoService>().As<IPostVideoService>().InstancePerLifetimeScope();
+            builder.RegisterType<PostCommentService>().As<IPostCommentService>().InstancePerLifetimeScope();
             builder.RegisterType<UserService>().As<IUserService>().InstancePerLifetimeScope();
             builder.RegisterType<UserDetailService>().As<IUserDetailService>().InstancePerLifetimeScope();
             builder.RegisterType<ChatService>().As<IChatService>().InstancePerLifetimeScope();

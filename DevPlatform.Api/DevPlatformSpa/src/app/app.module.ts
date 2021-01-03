@@ -1,3 +1,4 @@
+import { AlbumService } from './services/album/album.service';
 import { FormatTitlePipe } from './core/pipes/format-title.pipe';
 /* Components */
 import { AppComponent } from './app.component';
@@ -71,6 +72,7 @@ export function getMetaReducers(saveKeys: string[], localStorageKey: string, sto
   ],
   providers: [
     AlertifyService,
+    AlbumService,
     { provide: ROOT_STORAGE_KEYS, useValue: ['users'], multi: true },
     { provide: ROOT_LOCAL_STORAGE_KEY, useValue: '__app_storage__', multi: true },
     {

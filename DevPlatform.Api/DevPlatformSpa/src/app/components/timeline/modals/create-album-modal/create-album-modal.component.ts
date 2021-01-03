@@ -1,7 +1,8 @@
+import { AlbumService } from './../../../../services/album/album.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { DropzoneComponent, DropzoneDirective, DropzoneConfigInterface } from 'ngx-dropzone-wrapper';
-import { ModalService } from '../../../../services/modal.service';
-
+import { ModalService } from '../../../../services/modal/modal.service';
+import { AlbumCreate } from 'src/app/models/album/albumCreate';
 
 @Component({
   selector: 'app-create-album-modal',
@@ -9,10 +10,6 @@ import { ModalService } from '../../../../services/modal.service';
   styleUrls: ['./create-album-modal.component.scss']
 })
 export class CreateAlbumModalComponent implements OnInit {
-
-  public type: string = 'component';
-
-  public disabled: boolean = false;
 
   public config: DropzoneConfigInterface = {
     clickable: true,
@@ -32,14 +29,19 @@ export class CreateAlbumModalComponent implements OnInit {
   @ViewChild(DropzoneComponent, { static: false }) componentRef?: DropzoneComponent;
   @ViewChild(DropzoneDirective, { static: false }) directiveRef?: DropzoneDirective;
 
-  constructor(private modalService: ModalService
+  constructor(private modalService: ModalService,
+    private albumService: AlbumService
   ) { }
 
+  public disabled: boolean = false;
+  public type: string = 'component';
+  albumCreate: any = {};
+  files: File[] = [];
+  album: AlbumCreate;
 
   ngOnInit() {
-  }
 
-  files: File[] = [];
+  }
 
   public toggleType(): void {
     this.type = (this.type === 'component') ? 'directive' : 'component';
@@ -85,6 +87,24 @@ export class CreateAlbumModalComponent implements OnInit {
 
   closeModal(id: string) {
     this.modalService.close(id);
+  }
+
+  saveAlbum() {
+    let formData: FormData = new FormData();
+    formData.append('name', this.albumCreate.name);
+    formData.append('place', this.albumCreate.place);
+    formData.append('date', this.albumCreate.date);
+    formData.append('tag', this.albumCreate.tag);
+    if (this.files.length > 0) {
+      console.log("girdi2");
+      for (const row of this.files) {
+        formData.append('images', row);
+      }
+    }
+
+    this.albumService.createAlbum(this.albumCreate).subscribe((data: any) => {
+      console.log(data);
+    });
   }
 
 }

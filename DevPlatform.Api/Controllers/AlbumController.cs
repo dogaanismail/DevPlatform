@@ -7,27 +7,32 @@ using DevPlatform.Domain.Api.AlbumApi;
 using DevPlatform.Domain.Common;
 using DevPlatform.Framework.Controllers;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Net;
 
 namespace DevPlatform.Api.Controllers
 {
-    [ApiController]
     public partial class AlbumController : BaseApiController
     {
         #region Fields
         private readonly IAlbumService _albumService;
         private CloudinaryConfig _cloudinaryOptions;
         private Cloudinary _cloudinary;
+        private readonly IHttpContextAccessor _httpContextAccessor;
         #endregion
 
         #region Ctor
 
         public AlbumController(IAlbumService albumService,
-           CloudinaryConfig cloudinaryOptions)
+           CloudinaryConfig cloudinaryOptions,
+           IHttpContextAccessor httpContextAccessor)
         {
             _albumService = albumService;
             _cloudinaryOptions = cloudinaryOptions;
+            _httpContextAccessor = httpContextAccessor;
+
 
             Account account = new Account(
               _cloudinaryOptions.CloudName,
@@ -40,19 +45,24 @@ namespace DevPlatform.Api.Controllers
 
         #region Methods
 
+        /// <summary>
+        /// Creating album
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost("createalbum")]
-        [AllowAnonymous]
-        public virtual JsonResult CreateAlbum([FromForm] AlbumCreateApi model)
+        [Authorize]
+        public virtual JsonResult CreateAlbum([FromBody] AlbumCreateApi model)
         {
             if (model == null || model.Images.Count == 0)
                 return BadResponse(ResultModel.Error("The upload process can not be done !"));
 
             Album album = new Album
             {
-                Name = model.Name,
-                Place = model.Place,
-                Date = model.Date,
-                Tag = model.Tag
+                Name = model.name,
+                Place = model.place,
+                Date = Convert.ToDateTime(model.date),
+                Tag = model.tag
             };
 
             #region ImageUploadingProcess

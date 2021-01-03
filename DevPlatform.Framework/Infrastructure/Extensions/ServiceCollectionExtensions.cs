@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -116,11 +117,14 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
             //Angular
             services.AddSpaStaticFiles(configuration => { configuration.RootPath = "DevPlatformSpa/dist/"; });
 
+            //adding cors
+            services.AddCors();
+
             services.AddMvc(opt =>
             {
                 opt.EnableEndpointRouting = false;
                 opt.Filters.Add(typeof(ValidateModelAttribute));
-            });
+            }).SetCompatibilityVersion(CompatibilityVersion.Latest);
             //.AddFluentValidation(fvc => fvc.RegisterValidatorsFromAssemblyContaining<Startup>());
         }
 
@@ -198,8 +202,7 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
                 .AddRoleManager<RoleManager<AppRole>>()
                     .AddDefaultTokenProviders();
 
-                services.AddAuthentication()
-                 .AddCookie(options =>
+                services.AddAuthentication().AddCookie(options =>
                  {
                      options.Cookie.Name = "Interop";
                      options.DataProtectionProvider =

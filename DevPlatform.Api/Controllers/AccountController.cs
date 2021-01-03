@@ -48,6 +48,7 @@ namespace DevPlatform.Api.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost("register")]
+        [AllowAnonymous]
         public virtual async Task<JsonResult> Register([FromBody] RegisterApiRequest model)
         {
             try
@@ -101,7 +102,7 @@ namespace DevPlatform.Api.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost("login")]
-        [Authorize]
+        [AllowAnonymous]
         public virtual JsonResult Login([FromBody] LoginApiRequest model)
         {
             var result =  _signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, false).Result;

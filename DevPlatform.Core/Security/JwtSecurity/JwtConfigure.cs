@@ -11,7 +11,7 @@ namespace DevPlatform.Core.Security.JwtSecurity
         {
             services.AddAuthorizationCore(auth =>
             {
-                auth.AddPolicy("Bearer", new AuthorizationPolicyBuilder()
+                auth.AddPolicy("BearerNegotiateNTLM ", new AuthorizationPolicyBuilder()
                     .AddAuthenticationSchemes(JwtBearerDefaults.AuthenticationScheme)
                     .RequireAuthenticatedUser().Build());
             });
@@ -22,11 +22,18 @@ namespace DevPlatform.Core.Security.JwtSecurity
             services.AddAuthentication(options =>
             {
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             })
                 .AddJwtBearer(options =>
                 {
+                    options.RequireHttpsMetadata = false;
+                    options.SaveToken = true;
                     options.TokenValidationParameters = new TokenValidationParameters()
                     {
+                        ValidateIssuer=true,
+                        ValidateAudience = true,
+                        RequireExpirationTime = true,
                         IssuerSigningKey = JwtTokenDefinitions.IssuerSigningKey,
                         ValidAudience = JwtTokenDefinitions.Audience,
                         ValidIssuer = JwtTokenDefinitions.Issuer,

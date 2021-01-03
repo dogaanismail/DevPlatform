@@ -34,7 +34,7 @@ export class LoginComponent implements OnInit {
         this.userStore.dispatch(new userActions.LoginFail(data.result.message));
       } else {
         this.userStore.dispatch(new userActions.LoginSuccess(data.result));
-        this.authService.saveToken(data.result.refreshToken.toString());
+        this.authService.saveToken(data.result.accessToken.toString());
         this.alertifyService.success("You have entered successfully !");
         this.router.navigate(["/"]);
       }

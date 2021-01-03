@@ -78,6 +78,11 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
         {
             var webHostEnvironment = EngineContext.Current.Resolve<IWebHostEnvironment>();
 
+            application.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
+            //using cors
+            //application.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
             application.UseMvc()
             .UseSpa(spa =>
             {
@@ -111,12 +116,30 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
         }
 
         /// <summary>
-        /// Configure static file serving
+        /// Configure authentication
         /// </summary>
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public static void UseDevPlatformAuthentication(this IApplicationBuilder application)
         {
             application.UseAuthentication();
+        }
+
+        /// <summary>
+        /// Configure authorization
+        /// </summary>
+        /// <param name="application">Builder for configuring an application's request pipeline</param>
+        public static void UseDevPlatformAuthorization(this IApplicationBuilder application)
+        {
+            application.UseAuthorization();
+        }
+
+        /// <summary>
+        /// Configure routging
+        /// </summary>
+        /// <param name="application">Builder for configuring an application's request pipeline</param>
+        public static void UseDevPlatformRouting(this IApplicationBuilder application)
+        {
+            application.UseRouting();
         }
 
         /// <summary>

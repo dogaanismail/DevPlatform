@@ -20,11 +20,15 @@
           </span>
         </div>
       </div>
+
+      <form #albumCreateForm="ngForm" (ngSubmit)="saveAlbum()">
       <div class="card-body">
+
         <div class="left-section">
           <div class="album-form">
             <div class="control">
-              <input type="text" class="input is-sm no-radius is-fade" placeholder="Album name">
+              <input type="text" [(ngModel)]="albumCreate.name" name="name" required class="input is-sm no-radius is-fade"
+                placeholder="Album name">
               <div class="icon">
                 <i data-feather="camera"></i>
               </div>
@@ -34,7 +38,7 @@
                 placeholder="describe your album ..."></textarea>
             </div>
             <div class="control">
-              <input type="text" class="input is-sm no-radius is-fade" placeholder="Place">
+              <input type="text" [(ngModel)]="albumCreate.place" name="place" required class="input is-sm no-radius is-fade" placeholder="Place">
               <div class="icon">
                 <i data-feather="map-pin"></i>
               </div>
@@ -51,7 +55,7 @@
 
             <p>Set a date for your album. You can always change it later.</p>
             <div class="control is-hidden">
-              <input id="album-datepicker" type="text" class="input is-sm is-fade" placeholder="Select a date">
+              <input id="album-datepicker" type="text" [(ngModel)]="albumCreate.date" name="date" required class="input is-sm is-fade" placeholder="Select a date">
               <div class="icon">
                 <i data-feather="calendar"></i>
               </div>
@@ -69,7 +73,7 @@
             <p>Tag friends in this album. Tagged friends can see photos they are tagged in.</p>
             <div class="field is-autocomplete is-hidden">
               <div class="control">
-                <input id="create-album-friends-autocpl" type="text" class="input is-sm is-fade"
+                <input id="create-album-friends-autocpl" [(ngModel)]="albumCreate.tag" required name="tag" type="text" class="input is-sm is-fade"
                   placeholder="Search for friends">
                 <div class="icon">
                   <i data-feather="search"></i>
@@ -200,8 +204,11 @@
             </div>
           </div>
         </div>
-        <button type="button" class="button is-solid accent-button close-modal">Create album</button>
+        <button type="submit" [disabled]="!albumCreateForm.valid" class="button is-solid accent-button close-modal">Create album</button>
       </div>
+      </form>
+
+
     </div>
   </div>
 

@@ -52,8 +52,14 @@ namespace DevPlatform.Framework.Infrastructure
             //used for static files
             application.UseDevPlatformStaticFiles();
 
+            //used for routing
+            application.UseDevPlatformRouting();
+
             //used for authentication
             application.UseDevPlatformAuthentication();
+
+            //used for authorization
+            application.UseDevPlatformAuthorization();
 
             //used for swagger
             application.UseDevPlatformSwagger();
