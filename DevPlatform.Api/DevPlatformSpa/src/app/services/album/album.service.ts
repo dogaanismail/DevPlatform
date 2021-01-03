@@ -15,13 +15,12 @@ export class AlbumService {
 
   albumUrl = "api/album/";
 
-  createAlbum(post: AlbumCreate): Observable<AlbumCreate> {
+  createAlbum(album: any): Observable<any> {
     const headers = new HttpHeaders
       ({
-        "Authorization": "Bearer " + this.authService.getToken,
-        "Access-Control-Allow-Origin":'*'
+        "Authorization": "Bearer " + this.authService.getToken
       });
-    return this.httpClient.post(this.albumUrl + "createalbum", post, { headers: headers })
+    return this.httpClient.post(this.albumUrl + "createalbum", album, { headers: headers })
       .pipe(
         tap((data: any) => {
         }),

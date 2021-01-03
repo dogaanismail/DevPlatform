@@ -78,10 +78,8 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
         {
             var webHostEnvironment = EngineContext.Current.Resolve<IWebHostEnvironment>();
 
-            application.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-
             //using cors
-            //application.UseCors(builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            application.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             application.UseMvc()
             .UseSpa(spa =>

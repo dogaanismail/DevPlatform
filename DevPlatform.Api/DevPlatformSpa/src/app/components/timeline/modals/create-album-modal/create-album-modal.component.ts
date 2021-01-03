@@ -82,7 +82,7 @@ export class CreateAlbumModalComponent implements OnInit {
   }
 
   public onUploadSuccess(event: any): void {
-    this.files.push(event[1].files);
+    this.files.push(event[0] as File);
   }
 
   closeModal(id: string) {
@@ -90,20 +90,20 @@ export class CreateAlbumModalComponent implements OnInit {
   }
 
   saveAlbum() {
-    let formData: FormData = new FormData();
+    var formData: any = new FormData();
     formData.append('name', this.albumCreate.name);
     formData.append('place', this.albumCreate.place);
     formData.append('date', this.albumCreate.date);
     formData.append('tag', this.albumCreate.tag);
+
     if (this.files.length > 0) {
-      console.log("girdi2");
-      for (const row of this.files) {
-        formData.append('images', row);
+      for (let index = 0; index < this.files.length; index++) {
+        formData.append('images', this.files[index], this.files[index].name);
       }
     }
 
-    this.albumService.createAlbum(this.albumCreate).subscribe((data: any) => {
-      console.log(data);
+    this.albumService.createAlbum(formData).subscribe((data: any) => {
+      //TODO: must be implemented
     });
   }
 

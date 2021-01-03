@@ -14,6 +14,7 @@ using System.Net;
 
 namespace DevPlatform.Api.Controllers
 {
+    [ApiController]
     public partial class AlbumController : BaseApiController
     {
         #region Fields
@@ -52,28 +53,32 @@ namespace DevPlatform.Api.Controllers
         /// <returns></returns>
         [HttpPost("createalbum")]
         [Authorize]
-        public virtual JsonResult CreateAlbum([FromBody] AlbumCreateApi model)
+        public virtual JsonResult CreateAlbum([FromForm] AlbumCreateApi model)
         {
-            if (model == null || model.Images.Count == 0)
+            if (model == null || model.Images == null || model.Images.Count == 0)
                 return BadResponse(ResultModel.Error("The upload process can not be done !"));
+
+            //could be useful if model comes as null
+            var formData = _httpContextAccessor.HttpContext.Request.Form;
+            var images = formData.Files;
 
             Album album = new Album
             {
-                Name = model.name,
-                Place = model.place,
-                Date = Convert.ToDateTime(model.date),
-                Tag = model.tag
+                Name = model.Name,
+                Place = model.Place,
+                Date = Convert.ToDateTime(model.Date),
+                Tag = model.Tag
             };
 
             #region ImageUploadingProcess
 
-            foreach (var file in model.Images)
+            foreach (var image in model.Images)
             {
-                using (var stream = file.OpenReadStream())
+                using (var stream = image.OpenReadStream())
                 {
                     var uploadParams = new ImageUploadParams
                     {
-                        File = new FileDescription(file.Name, stream)
+                        File = new FileDescription(image.Name, stream)
                     };
 
                     var imageUploadResult = _cloudinary.Upload(uploadParams);

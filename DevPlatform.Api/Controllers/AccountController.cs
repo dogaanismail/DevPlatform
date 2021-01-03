@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace DevPlatform.Api.Controllers
 {
+    [ApiController]
     public partial class AccountController : BaseApiController
     {
         #region Fields

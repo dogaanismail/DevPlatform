@@ -8,8 +8,8 @@ namespace DevPlatform.Domain.Api.AlbumApi
     {
         public string Name { get; set; }
         public string Place { get; set; }
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
         public string Tag { get; set; }
-        public List<IFormFile> Images { get; set; }
+        public IList<IFormFile> Images { get; set; }
     }
 }

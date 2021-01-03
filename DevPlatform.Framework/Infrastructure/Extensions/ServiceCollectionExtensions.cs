@@ -7,9 +7,12 @@ using DevPlatform.Core.Security.JwtSecurity;
 using DevPlatform.Data;
 using DevPlatform.Data.IdentityFactory;
 using DevPlatform.Domain.Api;
+using DevPlatform.Domain.Api.AlbumApi;
 using DevPlatform.Domain.Validation;
+using DevPlatform.Domain.Validation.AlbumValidation;
 using DevPlatform.LinqToDB.Identity;
 using FluentValidation;
+using FluentValidation.AspNetCore;
 using LinqToDB;
 using LinqToDB.DataProvider.SqlServer;
 using Microsoft.AspNetCore.Builder;
@@ -124,8 +127,8 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
             {
                 opt.EnableEndpointRouting = false;
                 opt.Filters.Add(typeof(ValidateModelAttribute));
-            }).SetCompatibilityVersion(CompatibilityVersion.Latest);
-            //.AddFluentValidation(fvc => fvc.RegisterValidatorsFromAssemblyContaining<Startup>());
+            }).SetCompatibilityVersion(CompatibilityVersion.Latest)
+            .AddFluentValidation(fvc => { });
         }
 
         /// <summary>
@@ -224,7 +227,8 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
         public static void AddMyValidator(this IServiceCollection services)
         {
             services.AddSingleton<IValidator<LoginApiRequest>, LoginApiRequestValidator>();
-            //services.AddSingleton<IValidator<PostCreateApi>, PostCreateApiValidator>();
+            services.AddSingleton<IValidator<PostCreateApi>, PostCreateApiValidator>();
+            services.AddSingleton<IValidator<AlbumCreateApi>, AlbumCreateApiValidator>();
         }
 
         /// <summary>
