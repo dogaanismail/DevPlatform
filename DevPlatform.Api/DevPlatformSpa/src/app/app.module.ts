@@ -1,4 +1,3 @@
-import { AlbumService } from './services/album/album.service';
 import { FormatTitlePipe } from './core/pipes/format-title.pipe';
 /* Components */
 import { AppComponent } from './app.component';
@@ -12,10 +11,12 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { EffectsModule } from '@ngrx/effects';
 import { UserEffects } from './core/ngrx/effects/user.effects';
 import { UserAccountEffects } from './core/ngrx/effects/user-account.effects';
+import { PostEffects } from './core/ngrx/effects/post.effects';
 import { reducers } from './core/ngrx/states/app.state';
 
 /* Services */
 import { AlertifyService } from './services/alertify/alertify.service';
+import { AlbumService } from './services/album/album.service';
 
 /* Modules */
 import { QuestionModule } from './components/question/question.module';
@@ -66,7 +67,7 @@ export function getMetaReducers(saveKeys: string[], localStorageKey: string, sto
     StoreModule.forRoot(reducers),
     EffectsModule.forRoot([]),
     EffectsModule.forFeature(
-      [UserEffects, UserAccountEffects]
+      [UserEffects, UserAccountEffects, PostEffects]
     ),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production })
   ],

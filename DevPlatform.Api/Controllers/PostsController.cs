@@ -65,7 +65,7 @@ namespace DevPlatform.Api.Controllers
         #region Methods
 
         [HttpPost("createpost")]
-        [AllowAnonymous]
+        [Authorize]
         public virtual JsonResult CreatePost([FromForm] PostCreateApi model)
         {
             try

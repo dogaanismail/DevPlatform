@@ -1,5 +1,6 @@
 ﻿using DevPlatform.Domain.Api;
 using FluentValidation;
+using System;
 
 namespace DevPlatform.Domain.Validation
 {
@@ -7,9 +8,7 @@ namespace DevPlatform.Domain.Validation
     {
         public PostCreateApiValidator()
         {
-            RuleFor(m => m.Text)
-                .Equal("undefined").WithMessage(ValidationMessage.Required)
-               .NotEmpty().WithMessage(ValidationMessage.Required);
+            RuleFor(p => p.Text).NotEmpty().When(post => String.IsNullOrEmpty(post.Text));
         }
     }
 }
