@@ -10,7 +10,7 @@ import { Post } from '../../models/post/post';
   providedIn: "root"
 })
 export class PostService {
-  private postUrl = 'api/post/';
+  private postUrl = 'api/posts/';
 
   constructor(
     private http: HttpClient,
@@ -18,6 +18,7 @@ export class PostService {
   ) { }
 
   createPost(post: any): Observable<Post> {
+    console.log("girdi");
     const headers = new HttpHeaders
       ({
         "Authorization": "Bearer " + this.authService.getToken
