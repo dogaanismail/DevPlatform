@@ -3,8 +3,10 @@
   <!-- Container -->
   <div id="main-feed" class="container">
 
+    <!-- <app-timeline-shadow></app-timeline-shadow> -->
+
     <!-- Feed page main wrapper -->
-    <div id="activity-feed" class="view-wrap ">
+    <div id="activity-feed" class="view-wrap true-dom " [ngClass]="{'is-hidden' : (newPost$ | async) == true}">
       <div class="columns">
         <!-- Left side column -->
         <div class="column is-3 is-hidden-mobile">
@@ -22,7 +24,7 @@
 
           </app-timeline-create-post>
 
-          <app-timeline-posts></app-timeline-posts>
+          <app-timeline-posts [posts]="posts$ | async"></app-timeline-posts>
 
         </div>
         <!-- /Middle column -->

@@ -53,7 +53,9 @@ export class PostService {
 
     return this.http.get<Post[]>(this.postUrl + "postlist", { headers: headers })
       .pipe(
-        tap(),
+        tap((data: any) => {
+          console.log(data);
+        }),
         shareReplay(1),
         catchError(this.handleError)
       );

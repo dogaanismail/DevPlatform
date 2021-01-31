@@ -1,16 +1,36 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ModalService } from '../../../services/modal/modal.service';
+import { Post } from 'src/app/models/post/post';
+
+/* Rxjs */
+import { Observable } from 'rxjs';
+/* NgRx */
+import { Store, select } from '@ngrx/store';
+import * as fromPost from '../../../core/ngrx/selectors/post.selectors';
+import * as fromUser from '../../../core/ngrx/selectors/user.selectors';
+import * as postActions from '../../../core/ngrx/actions/post.actions';
+
 
 @Component({
   selector: 'app-timeline-layout',
   templateUrl: './timeline-layout.component.html',
-  styleUrls: ['./timeline-layout.component.css']
+  styleUrls: ['./timeline-layout.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TimelineLayoutComponent implements OnInit {
 
-  constructor(private modalService: ModalService) { }
+  componentActive = true;
+  posts$: Observable<Post[]>;
+  newPost$: Observable<boolean>;
+
+  constructor(
+    private modalService: ModalService,
+    private postStore: Store<fromPost.State>) { }
 
   ngOnInit() {
+    this.postStore.dispatch(new postActions.Load());
+    this.posts$ = this.postStore.pipe(select(fromPost.getPosts)) as Observable<Post[]>;
+    this.newPost$ = this.postStore.pipe(select(fromPost.getIsNewPost));
   }
 
   closeModal(id: string) {

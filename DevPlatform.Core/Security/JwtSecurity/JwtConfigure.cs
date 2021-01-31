@@ -31,7 +31,7 @@ namespace DevPlatform.Core.Security.JwtSecurity
                     options.SaveToken = true;
                     options.TokenValidationParameters = new TokenValidationParameters()
                     {
-                        ValidateIssuer=true,
+                        ValidateIssuer = true,
                         ValidateAudience = true,
                         RequireExpirationTime = true,
                         IssuerSigningKey = JwtTokenDefinitions.IssuerSigningKey,

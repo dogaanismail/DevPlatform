@@ -1,4 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { Post } from 'src/app/models/post/post';
+
+/* NgRx */
+import { Store } from '@ngrx/store';
+import * as fromPost from '../../../core/ngrx/selectors/post.selectors';
+import * as postActions from '../../../core/ngrx/actions/post.actions';
+
 
 @Component({
   selector: 'app-timeline-posts',
@@ -7,7 +14,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TimelinePostsComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private postStore: Store<fromPost.State>,
+  ) { }
+
+  pageTitle = 'Timeline';
+  @Input() posts: Post[];
 
   ngOnInit() {
   }
