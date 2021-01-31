@@ -29,6 +29,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { StoryModule } from './components/storie/story.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { DevPlatformMaterialModule } from './shared/modules/material.module';
 
 /* Store Mechanism */
 import { storageMetaReducer } from './core/store-infrastructure/storage-metareducer';
@@ -55,7 +57,9 @@ export function getMetaReducers(saveKeys: string[], localStorageKey: string, sto
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
+    DevPlatformMaterialModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
