@@ -3,6 +3,7 @@ using DevPlatform.Core.Infrastructure;
 using DevPlatform.Data;
 using DevPlatform.Domain.Common;
 using DevPlatform.Framework.Controllers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevPlatform.Api.Controllers
@@ -27,10 +28,11 @@ namespace DevPlatform.Api.Controllers
         #region Methods
 
         [HttpGet("install")]
+        [AllowAnonymous]
         public virtual JsonResult InstallDb()
         {
             var dataProvider = DataProviderManager.GetDataProvider(DataProviderType.SqlServer);
-            var connectionString = "Data Source=DESKTOP-B2VJH8F\\SQLEXPRESS;Initial Catalog=DevPlatformDB;Integrated Security=True";
+            var connectionString = "Data Source=ISMAILDOGAN2;Initial Catalog=DevPlatformDB;Integrated Security=True";
             DataSettingsManager.SaveSettings(new DataSettings
             {
                 DataProvider = DataProviderType.SqlServer,
