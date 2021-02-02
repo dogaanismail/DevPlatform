@@ -16,7 +16,7 @@ namespace DevPlatform.Data.Mapping.Builders.Identity
               .WithColumn(nameof(AppRoleClaim.RoleId)).AsInt32().NotNullable().ForeignKey<AppRole>(onDelete: Rule.Cascade)
               .WithColumn(nameof(AppRoleClaim.ClaimType)).AsString(256).NotNullable()
               .WithColumn(nameof(AppRoleClaim.ClaimValue)).AsString(256).NotNullable()
-              .WithColumn(nameof(AppRoleClaim.CreatedBy)).AsInt32().Nullable().ForeignKey<AppUser>(onDelete: Rule.None)
+              .WithColumn(nameof(AppRoleClaim.CreatedBy)).AsInt32().NotNullable().ForeignKey<AppUser>(onDelete: Rule.None)
               .WithColumn(nameof(AppRoleClaim.ModifiedBy)).AsInt32().Nullable().ForeignKey<AppUser>(onDelete: Rule.None)
               .WithColumn(nameof(AppRoleClaim.CreatedDate)).AsDateTime().NotNullable()
               .WithColumn(nameof(AppRoleClaim.ModifiedDate)).AsDateTime().Nullable()

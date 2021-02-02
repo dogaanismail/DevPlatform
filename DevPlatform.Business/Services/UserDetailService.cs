@@ -62,7 +62,7 @@ namespace DevPlatform.Business.Services
             if (string.IsNullOrEmpty(userName))
                 throw new ArgumentNullException(nameof(userName));
 
-            var appUser = _appUserRepository.Table.LoadWith(t => t.UserDetail).LoadWith(p => p.UserPosts).FirstOrDefault(x => x.UserName == userName);
+            var appUser = _appUserRepository.Table.LoadWith(t => t.UserDetail).FirstOrDefault(x => x.UserName == userName);
 
             AppUserDetailDto dto = new AppUserDetailDto
             {

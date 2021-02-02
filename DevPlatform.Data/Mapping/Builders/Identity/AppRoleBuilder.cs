@@ -16,7 +16,7 @@ namespace DevPlatform.Data.Mapping.Builders.Identity
                 .WithColumn(nameof(AppRole.Name)).AsString(128).NotNullable()
                 .WithColumn(nameof(AppRole.NormalizedName)).AsString(128).NotNullable()
                 .WithColumn(nameof(AppRole.ConcurrencyStamp)).AsString(256).NotNullable()
-                .WithColumn(nameof(AppRole.CreatedBy)).AsInt32().Nullable().ForeignKey<AppUser>(onDelete: Rule.None)
+                .WithColumn(nameof(AppRole.CreatedBy)).AsInt32().NotNullable().ForeignKey<AppUser>(onDelete: Rule.None)
                 .WithColumn(nameof(AppRole.ModifiedBy)).AsInt32().Nullable().ForeignKey<AppUser>(onDelete: Rule.None)
                 .WithColumn(nameof(AppRole.CreatedDate)).AsDateTime().NotNullable()
                 .WithColumn(nameof(AppRole.ModifiedDate)).AsDateTime().Nullable()

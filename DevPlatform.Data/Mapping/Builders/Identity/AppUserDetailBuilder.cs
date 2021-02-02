@@ -1,5 +1,8 @@
 ﻿using DevPlatform.Core.Domain.Identity;
 using FluentMigrator.Builders.Create.Table;
+using DevPlatform.Data.Extensions;
+using System.Data;
+using FluentMigrator.SqlServer;
 
 namespace DevPlatform.Data.Mapping.Builders.Identity
 {
@@ -24,7 +27,10 @@ namespace DevPlatform.Data.Mapping.Builders.Identity
                 .WithColumn(nameof(AppUserDetail.HasGraduated)).AsBoolean().Nullable()
                 .WithColumn(nameof(AppUserDetail.UniversityDesc)).AsString(256).Nullable()
                 .WithColumn(nameof(AppUserDetail.CompanyName)).AsString(128).Nullable()
-                .WithColumn(nameof(AppUserDetail.Designation)).AsString(256).Nullable();
+                .WithColumn(nameof(AppUserDetail.Designation)).AsString(256).Nullable()
+                .WithColumn(nameof(AppUserDetail.CreatedDate)).AsDateTime().NotNullable()
+                .WithColumn(nameof(AppUserDetail.ModifiedDate)).AsDateTime().Nullable()
+                .WithColumn(nameof(AppUserDetail.StatusId)).AsInt32().Nullable();
             #endregion
         }
     }

@@ -14,7 +14,7 @@ namespace DevPlatform.Data.Mapping.Builders.Portal
             table
               .WithColumn(nameof(PostImage.ImageUrl)).AsString(300).NotNullable()
               .WithColumn(nameof(PostImage.PostId)).AsInt32().NotNullable().ForeignKey<Post>(onDelete: Rule.Cascade)
-              .WithColumn(nameof(PostImage.CreatedBy)).AsInt32().Nullable().ForeignKey<AppUser>(onDelete: Rule.None)
+              .WithColumn(nameof(PostImage.CreatedBy)).AsInt32().NotNullable().ForeignKey<AppUser>(onDelete: Rule.None)
               .WithColumn(nameof(PostImage.ModifiedBy)).AsInt32().Nullable().ForeignKey<AppUser>(onDelete: Rule.None)
               .WithColumn(nameof(PostImage.CreatedDate)).AsDateTime().NotNullable()
               .WithColumn(nameof(PostImage.ModifiedDate)).AsDateTime().Nullable()

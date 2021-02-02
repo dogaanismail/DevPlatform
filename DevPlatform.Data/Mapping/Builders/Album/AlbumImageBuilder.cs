@@ -15,7 +15,7 @@ namespace DevPlatform.Data.Mapping.Builders.Album
             table
               .WithColumn(nameof(AlbumImage.ImageUrl)).AsString(300).NotNullable()
               .WithColumn(nameof(AlbumImage.AlbumId)).AsInt32().NotNullable().ForeignKey<AlbumEntity>(onDelete: Rule.Cascade)
-              .WithColumn(nameof(AlbumImage.CreatedBy)).AsInt32().Nullable().ForeignKey<AppUser>(onDelete: Rule.None)
+              .WithColumn(nameof(AlbumImage.CreatedBy)).AsInt32().NotNullable().ForeignKey<AppUser>(onDelete: Rule.None)
               .WithColumn(nameof(AlbumImage.ModifiedBy)).AsInt32().Nullable().ForeignKey<AppUser>(onDelete: Rule.None)
               .WithColumn(nameof(AlbumImage.CreatedDate)).AsDateTime().NotNullable()
               .WithColumn(nameof(AlbumImage.ModifiedDate)).AsDateTime().Nullable()

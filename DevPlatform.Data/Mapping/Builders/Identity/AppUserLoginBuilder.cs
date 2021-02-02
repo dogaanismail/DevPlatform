@@ -17,7 +17,7 @@ namespace DevPlatform.Data.Mapping.Builders.Identity
               .WithColumn(nameof(AppUserLogin.ProviderKey)).AsString(256).NotNullable().PrimaryKey()
               .WithColumn(nameof(AppUserLogin.ProviderDisplayName)).AsString(256).NotNullable()
               .WithColumn(nameof(AppUserLogin.UserId)).AsInt32().NotNullable().ForeignKey<AppUser>(onDelete: Rule.Cascade)
-              .WithColumn(nameof(AppUserLogin.CreatedBy)).AsInt32().Nullable().ForeignKey<AppUser>(onDelete: Rule.None)
+              .WithColumn(nameof(AppUserLogin.CreatedBy)).AsInt32().NotNullable().ForeignKey<AppUser>(onDelete: Rule.None)
               .WithColumn(nameof(AppUserLogin.ModifiedBy)).AsInt32().Nullable().ForeignKey<AppUser>(onDelete: Rule.None)
               .WithColumn(nameof(AppUserLogin.CreatedDate)).AsDateTime().NotNullable()
               .WithColumn(nameof(AppUserLogin.ModifiedDate)).AsDateTime().Nullable()

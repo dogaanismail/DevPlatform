@@ -14,7 +14,7 @@ namespace DevPlatform.Data.Mapping.Builders.Story
             table
                .WithColumn(nameof(StoryEntity.Title)).AsString(150).NotNullable()
                .WithColumn(nameof(StoryEntity.Description)).AsString(500).NotNullable()
-               .WithColumn(nameof(StoryEntity.CreatedBy)).AsInt32().Nullable().ForeignKey<AppUser>(onDelete: Rule.None)
+               .WithColumn(nameof(StoryEntity.CreatedBy)).AsInt32().NotNullable().ForeignKey<AppUser>(onDelete: Rule.None)
                .WithColumn(nameof(StoryEntity.ModifiedBy)).AsInt32().Nullable().ForeignKey<AppUser>(onDelete: Rule.None)
                .WithColumn(nameof(StoryEntity.CreatedDate)).AsDateTime().NotNullable()
                .WithColumn(nameof(StoryEntity.ModifiedDate)).AsDateTime().Nullable()

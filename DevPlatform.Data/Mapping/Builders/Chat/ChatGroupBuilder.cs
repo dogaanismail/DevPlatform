@@ -13,7 +13,7 @@ namespace DevPlatform.Data.Mapping.Builders.Chat
             #region Methods
             table
                .WithColumn(nameof(ChatGroup.GroupFlag)).AsString(200).NotNullable()
-               .WithColumn(nameof(ChatGroup.CreatedBy)).AsInt32().Nullable().ForeignKey<AppUser>(onDelete: Rule.None)
+               .WithColumn(nameof(ChatGroup.CreatedBy)).AsInt32().NotNullable().ForeignKey<AppUser>(onDelete: Rule.None)
                .WithColumn(nameof(ChatGroup.ModifiedBy)).AsInt32().Nullable().ForeignKey<AppUser>(onDelete: Rule.None)
                .WithColumn(nameof(ChatGroup.CreatedDate)).AsDateTime().NotNullable()
                .WithColumn(nameof(ChatGroup.ModifiedDate)).AsDateTime().Nullable()

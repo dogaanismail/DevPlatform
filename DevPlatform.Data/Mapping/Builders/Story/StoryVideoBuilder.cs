@@ -15,7 +15,7 @@ namespace DevPlatform.Data.Mapping.Builders.Story
             table
              .WithColumn(nameof(StoryVideo.VideoUrl)).AsString(300).NotNullable()
              .WithColumn(nameof(StoryVideo.StoryId)).AsInt32().NotNullable().ForeignKey<StoryEntity>(onDelete: Rule.Cascade)
-             .WithColumn(nameof(StoryVideo.CreatedBy)).AsInt32().Nullable().ForeignKey<AppUser>(onDelete: Rule.None)
+             .WithColumn(nameof(StoryVideo.CreatedBy)).AsInt32().NotNullable().ForeignKey<AppUser>(onDelete: Rule.None)
              .WithColumn(nameof(StoryVideo.ModifiedBy)).AsInt32().Nullable().ForeignKey<AppUser>(onDelete: Rule.None)
              .WithColumn(nameof(StoryVideo.CreatedDate)).AsDateTime().NotNullable()
              .WithColumn(nameof(StoryVideo.ModifiedDate)).AsDateTime().Nullable()

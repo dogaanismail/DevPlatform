@@ -14,7 +14,7 @@ namespace DevPlatform.Data.Mapping.Builders.Portal
             table
                .WithColumn(nameof(Post.Text)).AsString(int.MaxValue).NotNullable()
                .WithColumn(nameof(Post.PostType)).AsInt32().NotNullable()
-               .WithColumn(nameof(Post.CreatedBy)).AsInt32().Nullable().ForeignKey<AppUser>(onDelete: Rule.None)
+               .WithColumn(nameof(Post.CreatedBy)).AsInt32().NotNullable().WithDefaultValue(0).ForeignKey<AppUser>(onDelete: Rule.None)
                .WithColumn(nameof(Post.ModifiedBy)).AsInt32().Nullable().ForeignKey<AppUser>(onDelete: Rule.None)
                .WithColumn(nameof(Post.CreatedDate)).AsDateTime().NotNullable()
                .WithColumn(nameof(Post.ModifiedDate)).AsDateTime().Nullable()

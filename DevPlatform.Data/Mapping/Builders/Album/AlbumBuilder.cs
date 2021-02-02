@@ -16,7 +16,7 @@ namespace DevPlatform.Data.Mapping.Builders.Album
                .WithColumn(nameof(AlbumEntity.Place)).AsString(64).NotNullable()
                .WithColumn(nameof(AlbumEntity.Date)).AsDateTime().Nullable()
                .WithColumn(nameof(AlbumEntity.Tag)).AsString(256).NotNullable()
-               .WithColumn(nameof(AlbumEntity.CreatedBy)).AsInt32().Nullable().ForeignKey<AppUser>(onDelete: Rule.None)
+               .WithColumn(nameof(AlbumEntity.CreatedBy)).AsInt32().NotNullable().ForeignKey<AppUser>(onDelete: Rule.None)
                .WithColumn(nameof(AlbumEntity.ModifiedBy)).AsInt32().Nullable().ForeignKey<AppUser>(onDelete: Rule.None)
                .WithColumn(nameof(AlbumEntity.CreatedDate)).AsDateTime().NotNullable()
                .WithColumn(nameof(AlbumEntity.ModifiedDate)).AsDateTime().Nullable()

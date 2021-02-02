@@ -1,6 +1,7 @@
 ﻿using DevPlatform.Core.Entities;
 using System;
 using System.ComponentModel.DataAnnotations;
+using LinqToDBAssociation = LinqToDB.Mapping;
 
 namespace DevPlatform.Core.Domain.Identity
 {
@@ -49,5 +50,8 @@ namespace DevPlatform.Core.Domain.Identity
 
         [MaxLength(50)]
         public string Designation { get; set; }
+
+        [LinqToDBAssociation.Association(ThisKey = nameof(Id), OtherKey = nameof(AppUser.DetailId), CanBeNull = false)]
+        public virtual AppUser UserDetail { get; set; }
     }
 }

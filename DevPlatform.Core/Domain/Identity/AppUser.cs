@@ -15,13 +15,13 @@ namespace DevPlatform.Core.Domain.Identity
     {
         [Required, Identity]
         [Key]
-        public new int Id { get; set; }
+        public override int Id { get => base.Id; set => base.Id = value; }
 
         [Required]
         [ForeignKey("UserDetail")]
         public int DetailId { get; set; }
 
-        [LinqToDBAssociation.Association(ThisKey = nameof(DetailId), OtherKey = nameof(AppUserDetail.Id), CanBeNull = true, Relationship = Relationship.OneToOne)]
+        [LinqToDBAssociation.Association(ThisKey = nameof(DetailId), OtherKey = nameof(AppUserDetail.Id), CanBeNull = false)]
         public virtual AppUserDetail UserDetail { get; set; }
 
         public string UserName { get; set; }

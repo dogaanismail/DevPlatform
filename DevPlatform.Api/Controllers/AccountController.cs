@@ -106,7 +106,7 @@ namespace DevPlatform.Api.Controllers
         [AllowAnonymous]
         public virtual JsonResult Login([FromBody] LoginApiRequest model)
         {
-            var result =  _signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, false).Result;
+            var result = _signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, false).Result;
             var user = _userDetailService.GetUserDetailByUserName(model.UserName);
             if (result.Succeeded)
             {

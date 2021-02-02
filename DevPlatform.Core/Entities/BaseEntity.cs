@@ -7,7 +7,7 @@ namespace DevPlatform.Core.Entities
 {
     public class BaseEntity : IEntity
     {
-        public int Id { get; set; }
+        public virtual int Id { get; set; }
 
         [ForeignKey("CreatedUser")]  //By using CreatedUser integration, an owner of post,postComment,postLike that has been created, can be found easily thanks to it.
         public virtual int? CreatedBy { get; set; }
@@ -25,10 +25,10 @@ namespace DevPlatform.Core.Entities
             CreatedDate = DateTime.Now;
         }
 
-        [LinqToDBAssociation.Association(ThisKey = nameof(Id), OtherKey = nameof(AppUser.Id), CanBeNull = true)]
+        [LinqToDBAssociation.Association(ThisKey = nameof(CreatedBy), OtherKey = nameof(AppUser.Id), CanBeNull = false)]
         public virtual AppUser CreatedUser { get; set; }
 
-        [LinqToDBAssociation.Association(ThisKey = nameof(Id), OtherKey = nameof(AppUser.Id), CanBeNull = true)]
+        [LinqToDBAssociation.Association(ThisKey = nameof(ModifiedBy), OtherKey = nameof(AppUser.Id), CanBeNull = true)]
         public virtual AppUser ModifiedUser { get; set; }
     }
 }

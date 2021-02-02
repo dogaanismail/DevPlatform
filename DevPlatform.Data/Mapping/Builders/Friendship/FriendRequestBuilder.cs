@@ -15,7 +15,7 @@ namespace DevPlatform.Data.Mapping.Builders.Friendship
                 .WithColumn(nameof(FriendRequest.RequestMessage)).AsString(200).Nullable()
                 .WithColumn(nameof(FriendRequest.FutureFriendId)).AsInt32().NotNullable().ForeignKey<AppUser>(onDelete: Rule.Cascade)
                 .WithColumn(nameof(FriendRequest.UserId)).AsInt32().NotNullable().ForeignKey<AppUser>(onDelete: Rule.None)
-                .WithColumn(nameof(FriendRequest.CreatedBy)).AsInt32().Nullable().ForeignKey<AppUser>(onDelete: Rule.None)
+                .WithColumn(nameof(FriendRequest.CreatedBy)).AsInt32().NotNullable().ForeignKey<AppUser>(onDelete: Rule.None)
                 .WithColumn(nameof(FriendRequest.ModifiedBy)).AsInt32().Nullable().ForeignKey<AppUser>(onDelete: Rule.None)
                 .WithColumn(nameof(FriendRequest.CreatedDate)).AsDateTime().NotNullable()
                 .WithColumn(nameof(FriendRequest.ModifiedDate)).AsDateTime().Nullable()

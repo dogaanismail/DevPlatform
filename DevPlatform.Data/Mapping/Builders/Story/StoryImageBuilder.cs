@@ -15,7 +15,7 @@ namespace DevPlatform.Data.Mapping.Builders.Story
             table
               .WithColumn(nameof(StoryImage.ImageUrl)).AsString(300).NotNullable()
               .WithColumn(nameof(StoryImage.StoryId)).AsInt32().NotNullable().ForeignKey<StoryEntity>(onDelete: Rule.Cascade)
-              .WithColumn(nameof(StoryImage.CreatedBy)).AsInt32().Nullable().ForeignKey<AppUser>(onDelete: Rule.None)
+              .WithColumn(nameof(StoryImage.CreatedBy)).AsInt32().NotNullable().ForeignKey<AppUser>(onDelete: Rule.None)
               .WithColumn(nameof(StoryImage.ModifiedBy)).AsInt32().Nullable().ForeignKey<AppUser>(onDelete: Rule.None)
               .WithColumn(nameof(StoryImage.CreatedDate)).AsDateTime().NotNullable()
               .WithColumn(nameof(StoryImage.ModifiedDate)).AsDateTime().Nullable()

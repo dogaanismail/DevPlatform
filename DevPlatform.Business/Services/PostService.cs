@@ -1,4 +1,5 @@
 ﻿using DevPlatform.Business.Interfaces;
+using DevPlatform.Core.Domain.Identity;
 using DevPlatform.Core.Domain.Portal;
 using DevPlatform.Domain.Common;
 using DevPlatform.Domain.Dto;
@@ -7,6 +8,7 @@ using LinqToDB;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DevPlatform.LinqToDB.Include;
 
 namespace DevPlatform.Business.Services
 {
@@ -17,13 +19,19 @@ namespace DevPlatform.Business.Services
     {
         #region Fields
         private readonly IRepository<Post> _postRepository;
+        private readonly IRepository<AppUser> _userRepository;
+        private readonly IRepository<AppUserDetail> _userDetailRepository;
 
         #endregion
 
         #region Ctor
-        public PostService(IRepository<Post> postRepository)
+        public PostService(IRepository<Post> postRepository,
+            IRepository<AppUser> userRepository,
+            IRepository<AppUserDetail> userDetailRepository)
         {
             _postRepository = postRepository;
+            _userRepository = userRepository;
+            _userDetailRepository = userDetailRepository;
         }
         #endregion
 
@@ -137,9 +145,10 @@ namespace DevPlatform.Business.Services
         /// <returns></returns>
         public IEnumerable<PostListDto> GetPostList()
         {
-            IEnumerable<PostListDto> data = _postRepository.Table.LoadWith(x => x.PostImages)
-              .LoadWith(x => x.PostVideos).LoadWith(x => x.PostComments).ThenLoad(x => x.CreatedUser)
-              .ThenLoad(x => x.UserDetail).LoadWith(x => x.CreatedUser).ThenLoad(x => x.UserDetail)
+            IEnumerable<PostListDto> data = _postRepository.Table
+                .LoadWith(x => x.CreatedUser).ThenLoad(x => x.UserDetail)
+                .LoadWith(x => x.PostImages).LoadWith(x => x.PostVideos)
+                .LoadWith(x => x.PostComments).LoadWith(x => x.CreatedUser).ThenLoad(x => x.UserDetail)
                 .Select(p => new PostListDto
                 {
                     Id = p.Id,
