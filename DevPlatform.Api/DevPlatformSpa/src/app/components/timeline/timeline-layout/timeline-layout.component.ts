@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ModalService } from '../../../services/modal/modal.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { Post } from 'src/app/models/post/post';
 
 /* Rxjs */
@@ -25,9 +26,16 @@ export class TimelineLayoutComponent implements OnInit {
 
   constructor(
     private modalService: ModalService,
-    private postStore: Store<fromPost.State>) { }
+    private postStore: Store<fromPost.State>,
+    private spinner: NgxSpinnerService) { }
 
   ngOnInit() {
+    this.spinner.show();
+
+    setTimeout(() => {
+      this.spinner.hide();
+    }, 1000);
+    
     this.postStore.dispatch(new postActions.Load());
     this.posts$ = this.postStore.pipe(select(fromPost.getPosts)) as Observable<Post[]>;
     this.newPost$ = this.postStore.pipe(select(fromPost.getIsNewPost));
