@@ -1,6 +1,6 @@
 <!-- Publishing Area -->
 <!-- /partials/pages/feed/compose-card.html -->
-<div id="compose-card" class="card is-new-content">
+<div id="compose-card" class="card is-new-content" [ngClass]="{'is-highlighted' : isHighlighted  == true}">
   <!-- Top tabs -->
   <div class="tabs-wrapper">
     <form #postCreateForm="ngForm" (ngSubmit)="savePost()">
@@ -8,26 +8,32 @@
         <ul>
           <li class="is-active">
             <a>
-              <span class="icon is-small"><i data-feather="edit-3"></i></span>
+              <span class="icon is-small">
+                <mat-icon>publish</mat-icon>
+              </span>
               <span>Publish</span>
             </a>
           </li>
           <li>
             <a class="modal-trigger" (click)="openModal('create-album');">
-              <span class="icon is-small"><i data-feather="image"></i></span>
+              <span class="icon is-small">
+                <mat-icon>photo_library</mat-icon>
+              </span>
               <span>Albums</span>
             </a>
           </li>
           <li>
             <a class="modal-trigger" data-modal="videos-help-modal">
-              <span class="icon is-small"><i data-feather="video"></i></span>
+              <span class="icon is-small">
+                <mat-icon>photo_camera_front</mat-icon>
+              </span>
               <span>Video</span>
             </a>
           </li>
           <!-- Close X button -->
           <li class="close-wrap">
-            <span class="close-publish">
-              <i data-feather="x"></i>
+            <span class="close-publish" (click)="makeUnHighlighted()">
+              <mat-icon>close</mat-icon>
             </span>
           </li>
         </ul>
@@ -40,7 +46,8 @@
           <div class="compose-form">
             <img src="https://via.placeholder.com/300x300" data-demo-src="assets/img/avatars/jenna.png" alt="">
             <div class="control">
-              <textarea id="publish" class="textarea" rows="3" [(ngModel)]="postCreate.text" required name="text" placeholder="Write something about you..."></textarea>
+              <textarea class="textarea" (click)="makeHighlighted()" rows="3" [(ngModel)]="postCreate.text" required
+                name="text" placeholder="Write something about you..."></textarea>
             </div>
           </div>
 
@@ -52,10 +59,10 @@
             <div class="control">
               <input id="users-autocpl" type="text" class="input" placeholder="Who are you with?">
               <div class="icon">
-                <i data-feather="search"></i>
+                <mat-icon>search</mat-icon>
               </div>
               <div class="close-icon is-main">
-                <i data-feather="x"></i>
+                <mat-icon>close</mat-icon>
               </div>
             </div>
           </div>
@@ -66,10 +73,10 @@
             <div id="activities-autocpl-wrapper" class="control has-margin">
               <input id="activities-autocpl" type="text" class="input" placeholder="What are you doing right now?">
               <div class="icon">
-                <i data-feather="search"></i>
+                <mat-icon>search</mat-icon>
               </div>
               <div class="close-icon is-main">
-                <i data-feather="x"></i>
+                <mat-icon>close</mat-icon>
               </div>
             </div>
 
@@ -81,7 +88,7 @@
                   Feels
                 </div>
                 <div class="close-icon is-subactivity">
-                  <i data-feather="x"></i>
+                  <mat-icon>close</mat-icon>
                 </div>
               </div>
             </div>
@@ -95,7 +102,7 @@
                   Drinks
                 </div>
                 <div class="close-icon is-subactivity">
-                  <i data-feather="x"></i>
+                  <mat-icon>close</mat-icon>
                 </div>
               </div>
             </div>
@@ -108,7 +115,7 @@
                   Eats
                 </div>
                 <div class="close-icon is-subactivity">
-                  <i data-feather="x"></i>
+                  <mat-icon>close</mat-icon>
                 </div>
               </div>
             </div>
@@ -122,7 +129,7 @@
                   Reads
                 </div>
                 <div class="close-icon is-subactivity">
-                  <i data-feather="x"></i>
+                  <mat-icon>close</mat-icon>
                 </div>
               </div>
             </div>
@@ -136,7 +143,7 @@
                   Watches
                 </div>
                 <div class="close-icon is-subactivity">
-                  <i data-feather="x"></i>
+                  <mat-icon>close</mat-icon>
                 </div>
               </div>
             </div>
@@ -149,7 +156,7 @@
                   Travels
                 </div>
                 <div class="close-icon is-subactivity">
-                  <i data-feather="x"></i>
+                  <mat-icon>close</mat-icon>
                 </div>
               </div>
             </div>
@@ -162,10 +169,10 @@
             <div id="location-autocpl-wrapper" class="control is-location-wrapper has-margin">
               <input id="location-autocpl" type="text" class="input" placeholder="Where are you now?">
               <div class="icon">
-                <i data-feather="map-pin"></i>
+                <mat-icon>location_on</mat-icon>
               </div>
               <div class="close-icon is-main">
-                <i data-feather="x"></i>
+                <mat-icon>close</mat-icon>
               </div>
             </div>
           </div>
@@ -175,10 +182,10 @@
             <div id="link-autocpl-wrapper" class="control is-location-wrapper has-margin">
               <input id="link-autocpl" type="text" class="input" placeholder="Enter the link URL">
               <div class="icon">
-                <i data-feather="link-2"></i>
+                <mat-icon>insert_link</mat-icon>
               </div>
               <div class="close-icon is-main">
-                <i data-feather="x"></i>
+                <mat-icon>close</mat-icon>
               </div>
             </div>
           </div>
@@ -188,10 +195,10 @@
             <div id="gif-autocpl-wrapper" class="control is-gif-wrapper has-margin">
               <input id="gif-autocpl" type="text" class="input" placeholder="Search a GIF to add" autofocus>
               <div class="icon">
-                <i data-feather="search"></i>
+                <mat-icon>search</mat-icon>
               </div>
               <div class="close-icon is-main">
-                <i data-feather="x"></i>
+                <mat-icon>close</mat-icon>
               </div>
               <div class="gif-dropdown">
                 <div class="inner">
@@ -507,7 +514,7 @@
         <div class="more-wrap">
           <!-- View more button -->
           <button id="show-compose-friends" type="button" class="button is-more" aria-haspopup="true">
-            <i data-feather="more-vertical"></i>
+            <mat-icon>more_horiz</mat-icon>
             <span>View More</span>
           </button>
           <!-- Publish button -->

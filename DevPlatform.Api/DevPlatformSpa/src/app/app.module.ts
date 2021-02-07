@@ -31,6 +31,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { StoryModule } from './components/storie/story.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DevPlatformMaterialModule } from './shared/modules/material.module';
+import { NgxSpinnerModule } from "ngx-spinner";
 
 /* Store Mechanism */
 import { storageMetaReducer } from './core/store-infrastructure/storage-metareducer';
@@ -60,6 +61,7 @@ export function getMetaReducers(saveKeys: string[], localStorageKey: string, sto
     BrowserAnimationsModule,
     AppRoutingModule,
     DevPlatformMaterialModule,
+    NgxSpinnerModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,

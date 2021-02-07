@@ -32,7 +32,7 @@ namespace DevPlatform.Api.Controllers
         public virtual JsonResult InstallDb()
         {
             var dataProvider = DataProviderManager.GetDataProvider(DataProviderType.SqlServer);
-            var connectionString = "Data Source=ISMAILDOGAN2;Initial Catalog=DevPlatformDB;Integrated Security=True";
+            var connectionString = "Data Source=DESKTOP-B2VJH8F\\SQLEXPRESS;Initial Catalog=DevPlatformDB;Integrated Security=True";
             DataSettingsManager.SaveSettings(new DataSettings
             {
                 DataProvider = DataProviderType.SqlServer,
@@ -47,7 +47,7 @@ namespace DevPlatform.Api.Controllers
             {
                 Result.Status = true;
                 Result.Message = "Datase has been installed!";
-                return OkResponse(Result);                
+                return OkResponse(Result);
             }
             return BadResponse(ResultModel.Error("The process can not be done !"));
         }
