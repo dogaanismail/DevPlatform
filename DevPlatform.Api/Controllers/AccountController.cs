@@ -107,9 +107,10 @@ namespace DevPlatform.Api.Controllers
         public virtual JsonResult Login([FromBody] LoginApiRequest model)
         {
             var result = _signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, false).Result;
-            var user = _userDetailService.GetUserDetailByUserName(model.UserName);
+         
             if (result.Succeeded)
             {
+                var user = _userDetailService.GetUserDetailByUserName(model.UserName);
                 var token = _tokenService.GenerateToken(new AppUserDto
                 {
                     AppUserId = user.Id,
