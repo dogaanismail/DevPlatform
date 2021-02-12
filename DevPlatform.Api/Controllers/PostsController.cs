@@ -80,11 +80,7 @@ namespace DevPlatform.Api.Controllers
                 if (appUser == null)
 
                 {
-                    return BadResponse(new ResultModel
-                    {
-                        Status = false,
-                        Message = "User not found !"
-                    });
+                    
                 }
 
                 bool hasImage = CheckItemType.HasItemImage(model);
