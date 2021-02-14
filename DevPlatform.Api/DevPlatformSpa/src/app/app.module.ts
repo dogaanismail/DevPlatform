@@ -40,7 +40,6 @@ import { ROOT_STORAGE_KEYS, ROOT_LOCAL_STORAGE_KEY } from './app.tokens';
 import { environment } from 'src/environments/environment';
 import { MultiStepFormComponent } from './components/authentication/multi-step-form/multi-step-form.component';
 
-
 // factory meta-reducer configuration function
 export function getMetaReducers(saveKeys: string[], localStorageKey: string, storageService: StoreLocalStorageService): MetaReducer<State<any>>[] {
   return [storageMetaReducer(saveKeys, localStorageKey, storageService)];
