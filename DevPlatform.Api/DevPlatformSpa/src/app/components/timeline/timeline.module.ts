@@ -5,7 +5,6 @@ import { TimelineSuggestFriendsComponent } from './timeline-widgets/timeline-sug
 import { TimelineStoriesComponent } from './timeline-widgets/timeline-stories/timeline-stories.component';
 import { TimelinePostsComponent } from './timeline-posts/timeline-posts.component';
 import { TimelineLayoutComponent } from './timeline-layout/timeline-layout.component';
-import { SnowEffectComponent } from '../shared/snow-effect/snow-effect.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { TimelineCreatePostComponent } from './timeline-create-post/timeline-create-post.component';
@@ -20,7 +19,6 @@ import { StoreModule } from '@ngrx/store';
 import { POSTS_CONFIG_TOKEN, POSTS_LOCAL_STORAGE_KEY, POSTS_STORAGE_KEYS } from './timeline.tokens';
 import { StoreLocalStorageService } from '../../core/store-infrastructure/store-local-storage.service';
 import { DevPlatformMaterialModule } from 'src/app/shared/modules/material.module';
-
 
 const timelineRoutes: Routes = [
     { path: "timeline", component: TimelineLayoutComponent }
@@ -48,8 +46,7 @@ export function getPostsConfig(saveKeys: string[], localStorageKey: string, stor
         TimelineBirthdayComponent,
         TimelineWeatherComponent,
         TimelineActivityComponent,
-        CreateAlbumModalComponent,
-        SnowEffectComponent
+        CreateAlbumModalComponent
     ],
     providers: [
         StoreLocalStorageService,

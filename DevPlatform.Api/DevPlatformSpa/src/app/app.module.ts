@@ -4,6 +4,7 @@ import { AppComponent } from './app.component';
 import { LoginComponent } from './components/authentication/login/login.component';
 import { RegisterComponent } from './components/authentication/register/register.component';
 import { NavbarComponent } from './components/shared/navbar/navbar-layout/navbar.component';
+import { SnowComponent } from './components/shared/snow/snow.component';
 
 /* NgRx */
 import { StoreModule, META_REDUCERS, MetaReducer, State, USER_PROVIDED_META_REDUCERS } from '@ngrx/store';
@@ -53,7 +54,8 @@ export function getMetaReducers(saveKeys: string[], localStorageKey: string, sto
     LoginComponent,
     RegisterComponent,
     MultiStepFormComponent,
-    FormatTitlePipe
+    FormatTitlePipe,
+    SnowComponent
   ],
   imports: [
     BrowserModule,
