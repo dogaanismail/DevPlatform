@@ -1,4 +1,3 @@
-
 <div class="view-wrapper">
 
   <!-- Container -->
@@ -25,7 +24,8 @@
 
           </app-timeline-create-post>
 
-          <app-timeline-posts [posts]="posts$ | async"></app-timeline-posts>
+          <app-timeline-posts [posts]="posts$ | async" [newPost]="newPost$ | async">
+          </app-timeline-posts>
 
         </div>
         <!-- /Middle column -->

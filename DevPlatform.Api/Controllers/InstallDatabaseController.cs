@@ -32,7 +32,7 @@ namespace DevPlatform.Api.Controllers
         public virtual JsonResult InstallDb()
         {
             var dataProvider = DataProviderManager.GetDataProvider(DataProviderType.SqlServer);
-            var connectionString = "Data Source=DESKTOP-B2VJH8F\\SQLEXPRESS;Initial Catalog=DevPlatformDB;Integrated Security=True";
+            var connectionString = "Data Source=DESKTOP-STEV1LL\\SQLEXPRESS;Initial Catalog=DevPlatformDB;Integrated Security=True";
             DataSettingsManager.SaveSettings(new DataSettings
             {
                 DataProvider = DataProviderType.SqlServer,

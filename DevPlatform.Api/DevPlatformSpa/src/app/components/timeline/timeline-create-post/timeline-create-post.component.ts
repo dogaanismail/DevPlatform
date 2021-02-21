@@ -13,7 +13,6 @@ import * as postActions from "../../../core/ngrx/actions/post.actions";
 import { Observable } from "rxjs";
 
 
-
 @Component({
   selector: 'app-timeline-create-post',
   templateUrl: './timeline-create-post.component.html',
@@ -30,6 +29,8 @@ export class TimelineCreatePostComponent implements OnInit {
   fileData: File = null;
   previewUrl: any = null;
   isHighlighted: boolean = false;
+  public activityFeed = true;
+  public storyFeed = false;
 
   ngOnInit() {
   }
@@ -68,7 +69,6 @@ export class TimelineCreatePostComponent implements OnInit {
   }
 
   savePost() {
-    this.spinner.show();
     var formData: any = new FormData();
     if (this.fileData != null) {
       let checkedItem = this.checkFileType(this.fileData);
@@ -77,11 +77,6 @@ export class TimelineCreatePostComponent implements OnInit {
     }
 
     formData.append("Text", this.postCreate.text);
-
-    setTimeout(() => {
-      this.spinner.hide();
-    }, 2000);
-
     this.postStore.dispatch(new postActions.CreatePost(formData));
     this.postCreate.text = null;
     this.closePreview();
@@ -108,4 +103,29 @@ export class TimelineCreatePostComponent implements OnInit {
     $('#compose-search, #extended-options, .is-suboption').addClass('is-hidden');
     $('#basic-options, #open-compose-search').removeClass('is-hidden');
   }
+
+  changeFeed = (evt: any) => {
+    this.activityFeed = evt.target.checked;
+  }
+
+  changeStory = (evt: any) => {
+    this.storyFeed = evt.target.checked;
+  }
+
+  config: any = {
+    height: 250,
+    theme: 'modern',
+    plugins: 'print preview fullpage searchreplace autolink directionality visualblocks visualchars fullscreen image imagetools link media template codesample table charmap hr pagebreak nonbreaking anchor insertdatetime advlist lists textcolor wordcount contextmenu colorpicker textpattern | emoticons',
+    toolbar: 'formatselect | bold italic strikethrough forecolor backcolor | link | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent  | removeformat | emoticons ',
+    image_advtab: true,
+    imagetools_toolbar: 'rotateleft rotateright | flipv fliph | editimage imageoptions',
+    templates: [
+      { title: 'Test template 1', content: 'Test 1' },
+      { title: 'Test template 2', content: 'Test 2' }
+    ],
+    content_css: [
+      '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
+      '//www.tinymce.com/css/codepen.min.css'
+    ]
+  };
 }

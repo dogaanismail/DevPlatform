@@ -304,12 +304,12 @@
             <div class="channel">
               <div class="round-checkbox is-small">
                 <div>
-                  <input type="checkbox" id="checkbox-1" checked>
-                  <label for="checkbox-1"></label>
+                  <input id="checkbox" type="checkbox" [(ngModel)]="activityFeed" [checked]="activityFeed" (change)="changeFeed($event)">
+                  <label for="checkbox"></label>
                 </div>
               </div>
               <div class="channel-icon">
-                <i data-feather="bell"></i>
+                <mat-icon>notifications_none</mat-icon>
               </div>
               <div class="channel-name">Activity Feed</div>
               <!-- Dropdown menu -->
@@ -368,14 +368,12 @@
             <div class="channel">
               <div class="round-checkbox is-small">
                 <div>
-                  <input type="checkbox" id="checkbox-2">
+                  <input type="checkbox" id="checkbox-2" [checked]="storyFeed" (change)="changeStory($event)">
                   <label for="checkbox-2"></label>
                 </div>
               </div>
-              <div class="story-icon">
-                <div class="plus-icon">
-                  <i data-feather="plus"></i>
-                </div>
+              <div class="channel-icon">
+                <mat-icon>history</mat-icon>
               </div>
 
               <div class="channel-name">My Story</div>

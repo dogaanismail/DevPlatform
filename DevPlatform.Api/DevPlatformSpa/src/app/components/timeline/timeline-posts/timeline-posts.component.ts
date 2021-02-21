@@ -20,6 +20,7 @@ export class TimelinePostsComponent implements OnInit {
 
   pageTitle = 'Timeline';
   @Input() posts: Post[];
+  @Input() newPost: boolean;
 
   ngOnInit() {
   }

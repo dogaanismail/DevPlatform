@@ -30,12 +30,6 @@ export class TimelineLayoutComponent implements OnInit {
     private spinner: NgxSpinnerService) { }
 
   ngOnInit() {
-    this.spinner.show();
-
-    setTimeout(() => {
-      this.spinner.hide();
-    }, 1000);
-    
     this.postStore.dispatch(new postActions.Load());
     this.posts$ = this.postStore.pipe(select(fromPost.getPosts)) as Observable<Post[]>;
     this.newPost$ = this.postStore.pipe(select(fromPost.getIsNewPost));

@@ -77,17 +77,17 @@ $(document).ready(function () {
       $('.is-new-content').addClass('is-highlighted');
     }); //Open publish mode from new story-button
 
-    $('#add-story-button').on('click', function () {
-      $('.app-overlay').addClass('is-active');
-      $('.is-new-content').addClass('is-highlighted');
-      $('.target-channels .channel').each(function () {
-        if ($(this).find('input[type="checkbox"]').prop('checked')) {
-          $(this).find('input[type="checkbox"]').prop('checked', false);
-        } else {
-          $(this).find('input[type="checkbox"]').prop('checked', true);
-        }
-      });
-    }); //Enable and disable publish button based on the textarea value length (1)
+    // $('#add-story-button').on('click', function () {
+    //   $('.app-overlay').addClass('is-active');
+    //   $('.is-new-content').addClass('is-highlighted');
+    //   $('.target-channels .channel').each(function () {
+    //     if ($(this).find('input[type="checkbox"]').prop('checked')) {
+    //       $(this).find('input[type="checkbox"]').prop('checked', false);
+    //     } else {
+    //       $(this).find('input[type="checkbox"]').prop('checked', true);
+    //     }
+    //   });
+    // }); //Enable and disable publish button based on the textarea value length (1)
 
 
     $('.close-publish').on('click', function () {
@@ -113,17 +113,17 @@ $(document).ready(function () {
       $('#compose-search, #open-compose-search').toggleClass('is-hidden');
     }); //Enable checkbox checking and unchecking by clicking on the row
 
-    $('.channel, .friend-block').on('click', function (e) {
-      if (e.target !== this) {
-        return false;
-      } else {
-        if ($(this).find('input[type="checkbox"]').prop('checked')) {
-          $(this).find('input[type="checkbox"]').prop('checked', false);
-        } else {
-          $(this).find('input[type="checkbox"]').prop('checked', true);
-        }
-      }
-    }); //Suboptions
+    // $('.channel, .friend-block').on('click', function (e) {
+    //   if (e.target !== this) {
+    //     return false;
+    //   } else {
+    //     if ($(this).find('input[type="checkbox"]').prop('checked')) {
+    //       $(this).find('input[type="checkbox"]').prop('checked', false);
+    //     } else {
+    //       $(this).find('input[type="checkbox"]').prop('checked', true);
+    //     }
+    //   }
+    // }); //Suboptions
 
     $('#open-tag-suboption').on('click', function () {
       $('.is-suboption').addClass('is-hidden');
