@@ -77,6 +77,8 @@ export class TimelineCreatePostComponent implements OnInit {
     }
 
     formData.append("Text", this.postCreate.text);
+    formData.append("IsPost", this.activityFeed.valueOf());
+    formData.append("IsStory", this.storyFeed.valueOf());
     this.postStore.dispatch(new postActions.CreatePost(formData));
     this.postCreate.text = null;
     this.closePreview();

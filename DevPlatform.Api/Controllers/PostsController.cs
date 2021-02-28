@@ -136,7 +136,7 @@ namespace DevPlatform.Api.Controllers
 
                 #endregion
 
-                #region CRUD
+                #region POST CRUD
 
                 var newPost = new Post
                 {
@@ -192,6 +192,15 @@ namespace DevPlatform.Api.Controllers
 
                 #endregion
 
+                #region Story CRUD
+
+                if (model.IsStory.GetValueOrDefault())
+                {
+
+                }
+
+                #endregion
+
                 //TODO
                 //There must be an integration that returns the last post that has just been createad.
 
@@ -218,7 +227,7 @@ namespace DevPlatform.Api.Controllers
 
         [HttpGet("postlist")]
         [AllowAnonymous]
-        public JsonResult GetPostList()
+        public virtual JsonResult GetPostList()
         {
             var data = _postService.GetPostList();
             return OkResponse(data);
@@ -266,7 +275,7 @@ namespace DevPlatform.Api.Controllers
                             PostId = newComment.PostId,
                             CreatedDate = newComment.CreatedDate,
                             CreatedByUserName = appUser.UserName,
-                            CreatedByUserPhoto = appUser.UserDetail.ProfilePhotoPath
+                            CreatedByUserPhoto = appUser.UserDetail?.ProfilePhotoPath
                         });
                     }
                     else
