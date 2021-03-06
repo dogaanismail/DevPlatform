@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, pipe } from 'rxjs';
-import { mergeMap, map, catchError } from 'rxjs/operators';
+import { mergeMap, map, catchError, switchMap } from 'rxjs/operators';
 import { PostService } from '../../../services/post/post.service';
 
 /* NgRx */
@@ -31,9 +31,11 @@ export class PostEffects {
     createPost$: Observable<Action> = this.actions$.pipe(
         ofType(postActions.PostActionTypes.CreatePost),
         map(((action: postActions.CreatePost) => action.payload)),
-        mergeMap((post: any) =>
+        switchMap((post: any) =>
             this.postService.createPost(post).pipe(
-                map((newPost: any) => (new postActions.CreatePostSuccess(newPost.result))),
+                mergeMap((newPost: any) =>
+                    [new postActions.CreatePostSuccess(newPost.result),
+                    ]),
                 catchError(err => of(new postActions.CreatePostFail(err)))
             )
         )

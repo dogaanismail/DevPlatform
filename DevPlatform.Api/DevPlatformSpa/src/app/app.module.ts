@@ -13,6 +13,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { UserEffects } from './core/ngrx/effects/user.effects';
 import { UserAccountEffects } from './core/ngrx/effects/user-account.effects';
 import { PostEffects } from './core/ngrx/effects/post.effects';
+import { StoryEffects } from './core/ngrx/effects/story.effects';
 import { reducers } from './core/ngrx/states/app.state';
 
 /* Services */
@@ -40,6 +41,7 @@ import { StoreLocalStorageService } from './core/store-infrastructure/store-loca
 import { ROOT_STORAGE_KEYS, ROOT_LOCAL_STORAGE_KEY } from './app.tokens';
 import { environment } from 'src/environments/environment';
 import { MultiStepFormComponent } from './components/authentication/multi-step-form/multi-step-form.component';
+
 
 // factory meta-reducer configuration function
 export function getMetaReducers(saveKeys: string[], localStorageKey: string, storageService: StoreLocalStorageService): MetaReducer<State<any>>[] {
@@ -74,7 +76,7 @@ export function getMetaReducers(saveKeys: string[], localStorageKey: string, sto
     StoreModule.forRoot(reducers),
     EffectsModule.forRoot([]),
     EffectsModule.forFeature(
-      [UserEffects, UserAccountEffects, PostEffects]
+      [UserEffects, UserAccountEffects, PostEffects, StoryEffects]
     ),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production })
   ],
