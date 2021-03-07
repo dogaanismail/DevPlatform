@@ -2,6 +2,7 @@
 using DevPlatform.Domain.Api;
 using DevPlatform.Domain.Common;
 using DevPlatform.Domain.Dto;
+using DevPlatform.Domain.ServiceResponseModels.PostService;
 using System.Collections.Generic;
 
 namespace DevPlatform.Business.Interfaces
@@ -74,6 +75,6 @@ namespace DevPlatform.Business.Interfaces
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        ServiceResponse Create(PostCreateApi model);
+        ServiceResponse<CreateResponse> Create(PostCreateApi model);
     }
 }

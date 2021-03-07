@@ -23,7 +23,7 @@ namespace DevPlatform.Business.Services
     /// <summary>
     /// Post service
     /// </summary>
-    public partial class PostService : IPostService
+    public partial class PostService : ServiceExecute, IPostService
     {
         #region Fields
         private readonly IRepository<Post> _postRepository;
@@ -265,120 +265,138 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public ServiceResponse Create(PostCreateApi model)
+        public ServiceResponse<CreateResponse> Create(PostCreateApi model)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
 
-            var response = new ServiceResponse();
-
-            if (string.IsNullOrEmpty(model.Text))
-                return ServiceResponse.Error("Text can not be null !");
-
-            var appUser = _userService.FindByUserName(_httpContextAccessor.HttpContext.User.Identity.Name);
-            if (appUser == null)
-                return ServiceResponse.Error("User not found !");
-
-            bool hasImage = CheckItemType.HasItemImage(model);
-            bool hasVideo = CheckItemType.HasItemVideo(model);
-            var imageUploadResult = new ImageUploadResult();
-            var videoUploadResult = new VideoUploadResult();
-
-            #region CloudinaryProcess
-
-            #region ImageUploadingProcess
-            if (hasImage)
+            var serviceResponse = new ServiceResponse<CreateResponse>
             {
-                imageUploadResult = _imageProcessingService.UploadImage(model.Photo);
-                if (imageUploadResult.Error != null)
-                {
-                    return ServiceResponse.Error("The upload process can not be done !");
-                }
-            }
-
-            #endregion
-
-            #region VideoUploadingProcess
-
-            if (hasVideo)
-            {
-                videoUploadResult = _imageProcessingService.UploadVideo(model.Video);
-                if (videoUploadResult.Error != null)
-                {
-                    return ServiceResponse.Error("The upload process can not be done !");
-                }
-            }
-
-            #endregion
-
-            #endregion
-
-            #region POST CRUD
-
-            var newPost = new Post
-            {
-                Text = model.Text,
-                PostType = GetPostType(hasImage, hasVideo),
-                CreatedBy = appUser.Id
+                Success = false
             };
 
-            ResultModel postModel = Create(newPost);
-
-            if (!postModel.Status)
+            try
             {
-                return ServiceResponse.Error("The upload process can not be done !");
-            }
+                if (string.IsNullOrEmpty(model.Text))
+                    return ServiceResponse((CreateResponse)null, new List<string> { "Text can not be null !" });
 
-            #region PostImages
-            if (imageUploadResult != null && imageUploadResult.StatusCode == HttpStatusCode.OK)
-            {
-                var postImages = new PostImage
+                var appUser = _userService.FindByUserName(_httpContextAccessor.HttpContext.User.Identity.Name);
+                if (appUser == null)
+                    return ServiceResponse((CreateResponse)null, new List<string> { "User not found!" });
+
+                bool hasImage = CheckItemType.HasItemImage(model);
+                bool hasVideo = CheckItemType.HasItemVideo(model);
+                var imageUploadResult = new ImageUploadResult();
+                var videoUploadResult = new VideoUploadResult();
+
+                #region CloudinaryProcess
+
+                #region ImageUploadingProcess
+                if (hasImage)
                 {
-                    PostId = newPost.Id,
-                    ImageUrl = imageUploadResult.Url.ToString()
+                    imageUploadResult = _imageProcessingService.UploadImage(model.Photo);
+
+                    if (imageUploadResult.Error != null)
+                        return ServiceResponse((CreateResponse)null, new List<string> { imageUploadResult.Error.Message.ToString() });
+                }
+
+                #endregion
+
+                #region VideoUploadingProcess
+
+                if (hasVideo)
+                {
+                    videoUploadResult = _imageProcessingService.UploadVideo(model.Video);
+
+                    if (videoUploadResult.Error != null)
+                        return ServiceResponse((CreateResponse)null, new List<string> { videoUploadResult.Error.Message.ToString() });
+                }
+
+                #endregion
+
+                #endregion
+
+                #region POST CRUD
+
+                var newPost = new Post
+                {
+                    Text = model.Text,
+                    PostType = GetPostType(hasImage, hasVideo),
+                    CreatedBy = appUser.Id
                 };
 
-                ResultModel postImageModel = _postImageService.Create(postImages);
+                ResultModel postModel = Create(newPost);
 
-                if (!postImageModel.Status)
+                if (!postModel.Status)
+                    return ServiceResponse((CreateResponse)null, new List<string> { postModel.Message });
+
+                #region PostImages
+                if (imageUploadResult != null && imageUploadResult.StatusCode == HttpStatusCode.OK)
                 {
-                    return ServiceResponse.Error("The upload process can not be done !");
+                    var postImages = new PostImage
+                    {
+                        PostId = newPost.Id,
+                        ImageUrl = imageUploadResult.Url.ToString()
+                    };
+
+                    ResultModel postImageModel = _postImageService.Create(postImages);
+
+                    if (!postImageModel.Status)
+                        return ServiceResponse((CreateResponse)null, new List<string> { postImageModel.Message });
                 }
-            }
 
-            #endregion
+                #endregion
 
-            #region PostVideos
+                #region PostVideos
 
-            if (videoUploadResult != null && videoUploadResult.StatusCode == HttpStatusCode.OK)
-            {
-                var postVideos = new PostVideo
+                if (videoUploadResult != null && videoUploadResult.StatusCode == HttpStatusCode.OK)
                 {
-                    PostId = newPost.Id,
-                    VideoUrl = videoUploadResult.Url.ToString()
+                    var postVideos = new PostVideo
+                    {
+                        PostId = newPost.Id,
+                        VideoUrl = videoUploadResult.Url.ToString()
+                    };
+                    ResultModel postVideoModel = _postVideoService.Create(postVideos);
+
+                    if (!postVideoModel.Status)
+                        return ServiceResponse((CreateResponse)null, new List<string> { postVideoModel.Message });
+                }
+
+                #endregion
+
+                #endregion
+
+                #region Story CRUD
+
+                if (model.IsStory.GetValueOrDefault())
+                {
+
+                }
+
+                #endregion
+
+                serviceResponse.Success = true;
+                serviceResponse.Data = new CreateResponse
+                {
+                    Id = newPost.Id,
+                    Text = newPost.Text,
+                    ImageUrl = imageUploadResult.Url?.ToString(),
+                    CreatedByUserName = appUser.UserName,
+                    CreatedByUserPhoto = appUser.UserDetail.ProfilePhotoPath,
+                    CreatedDate = newPost.CreatedDate,
+                    VideoUrl = videoUploadResult.Url?.ToString(),
+                    PostType = newPost.PostType,
+                    Comments = null
                 };
-                ResultModel postVideoModel = _postVideoService.Create(postVideos);
 
-                if (!postVideoModel.Status)
-                {
-                    return ServiceResponse.Error("The upload process can not be done !");
-                }
+                return serviceResponse;
             }
-
-            #endregion
-
-            #endregion
-
-            #region Story CRUD
-
-            if (model.IsStory.GetValueOrDefault())
+            catch (Exception ex)
             {
-
+                serviceResponse.Success = false;
+                serviceResponse.Warnings.Add(ex.Message);
+                return serviceResponse;
             }
-
-            #endregion
-
-            return response;
         }
 
         #endregion

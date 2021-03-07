@@ -1,57 +1,126 @@
-﻿namespace DevPlatform.Domain.Common
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace DevPlatform.Domain.Common
 {
     public class ServiceResponse
     {
-        public static ServiceResponse Success()
+        public ServiceResponse()
         {
-            return new ServiceResponse();
+            Warnings = new List<string>();
+        }
+        public List<string> Warnings { get; set; }
+        public bool Success { get; set; }
+        public ResultCode ResultCode { get; set; }
+    }
+    public class ServiceResponse<T> : ServiceResponse
+    {
+        public T Data { get; set; }
+    }
+    public class ServiceResponseList<T> : ServiceResponse
+    {
+        public ServiceResponseList()
+        {
+            Data = new List<T>();
+        }
+        public bool Any => Data != null && Data.Any();
+        public IList<T> Data { get; set; }
+    }
+
+    public class ServiceExecute
+    {
+        public ServiceResponse ServiceResponse(List<string> warnings)
+        {
+            var sr = new ServiceResult(warnings ?? new List<string>());
+            return sr.ExecuteResult();
+        }
+        public ServiceResponse<T> ServiceResponse<T>(T data, List<string> warnings)
+        {
+            var sr = new ServiceResult<T>(data, warnings ?? new List<string>());
+            return sr.ExecuteResult();
+        }
+        public ServiceResponseList<T> ServiceResponseList<T>(IList<T> data, List<string> warnings)
+        {
+            var sr = new ServiceResultList<T>(data, warnings ?? new List<string>());
+            return sr.ExecuteResult();
         }
 
-        public static ServiceResponse Error(string message)
+        public class ServiceResult
         {
-            return new ServiceResponse(false, message);
+
+            private readonly ServiceResponse _generic;
+
+            public ServiceResult(List<string> warnings)
+            {
+                _generic = new ServiceResponse
+                {
+                    Warnings = warnings,
+                    ResultCode = !warnings.Any() ? ResultCode.Success : ResultCode.Warning,
+                    Success = !warnings.Any()
+                };
+            }
+
+            public ServiceResponse ExecuteResult()
+            {
+                return _generic;
+            }
         }
-
-        public bool Status { get; set; }
-        public string Message { get; set; }
-        public int Id { get; set; }
-
-        public ServiceResponse(bool status = true, string message = "")
+        public class ServiceResult<T>
         {
-            this.Status = status;
-            this.Message = message;
+            private readonly ServiceResponse<T> _generic;
+
+            public ServiceResult(T data, List<string> warnings)
+            {
+                _generic = new ServiceResponse<T>
+                {
+                    Data = data,
+                    Warnings = warnings,
+                    ResultCode = !warnings.Any() ? ResultCode.Success : ResultCode.Warning,
+                    Success = !warnings.Any()
+                };
+            }
+
+            public ServiceResponse<T> ExecuteResult()
+            {
+                return _generic;
+            }
+        }
+        public class ServiceResultList<T>
+        {
+
+            private readonly ServiceResponseList<T> _generic;
+
+            public ServiceResultList(IList<T> data, List<string> warnings)
+            {
+                data = data.ToList();
+                _generic = new ServiceResponseList<T>
+                {
+                    Data = data,
+                    Warnings = warnings,
+                    ResultCode = !warnings.Any() ? ResultCode.Success : ResultCode.Warning,
+                    Success = !warnings.Any()
+                };
+            }
+            public ServiceResponseList<T> ExecuteResult()
+            {
+                return _generic;
+            }
         }
     }
 
-    public class ServiceResponse<T> : ResultModel
+    public enum ResultCode
     {
-        public new static ServiceResponse<T> Success()
-        {
-            return new ServiceResponse<T>();
-        }
 
-        public static ServiceResponse<T> Error()
-        {
-            return new ServiceResponse<T>(false);
-        }
+        Exception = 0,
 
-        public ServiceResponse(string errorMessage)
-        {
-            Message = errorMessage;
-            Status = false;
-        }
+        Success = 1,
 
-        public ServiceResponse(T value)
-        {
-            this.Data = value;
-        }
+        ValidationError = 2,
 
-        public ServiceResponse(bool status = true, string message = "")
-        {
-            Status = status;
-            Message = message;
-        }
+        AuthorizationError = 3,
 
-        public T Data { get; set; }
+        NoContent = 4,
+
+        Warning = 5
     }
 }
