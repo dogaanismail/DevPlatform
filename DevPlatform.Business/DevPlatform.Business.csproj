@@ -10,6 +10,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="CloudinaryDotNet" Version="1.11.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\DevPlatform.Core\DevPlatform.Core.csproj" />
     <ProjectReference Include="..\DevPlatform.LinqToDB.Include\DevPlatform.LinqToDB.Include.csproj" />
     <ProjectReference Include="..\DevPlatform.Repository\DevPlatform.Repository.csproj" />

@@ -1,4 +1,5 @@
 ﻿using DevPlatform.Core.Domain.Portal;
+using DevPlatform.Domain.Api;
 using DevPlatform.Domain.Common;
 using DevPlatform.Domain.Dto;
 using System.Collections.Generic;
@@ -67,5 +68,12 @@ namespace DevPlatform.Business.Interfaces
         /// <param name="userId"></param>
         /// <returns></returns>
         IEnumerable<PostListDto> GetUserPostsWithDto(int userId);
+
+        /// <summary>
+        /// Inserts posts and returns service response
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        ServiceResponse Create(PostCreateApi model);
     }
 }

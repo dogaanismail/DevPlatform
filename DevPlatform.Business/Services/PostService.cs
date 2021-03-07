@@ -8,7 +8,15 @@ using LinqToDB;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DevPlatform.LinqToDB.Include;
+using DevPlatform.Domain.Api;
+using DevPlatform.Common.Helpers;
+using CloudinaryDotNet.Actions;
+using CloudinaryDotNet;
+using DevPlatform.Domain.Enumerations;
+using System.Net;
+using Microsoft.AspNetCore.Http;
+using DevPlatform.Core.Configuration;
+using DevPlatform.Domain.ServiceResponseModels.PostService;
 
 namespace DevPlatform.Business.Services
 {
@@ -21,17 +29,42 @@ namespace DevPlatform.Business.Services
         private readonly IRepository<Post> _postRepository;
         private readonly IRepository<AppUser> _userRepository;
         private readonly IRepository<AppUserDetail> _userDetailRepository;
+        private readonly IUserService _userService;
+        private readonly IPostImageService _postImageService;
+        private readonly IPostVideoService _postVideoService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private CloudinaryConfig _cloudinaryOptions;
+        private Cloudinary _cloudinary;
+        private readonly IImageProcessingService _imageProcessingService;
 
         #endregion
 
         #region Ctor
         public PostService(IRepository<Post> postRepository,
             IRepository<AppUser> userRepository,
-            IRepository<AppUserDetail> userDetailRepository)
+            IRepository<AppUserDetail> userDetailRepository,
+            IUserService userService,
+            IPostImageService postImageService,
+            IPostVideoService postVideoService,
+            IHttpContextAccessor httpContextAccessor,
+            CloudinaryConfig cloudinaryOptions,
+            IImageProcessingService imageProcessingService)
         {
             _postRepository = postRepository;
             _userRepository = userRepository;
             _userDetailRepository = userDetailRepository;
+            _userService = userService;
+            _postImageService = postImageService;
+            _postVideoService = postVideoService;
+            _httpContextAccessor = httpContextAccessor;
+            _imageProcessingService = imageProcessingService;
+
+            Account account = new Account(
+            _cloudinaryOptions.CloudName,
+            _cloudinaryOptions.ApiKey,
+            _cloudinaryOptions.ApiSecret);
+
+            _cloudinary = new Cloudinary(account);
         }
         #endregion
 
@@ -227,6 +260,145 @@ namespace DevPlatform.Business.Services
             return getPost;
         }
 
+        /// <summary>
+        /// Inserts posts and returns service response
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public ServiceResponse Create(PostCreateApi model)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            var response = new ServiceResponse();
+
+            if (string.IsNullOrEmpty(model.Text))
+                return ServiceResponse.Error("Text can not be null !");
+
+            var appUser = _userService.FindByUserName(_httpContextAccessor.HttpContext.User.Identity.Name);
+            if (appUser == null)
+                return ServiceResponse.Error("User not found !");
+
+            bool hasImage = CheckItemType.HasItemImage(model);
+            bool hasVideo = CheckItemType.HasItemVideo(model);
+            var imageUploadResult = new ImageUploadResult();
+            var videoUploadResult = new VideoUploadResult();
+
+            #region CloudinaryProcess
+
+            #region ImageUploadingProcess
+            if (hasImage)
+            {
+                imageUploadResult = _imageProcessingService.UploadImage(model.Photo);
+                if (imageUploadResult.Error != null)
+                {
+                    return ServiceResponse.Error("The upload process can not be done !");
+                }
+            }
+
+            #endregion
+
+            #region VideoUploadingProcess
+
+            if (hasVideo)
+            {
+                videoUploadResult = _imageProcessingService.UploadVideo(model.Video);
+                if (videoUploadResult.Error != null)
+                {
+                    return ServiceResponse.Error("The upload process can not be done !");
+                }
+            }
+
+            #endregion
+
+            #endregion
+
+            #region POST CRUD
+
+            var newPost = new Post
+            {
+                Text = model.Text,
+                PostType = GetPostType(hasImage, hasVideo),
+                CreatedBy = appUser.Id
+            };
+
+            ResultModel postModel = Create(newPost);
+
+            if (!postModel.Status)
+            {
+                return ServiceResponse.Error("The upload process can not be done !");
+            }
+
+            #region PostImages
+            if (imageUploadResult != null && imageUploadResult.StatusCode == HttpStatusCode.OK)
+            {
+                var postImages = new PostImage
+                {
+                    PostId = newPost.Id,
+                    ImageUrl = imageUploadResult.Url.ToString()
+                };
+
+                ResultModel postImageModel = _postImageService.Create(postImages);
+
+                if (!postImageModel.Status)
+                {
+                    return ServiceResponse.Error("The upload process can not be done !");
+                }
+            }
+
+            #endregion
+
+            #region PostVideos
+
+            if (videoUploadResult != null && videoUploadResult.StatusCode == HttpStatusCode.OK)
+            {
+                var postVideos = new PostVideo
+                {
+                    PostId = newPost.Id,
+                    VideoUrl = videoUploadResult.Url.ToString()
+                };
+                ResultModel postVideoModel = _postVideoService.Create(postVideos);
+
+                if (!postVideoModel.Status)
+                {
+                    return ServiceResponse.Error("The upload process can not be done !");
+                }
+            }
+
+            #endregion
+
+            #endregion
+
+            #region Story CRUD
+
+            if (model.IsStory.GetValueOrDefault())
+            {
+
+            }
+
+            #endregion
+
+            return response;
+        }
+
         #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Returns PostType by PostTypeId
+        /// </summary>
+        /// <param name="hasImage"></param>
+        /// <param name="hasVideo"></param>
+        /// <returns></returns>
+        private int GetPostType(bool hasImage, bool hasVideo)
+        {
+            return hasImage == true ? (int)PostTypeEnum.PostImage
+                : hasVideo == true ? (int)PostTypeEnum.PostVideo
+                : (int)PostTypeEnum.PostText;
+        }
+
+        #endregion
+
     }
 }
