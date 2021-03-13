@@ -17,34 +17,21 @@ namespace DevPlatform.Core.Infrastructure
     /// </summary>
     public class DevPlatformEngine : IEngine
     {
-        #region Fields
-
-        private ITypeFinder _typeFinder;
-
-        #endregion
-
-        #region Properties
-
-        /// <summary>
-        /// Gets or sets service provider
-        /// </summary>
-        private IServiceProvider _serviceProvider { get; set; }
-
-        #endregion
-
         #region Utilities
 
         /// <summary>
         /// Get IServiceProvider
         /// </summary>
         /// <returns>IServiceProvider</returns>
-        protected IServiceProvider GetServiceProvider()
+        protected IServiceProvider GetServiceProvider(IServiceScope scope = null)
         {
-            if (ServiceProvider == null)
-                return null;
-            var accessor = ServiceProvider?.GetService<IHttpContextAccessor>();
-            var context = accessor?.HttpContext;
-            return context?.RequestServices ?? ServiceProvider;
+            if (scope == null)
+            {
+                var accessor = ServiceProvider?.GetService<IHttpContextAccessor>();
+                var context = accessor?.HttpContext;
+                return context?.RequestServices ?? ServiceProvider;
+            }
+            return scope.ServiceProvider;
         }
 
         /// <summary>
@@ -56,9 +43,6 @@ namespace DevPlatform.Core.Infrastructure
             //find startup tasks provided by other assemblies
             var startupTasks = typeFinder.FindClassesOfType<IStartupTask>();
 
-            //create and sort instances of startup tasks
-            //we startup this interface even for not installed plugins. 
-            //otherwise, DbContext initializers won't run and a plugin installation won't work
             var instances = startupTasks
                 .Select(startupTask => (IStartupTask)Activator.CreateInstance(startupTask))
                 .OrderBy(startupTask => startupTask.Order);
@@ -73,25 +57,29 @@ namespace DevPlatform.Core.Infrastructure
         /// </summary>
         /// <param name="containerBuilder">Container builder</param>
         /// <param name="config">DevPlatform configuration parameters</param>
-        public virtual void RegisterDependencies(ContainerBuilder containerBuilder, DevPlatformConfig config)
+        public virtual void RegisterDependencies(IServiceCollection services, DevPlatformConfig config)
         {
+            var typeFinder = new WebAppTypeFinder();
+
             //register engine
-            containerBuilder.RegisterInstance(this).As<IEngine>().SingleInstance();
+            services.AddSingleton<IEngine>(this);
 
             //register type finder
-            containerBuilder.RegisterInstance(_typeFinder).As<ITypeFinder>().SingleInstance();
+            services.AddSingleton<ITypeFinder>(typeFinder);
 
             //find dependency registrars provided by other assemblies
-            var dependencyRegistrars = _typeFinder.FindClassesOfType<IDependencyRegistrar>();
+            var dependencyRegistrars = typeFinder.FindClassesOfType<IDependencyRegistrar>();
 
             //create and sort instances of dependency registrars
             var instances = dependencyRegistrars
                 .Select(dependencyRegistrar => (IDependencyRegistrar)Activator.CreateInstance(dependencyRegistrar))
-                .OrderBy(startupTask => startupTask.Order);
+                .OrderBy(dependencyRegistrar => dependencyRegistrar.Order);
 
             //register all provided dependencies
             foreach (var dependencyRegistrar in instances)
-                dependencyRegistrar.Register(containerBuilder, _typeFinder, config);
+                dependencyRegistrar.Register(services, typeFinder, config);
+
+            services.AddSingleton(services);
         }
 
         //TODO: Adding auto mapper has to be implemented here.
@@ -133,9 +121,7 @@ namespace DevPlatform.Core.Infrastructure
 
             //get assembly from TypeFinder
             var tf = Resolve<ITypeFinder>();
-            if (tf == null)
-                return null;
-            assembly = tf.GetAssemblies().FirstOrDefault(a => a.FullName == args.Name);
+            assembly = tf?.GetAssemblies().FirstOrDefault(a => a.FullName == args.Name);
             return assembly;
         }
 
@@ -152,8 +138,8 @@ namespace DevPlatform.Core.Infrastructure
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration, DevPlatformConfig config)
         {
             //find startup configurations provided by other assemblies
-            _typeFinder = new WebAppTypeFinder();
-            var startupConfigurations = _typeFinder.FindClassesOfType<IDevPlatformStartup>();
+            var typeFinder = new WebAppTypeFinder();
+            var startupConfigurations = typeFinder.FindClassesOfType<IDevPlatformStartup>();
 
             //create and sort instances of startup configurations
             var instances = startupConfigurations
@@ -176,7 +162,7 @@ namespace DevPlatform.Core.Infrastructure
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public void ConfigureRequestPipeline(IApplicationBuilder application)
         {
-            _serviceProvider = application.ApplicationServices;
+            ServiceProvider = application.ApplicationServices;
 
             //find startup configurations provided by other assemblies
             var typeFinder = Resolve<ITypeFinder>();
@@ -192,27 +178,27 @@ namespace DevPlatform.Core.Infrastructure
                 instance.Configure(application);
         }
 
+
         /// <summary>
         /// Resolve dependency
         /// </summary>
+        /// <param name="scope">Scope</param>
         /// <typeparam name="T">Type of resolved service</typeparam>
         /// <returns>Resolved service</returns>
-        public T Resolve<T>() where T : class
+        public T Resolve<T>(IServiceScope scope = null) where T : class
         {
-            return (T)Resolve(typeof(T));
+            return (T)Resolve(typeof(T), scope);
         }
 
         /// <summary>
         /// Resolve dependency
         /// </summary>
         /// <param name="type">Type of resolved service</param>
+        /// <param name="scope">Scope</param>
         /// <returns>Resolved service</returns>
-        public object Resolve(Type type)
+        public object Resolve(Type type, IServiceScope scope = null)
         {
-            var sp = GetServiceProvider();
-            if (sp == null)
-                return null;
-            return sp.GetService(type);
+            return GetServiceProvider(scope)?.GetService(type);
         }
 
         /// <summary>
@@ -224,7 +210,6 @@ namespace DevPlatform.Core.Infrastructure
         {
             return (IEnumerable<T>)GetServiceProvider().GetServices(typeof(T));
         }
-
         /// <summary>
         /// Resolve unregistered service
         /// </summary>
@@ -265,7 +250,7 @@ namespace DevPlatform.Core.Infrastructure
         /// <summary>
         /// Service provider
         /// </summary>
-        public virtual IServiceProvider ServiceProvider => _serviceProvider;
+        public virtual IServiceProvider ServiceProvider { get; protected set; }
 
         #endregion
     }

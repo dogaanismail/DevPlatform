@@ -52,6 +52,8 @@ namespace DevPlatform.Data.Mapping
                 if (column is null)
                     return null;
 
+                var columnSystemType = (memberInfo as PropertyInfo)?.PropertyType ?? typeof(string);
+
                 return new ColumnAttribute
                 {
                     Name = column.Name,
@@ -61,7 +63,7 @@ namespace DevPlatform.Data.Mapping
                     Length = column.Size ?? 0,
                     Precision = column.Precision ?? 0,
                     IsIdentity = column.IsIdentity,
-                    DataType = new SqlDataType((memberInfo as PropertyInfo)?.PropertyType ?? typeof(string)).Type.DataType
+                    DataType = SqlDataType.GetDataType(columnSystemType).Type.DataType
                 };
             });
 
@@ -122,8 +124,8 @@ namespace DevPlatform.Data.Mapping
 
         #region Properties
 
-        protected static ConcurrentDictionary<(Type, MemberInfo), Attribute> Types => new ConcurrentDictionary<(Type, MemberInfo), Attribute>();
-        protected static ConcurrentDictionary<Type, CreateTableExpression> Expressions => new ConcurrentDictionary<Type, CreateTableExpression>();
+        protected static ConcurrentDictionary<(Type, MemberInfo), Attribute> Types { get; } = new ConcurrentDictionary<(Type, MemberInfo), Attribute>();
+        protected static ConcurrentDictionary<Type, CreateTableExpression> Expressions { get; } = new ConcurrentDictionary<Type, CreateTableExpression>();
 
         #endregion
     }

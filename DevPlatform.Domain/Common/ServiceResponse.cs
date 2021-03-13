@@ -108,6 +108,7 @@ namespace DevPlatform.Domain.Common
         }
     }
 
+    #region ResultCode Enums
     public enum ResultCode
     {
 
@@ -123,4 +124,6 @@ namespace DevPlatform.Domain.Common
 
         Warning = 5
     }
+
+    #endregion
 }

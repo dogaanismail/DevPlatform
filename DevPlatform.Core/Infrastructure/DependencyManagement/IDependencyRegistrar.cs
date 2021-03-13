@@ -1,5 +1,5 @@
-﻿using Autofac;
-using DevPlatform.Core.Configuration;
+﻿using DevPlatform.Core.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DevPlatform.Core.Infrastructure.DependencyManagement
 {
@@ -11,10 +11,10 @@ namespace DevPlatform.Core.Infrastructure.DependencyManagement
         /// <summary>
         /// Register services and interfaces
         /// </summary>
-        /// <param name="builder">Container builder</param>
-        /// <param name="typeFinder">Type finder</param>
-        /// <param name="config">Config</param>
-        void Register(ContainerBuilder builder, ITypeFinder typeFinder, DevPlatformConfig config);
+        /// <param name="services"></param>
+        /// <param name="typeFinder"></param>
+        /// <param name="config"></param>
+        void Register(IServiceCollection services, ITypeFinder typeFinder, DevPlatformConfig config);
 
         /// <summary>
         /// Gets order of this dependency registrar implementation

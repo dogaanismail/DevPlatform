@@ -146,7 +146,7 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
         /// <param name="services"></param>
         public static void AddDevPlatformSignalR(this IApplicationBuilder application)
         {
-            application.UseSignalR(routes =>
+            application.UseEndpoints(routes =>
             {
                 routes.MapHub<VideoNotificationHub>("/notificationHub");
                 //TODO: can be added other hubs

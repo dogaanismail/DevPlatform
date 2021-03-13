@@ -17,15 +17,13 @@ namespace DevPlatform.Data
         /// <returns></returns>
         public static IDevPlatformDataProvider GetDataProvider(DataProviderType dataProviderType)
         {
-            switch (dataProviderType)
+            return dataProviderType switch
             {
-                case DataProviderType.SqlServer:
-                    return new MsSqlDataProvider();
-                case DataProviderType.MySql:
-                    return new MySqlDataProvider();
-                default:
-                    throw new Exception($"Not supported data provider name: '{dataProviderType}'");
-            }
+                DataProviderType.SqlServer => new MsSqlDataProvider(),
+                DataProviderType.MySql => new MySqlDataProvider(),
+                //DataProviderType.PostgreSQL => new PostgreSqlDataProvider(),
+                _ => throw new Exception($"Not supported data provider name: '{dataProviderType}'"),
+            };
         }
 
         #endregion

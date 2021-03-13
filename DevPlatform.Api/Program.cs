@@ -1,4 +1,3 @@
-using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
@@ -14,7 +13,11 @@ namespace DevPlatform.Api
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
             return Host.CreateDefaultBuilder(args)
-                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+               .UseDefaultServiceProvider(options =>
+               {
+                   options.ValidateScopes = false;
+                   options.ValidateOnBuild = false;
+               })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder

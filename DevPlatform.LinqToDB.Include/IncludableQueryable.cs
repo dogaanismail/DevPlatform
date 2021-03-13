@@ -61,8 +61,7 @@ namespace DevPlatform.LinqToDB.Include
 
         public string SqlText => LinqToDBQuery.SqlText;
 
-        IAsyncEnumerable<TResult> IQueryProviderAsync.ExecuteAsync<TResult>(Expression expression)
-            => LinqToDBQuery.ExecuteAsync<TResult>(expression);
+       
 
         async Task<TResult> IQueryProviderAsync.ExecuteAsync<TResult>(Expression expression, CancellationToken token)
         {
@@ -209,6 +208,11 @@ namespace DevPlatform.LinqToDB.Include
             _rootAccessor.LoadMap(entities, this, _builder);
 
             return ((IEnumerable)entities).GetEnumerator();
+        }
+
+        public Task<IAsyncEnumerable<TResult>> ExecuteAsyncEnumerable<TResult>(Expression expression, CancellationToken token)
+        {
+            throw new NotImplementedException();
         }
     }
 }

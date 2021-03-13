@@ -22,6 +22,9 @@ namespace DevPlatform.Business.Services
 
         public ImageProcessingService(CloudinaryConfig cloudinaryOptions)
         {
+
+            _cloudinaryOptions = cloudinaryOptions;
+
             Account account = new Account(
             _cloudinaryOptions.CloudName,
             _cloudinaryOptions.ApiKey,
