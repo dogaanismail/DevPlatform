@@ -32,10 +32,10 @@ namespace DevPlatform.Business.Services
         private readonly IUserService _userService;
         private readonly IPostImageService _postImageService;
         private readonly IPostVideoService _postVideoService;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private CloudinaryConfig _cloudinaryOptions;
         private Cloudinary _cloudinary;
         private readonly IImageProcessingService _imageProcessingService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
         #endregion
 
@@ -56,10 +56,11 @@ namespace DevPlatform.Business.Services
             _userService = userService;
             _postImageService = postImageService;
             _postVideoService = postVideoService;
-            _httpContextAccessor = httpContextAccessor;
             _imageProcessingService = imageProcessingService;
+            _cloudinaryOptions = cloudinaryOptions;
+            _httpContextAccessor = httpContextAccessor;
 
-            Account account = new Account(
+            Account account = new(
             _cloudinaryOptions.CloudName,
             _cloudinaryOptions.ApiKey,
             _cloudinaryOptions.ApiSecret);

@@ -77,13 +77,13 @@ namespace DevPlatform.Api.Controllers
             return OkResponse(new PostListDto
             {
                 Id = serviceResponse.Data.Id,
-                Text = serviceResponse.Data.Text,
-                ImageUrl = serviceResponse.Data.ImageUrl.ToString(),
-                CreatedByUserName = serviceResponse.Data.CreatedByUserName,
-                CreatedByUserPhoto = serviceResponse.Data.CreatedByUserPhoto,
+                Text = serviceResponse.Data?.Text,
+                ImageUrl = serviceResponse.Data.ImageUrl?.ToString(),
+                CreatedByUserName = serviceResponse.Data?.CreatedByUserName,
+                CreatedByUserPhoto = serviceResponse.Data?.CreatedByUserPhoto,
                 CreatedDate = serviceResponse.Data.CreatedDate,
-                VideoUrl = serviceResponse.Data.VideoUrl,
-                PostType = serviceResponse.Data.PostType,
+                VideoUrl = serviceResponse.Data?.VideoUrl,
+                PostType = serviceResponse.Data?.PostType,
                 Comments = null
             });
         }

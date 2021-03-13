@@ -214,7 +214,7 @@ namespace DevPlatform.Data
         public void InitializeDatabase()
         {
             var migrationManager = EngineContext.Current.Resolve<IMigrationManager>();
-            migrationManager.ApplyUpMigrations();
+            migrationManager.ApplyUpMigrations(typeof(DevPlatformDbStartup).Assembly);
 
             //create stored procedures 
             var fileProvider = EngineContext.Current.Resolve<DevPlatformFileProvider>();

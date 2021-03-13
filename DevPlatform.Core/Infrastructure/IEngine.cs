@@ -31,16 +31,18 @@ namespace DevPlatform.Core.Infrastructure
         /// <summary>
         /// Resolve dependency
         /// </summary>
+        /// <param name="scope">Scope</param>
         /// <typeparam name="T">Type of resolved service</typeparam>
         /// <returns>Resolved service</returns>
-        T Resolve<T>() where T : class;
+        T Resolve<T>(IServiceScope scope = null) where T : class;
 
         /// <summary>
         /// Resolve dependency
         /// </summary>
         /// <param name="type">Type of resolved service</param>
+        /// <param name="scope">Scope</param>
         /// <returns>Resolved service</returns>
-        object Resolve(Type type);
+        object Resolve(Type type, IServiceScope scope = null);
 
         /// <summary>
         /// Resolve dependencies
@@ -61,6 +63,6 @@ namespace DevPlatform.Core.Infrastructure
         /// </summary>
         /// <param name="containerBuilder">Container builder</param>
         /// <param name="config">devPlatform configuration parameters</param>
-        void RegisterDependencies(ContainerBuilder containerBuilder, DevPlatformConfig config);
+        void RegisterDependencies(IServiceCollection services, DevPlatformConfig config);
     }
 }

@@ -42,9 +42,13 @@ namespace DevPlatform.Api
             (_engine, _devPlatformConfig) = services.ConfigureApplicationServices(_configuration, _webHostEnvironment);
         }
 
-        public void ConfigureContainer(ContainerBuilder builder)
+        /// <summary>
+        /// Configure the DI container 
+        /// </summary>
+        /// <param name="services">Collection of service descriptors</param>
+        public void ConfigureContainer(IServiceCollection services)
         {
-            _engine.RegisterDependencies(builder, _devPlatformConfig);
+            _engine.RegisterDependencies(services, _devPlatformConfig);
         }
 
         /// <summary>

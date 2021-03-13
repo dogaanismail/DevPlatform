@@ -1,6 +1,4 @@
 ﻿using Autofac;
-using Autofac.Builder;
-using Autofac.Core;
 using DevPlatform.Business.Interfaces;
 using DevPlatform.Business.Services;
 using DevPlatform.Core.Configuration;
@@ -10,9 +8,8 @@ using DevPlatform.Core.Security;
 using DevPlatform.Data;
 using DevPlatform.Repository.Generic;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using System;
-using System.Collections.Generic;
-using System.Reflection;
+using Microsoft.Extensions.DependencyInjection;
+using System.Linq;
 
 namespace DevPlatform.Framework.Infrastructure
 {
@@ -24,89 +21,44 @@ namespace DevPlatform.Framework.Infrastructure
         /// <param name="builder"></param>
         /// <param name="typeFinder"></param>
         /// <param name="config"></param>
-        public void Register(ContainerBuilder builder, ITypeFinder typeFinder, DevPlatformConfig config)
+        public void Register(IServiceCollection services, ITypeFinder typeFinder, DevPlatformConfig config)
         {
-            //file provider
-            builder.RegisterType<DevPlatformFileProvider>().As<IDevPlatformFileProvider>().InstancePerLifetimeScope();
+            services.AddScoped<IDevPlatformFileProvider, DevPlatformFileProvider>();
 
             //data layer
-            builder.RegisterType<DataProviderManager>().As<IDataProviderManager>().InstancePerDependency();
-            builder.Register(context => context.Resolve<IDataProviderManager>().DataProvider).As<IDevPlatformDataProvider>().InstancePerDependency();
+            services.AddTransient<IDataProviderManager, DataProviderManager>();
+            services.AddTransient(serviceProvider =>
+                serviceProvider.GetRequiredService<IDataProviderManager>().DataProvider);
 
             //repositories
-            builder.RegisterGeneric(typeof(RepositoryBase<>)).As(typeof(IRepository<>)).InstancePerLifetimeScope();
+            services.AddScoped(typeof(IRepository<>), typeof(RepositoryBase<>));
 
-            //services will be implemented here
-            builder.RegisterType<TokenService>().As<ITokenService>().InstancePerLifetimeScope();
-            builder.RegisterType<PostService>().As<IPostService>().InstancePerLifetimeScope();
-            builder.RegisterType<StoryService>().As<IStoryService>().InstancePerLifetimeScope();
-            builder.RegisterType<PostImageService>().As<IPostImageService>().InstancePerLifetimeScope();
-            builder.RegisterType<PostVideoService>().As<IPostVideoService>().InstancePerLifetimeScope();
-            builder.RegisterType<PostCommentService>().As<IPostCommentService>().InstancePerLifetimeScope();
-            builder.RegisterType<UserService>().As<IUserService>().InstancePerLifetimeScope();
-            builder.RegisterType<UserDetailService>().As<IUserDetailService>().InstancePerLifetimeScope();
-            builder.RegisterType<ChatService>().As<IChatService>().InstancePerLifetimeScope();
-            builder.RegisterType<ChatGroupUserService>().As<IChatGroupUserService>().InstancePerLifetimeScope();
-            builder.RegisterType<ChatGroupService>().As<IChatGroupService>().InstancePerLifetimeScope();
-            builder.RegisterType<ActionContextAccessor>().As<IActionContextAccessor>().InstancePerLifetimeScope();
-            builder.RegisterType<SettingService>().As<ISettingService>().InstancePerLifetimeScope();
-            builder.RegisterType<AlbumService>().As<IAlbumService>().InstancePerLifetimeScope();
+            services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IPostService, PostService>();
+            services.AddScoped<IStoryService, StoryService>();
+            services.AddScoped<IPostImageService, PostImageService>();
+            services.AddScoped<IPostVideoService, PostVideoService>();
+            services.AddScoped<IPostCommentService, PostCommentService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IUserDetailService, UserDetailService>();
+            services.AddScoped<IChatService, ChatService>();
+            services.AddScoped<IChatGroupUserService, ChatGroupUserService>();
+            services.AddScoped<IChatGroupService, ChatGroupService>();
+            services.AddScoped<ISettingService, SettingService>();
+            services.AddScoped<IAlbumService, AlbumService>();
+            services.AddScoped<IImageProcessingService, ImageProcessingService>();
 
-            //register all settings
-            builder.RegisterSource(new SettingsSource());
-        }
+            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
-        /// <summary>
-        /// Setting source
-        /// </summary>
-        public class SettingsSource : IRegistrationSource
-        {
-            private static readonly MethodInfo _buildMethod =
-                typeof(SettingsSource).GetMethod("BuildRegistration", BindingFlags.Static | BindingFlags.NonPublic);
-
-            /// <summary>
-            /// Registrations for
-            /// </summary>
-            /// <param name="service">Service</param>
-            /// <param name="registrations">Registrations</param>
-            /// <returns>Registrations</returns>
-            public IEnumerable<IComponentRegistration> RegistrationsFor(Service service,
-                Func<Service, IEnumerable<IComponentRegistration>> registrations)
-            {
-                var ts = service as TypedService;
-                if (ts != null && typeof(ISettings).IsAssignableFrom(ts.ServiceType))
-                {
-                    var buildMethod = _buildMethod.MakeGenericMethod(ts.ServiceType);
-                    yield return (IComponentRegistration)buildMethod.Invoke(null, null);
-                }
-            }
-
-            private static IComponentRegistration BuildRegistration<TSettings>() where TSettings : ISettings, new()
-            {
-                return RegistrationBuilder
-                    .ForDelegate((c, p) =>
-                    {
-
-                        try
-                        {
-                            return c.Resolve<ISettingService>().LoadSetting<TSettings>();
-                        }
-                        catch
-                        {
-                            if (DataSettingsManager.DatabaseIsInstalled)
-                                throw;
-                        }
-
-                        return default;
-                    })
-                    .InstancePerLifetimeScope()
-                    .CreateRegistration();
-            }
-
-            /// <summary>
-            /// Is adapter for individual components
-            /// </summary>
-            public bool IsAdapterForIndividualComponents => false;
+            ////register all settings
+            //var settings = typeFinder.FindClassesOfType(typeof(ISettings), false).ToList();
+            //foreach (var setting in settings)
+            //{
+            //    services.AddScoped(setting, serviceProvider =>
+            //    {
+            //        return serviceProvider.GetRequiredService<ISettingService>().LoadSetting(setting);
+            //    });
+            //}
         }
 
         /// <summary>

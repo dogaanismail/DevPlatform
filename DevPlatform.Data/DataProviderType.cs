@@ -23,6 +23,7 @@ namespace DevPlatform.Data
         /// MySQL
         /// </summary>
         [EnumMember(Value = "mysql")]
-        MySql
+        MySql,
+        PostgreSQL
     }
 }

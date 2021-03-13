@@ -8,8 +8,6 @@ using FluentMigrator.Runner.Processors;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace DevPlatform.Data
@@ -27,22 +25,20 @@ namespace DevPlatform.Data
         public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
             var mAssemblies = new AppDomainTypeFinder().FindClassesOfType<MigrationBase>()
-                .Select(t => t.Assembly)
-                .Where(assembly => !assembly.FullName.Contains("FluentMigrator.Runner"))
-                .Distinct()
-                .ToArray();
+               .Select(t => t.Assembly)
+               .Where(assembly => !assembly.FullName.Contains("FluentMigrator.Runner"))
+               .Distinct()
+               .ToArray();
 
             services
                 // add common FluentMigrator services
                 .AddFluentMigratorCore()
                 .AddScoped<IProcessorAccessor, DevPlatformProcessorAccessor>()
-                // set accessor for the connection string
                 .AddScoped<IConnectionStringAccessor>(x => DataSettingsManager.LoadSettings())
                 .AddScoped<IMigrationManager, MigrationManager>()
                 .AddSingleton<IConventionSet, DevPlatformConventionSet>()
                 .ConfigureRunner(rb =>
-                    rb.WithVersionTable(new MigrationVersionInfo()).AddSqlServer().AddMySql5()
-                        // define the assembly containing the migrations
+                    rb.WithVersionTable(new MigrationVersionInfo()).AddSqlServer().AddMySql5().AddPostgres()
                         .ScanIn(mAssemblies).For.Migrations());
         }
 

@@ -1,10 +1,10 @@
 ﻿using FluentMigrator.Runner;
 using FluentMigrator.Runner.Conventions;
+using System;
 using System.Collections.Generic;
 
 namespace DevPlatform.Data.Migrations
 {
-
     /// <summary>
     /// A set conventions to be applied to expressions
     /// </summary>
@@ -13,30 +13,36 @@ namespace DevPlatform.Data.Migrations
         #region Ctor
 
         public DevPlatformConventionSet(IDevPlatformDataProvider dataProvider)
-            : this(new DefaultConventionSet(), new DevPlatformForeignKeyConvention(dataProvider), new DevPlatformIndexConvention(dataProvider))
         {
-        }
+            if (dataProvider is null)
+                throw new ArgumentNullException(nameof(dataProvider));
 
-        public DevPlatformConventionSet(IConventionSet innerConventionSet, DevPlatformForeignKeyConvention foreignKeyConvention, DevPlatformIndexConvention indexConvention)
-        {
-            ForeignKeyConventions = new List<IForeignKeyConvention>
+            var defaultConventionSet = new DefaultConventionSet();
+
+            ForeignKeyConventions = new List<IForeignKeyConvention>()
             {
-                foreignKeyConvention,
-                innerConventionSet.SchemaConvention,
+                new DevPlatformForeignKeyConvention(dataProvider),
+                defaultConventionSet.SchemaConvention,
             };
 
-            IndexConventions = new List<IIndexConvention>
+            IndexConventions = new List<IIndexConvention>()
             {
-                indexConvention
+                new DevPlatformIndexConvention(dataProvider),
+                defaultConventionSet.SchemaConvention
             };
 
-            ColumnsConventions = innerConventionSet.ColumnsConventions;
-            ConstraintConventions = innerConventionSet.ConstraintConventions;
+            ColumnsConventions = new List<IColumnsConvention>()
+            {
+                new DevPlatformColumnsConvention(),
+                new DefaultPrimaryKeyNameConvention()
+            };
 
-            SequenceConventions = innerConventionSet.SequenceConventions;
-            AutoNameConventions = innerConventionSet.AutoNameConventions;
-            SchemaConvention = innerConventionSet.SchemaConvention;
-            RootPathConvention = innerConventionSet.RootPathConvention;
+            ConstraintConventions = defaultConventionSet.ConstraintConventions;
+
+            SequenceConventions = defaultConventionSet.SequenceConventions;
+            AutoNameConventions = defaultConventionSet.AutoNameConventions;
+            SchemaConvention = defaultConventionSet.SchemaConvention;
+            RootPathConvention = defaultConventionSet.RootPathConvention;
         }
 
         #endregion
