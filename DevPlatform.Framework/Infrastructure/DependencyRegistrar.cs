@@ -47,18 +47,19 @@ namespace DevPlatform.Framework.Infrastructure
             services.AddScoped<ISettingService, SettingService>();
             services.AddScoped<IAlbumService, AlbumService>();
             services.AddScoped<IImageProcessingService, ImageProcessingService>();
+            services.AddScoped<IDatabaseService, DatabaseService>();
 
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
-            ////register all settings
-            //var settings = typeFinder.FindClassesOfType(typeof(ISettings), false).ToList();
-            //foreach (var setting in settings)
-            //{
-            //    services.AddScoped(setting, serviceProvider =>
-            //    {
-            //        return serviceProvider.GetRequiredService<ISettingService>().LoadSetting(setting);
-            //    });
-            //}
+            //register all settings
+            var settings = typeFinder.FindClassesOfType(typeof(ISettings), false).ToList();
+            foreach (var setting in settings)
+            {
+                services.AddScoped(setting, serviceProvider =>
+                {
+                    return serviceProvider.GetRequiredService<ISettingService>().LoadSetting(setting);
+                });
+            }
         }
 
         /// <summary>

@@ -65,7 +65,7 @@ namespace DevPlatform.Api.Controllers
         {
             var serviceResponse = _postService.Create(model);
 
-            if (serviceResponse.Warnings.Count > 0)
+            if (serviceResponse.Warnings.Count > 0 || serviceResponse.Warnings.Any())
                 return BadResponse(new ResultModel
                 {
                     Status = false,
@@ -100,7 +100,7 @@ namespace DevPlatform.Api.Controllers
         {
             var serviceResponse = _postCommentService.Create(model);
 
-            if (serviceResponse.Warnings.Count > 0)
+            if (serviceResponse.Warnings.Count > 0 || serviceResponse.Warnings.Any())
                 return BadResponse(new ResultModel
                 {
                     Status = false,

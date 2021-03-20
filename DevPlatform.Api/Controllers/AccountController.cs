@@ -56,7 +56,7 @@ namespace DevPlatform.Api.Controllers
         {
             var serviceResponse = _userService.Register(model);
 
-            if (serviceResponse.Warnings.Count > 0)
+            if (serviceResponse.Warnings.Count > 0 || serviceResponse.Warnings.Any())
                 return BadResponse(new ResultModel
                 {
                     Status = false,

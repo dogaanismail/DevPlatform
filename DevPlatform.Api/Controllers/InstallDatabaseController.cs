@@ -1,10 +1,9 @@
-﻿using DevPlatform.Core.Configuration;
-using DevPlatform.Core.Infrastructure;
-using DevPlatform.Data;
+﻿using DevPlatform.Business.Interfaces;
 using DevPlatform.Domain.Common;
 using DevPlatform.Framework.Controllers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace DevPlatform.Api.Controllers
 {
@@ -12,16 +11,14 @@ namespace DevPlatform.Api.Controllers
     public partial class InstallDatabaseController : BaseApiController
     {
         #region Fields
-        private readonly IDevPlatformFileProvider _fileProvider;
-        private readonly DevPlatformConfig _config;
+        private readonly IDatabaseService _databaseService;
         #endregion
 
         #region Ctor
 
-        public InstallDatabaseController(IDevPlatformFileProvider fileProvider, DevPlatformConfig config)
+        public InstallDatabaseController(IDatabaseService databaseService)
         {
-            _fileProvider = fileProvider;
-            _config = config;
+            _databaseService = databaseService;
         }
         #endregion
 
@@ -31,25 +28,19 @@ namespace DevPlatform.Api.Controllers
         [AllowAnonymous]
         public virtual JsonResult InstallDb()
         {
-            var dataProvider = DataProviderManager.GetDataProvider(DataProviderType.SqlServer);
-            var connectionString = "Data Source=DESKTOP-STEV1LL\\SQLEXPRESS;Initial Catalog=DevPlatformDB;Integrated Security=True";
-            DataSettingsManager.SaveSettings(new DataSettings
-            {
-                DataProvider = DataProviderType.SqlServer,
-                ConnectionString = connectionString
-            }, _fileProvider);
+            var serviceResponse = _databaseService.InstallDatabase();
 
-            DataSettingsManager.LoadSettings(reloadSettings: true);
-            dataProvider.CreateDatabase(string.Empty);
-            dataProvider.InitializeDatabase();
+            if (serviceResponse.Warnings.Count > 0 || serviceResponse.Warnings.Any())
+                return BadResponse(new ResultModel
+                {
+                    Status = false,
+                    Message = serviceResponse.Warnings.First()
+                });
 
-            if (DataSettingsManager.DatabaseIsInstalled)
-            {
-                Result.Status = true;
-                Result.Message = "Datase has been installed!";
-                return OkResponse(Result);
-            }
-            return BadResponse(ResultModel.Error("The process can not be done !"));
+            if (serviceResponse.Data.Succeeded)
+                return OkResponse(serviceResponse);
+            else
+                return BadResponse(serviceResponse);
         }
 
         #endregion

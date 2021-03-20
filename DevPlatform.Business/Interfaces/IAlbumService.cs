@@ -1,6 +1,8 @@
 ﻿using DevPlatform.Core.Domain.Album;
+using DevPlatform.Domain.Api.AlbumApi;
 using DevPlatform.Domain.Common;
 using DevPlatform.Domain.Dto.AlbumDto;
+using DevPlatform.Domain.ServiceResponseModels.AlbumService;
 using System.Collections.Generic;
 
 namespace DevPlatform.Business.Interfaces
@@ -67,5 +69,12 @@ namespace DevPlatform.Business.Interfaces
         /// <param name="userId"></param>
         /// <returns></returns>
         IEnumerable<AlbumListDto> GetUserAlbumsWithDto(int userId);
+
+        /// <summary>
+        /// Inserts an album with images and returns service response
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        ServiceResponse<CreateResponse> Create(AlbumCreateApi model);
     }
 }

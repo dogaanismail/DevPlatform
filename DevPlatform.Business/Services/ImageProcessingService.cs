@@ -33,6 +33,8 @@ namespace DevPlatform.Business.Services
         }
         #endregion
 
+        #region Methods
+
         /// <summary>
         /// Upload an image to Cloudinary
         /// </summary>
@@ -62,9 +64,28 @@ namespace DevPlatform.Business.Services
         /// <param name="images"></param>
         /// <param name="imageUploadParams"></param>
         /// <returns></returns>
-        public List<ImageUploadResult> UploadImage(List<IFormFile> images, List<ImageUploadParams> imageUploadParams = null)
+        public IList<ImageUploadResult> UploadImage(IList<IFormFile> images, IList<ImageUploadParams> imageUploadParams = null)
         {
-            throw new NotImplementedException();
+            if (images == null)
+                throw new ArgumentNullException(nameof(images));
+
+            var uploadProcessResults = new List<ImageUploadResult>();
+
+            foreach (var image in images)
+            {
+                using (var stream = image.OpenReadStream())
+                {
+                    var uploadParams = new ImageUploadParams
+                    {
+                        File = new FileDescription(image.Name, stream)
+                    };
+
+                    var imageUploadResult = _cloudinary.Upload(uploadParams);
+                    uploadProcessResults.Add(imageUploadResult);
+                }
+            }
+
+            return uploadProcessResults;
         }
 
         /// <summary>
@@ -96,9 +117,30 @@ namespace DevPlatform.Business.Services
         /// <param name="videos"></param>
         /// <param name="videoUploadParams"></param>
         /// <returns></returns>
-        public List<VideoUploadResult> UploadVideo(List<IFormFile> videos, List<VideoUploadParams> videoUploadParams = null)
+        public IList<VideoUploadResult> UploadVideo(IList<IFormFile> videos, IList<VideoUploadParams> videoUploadParams = null)
         {
-            throw new NotImplementedException();
+            if (videos == null)
+                throw new ArgumentNullException(nameof(videos));
+
+            var uploadProcessResults = new List<VideoUploadResult>();
+
+            foreach (var image in videos)
+            {
+                using (var stream = image.OpenReadStream())
+                {
+                    var uploadParams = new VideoUploadParams
+                    {
+                        File = new FileDescription(image.Name, stream)
+                    };
+
+                    var videoUploadResult = _cloudinary.Upload(uploadParams);
+                    uploadProcessResults.Add(videoUploadResult);
+                }
+            }
+
+            return uploadProcessResults;
         }
+
+        #endregion
     }
 }

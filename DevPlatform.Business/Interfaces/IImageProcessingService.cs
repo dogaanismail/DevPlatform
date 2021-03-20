@@ -21,7 +21,7 @@ namespace DevPlatform.Business.Interfaces
         /// </summary>
         /// <param name="ımageUploadParams"></param>
         /// <returns></returns>
-        List<ImageUploadResult> UploadImage(List<IFormFile> images, List<ImageUploadParams> imageUploadParams = null);
+        IList<ImageUploadResult> UploadImage(IList<IFormFile> images, IList<ImageUploadParams> imageUploadParams = null);
 
         /// <summary>
         /// Upload a video to Cloudinary
@@ -35,6 +35,6 @@ namespace DevPlatform.Business.Interfaces
         /// </summary>
         /// <param name="videoUploadParams"></param>
         /// <returns></returns>
-        List<VideoUploadResult> UploadVideo(List<IFormFile> videos, List<VideoUploadParams> videoUploadParams = null);
+        IList<VideoUploadResult> UploadVideo(IList<IFormFile> videos, IList<VideoUploadParams> videoUploadParams = null);
     }
 }
