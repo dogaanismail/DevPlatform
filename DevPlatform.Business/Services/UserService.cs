@@ -1,9 +1,13 @@
 ﻿using DevPlatform.Business.Interfaces;
 using DevPlatform.Core.Domain.Identity;
+using DevPlatform.Domain.Api;
+using DevPlatform.Domain.Common;
+using DevPlatform.Domain.ServiceResponseModels.UserService;
 using DevPlatform.Repository.Generic;
 using LinqToDB;
 using Microsoft.AspNetCore.Identity;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace DevPlatform.Business.Services
@@ -11,18 +15,22 @@ namespace DevPlatform.Business.Services
     /// <summary>
     /// User service
     /// </summary>
-    public partial class UserService : IUserService
+    public partial class UserService : ServiceExecute, IUserService
     {
         #region Fields
         private readonly UserManager<AppUser> _userManager;
         private readonly IRepository<AppUser> _appUserRepository;
+        private readonly IUserDetailService _userDetailService;
         #endregion
 
         #region Ctor
-        public UserService(UserManager<AppUser> userManager, IRepository<AppUser> appUserRepository)
+        public UserService(UserManager<AppUser> userManager,
+            IRepository<AppUser> appUserRepository,
+            IUserDetailService userDetailService)
         {
             _userManager = userManager;
             _appUserRepository = appUserRepository;
+            _userDetailService = userDetailService;
         }
         #endregion
 
@@ -93,6 +101,7 @@ namespace DevPlatform.Business.Services
                 .Where(x => x.UserName == userName).FirstOrDefault();
         }
 
+
         /// <summary>
         /// Updates an appUser
         /// </summary>
@@ -104,6 +113,67 @@ namespace DevPlatform.Business.Services
                 throw new ArgumentNullException(nameof(appUser));
 
             return _userManager.UpdateAsync(appUser).Result;
+        }
+
+        /// <summary>
+        /// Register a user and returns a service response model
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public ServiceResponse<RegisterResponse> Register(RegisterApiRequest model)
+        {
+            if (model.RePassword != model.Password)
+                return ServiceResponse((RegisterResponse)null, new List<string> { "Repassword must match password!" });
+
+            var serviceResponse = new ServiceResponse<RegisterResponse>
+            {
+                Success = false
+            };
+
+            try
+            {
+                AppUserDetail appUserDetail = new()
+                {
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    ProfilePhotoPath = "http://placehold.it/300x300",
+                    CoverPhotoPath = "http://placehold.it/1030x360"
+                };
+
+                ResultModel resultModel = _userDetailService.Create(appUserDetail);
+
+                if (!resultModel.Status)
+                    return ServiceResponse((RegisterResponse)null, new List<string> { resultModel.Message });
+
+                AppUser userEntity = new()
+                {
+                    UserName = model.UserName,
+                    Email = model.Email,
+                    DetailId = appUserDetail.Id
+                };
+
+                IdentityResult result = _userManager.CreateAsync(userEntity, model.Password).Result;
+
+                if (!result.Succeeded && result.Errors != null && result.Errors.Any())
+                {
+                    serviceResponse.Warnings = result.Errors.Select(x => x.Description).ToList();
+                    return serviceResponse;
+                }
+
+                serviceResponse.Success = true;
+                serviceResponse.Data = new RegisterResponse
+                {
+                    Succeeded = result.Succeeded
+                };
+
+                return serviceResponse;
+            }
+            catch (Exception ex)
+            {
+                serviceResponse.Success = false;
+                serviceResponse.Warnings.Add(ex.Message);
+                return serviceResponse;
+            }
         }
 
     }

@@ -1,4 +1,7 @@
 ﻿using DevPlatform.Core.Domain.Identity;
+using DevPlatform.Domain.Api;
+using DevPlatform.Domain.Common;
+using DevPlatform.Domain.ServiceResponseModels.UserService;
 using Microsoft.AspNetCore.Identity;
 
 namespace DevPlatform.Business.Interfaces
@@ -49,5 +52,12 @@ namespace DevPlatform.Business.Interfaces
         /// <param name="appUser"></param>
         /// <returns></returns>
         IdentityResult Delete(AppUser appUser);
+
+        /// <summary>
+        /// Register a user and returns a service response model
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        ServiceResponse<RegisterResponse> Register(RegisterApiRequest model);
     }
 }

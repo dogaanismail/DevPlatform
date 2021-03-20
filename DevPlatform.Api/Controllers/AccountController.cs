@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using DevPlatform.Business.Interfaces;
 using DevPlatform.Core.Domain.Identity;
@@ -24,17 +23,23 @@ namespace DevPlatform.Api.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUserDetailService _userDetailService;
+        private readonly IUserService _userService;
         #endregion
 
         #region Ctor
-        public AccountController(ITokenService tokenService, SignInManager<AppUser> signInManager,
-            UserManager<AppUser> userManager, IHttpContextAccessor httpContextAccessor, IUserDetailService userDetailService)
+        public AccountController(ITokenService tokenService,
+            SignInManager<AppUser> signInManager,
+            UserManager<AppUser> userManager,
+            IHttpContextAccessor httpContextAccessor,
+            IUserDetailService userDetailService,
+            IUserService userService)
         {
             _tokenService = tokenService;
             _signInManager = signInManager;
             _userManager = userManager;
             _httpContextAccessor = httpContextAccessor;
             _userDetailService = userDetailService;
+            _userService = userService;
         }
         #endregion
 
@@ -47,52 +52,18 @@ namespace DevPlatform.Api.Controllers
         /// <returns></returns>
         [HttpPost("register")]
         [AllowAnonymous]
-        public virtual async Task<JsonResult> Register([FromBody] RegisterApiRequest model)
+        public virtual JsonResult Register([FromBody] RegisterApiRequest model)
         {
-            try
-            {
-                if (model.RePassword != model.Password)
-                {
-                    return BadResponse(ResultModel.Error("Repassword must match password"));
-                }
+            var serviceResponse = _userService.Register(model);
 
-                AppUserDetail appUserDetail = new AppUserDetail
+            if (serviceResponse.Warnings.Count > 0)
+                return BadResponse(new ResultModel
                 {
-                    FirstName = model.FirstName,
-                    LastName = model.LastName,
-                    ProfilePhotoPath = "http://placehold.it/300x300",
-                    CoverPhotoPath = "http://placehold.it/1030x360"
-                };
-                ResultModel resultModel = _userDetailService.Create(appUserDetail);
+                    Status = false,
+                    Message = serviceResponse.Warnings.First()
+                });
 
-                if (!resultModel.Status)
-                {
-                    return BadResponse(resultModel);
-                }
-
-                AppUser userEntity = new AppUser
-                {
-                    UserName = model.UserName,
-                    Email = model.Email,
-                    DetailId = appUserDetail.Id
-                };
-
-                IdentityResult result = await _userManager.CreateAsync(userEntity, model.Password);
-                if (!result.Succeeded)
-                {
-                    Result.Status = false;
-                    Result.Message = string.Join(",", result.Errors.Select(x => x.Description));
-
-                    return BadResponse(Result);
-                }
-                return OkResponse(Result);
-            }
-            catch (Exception ex)
-            {
-                Result.Status = false;
-                Result.Message = ex.ToString();
-                return BadResponse(Result);
-            }
+            return OkResponse(Result);
         }
 
         /// <summary>
@@ -105,7 +76,7 @@ namespace DevPlatform.Api.Controllers
         public virtual JsonResult Login([FromBody] LoginApiRequest model)
         {
             var result = _signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, false).Result;
-         
+
             if (result.Succeeded)
             {
                 var user = _userDetailService.GetUserDetailByUserName(model.UserName);

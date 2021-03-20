@@ -1,9 +1,7 @@
-﻿using System;
-using CloudinaryDotNet;
+﻿using CloudinaryDotNet;
 using DevPlatform.Business.Interfaces;
 using DevPlatform.Core.Configuration;
 using DevPlatform.Core.Domain.Identity;
-using DevPlatform.Core.Domain.Portal;
 using DevPlatform.Domain.Api;
 using DevPlatform.Domain.Common;
 using DevPlatform.Domain.Dto;

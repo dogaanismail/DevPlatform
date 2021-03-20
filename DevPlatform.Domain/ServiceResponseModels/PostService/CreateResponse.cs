@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace DevPlatform.Domain.ServiceResponseModels.PostService
 {
+    /// <summary>
+    /// Postservice response model
+    /// </summary>
     public class CreateResponse
     {
         public int Id { get; set; }
