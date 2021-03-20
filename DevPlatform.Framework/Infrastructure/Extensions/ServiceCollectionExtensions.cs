@@ -212,8 +212,6 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
                          DataProtectionProvider.Create(new DirectoryInfo("C:\\Github\\Identity\\artifacts"));
                  });
 
-                // Uncomment the following lines to enable logging in with third party login providers
-
                 JwtTokenDefinitions.LoadFromConfiguration(configuration);
                 services.ConfigureJwtAuthentication();
                 services.ConfigureJwtAuthorization();

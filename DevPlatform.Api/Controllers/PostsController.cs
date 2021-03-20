@@ -100,62 +100,24 @@ namespace DevPlatform.Api.Controllers
         [Authorize]
         public virtual JsonResult CreatePostComment([FromBody] PostCommentCreateApi model)
         {
-            try
-            {
-                if (string.IsNullOrEmpty(model.Text))
+            var serviceResponse = _postCommentService.Create(model);
+
+            if (serviceResponse.Warnings.Count > 0)
+                return BadResponse(new ResultModel
                 {
-                    Result.Status = false;
-                    Result.Message = "Comment text can not be null ! ";
-                    return BadResponse(Result);
-                }
-                else
-                {
-                    var commentPost = _postService.GetById(model.PostId);
-                    var appUser = _userService.FindByUserName(User.Identity.Name);
-                    if (appUser == null)
-                    {
-                        return BadResponse(new ResultModel
-                        {
-                            Status = false,
-                            Message = "User not found ! "
-                        });
-                    }
+                    Status = false,
+                    Message = serviceResponse.Warnings.First()
+                });
 
-                    PostComment newComment = new PostComment
-                    {
-                        PostId = model.PostId,
-                        Text = model.Text,
-                        CreatedBy = appUser.Id
-                    };
-
-                    ResultModel result = _postCommentService.Create(newComment);
-                    if (result.Status)
-                    {
-                        return OkResponse(new PostCommentListDto
-                        {
-                            Text = newComment.Text,
-                            Id = newComment.Id,
-                            PostId = newComment.PostId,
-                            CreatedDate = newComment.CreatedDate,
-                            CreatedByUserName = appUser.UserName,
-                            CreatedByUserPhoto = appUser.UserDetail?.ProfilePhotoPath
-                        });
-                    }
-                    else
-                    {
-                        Result.Status = false;
-                        Result.Message = "Comment could not be added ! ";
-                        return BadResponse(Result);
-                    }
-                }
-            }
-            catch (Exception ex)
+            return OkResponse(new PostCommentListDto
             {
-                Result.Status = false;
-                Result.Message = ex.ToString();
-                return BadResponse(Result);
-            }
-
+                Text = serviceResponse.Data.Text,
+                Id = serviceResponse.Data.Id,
+                PostId = serviceResponse.Data.PostId,
+                CreatedDate = serviceResponse.Data.CreatedDate,
+                CreatedByUserName = serviceResponse.Data.CreatedByUserName,
+                CreatedByUserPhoto = serviceResponse.Data.CreatedByUserPhoto
+            });
         }
 
         #endregion

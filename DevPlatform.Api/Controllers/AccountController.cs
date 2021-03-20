@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Transactions;
 using DevPlatform.Business.Interfaces;
 using DevPlatform.Core.Domain.Identity;
 using DevPlatform.Core.Security;
@@ -10,7 +8,6 @@ using DevPlatform.Domain.Api;
 using DevPlatform.Domain.Common;
 using DevPlatform.Domain.Dto;
 using DevPlatform.Framework.Controllers;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -67,6 +64,7 @@ namespace DevPlatform.Api.Controllers
                     CoverPhotoPath = "http://placehold.it/1030x360"
                 };
                 ResultModel resultModel = _userDetailService.Create(appUserDetail);
+
                 if (!resultModel.Status)
                 {
                     return BadResponse(resultModel);

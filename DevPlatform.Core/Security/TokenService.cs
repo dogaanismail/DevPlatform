@@ -12,8 +12,18 @@ using System.Text;
 
 namespace DevPlatform.Core.Security
 {
+    /// <summary>
+    /// Token service implementation
+    /// </summary>
     public class TokenService : ITokenService
     {
+        #region Methods
+
+        /// <summary>
+        /// Generates JWT token
+        /// </summary>
+        /// <param name="appUserDto"></param>
+        /// <returns></returns>
         public TokenUserResponse GenerateToken(AppUserDto appUserDto)
         {
             var claims = new List<Claim>
@@ -40,6 +50,11 @@ namespace DevPlatform.Core.Security
             return token;
         }
 
+        /// <summary>
+        /// Generates access token
+        /// </summary>
+        /// <param name="claims"></param>
+        /// <returns></returns>
         public string GenerateAccessToken(IEnumerable<Claim> claims)
         {
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
@@ -59,6 +74,10 @@ namespace DevPlatform.Core.Security
             return accessToken;
         }
 
+        /// <summary>
+        /// Generates refresh token
+        /// </summary>
+        /// <returns></returns>
         public string GenerateRefreshToken()
         {
             var randomNumber = new byte[32];
@@ -68,5 +87,7 @@ namespace DevPlatform.Core.Security
                 return Convert.ToBase64String(randomNumber);
             }
         }
+
+        #endregion
     }
 }

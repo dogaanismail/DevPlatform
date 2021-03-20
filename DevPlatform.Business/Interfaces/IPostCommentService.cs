@@ -1,5 +1,7 @@
 ﻿using DevPlatform.Core.Domain.Portal;
+using DevPlatform.Domain.Api;
 using DevPlatform.Domain.Common;
+using DevPlatform.Domain.ServiceResponseModels.PostCommentService;
 using System.Collections.Generic;
 
 namespace DevPlatform.Business.Interfaces
@@ -43,5 +45,12 @@ namespace DevPlatform.Business.Interfaces
         /// <param name="postId"></param>
         /// <returns></returns>
         List<PostComment> GetPostCommentsByPostId(int postId);
+
+        /// <summary>
+        /// Creates a post comment and returns service response
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        ServiceResponse<CreateResponse> Create(PostCommentCreateApi model);
     }
 }

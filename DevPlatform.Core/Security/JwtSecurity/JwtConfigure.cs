@@ -5,8 +5,12 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace DevPlatform.Core.Security.JwtSecurity
 {
+    /// <summary>
+    /// Jwt configurations
+    /// </summary>
     public static class JwtConfigure
     {
+        #region Methods
         public static void ConfigureJwtAuthorization(this IServiceCollection services)
         {
             services.AddAuthorizationCore(auth =>
@@ -43,5 +47,7 @@ namespace DevPlatform.Core.Security.JwtSecurity
                     };
                 });
         }
+
+        #endregion
     }
 }
