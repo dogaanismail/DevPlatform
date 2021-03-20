@@ -1,4 +1,5 @@
 ﻿using DevPlatform.Business.Interfaces;
+using DevPlatform.Core.Domain.Identity;
 using DevPlatform.Core.Domain.Portal;
 using DevPlatform.Domain.Api;
 using DevPlatform.Domain.Common;
@@ -8,6 +9,7 @@ using DevPlatform.Repository.Generic;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DevPlatform.Business.Services
 {
@@ -19,18 +21,20 @@ namespace DevPlatform.Business.Services
         #region Fields
         private readonly IRepository<PostComment> _postCommentRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IPostService _postService;
-        private readonly IUserService _userService;
+        private readonly IRepository<Post> _postRepository;
+        private readonly IRepository<AppUser> _userRepository;
         #endregion
 
         #region Ctor
         public PostCommentService(IRepository<PostComment> postCommentRepository,
             IHttpContextAccessor httpContextAccessor,
-            IUserService userService)
+            IRepository<AppUser> userRepository,
+            IRepository<Post> postRepository)
         {
             _postCommentRepository = postCommentRepository;
             _httpContextAccessor = httpContextAccessor;
-            _userService = userService;
+            _postRepository = postRepository;
+            _userRepository = userRepository;
         }
         #endregion
 
@@ -119,19 +123,19 @@ namespace DevPlatform.Business.Services
                 if (string.IsNullOrEmpty(model.Text))
                     return ServiceResponse((CreateResponse)null, new List<string> { "Text can not be null !" });
 
-                var commentPost = _postService.GetById(model.PostId);
+                var commentPost = _postRepository.Table.FirstOrDefault(p => p.Id == model.PostId);
 
                 if (commentPost == null)
                     return ServiceResponse((CreateResponse)null, new List<string> { "Post not found!" });
 
-                var appUser = _userService.FindByUserName(_httpContextAccessor.HttpContext.User.Identity.Name);
+                var appUser = _userRepository.Table.FirstOrDefault(x => x.UserName == _httpContextAccessor.HttpContext.User.Identity.Name);
 
                 if (appUser == null)
                     return ServiceResponse((CreateResponse)null, new List<string> { "User not found!" });
 
                 PostComment newComment = new()
                 {
-                    PostId = model.PostId,
+                    PostId = commentPost.Id,
                     Text = model.Text,
                     CreatedBy = appUser.Id
                 };

@@ -236,7 +236,7 @@ namespace DevPlatform.Repository.Generic
         /// <summary>
         /// Gets an entity set
         /// </summary>
-        protected virtual ITable<TEntity> Entities => _entities ?? (_entities = _dataProvider.GetTable<TEntity>());
+        public virtual ITable<TEntity> Entities => _entities ?? (_entities = _dataProvider.GetTable<TEntity>());
 
         #endregion
     }

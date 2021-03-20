@@ -11,11 +11,9 @@ using System.Linq;
 using DevPlatform.Domain.Api;
 using DevPlatform.Common.Helpers;
 using CloudinaryDotNet.Actions;
-using CloudinaryDotNet;
 using DevPlatform.Domain.Enumerations;
 using System.Net;
 using Microsoft.AspNetCore.Http;
-using DevPlatform.Core.Configuration;
 using DevPlatform.Domain.ServiceResponseModels.PostService;
 
 namespace DevPlatform.Business.Services
@@ -32,8 +30,6 @@ namespace DevPlatform.Business.Services
         private readonly IUserService _userService;
         private readonly IPostImageService _postImageService;
         private readonly IPostVideoService _postVideoService;
-        private CloudinaryConfig _cloudinaryOptions;
-        private Cloudinary _cloudinary;
         private readonly IImageProcessingService _imageProcessingService;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
@@ -47,7 +43,6 @@ namespace DevPlatform.Business.Services
             IPostImageService postImageService,
             IPostVideoService postVideoService,
             IHttpContextAccessor httpContextAccessor,
-            CloudinaryConfig cloudinaryOptions,
             IImageProcessingService imageProcessingService)
         {
             _postRepository = postRepository;
@@ -57,15 +52,7 @@ namespace DevPlatform.Business.Services
             _postImageService = postImageService;
             _postVideoService = postVideoService;
             _imageProcessingService = imageProcessingService;
-            _cloudinaryOptions = cloudinaryOptions;
             _httpContextAccessor = httpContextAccessor;
-
-            Account account = new(
-            _cloudinaryOptions.CloudName,
-            _cloudinaryOptions.ApiKey,
-            _cloudinaryOptions.ApiSecret);
-
-            _cloudinary = new Cloudinary(account);
         }
         #endregion
 

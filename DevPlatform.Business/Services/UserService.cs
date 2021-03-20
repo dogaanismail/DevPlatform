@@ -20,17 +20,17 @@ namespace DevPlatform.Business.Services
         #region Fields
         private readonly UserManager<AppUser> _userManager;
         private readonly IRepository<AppUser> _appUserRepository;
-        private readonly IUserDetailService _userDetailService;
+        private readonly IRepository<AppUserDetail> _appUserDetailRepository;
         #endregion
 
         #region Ctor
         public UserService(UserManager<AppUser> userManager,
             IRepository<AppUser> appUserRepository,
-            IUserDetailService userDetailService)
+            IRepository<AppUserDetail> appUserDetailRepository)
         {
             _userManager = userManager;
             _appUserRepository = appUserRepository;
-            _userDetailService = userDetailService;
+            _appUserDetailRepository = appUserDetailRepository;
         }
         #endregion
 
@@ -140,7 +140,7 @@ namespace DevPlatform.Business.Services
                     CoverPhotoPath = "http://placehold.it/1030x360"
                 };
 
-                ResultModel resultModel = _userDetailService.Create(appUserDetail);
+                ResultModel resultModel = CreateUserDetail(appUserDetail);
 
                 if (!resultModel.Status)
                     return ServiceResponse((RegisterResponse)null, new List<string> { resultModel.Message });
@@ -176,5 +176,22 @@ namespace DevPlatform.Business.Services
             }
         }
 
+        #region Private Methods
+
+        /// <summary>
+        /// Creates an user detail
+        /// </summary>
+        /// <param name="appUserDetail"></param>
+        /// <returns></returns>
+        public ResultModel CreateUserDetail(AppUserDetail appUserDetail)
+        {
+            if (appUserDetail == null)
+                throw new ArgumentNullException(nameof(appUserDetail));
+
+            _appUserDetailRepository.Insert(appUserDetail);
+            return new ResultModel { Status = true, Message = "Create Process Success ! " };
+        }
+
+        #endregion
     }
 }
