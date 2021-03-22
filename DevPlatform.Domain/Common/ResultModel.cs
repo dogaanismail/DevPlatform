@@ -1,5 +1,8 @@
 ﻿namespace DevPlatform.Domain.Common
 {
+    /// <summary>
+    /// Api result model
+    /// </summary>
     public class ResultModel
     {
         public static ResultModel Success()

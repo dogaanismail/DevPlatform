@@ -39,7 +39,7 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="appUser"></param>
         /// <returns></returns>
-        public IdentityResult Create(AppUser appUser)
+        public virtual IdentityResult Create(AppUser appUser)
         {
             if (appUser == null)
                 throw new ArgumentNullException(nameof(appUser));
@@ -53,7 +53,7 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="appUser"></param>
         /// <returns></returns>
-        public IdentityResult Delete(AppUser appUser)
+        public virtual IdentityResult Delete(AppUser appUser)
         {
             if (appUser == null)
                 throw new ArgumentNullException(nameof(appUser));
@@ -67,7 +67,7 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="email"></param>
         /// <returns></returns>
-        public AppUser FindByEmail(string email)
+        public virtual AppUser FindByEmail(string email)
         {
             if (string.IsNullOrEmpty(email))
                 throw new ArgumentNullException(nameof(email));
@@ -120,9 +120,9 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public ServiceResponse<RegisterResponse> Register(RegisterApiRequest model)
+        public virtual ServiceResponse<RegisterResponse> Register(RegisterApiRequest model)
         {
-            if (model.RePassword != model.Password)
+            if (!model.RePassword.Equals(model.Password))
                 return ServiceResponse((RegisterResponse)null, new List<string> { "Repassword must match password!" });
 
             var serviceResponse = new ServiceResponse<RegisterResponse>
@@ -183,7 +183,7 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="appUserDetail"></param>
         /// <returns></returns>
-        public ResultModel CreateUserDetail(AppUserDetail appUserDetail)
+        public virtual ResultModel CreateUserDetail(AppUserDetail appUserDetail)
         {
             if (appUserDetail == null)
                 throw new ArgumentNullException(nameof(appUserDetail));

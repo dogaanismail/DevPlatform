@@ -1,10 +1,12 @@
 ﻿using LinqToDB.Mapping;
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DevPlatform.Core.Entities
 {
+    /// <summary>
+    /// IEntity interface
+    /// </summary>
     public interface IEntity
     {
         [Required, Identity]

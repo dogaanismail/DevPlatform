@@ -70,7 +70,7 @@ namespace DevPlatform.Business.Services
                     serviceResponse.Data = new InstallResponse
                     {
                         Succeeded = true,
-                        Message = "Database could not be installed ! "
+                        Message = "Database could not be installed! "
                     };
 
                     return serviceResponse;

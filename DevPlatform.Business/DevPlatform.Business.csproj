@@ -10,6 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Aspose.Imaging" Version="21.3.0" />
     <PackageReference Include="CloudinaryDotNet" Version="1.15.0" />
   </ItemGroup>
 

@@ -5,20 +5,33 @@ using LinqToDBAssociation = LinqToDB.Mapping;
 
 namespace DevPlatform.Core.Entities
 {
+    /// <summary>
+    /// BaseEntity class implementation
+    /// </summary>
     public class BaseEntity : IEntity
     {
         public virtual int Id { get; set; }
 
-        [ForeignKey("CreatedUser")]  //By using CreatedUser integration, an owner of post,postComment,postLike that has been created, can be found easily thanks to it.
+        /// <summary>
+        /// //By using CreatedUser integration, an owner of post,postComment,postLike that has been created, can be found easily thanks to it.
+        /// </summary>
+        [ForeignKey("CreatedUser")]  
         public virtual int? CreatedBy { get; set; }
 
         public DateTime CreatedDate { get; set; }
 
-        [ForeignKey("ModifiedUser")]  //ModifiedUser can be used in AdminUI.
+        /// <summary>
+        /// //ModifiedUser can be used in AdminUI.
+        /// </summary>
+        [ForeignKey("ModifiedUser")]  
         public virtual int? ModifiedBy { get; set; }
 
         public DateTime? ModifiedDate { get; set; }
-        public int? StatusId { get; set; } //This can be Enumerations.
+
+        /// <summary>
+        /// //This can be Enumerations.
+        /// </summary>
+        public int? StatusId { get; set; } 
 
         public BaseEntity()
         {

@@ -16,7 +16,7 @@ namespace DevPlatform.Business.Services
     /// <summary>
     /// Album service
     /// </summary>
-    public class AlbumService : ServiceExecute, IAlbumService
+    public partial class AlbumService : ServiceExecute, IAlbumService
     {
         #region Fields
         private readonly IRepository<Album> _albumRepository;

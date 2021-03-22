@@ -109,20 +109,14 @@ namespace DevPlatform.Domain.Common
     }
 
     #region ResultCode Enums
-    public enum ResultCode
+    public enum ResultCode : int
     {
-
-        Exception = 0,
-
-        Success = 1,
-
-        ValidationError = 2,
-
-        AuthorizationError = 3,
-
-        NoContent = 4,
-
-        Warning = 5
+        Exception,
+        Success,
+        ValidationError,
+        AuthorizationError,
+        NoContent,
+        Warning,
     }
 
     #endregion
