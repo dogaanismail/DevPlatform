@@ -1,8 +1,12 @@
 ﻿using DevPlatform.ImageProcessingLibrary.Contract.Enums;
-using System;
+using DevPlatform.ImageProcessingLibrary.Providers.Aspose;
+using DevPlatform.ImageProcessingLibrary.Providers.ImageSharp;
 
 namespace DevPlatform.ImageProcessingLibrary.Providers
 {
+    /// <summary>
+    /// FileProcessorCreater class implementations
+    /// </summary>
     public class FileProcessorCreater : IFileProcessorCreater
     {
         public IFileProcessorFactory ProcessorFactory(LibraryType libraryType)
@@ -10,9 +14,9 @@ namespace DevPlatform.ImageProcessingLibrary.Providers
             switch (libraryType)
             {
                 case LibraryType.Aspose:
-                    return null;
+                    return new AsposeFactory();
                 case LibraryType.ImageSharp:
-                    return null;
+                    return new ImageSharpFactory();
                 default:
                     return null;
             }

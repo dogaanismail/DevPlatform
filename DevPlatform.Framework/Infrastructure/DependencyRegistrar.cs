@@ -6,6 +6,8 @@ using DevPlatform.Core.Infrastructure;
 using DevPlatform.Core.Infrastructure.DependencyManagement;
 using DevPlatform.Core.Security;
 using DevPlatform.Data;
+using DevPlatform.ImageProcessingLibrary.Contract;
+using DevPlatform.ImageProcessingLibrary.Providers;
 using DevPlatform.Repository.Generic;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
@@ -50,6 +52,13 @@ namespace DevPlatform.Framework.Infrastructure
             services.AddScoped<IDatabaseService, DatabaseService>();
 
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+
+            #region ImageProcessingLibrary services
+            services.AddScoped<IImageProcessorService, ImageProcessorService>();
+            services.AddScoped<IFileProcessorCreater, FileProcessorCreater>();
+            services.AddScoped<IFileProcessorClient, ProcessorClient>();
+
+            #endregion
 
             //register all settings
             var settings = typeFinder.FindClassesOfType(typeof(ISettings), false).ToList();

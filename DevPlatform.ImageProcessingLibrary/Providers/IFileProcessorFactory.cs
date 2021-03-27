@@ -1,19 +1,25 @@
 ﻿using DevPlatform.ImageProcessingLibrary.Contract.Enums;
-using DevPlatform.ImageProcessingLibrary.Providers.CreateFile;
-using DevPlatform.ImageProcessingLibrary.Providers.EditFile;
+using DevPlatform.ImageProcessingLibrary.Providers.FileProcess;
 using DevPlatform.ImageProcessingLibrary.Providers.Helper;
-using DevPlatform.ImageProcessingLibrary.Providers.LoadFile;
 
 namespace DevPlatform.ImageProcessingLibrary.Providers
 {
+    /// <summary>
+    /// IFileProcessFactory interface implementations
+    /// </summary>
     public interface IFileProcessorFactory
     {
+        /// <summary>
+        /// Creates a request
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
         IRequestHelper CreateRequest(PostType type);
 
-        ILoadFile CreateLoad();
-
-        IEditFile CreateEdit();
-
-        ISaveFile CreateSave();
+        /// <summary>
+        /// Applies a file process like edit, delete, save
+        /// </summary>
+        /// <returns></returns>
+        IFileProcess ApplyFileProcess();
     }
 }
