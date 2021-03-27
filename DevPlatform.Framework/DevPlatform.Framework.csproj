@@ -18,6 +18,7 @@
     <ProjectReference Include="..\DevPlatform.Business\DevPlatform.Business.csproj" />
     <ProjectReference Include="..\DevPlatform.Core\DevPlatform.Core.csproj" />
     <ProjectReference Include="..\DevPlatform.Data\DevPlatform.Data.csproj" />
+    <ProjectReference Include="..\DevPlatform.ImageProcessingLibrary\DevPlatform.ImageProcessingLibrary.csproj" />
     <ProjectReference Include="..\DevPlatform.Repository\DevPlatform.Repository.csproj" />
   </ItemGroup>
 

@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DevPlatform.Core\DevPlatform.Core.csproj" />
+    <ProjectReference Include="..\DevPlatform.ImageProcessingLibrary\DevPlatform.ImageProcessingLibrary.csproj" />
     <ProjectReference Include="..\DevPlatform.LinqToDB.Include\DevPlatform.LinqToDB.Include.csproj" />
     <ProjectReference Include="..\DevPlatform.Repository\DevPlatform.Repository.csproj" />
   </ItemGroup>

@@ -2,6 +2,7 @@
 using CloudinaryDotNet.Actions;
 using DevPlatform.Business.Interfaces;
 using DevPlatform.Core.Configuration;
+using DevPlatform.ImageProcessingLibrary.Contract;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -16,12 +17,15 @@ namespace DevPlatform.Business.Services
         #region Fields
         private CloudinaryConfig _cloudinaryOptions;
         private Cloudinary _cloudinary;
+        private readonly IImageProcessorService _imageProcessorService;
         #endregion
 
         #region Ctor
 
-        public ImageProcessingService(CloudinaryConfig cloudinaryOptions)
+        public ImageProcessingService(CloudinaryConfig cloudinaryOptions,
+            IImageProcessorService imageProcessorService)
         {
+            _imageProcessorService = imageProcessorService;
             _cloudinaryOptions = cloudinaryOptions;
 
             Account account = new Account(

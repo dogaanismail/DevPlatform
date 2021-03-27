@@ -1,20 +1,20 @@
 ﻿using DevPlatform.ImageProcessingLibrary.Contract.Request;
 using DevPlatform.ImageProcessingLibrary.Contract.Response.Base;
-using DevPlatform.ImageProcessingLibrary.Providers.CreateFile;
-using DevPlatform.ImageProcessingLibrary.Providers.EditFile;
+using DevPlatform.ImageProcessingLibrary.Providers.FileProcess;
 using DevPlatform.ImageProcessingLibrary.Providers.Helper;
-using DevPlatform.ImageProcessingLibrary.Providers.LoadFile;
 
 namespace DevPlatform.ImageProcessingLibrary.Providers
 {
+    /// <summary>
+    /// ProcessorClient class implementations
+    /// </summary>
     public class ProcessorClient : IFileProcessorClient
     {
         #region Fields
         private IFileProcessorCreater _fileProcessorCreater;
         private FileProcessorRequest _request;
-        private ILoadFile _loadFile;
-        private IEditFile _editFile;
-        private ISaveFile _saveFile;
+        private IFileProcess _fileProcess;
+
         #endregion
 
         #region Ctor
@@ -35,25 +35,18 @@ namespace DevPlatform.ImageProcessingLibrary.Providers
                 Helper = procesorFactory.CreateRequest(imageProcessRequest.SystemInformation.PostType)
             };
 
-            _loadFile = procesorFactory.CreateLoad();
-            _editFile = procesorFactory.CreateEdit();
-            _saveFile = procesorFactory.CreateSave();
+            _fileProcess = procesorFactory.ApplyFileProcess();
+
             _request.RequestInformation = imageProcessRequest;
         }
 
-        public EditFileResponse ApplyEdit()
+        /// <summary>
+        /// Applies a file process like edit,delete or save file
+        /// </summary>
+        /// <returns></returns>
+        public ImageProcessResponse ApplyFileProcess()
         {
-            return _editFile.EditFile(_request);
-        }
-
-        public LoadFileResponse ApplyLoad()
-        {
-            return _loadFile.LoadFile(_request);
-        }
-
-        public SaveFileResponse ApplySave()
-        {
-            return _saveFile.SaveFile(_request);
+            return _fileProcess.Apply(_request);
         }
 
         #endregion
