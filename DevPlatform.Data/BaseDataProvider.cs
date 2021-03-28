@@ -6,6 +6,7 @@ using LinqToDB.Data;
 using LinqToDB.DataProvider;
 using LinqToDB.Mapping;
 using LinqToDB.Tools;
+using StackExchange.Profiling.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -22,6 +23,34 @@ namespace DevPlatform.Data
     public abstract class BaseDataProvider
     {
         #region Utils
+
+        // <summary>
+        /// Gets an additional mapping schema
+        /// </summary>
+        private MappingSchema GetMappingSchema()
+        {
+            if (Singleton<MappingSchema>.Instance is null)
+            {
+                Singleton<MappingSchema>.Instance = new MappingSchema(ConfigurationName)
+                {
+                    MetadataReader = new FluentMigratorMetadataReader()
+                };
+            }
+
+            //if (true)
+            //{
+            //    var mpMappingSchema = new MappingSchema(new[] { Singleton<MappingSchema>.Instance });
+
+            //    mpMappingSchema.SetConvertExpression<ProfiledDbConnection, IDbConnection>(db => db.WrappedConnection);
+            //    mpMappingSchema.SetConvertExpression<ProfiledDbDataReader, IDataReader>(db => db.WrappedReader);
+            //    mpMappingSchema.SetConvertExpression<ProfiledDbTransaction, IDbTransaction>(db => db.WrappedTransaction);
+            //    mpMappingSchema.SetConvertExpression<ProfiledDbCommand, IDbCommand>(db => db.InternalCommand);
+
+            //    return mpMappingSchema;
+            //}
+
+            return Singleton<MappingSchema>.Instance;
+        }
 
         private void UpdateParameterValue(DataConnection dataConnection, DataParameter parameter)
         {
@@ -98,7 +127,51 @@ namespace DevPlatform.Data
             if (!DataSettingsManager.DatabaseIsInstalled)
                 return dbConnection;
 
-            LinqToDBConfigurations.Configuration.Linq.AllowMultipleQuery = true;
+            return dbConnection;
+        }
+
+        /// <summary>
+        /// Creates the database connection
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected virtual async Task<DataConnection> CreateDataConnectionAsync()
+        {
+            return await CreateDataConnectionAsync(LinqToDbDataProvider);
+        }
+
+        /// <summary>
+        /// Creates the database connection
+        /// </summary>
+        /// <param name="dataProvider">Data provider</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the database connection
+        /// </returns>
+        protected virtual async Task<DataConnection> CreateDataConnectionAsync(IDataProvider dataProvider)
+        {
+            if (dataProvider is null)
+                throw new ArgumentNullException(nameof(dataProvider));
+
+            var dataContext = new DataConnection(dataProvider, await CreateDbConnectionAsync(), GetMappingSchema())
+            {
+                CommandTimeout = await DataSettingsManager.GetSqlCommandTimeoutAsync()
+            };
+
+            return dataContext;
+        }
+
+        /// <summary>
+        /// Creates a connection to a database
+        /// </summary>
+        /// <param name="connectionString">Connection string</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the connection to a database
+        /// </returns>
+        protected virtual async Task<IDbConnection> CreateDbConnectionAsync(string connectionString = null)
+        {
+            var dbConnection = GetInternalDbConnection(!string.IsNullOrEmpty(connectionString) ? connectionString : await GetCurrentConnectionStringAsync());
+
             return dbConnection;
         }
 
@@ -148,7 +221,7 @@ namespace DevPlatform.Data
         /// </returns>
         public virtual async Task<TEntity> InsertEntityAsync<TEntity>(TEntity entity) where TEntity : BaseEntity
         {
-            using var dataContext = CreateDataConnection();
+            using var dataContext = await CreateDataConnectionAsync();
             entity.Id = await dataContext.InsertWithInt32IdentityAsync(entity);
             return entity;
         }
@@ -423,6 +496,16 @@ namespace DevPlatform.Data
         /// Name of database provider
         /// </summary>
         public string ConfigurationName => LinqToDbDataProvider.Name;
+
+        /// <summary>
+        /// Database connection string
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected async Task<string> GetCurrentConnectionStringAsync()
+        {
+            return (await DataSettingsManager.LoadSettingsAsync()).ConnectionString;
+        }
+
 
         #endregion
     }

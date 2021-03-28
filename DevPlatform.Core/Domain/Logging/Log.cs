@@ -42,11 +42,6 @@ namespace DevPlatform.Core.Domain.Logging
         public string ReferrerUrl { get; set; }
 
         /// <summary>
-        /// Gets or sets the date and time of instance creation
-        /// </summary>
-        public DateTime CreatedOnUtc { get; set; }
-
-        /// <summary>
         /// Gets or sets the log level
         /// </summary>
         public LogLevel LogLevel

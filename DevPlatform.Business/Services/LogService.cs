@@ -139,7 +139,6 @@ namespace DevPlatform.Business.Services
         /// </returns>
         public virtual async Task<Log> InsertLogAsync(LogLevel logLevel, string shortMessage, string fullMessage = "", AppUser appUser = null)
         {
-
             var log = new Log
             {
                 LogLevel = logLevel,
@@ -149,7 +148,7 @@ namespace DevPlatform.Business.Services
                 CustomerId = appUser?.Id,
                 PageUrl = _webHelper.GetThisPageUrl(true),
                 ReferrerUrl = _webHelper.GetUrlReferrer(),
-                CreatedOnUtc = DateTime.UtcNow
+                CreatedDate = DateTime.UtcNow
             };
 
             await _logRepository.InsertAsync(log);

@@ -1,5 +1,6 @@
 ﻿{
   "DataConnectionString": "Data Source=DESKTOP-STEV1LL\\SQLEXPRESS;Initial Catalog=DevPlatformDB;Integrated Security=True",
   "DataProvider": "sqlserver",
+  "SQLCommandTimeout": -1,
   "RawDataSettings": {}
 }

@@ -24,8 +24,6 @@ namespace DevPlatform.Data.IdentityFactory
         public IdentityConnectionFactory(IDataProvider provider, string configuration, string connectionString)
         {
             _provider = provider;
-            Configuration.Linq.AllowMultipleQuery = true;
-            //DataConnection.AddConfiguration(configuration, connectionString, provider);
             _configuration = configuration;
             _connectionString = connectionString;
             _key = _configuration + "$$" + _connectionString;

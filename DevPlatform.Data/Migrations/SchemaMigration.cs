@@ -3,6 +3,7 @@ using DevPlatform.Core.Domain.Chat;
 using DevPlatform.Core.Domain.Configuration;
 using DevPlatform.Core.Domain.Friendship;
 using DevPlatform.Core.Domain.Identity;
+using DevPlatform.Core.Domain.Logging;
 using DevPlatform.Core.Domain.Notification;
 using DevPlatform.Core.Domain.Portal;
 using FluentMigrator;
@@ -51,6 +52,7 @@ namespace DevPlatform.Data.Migrations
             _migrationManager.BuildTable<FriendRequest>(Create);
             _migrationManager.BuildTable<Album>(Create);
             _migrationManager.BuildTable<AlbumImage>(Create);
+            _migrationManager.BuildTable<Log>(Create);
         }
     }
 }
