@@ -7,7 +7,6 @@ using DevPlatform.Core.Domain.Notification;
 using DevPlatform.Core.Domain.Portal;
 using FluentMigrator;
 
-
 namespace DevPlatform.Data.Migrations
 {
     [SkipMigrationOnUpdate]
@@ -26,12 +25,11 @@ namespace DevPlatform.Data.Migrations
         /// <remarks>
         /// We use an explicit table creation order instead of an automatic one
         /// due to problems creating relationships between tables
+        /// AppUser and AppUserDetail have to be created first!
         /// </remarks>
         /// </summary>
         public override void Up()
         {
-            //AppUser and AppUserDetail have to be created first!
-
             _migrationManager.BuildTable<AppUserDetail>(Create);
             _migrationManager.BuildTable<AppUser>(Create);
             _migrationManager.BuildTable<AppRole>(Create);

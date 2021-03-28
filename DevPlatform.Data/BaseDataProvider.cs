@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using LinqToDBConfigurations = LinqToDB.Common;
 
 namespace DevPlatform.Data
@@ -137,6 +138,34 @@ namespace DevPlatform.Data
         }
 
         /// <summary>
+        /// Inserts record into table. Returns inserted entity with identity
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the inserted entity
+        /// </returns>
+        public virtual async Task<TEntity> InsertEntityAsync<TEntity>(TEntity entity) where TEntity : BaseEntity
+        {
+            using var dataContext = CreateDataConnection();
+            entity.Id = await dataContext.InsertWithInt32IdentityAsync(entity);
+            return entity;
+        }
+
+        /// <summary>
+        /// Performs bulk insert operation for entity colllection.
+        /// </summary>
+        /// <param name="entities">Entities for insert operation</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task BulkInsertEntitiesAsync<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity
+        {
+            using var dataContext = CreateDataConnection();
+            await dataContext.BulkCopyAsync(new BulkCopyOptions(), entities.RetrieveIdentity(dataContext));
+        }
+
+        /// <summary>
         /// Updates record in table, using values from entity parameter. 
         /// Record to update identified by match on primary key value from obj value.
         /// </summary>
@@ -146,6 +175,80 @@ namespace DevPlatform.Data
         {
             using var dataContext = CreateDataConnection();
             dataContext.Update(entity);
+        }
+
+        /// <summary>
+        /// Updates record in table, using values from entity parameter. 
+        /// Record to update identified by match on primary key value from obj value.
+        /// </summary>
+        /// <param name="entity">Entity with data to update</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task UpdateEntityAsync<TEntity>(TEntity entity) where TEntity : BaseEntity
+        {
+            using var dataContext = CreateDataConnection();
+            await dataContext.UpdateAsync(entity);
+        }
+
+        /// <summary>
+        /// Updates records in table, using values from entity parameter. 
+        /// Records to update are identified by match on primary key value from obj value.
+        /// </summary>
+        /// <param name="entities">Entities with data to update</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task UpdateEntitiesAsync<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity
+        {
+            foreach (var entity in entities)
+                await UpdateEntityAsync(entity);
+        }
+
+        /// <summary>
+        /// Deletes record in table. Record to delete identified
+        /// by match on primary key value from obj value.
+        /// </summary>
+        /// <param name="entity">Entity for delete operation</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task DeleteEntityAsync<TEntity>(TEntity entity) where TEntity : BaseEntity
+        {
+            using var dataContext = CreateDataConnection();
+            await dataContext.DeleteAsync(entity);
+        }
+
+        /// <summary>
+        /// Performs delete records in a table
+        /// </summary>
+        /// <param name="entities">Entities for delete operation</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task BulkDeleteEntitiesAsync<TEntity>(IList<TEntity> entities) where TEntity : BaseEntity
+        {
+            using var dataContext = CreateDataConnection();
+            if (entities.All(entity => entity.Id == 0))
+                foreach (var entity in entities)
+                    await dataContext.DeleteAsync(entity);
+            else
+                await dataContext.GetTable<TEntity>()
+                    .Where(e => e.Id.In(entities.Select(x => x.Id)))
+                    .DeleteAsync();
+        }
+
+        /// <summary>
+        /// Performs delete records in a table by a condition
+        /// </summary>
+        /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the number of deleted records
+        /// </returns>
+        public virtual async Task<int> BulkDeleteEntitiesAsync<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : BaseEntity
+        {
+            using var dataContext = CreateDataConnection();
+            return await dataContext.GetTable<TEntity>()
+                .Where(predicate)
+                .DeleteAsync();
         }
 
         /// <summary>

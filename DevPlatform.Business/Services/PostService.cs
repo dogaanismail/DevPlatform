@@ -15,6 +15,7 @@ using DevPlatform.Domain.Enumerations;
 using System.Net;
 using Microsoft.AspNetCore.Http;
 using DevPlatform.Domain.ServiceResponseModels.PostService;
+using Newtonsoft.Json;
 
 namespace DevPlatform.Business.Services
 {
@@ -32,6 +33,7 @@ namespace DevPlatform.Business.Services
         private readonly IPostVideoService _postVideoService;
         private readonly IImageProcessingService _imageProcessingService;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ILogService _logService;
 
         #endregion
 
@@ -43,7 +45,8 @@ namespace DevPlatform.Business.Services
             IPostImageService postImageService,
             IPostVideoService postVideoService,
             IHttpContextAccessor httpContextAccessor,
-            IImageProcessingService imageProcessingService)
+            IImageProcessingService imageProcessingService,
+            ILogService logService)
         {
             _postRepository = postRepository;
             _userRepository = userRepository;
@@ -53,6 +56,7 @@ namespace DevPlatform.Business.Services
             _postVideoService = postVideoService;
             _imageProcessingService = imageProcessingService;
             _httpContextAccessor = httpContextAccessor;
+            _logService = logService;
         }
         #endregion
 
@@ -381,6 +385,7 @@ namespace DevPlatform.Business.Services
             }
             catch (Exception ex)
             {
+                _logService.InsertLogAsync(LogLevel.Error, $"PostService- Create Error: model {JsonConvert.SerializeObject(model)}", ex.Message.ToString());
                 serviceResponse.Success = false;
                 serviceResponse.Warnings.Add(ex.Message);
                 return serviceResponse;

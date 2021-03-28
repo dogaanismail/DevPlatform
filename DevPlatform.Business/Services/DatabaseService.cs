@@ -2,6 +2,7 @@
 using DevPlatform.Core.Infrastructure;
 using DevPlatform.Data;
 using DevPlatform.Domain.Common;
+using DevPlatform.Domain.Enumerations;
 using DevPlatform.Domain.ServiceResponseModels.DatabaseService;
 using System;
 
@@ -14,13 +15,16 @@ namespace DevPlatform.Business.Services
     {
         #region Fields
         private readonly IDevPlatformFileProvider _fileProvider;
+        private readonly ILogService _logService;
         #endregion
 
         #region Ctor
 
-        public DatabaseService(IDevPlatformFileProvider fileProvider)
+        public DatabaseService(IDevPlatformFileProvider fileProvider,
+            ILogService logService)
         {
             _fileProvider = fileProvider;
+            _logService = logService;
         }
         #endregion
 
@@ -78,6 +82,7 @@ namespace DevPlatform.Business.Services
             }
             catch (Exception ex)
             {
+                _logService.InsertLogAsync(LogLevel.Error, $"DatabaseService- Create Error", ex.Message.ToString());
                 serviceResponse.Success = false;
                 serviceResponse.Warnings.Add(ex.Message);
                 return serviceResponse;
