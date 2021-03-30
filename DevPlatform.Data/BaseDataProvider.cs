@@ -6,14 +6,12 @@ using LinqToDB.Data;
 using LinqToDB.DataProvider;
 using LinqToDB.Mapping;
 using LinqToDB.Tools;
-using StackExchange.Profiling.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using LinqToDBConfigurations = LinqToDB.Common;
 
 namespace DevPlatform.Data
 {
@@ -221,7 +219,7 @@ namespace DevPlatform.Data
         /// </returns>
         public virtual async Task<TEntity> InsertEntityAsync<TEntity>(TEntity entity) where TEntity : BaseEntity
         {
-            using var dataContext = await CreateDataConnectionAsync();
+            using var dataContext = CreateDataConnection();
             entity.Id = await dataContext.InsertWithInt32IdentityAsync(entity);
             return entity;
         }

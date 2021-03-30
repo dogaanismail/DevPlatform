@@ -166,6 +166,7 @@ namespace DevPlatform.Business.Services
                 }
 
                 serviceResponse.Success = true;
+                serviceResponse.ResultCode = ResultCode.Success;
                 serviceResponse.Data = new RegisterResponse
                 {
                     Succeeded = result.Succeeded
@@ -177,6 +178,7 @@ namespace DevPlatform.Business.Services
             {
                 _logService.InsertLogAsync(LogLevel.Error, $"UserService- Register Error: model {JsonConvert.SerializeObject(model)}", ex.Message.ToString());
                 serviceResponse.Success = false;
+                serviceResponse.ResultCode = ResultCode.Exception;
                 serviceResponse.Warnings.Add(ex.Message);
                 return serviceResponse;
             }

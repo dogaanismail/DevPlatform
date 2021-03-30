@@ -178,6 +178,7 @@ namespace DevPlatform.Business.Services
                     return ServiceResponse((CreateResponse)null, new List<string> { createResult.Message });
 
                 serviceResponse.Success = true;
+                serviceResponse.ResultCode = ResultCode.Success;
                 serviceResponse.Data = new CreateResponse
                 {
                     Succeeded = true
@@ -190,6 +191,7 @@ namespace DevPlatform.Business.Services
             {
                 _logService.InsertLogAsync(LogLevel.Error, $"AlbumService- Create Error: model {JsonConvert.SerializeObject(model)}", ex.Message.ToString());
                 serviceResponse.Success = false;
+                serviceResponse.ResultCode = ResultCode.Exception;
                 serviceResponse.Warnings.Add(ex.Message);
                 return serviceResponse;
             }

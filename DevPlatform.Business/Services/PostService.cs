@@ -368,6 +368,7 @@ namespace DevPlatform.Business.Services
                 #endregion
 
                 serviceResponse.Success = true;
+                serviceResponse.ResultCode = ResultCode.Success;
                 serviceResponse.Data = new CreateResponse
                 {
                     Id = newPost.Id,
@@ -387,6 +388,7 @@ namespace DevPlatform.Business.Services
             {
                 _logService.InsertLogAsync(LogLevel.Error, $"PostService- Create Error: model {JsonConvert.SerializeObject(model)}", ex.Message.ToString());
                 serviceResponse.Success = false;
+                serviceResponse.ResultCode = ResultCode.Exception;
                 serviceResponse.Warnings.Add(ex.Message);
                 return serviceResponse;
             }

@@ -44,7 +44,7 @@ namespace DevPlatform.Business.Services
             try
             {
                 var dataProvider = DataProviderManager.GetDataProvider(DataProviderType.SqlServer);
-                var connectionString = "Data Source=DESKTOP-STEV1LL\\SQLEXPRESS;Initial Catalog=DevPlatformDB;Integrated Security=True";
+                var connectionString = "Data Source=ISMAILDOGAN2;Initial Catalog=DevPlatformDB;Integrated Security=True";
 
                 DataSettingsManager.SaveSettings(new DataSettings
                 {
@@ -60,6 +60,7 @@ namespace DevPlatform.Business.Services
                 if (DataSettingsManager.DatabaseIsInstalled)
                 {
                     serviceResponse.Success = true;
+                    serviceResponse.ResultCode = ResultCode.Success;
                     serviceResponse.Data = new InstallResponse
                     {
                         Succeeded = true,
@@ -71,6 +72,8 @@ namespace DevPlatform.Business.Services
 
                 else
                 {
+                    serviceResponse.Success = false;
+                    serviceResponse.ResultCode = ResultCode.Exception;
                     serviceResponse.Data = new InstallResponse
                     {
                         Succeeded = false,
@@ -84,6 +87,7 @@ namespace DevPlatform.Business.Services
             {
                 _logService.InsertLogAsync(LogLevel.Error, $"DatabaseService- Create Error", ex.Message.ToString());
                 serviceResponse.Success = false;
+                serviceResponse.ResultCode = ResultCode.Exception;
                 serviceResponse.Warnings.Add(ex.Message);
                 return serviceResponse;
             }
