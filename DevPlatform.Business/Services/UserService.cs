@@ -2,10 +2,12 @@
 using DevPlatform.Core.Domain.Identity;
 using DevPlatform.Domain.Api;
 using DevPlatform.Domain.Common;
+using DevPlatform.Domain.Enumerations;
 using DevPlatform.Domain.ServiceResponseModels.UserService;
 using DevPlatform.Repository.Generic;
 using LinqToDB;
 using Microsoft.AspNetCore.Identity;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,16 +23,19 @@ namespace DevPlatform.Business.Services
         private readonly UserManager<AppUser> _userManager;
         private readonly IRepository<AppUser> _appUserRepository;
         private readonly IRepository<AppUserDetail> _appUserDetailRepository;
+        private readonly ILogService _logService;
         #endregion
 
         #region Ctor
         public UserService(UserManager<AppUser> userManager,
             IRepository<AppUser> appUserRepository,
-            IRepository<AppUserDetail> appUserDetailRepository)
+            IRepository<AppUserDetail> appUserDetailRepository,
+            ILogService logService)
         {
             _userManager = userManager;
             _appUserRepository = appUserRepository;
             _appUserDetailRepository = appUserDetailRepository;
+            _logService = logService;
         }
         #endregion
 
@@ -161,6 +166,7 @@ namespace DevPlatform.Business.Services
                 }
 
                 serviceResponse.Success = true;
+                serviceResponse.ResultCode = ResultCode.Success;
                 serviceResponse.Data = new RegisterResponse
                 {
                     Succeeded = result.Succeeded
@@ -170,7 +176,9 @@ namespace DevPlatform.Business.Services
             }
             catch (Exception ex)
             {
+                _logService.InsertLogAsync(LogLevel.Error, $"UserService- Register Error: model {JsonConvert.SerializeObject(model)}", ex.Message.ToString());
                 serviceResponse.Success = false;
+                serviceResponse.ResultCode = ResultCode.Exception;
                 serviceResponse.Warnings.Add(ex.Message);
                 return serviceResponse;
             }

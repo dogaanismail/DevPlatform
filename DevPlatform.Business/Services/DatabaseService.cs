@@ -2,6 +2,7 @@
 using DevPlatform.Core.Infrastructure;
 using DevPlatform.Data;
 using DevPlatform.Domain.Common;
+using DevPlatform.Domain.Enumerations;
 using DevPlatform.Domain.ServiceResponseModels.DatabaseService;
 using System;
 
@@ -14,13 +15,16 @@ namespace DevPlatform.Business.Services
     {
         #region Fields
         private readonly IDevPlatformFileProvider _fileProvider;
+        private readonly ILogService _logService;
         #endregion
 
         #region Ctor
 
-        public DatabaseService(IDevPlatformFileProvider fileProvider)
+        public DatabaseService(IDevPlatformFileProvider fileProvider,
+            ILogService logService)
         {
             _fileProvider = fileProvider;
+            _logService = logService;
         }
         #endregion
 
@@ -40,7 +44,7 @@ namespace DevPlatform.Business.Services
             try
             {
                 var dataProvider = DataProviderManager.GetDataProvider(DataProviderType.SqlServer);
-                var connectionString = "Data Source=DESKTOP-STEV1LL\\SQLEXPRESS;Initial Catalog=DevPlatformDB;Integrated Security=True";
+                var connectionString = "Data Source=ISMAILDOGAN2;Initial Catalog=DevPlatformDB;Integrated Security=True";
 
                 DataSettingsManager.SaveSettings(new DataSettings
                 {
@@ -56,6 +60,7 @@ namespace DevPlatform.Business.Services
                 if (DataSettingsManager.DatabaseIsInstalled)
                 {
                     serviceResponse.Success = true;
+                    serviceResponse.ResultCode = ResultCode.Success;
                     serviceResponse.Data = new InstallResponse
                     {
                         Succeeded = true,
@@ -67,10 +72,12 @@ namespace DevPlatform.Business.Services
 
                 else
                 {
+                    serviceResponse.Success = false;
+                    serviceResponse.ResultCode = ResultCode.Exception;
                     serviceResponse.Data = new InstallResponse
                     {
-                        Succeeded = true,
-                        Message = "Database could not be installed! "
+                        Succeeded = false,
+                        Message = "Database could not be installed!"
                     };
 
                     return serviceResponse;
@@ -78,7 +85,9 @@ namespace DevPlatform.Business.Services
             }
             catch (Exception ex)
             {
+                _logService.InsertLogAsync(LogLevel.Error, $"DatabaseService- Create Error", ex.Message.ToString());
                 serviceResponse.Success = false;
+                serviceResponse.ResultCode = ResultCode.Exception;
                 serviceResponse.Warnings.Add(ex.Message);
                 return serviceResponse;
             }

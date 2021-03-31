@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using System.Transactions;
 
 namespace DevPlatform.Repository.Generic
@@ -74,6 +75,34 @@ namespace DevPlatform.Repository.Generic
         }
 
         /// <summary>
+        /// Insert the entity entry
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public virtual async Task InsertAsync(TEntity entity)
+        {
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+
+            await _dataProvider.InsertEntityAsync(entity);
+        }
+
+        /// <summary>
+        /// Insert entity entries
+        /// </summary>
+        /// <param name="entities"></param>
+        /// <returns></returns>
+        public virtual async Task InsertAsync(IList<TEntity> entities)
+        {
+            if (entities == null)
+                throw new ArgumentNullException(nameof(entities));
+
+            using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
+            await _dataProvider.BulkInsertEntitiesAsync(entities);
+            transaction.Complete();
+        }
+
+        /// <summary>
         /// Loads the original copy of the entity
         /// </summary>
         /// <typeparam name="TEntity">Entity type</typeparam>
@@ -113,6 +142,35 @@ namespace DevPlatform.Repository.Generic
         }
 
         /// <summary>
+        /// Update the entity entry
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public virtual async Task UpdateAsync(TEntity entity)
+        {
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+
+            await _dataProvider.UpdateEntityAsync(entity);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="entities"></param>
+        /// <returns></returns>
+        public virtual async Task UpdateAsync(IList<TEntity> entities)
+        {
+            if (entities == null)
+                throw new ArgumentNullException(nameof(entities));
+
+            if (!entities.Any())
+                return;
+
+            await _dataProvider.UpdateEntitiesAsync(entities);
+        }
+
+        /// <summary>
         /// Delete entity
         /// </summary>
         /// <param name="entity">Entity</param>
@@ -147,6 +205,32 @@ namespace DevPlatform.Repository.Generic
                 throw new ArgumentNullException(nameof(predicate));
 
             _dataProvider.BulkDeleteEntities(predicate);
+        }
+
+        /// <summary>
+        /// Delete the entity entry
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public virtual async Task DeleteAsync(TEntity entity)
+        {
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+
+            await _dataProvider.DeleteEntityAsync(entity);
+        }
+
+        /// <summary>
+        /// Delete entity entries
+        /// </summary>
+        /// <param name="entities"></param>
+        /// <returns></returns>
+        public virtual async Task DeleteAsync(IList<TEntity> entities)
+        {
+            if (entities == null)
+                throw new ArgumentNullException(nameof(entities));
+
+            await _dataProvider.BulkDeleteEntitiesAsync(entities);
         }
 
         /// <summary>

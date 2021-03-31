@@ -3,13 +3,14 @@ using DevPlatform.Core.Domain.Album;
 using DevPlatform.Domain.Api.AlbumApi;
 using DevPlatform.Domain.Common;
 using DevPlatform.Domain.Dto.AlbumDto;
+using DevPlatform.Domain.Enumerations;
 using DevPlatform.Domain.ServiceResponseModels.AlbumService;
 using DevPlatform.Repository.Generic;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace DevPlatform.Business.Services
 {
@@ -22,16 +23,19 @@ namespace DevPlatform.Business.Services
         private readonly IRepository<Album> _albumRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IImageProcessingService _imageProcessingService;
+        private readonly ILogService _logService;
         #endregion
 
         #region Ctor
         public AlbumService(IRepository<Album> albumRepository,
             IHttpContextAccessor httpContextAccessor,
-            IImageProcessingService imageProcessingService)
+            IImageProcessingService imageProcessingService,
+            ILogService logService)
         {
             _albumRepository = albumRepository;
             _httpContextAccessor = httpContextAccessor;
             _imageProcessingService = imageProcessingService;
+            _logService = logService;
         }
         #endregion
 
@@ -174,6 +178,7 @@ namespace DevPlatform.Business.Services
                     return ServiceResponse((CreateResponse)null, new List<string> { createResult.Message });
 
                 serviceResponse.Success = true;
+                serviceResponse.ResultCode = ResultCode.Success;
                 serviceResponse.Data = new CreateResponse
                 {
                     Succeeded = true
@@ -184,7 +189,9 @@ namespace DevPlatform.Business.Services
             }
             catch (Exception ex)
             {
+                _logService.InsertLogAsync(LogLevel.Error, $"AlbumService- Create Error: model {JsonConvert.SerializeObject(model)}", ex.Message.ToString());
                 serviceResponse.Success = false;
+                serviceResponse.ResultCode = ResultCode.Exception;
                 serviceResponse.Warnings.Add(ex.Message);
                 return serviceResponse;
             }

@@ -237,7 +237,7 @@ namespace DevPlatform.Data.Migrations
         public virtual CreateTableExpression GetCreateTableExpression(Type type)
         {
             var expression = new CreateTableExpression { TableName = NameCompatibilityManager.GetTableName(type) };
-            var builder = new CreateTableExpressionBuilder(expression, CreateNullMigrationContext());
+            var builder = new CreateTableExpressionBuilder(expression, _migrationContext);
 
             RetrieveTableExpressions(type, builder);
 

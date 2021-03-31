@@ -1,12 +1,16 @@
-﻿using DevPlatform.Core.Infrastructure;
-using DevPlatform.Core.Middlewares;
+﻿using DevPlatform.Business.Interfaces;
+using DevPlatform.Core.Infrastructure;
+using DevPlatform.Data;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Net.Http.Headers;
 using Swashbuckle.AspNetCore.SwaggerUI;
+using System.Net;
 using static DevPlatform.Framework.Hubs.SignalRHubs;
 
 namespace DevPlatform.Framework.Infrastructure.Extensions
@@ -31,7 +35,32 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
         /// <param name="application">Builder for configuring an application's request pipeline</param>
         public static void UseDevPlatformExceptionHandler(this IApplicationBuilder application)
         {
-            application.UseMiddleware<ErrorHandlingMiddleware>();
+            var webHostEnvironment = EngineContext.Current.Resolve<IWebHostEnvironment>();
+
+            application.UseExceptionHandler(handler =>
+            {
+                handler.Run(async context =>
+                {
+                    var exception = context.Features.Get<IExceptionHandlerFeature>()?.Error;
+                    if (exception == null)
+                        return;
+
+                    try
+                    {
+                        if (DataSettingsManager.DatabaseIsInstalled)
+                        {
+                            await EngineContext.Current.Resolve<ILogService>().ErrorAsync(exception.Message, exception);
+                        }
+                    }
+                    finally
+                    {
+                        var code = HttpStatusCode.InternalServerError;
+                        context.Response.ContentType = "application/json";
+                        context.Response.StatusCode = (int)code;
+                        await context.Response.WriteAsync(exception.Message);
+                    }
+                });
+            });
         }
 
         /// <summary>

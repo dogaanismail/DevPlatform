@@ -3,10 +3,12 @@ using DevPlatform.Core.Domain.Identity;
 using DevPlatform.Core.Domain.Portal;
 using DevPlatform.Domain.Api;
 using DevPlatform.Domain.Common;
+using DevPlatform.Domain.Enumerations;
 using DevPlatform.Domain.ServiceResponseModels.PostCommentService;
 using DevPlatform.Repository.Extensions;
 using DevPlatform.Repository.Generic;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,18 +25,21 @@ namespace DevPlatform.Business.Services
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IRepository<Post> _postRepository;
         private readonly IRepository<AppUser> _userRepository;
+        private readonly ILogService _logService;
         #endregion
 
         #region Ctor
         public PostCommentService(IRepository<PostComment> postCommentRepository,
             IHttpContextAccessor httpContextAccessor,
             IRepository<AppUser> userRepository,
-            IRepository<Post> postRepository)
+            IRepository<Post> postRepository,
+            ILogService logService)
         {
             _postCommentRepository = postCommentRepository;
             _httpContextAccessor = httpContextAccessor;
             _postRepository = postRepository;
             _userRepository = userRepository;
+            _logService = logService;
         }
         #endregion
 
@@ -161,6 +166,7 @@ namespace DevPlatform.Business.Services
             }
             catch (Exception ex)
             {
+                _logService.InsertLogAsync(LogLevel.Error, $"PostCommentService- Create Error: model {JsonConvert.SerializeObject(model)}", ex.Message.ToString());
                 serviceResponse.Success = false;
                 serviceResponse.Warnings.Add(ex.Message);
                 return serviceResponse;

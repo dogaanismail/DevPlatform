@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 
 namespace DevPlatform.Data
 {
@@ -45,12 +46,50 @@ namespace DevPlatform.Data
         TEntity InsertEntity<TEntity>(TEntity entity) where TEntity : BaseEntity;
 
         /// <summary>
+        /// Insert a new entity
+        /// </summary>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <param name="entity">Entity</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the entity
+        /// </returns>
+        Task<TEntity> InsertEntityAsync<TEntity>(TEntity entity) where TEntity : BaseEntity;
+
+        /// <summary>
+        /// Performs bulk insert entities operation
+        /// </summary>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <param name="entities">Collection of Entities</param>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task BulkInsertEntitiesAsync<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity;
+
+
+        /// <summary>
         /// Updates record in table, using values from entity parameter. 
         /// Record to update identified by match on primary key value from obj value.
         /// </summary>
         /// <param name="entity">Entity with data to update</param>
         /// <typeparam name="TEntity">Entity type</typeparam>
         void UpdateEntity<TEntity>(TEntity entity) where TEntity : BaseEntity;
+
+        /// <summary>
+        /// Updates record in table, using values from entity parameter. 
+        /// Record to update identified by match on primary key value from obj value.
+        /// </summary>
+        /// <param name="entity">Entity with data to update</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task UpdateEntityAsync<TEntity>(TEntity entity) where TEntity : BaseEntity;
+
+        /// <summary>
+        /// Updates records in table, using values from entity parameter. 
+        /// Records to update are identified by match on primary key value from obj value.
+        /// </summary>
+        /// <param name="entities">Entities with data to update</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task UpdateEntitiesAsync<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity;
 
         /// <summary>
         /// Deletes record in table. Record to delete identified
@@ -73,6 +112,34 @@ namespace DevPlatform.Data
         /// <param name="predicate">A function to test each element for a condition.</param>
         /// <typeparam name="TEntity">Entity type</typeparam>
         void BulkDeleteEntities<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : BaseEntity;
+
+        /// <summary>
+        /// Deletes record in table. Record to delete identified
+        /// by match on primary key value from obj value.
+        /// </summary>
+        /// <param name="entity">Entity for delete operation</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task DeleteEntityAsync<TEntity>(TEntity entity) where TEntity : BaseEntity;
+
+        /// <summary>
+        /// Performs delete records in a table
+        /// </summary>
+        /// <param name="entities">Entities for delete operation</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        Task BulkDeleteEntitiesAsync<TEntity>(IList<TEntity> entities) where TEntity : BaseEntity;
+
+        /// <summary>
+        /// Performs delete records in a table by a condition
+        /// </summary>
+        /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the number of deleted records
+        /// </returns>
+        Task<int> BulkDeleteEntitiesAsync<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : BaseEntity;
 
         /// <summary>
         /// Performs bulk insert entities operation

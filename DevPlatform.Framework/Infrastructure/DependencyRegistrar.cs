@@ -1,6 +1,7 @@
 ﻿using Autofac;
 using DevPlatform.Business.Interfaces;
 using DevPlatform.Business.Services;
+using DevPlatform.Core;
 using DevPlatform.Core.Configuration;
 using DevPlatform.Core.Infrastructure;
 using DevPlatform.Core.Infrastructure.DependencyManagement;
@@ -35,6 +36,9 @@ namespace DevPlatform.Framework.Infrastructure
             //repositories
             services.AddScoped(typeof(IRepository<>), typeof(RepositoryBase<>));
 
+            //web helper
+            services.AddScoped<IWebHelper, WebHelper>();
+
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IPostService, PostService>();
             services.AddScoped<IStoryService, StoryService>();
@@ -50,6 +54,7 @@ namespace DevPlatform.Framework.Infrastructure
             services.AddScoped<IAlbumService, AlbumService>();
             services.AddScoped<IImageProcessingService, ImageProcessingService>();
             services.AddScoped<IDatabaseService, DatabaseService>();
+            services.AddScoped<ILogService, LogService>();
 
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
