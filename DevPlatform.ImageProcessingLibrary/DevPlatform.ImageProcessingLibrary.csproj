@@ -10,8 +10,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Contract\Response\Aspose\" />
     <Folder Include="Contract\Response\ImageSharp\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DevPlatform.Core\DevPlatform.Core.csproj" />
   </ItemGroup>
 
 </Project>
