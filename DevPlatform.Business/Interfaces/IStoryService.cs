@@ -1,6 +1,8 @@
 ﻿using DevPlatform.Core.Domain.Story;
+using DevPlatform.Domain.Api.StoryApi;
 using DevPlatform.Domain.Common;
 using DevPlatform.Domain.Dto.StoryDto;
+using DevPlatform.Domain.ServiceResponseModels.StoryService;
 using System.Collections.Generic;
 
 namespace DevPlatform.Business.Interfaces
@@ -67,5 +69,19 @@ namespace DevPlatform.Business.Interfaces
         /// <param name="userId"></param>
         /// <returns></returns>
         IEnumerable<StoryListDto> GetUserStoriesWithDto(int userId);
+
+        /// <summary>
+        /// Inserts stories and returns service response
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        ServiceResponse<CreateResponse> Create(StoryCreateApi model);
+
+        /// <summary>
+        /// Inserts stories for post and returns service response
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        ServiceResponse<CreateResponse> Create(StoryCreateApi model, bool isCreateWithPost = true);
     }
 }

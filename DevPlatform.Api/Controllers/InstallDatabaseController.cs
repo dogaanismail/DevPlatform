@@ -3,6 +3,7 @@ using DevPlatform.Domain.Common;
 using DevPlatform.Framework.Controllers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Linq;
 
 namespace DevPlatform.Api.Controllers
@@ -34,7 +35,7 @@ namespace DevPlatform.Api.Controllers
                 return BadResponse(new ResultModel
                 {
                     Status = false,
-                    Message = serviceResponse.Warnings.First()
+                    Message = string.Join(Environment.NewLine, serviceResponse.Warnings.Select(err => string.Join(Environment.NewLine, err))),
                 });
 
             if (serviceResponse.Data.Succeeded)

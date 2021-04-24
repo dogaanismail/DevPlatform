@@ -1,9 +1,12 @@
 ﻿using DevPlatform.Business.Interfaces;
 using DevPlatform.Domain.Api.AlbumApi;
 using DevPlatform.Domain.Common;
+using DevPlatform.Domain.Enumerations;
 using DevPlatform.Framework.Controllers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System;
 using System.Linq;
 
 namespace DevPlatform.Api.Controllers
@@ -13,20 +16,23 @@ namespace DevPlatform.Api.Controllers
     {
         #region Fields
         private readonly IAlbumService _albumService;
+        private readonly ILogService _logService;
         #endregion
 
         #region Ctor
 
-        public AlbumController(IAlbumService albumService)
+        public AlbumController(IAlbumService albumService,
+            ILogService logService)
         {
             _albumService = albumService;
+            _logService = logService;
         }
         #endregion
 
         #region Methods
 
         /// <summary>
-        /// Creating album
+        /// Creating an album
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
@@ -40,8 +46,10 @@ namespace DevPlatform.Api.Controllers
                 return BadResponse(new ResultModel
                 {
                     Status = false,
-                    Message = serviceResponse.Warnings.First()
+                    Message = string.Join(Environment.NewLine, serviceResponse.Warnings.Select(err => string.Join(Environment.NewLine, err))),
                 });
+
+            _logService.InsertLogAsync(LogLevel.Information, $"AlbumController- Create Story Request", JsonConvert.SerializeObject(model));
 
             if (serviceResponse.Data.Succeeded)
                 return OkResponse(Result);

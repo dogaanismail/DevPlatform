@@ -39,7 +39,7 @@ namespace DevPlatform.Business.Services
         }
 
         /// <summary>
-        /// Creates posts by using bulk entities
+        /// Creates post images by using bulk entities
         /// </summary>
         /// <param name="createImageForPost"></param>
         /// <returns></returns>

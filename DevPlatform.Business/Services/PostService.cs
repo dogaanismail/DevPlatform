@@ -16,6 +16,8 @@ using System.Net;
 using Microsoft.AspNetCore.Http;
 using DevPlatform.Domain.ServiceResponseModels.PostService;
 using Newtonsoft.Json;
+using DevPlatform.Domain.Api.StoryApi;
+using StoryCreateResponse = DevPlatform.Domain.ServiceResponseModels.StoryService.CreateResponse;
 
 namespace DevPlatform.Business.Services
 {
@@ -34,6 +36,7 @@ namespace DevPlatform.Business.Services
         private readonly IImageProcessingService _imageProcessingService;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILogService _logService;
+        private readonly IStoryService _storyService;
 
         #endregion
 
@@ -46,7 +49,8 @@ namespace DevPlatform.Business.Services
             IPostVideoService postVideoService,
             IHttpContextAccessor httpContextAccessor,
             IImageProcessingService imageProcessingService,
-            ILogService logService)
+            ILogService logService,
+            IStoryService storyService)
         {
             _postRepository = postRepository;
             _userRepository = userRepository;
@@ -57,6 +61,7 @@ namespace DevPlatform.Business.Services
             _imageProcessingService = imageProcessingService;
             _httpContextAccessor = httpContextAccessor;
             _logService = logService;
+            _storyService = storyService;
         }
         #endregion
 
@@ -275,13 +280,14 @@ namespace DevPlatform.Business.Services
                 var appUser = _userService.FindByUserName(_httpContextAccessor.HttpContext.User.Identity.Name);
                 if (appUser == null)
                     return ServiceResponse((CreateResponse)null, new List<string> { "User not found!" });
+         
+                #region CloudinaryProcess
 
-                bool hasImage = CheckItemType.HasItemImage(model);
-                bool hasVideo = CheckItemType.HasItemVideo(model);
                 var imageUploadResult = new ImageUploadResult();
                 var videoUploadResult = new VideoUploadResult();
 
-                #region CloudinaryProcess
+                bool hasImage = CheckItemType.HasItemImage(model);
+                bool hasVideo = CheckItemType.HasItemVideo(model);
 
                 #region ImageUploadingProcess
                 if (hasImage)
@@ -309,7 +315,7 @@ namespace DevPlatform.Business.Services
                 #endregion
 
                 #region POST CRUD
-
+      
                 var newPost = new Post
                 {
                     Text = model.Text,
@@ -360,9 +366,30 @@ namespace DevPlatform.Business.Services
 
                 #region Story CRUD
 
-                if (model.IsStory.GetValueOrDefault())
-                {
+                StoryCreateResponse storyCreateResponse = null;
 
+                if (model.IsStory.GetValueOrDefault() && (model.Photo != null || model.Video != null))
+                {                 
+                    var storyCreateModel = new StoryCreateApi()
+                    {
+                        Title = model.Text,
+                        Description = model.Text,
+                        PhotoUrl = imageUploadResult?.Url?.ToString(),
+                        VideoUrl = videoUploadResult?.Url?.ToString()
+                    };
+
+                    _logService.InsertLogAsync(LogLevel.Information, $"PostService - Create Story Request", JsonConvert.SerializeObject(storyCreateModel));
+
+                    var storyServiceResponse = _storyService.Create(storyCreateModel, isCreateWithPost: true);
+
+                    if (storyServiceResponse.Warnings.Any())
+                    {
+                        _logService.InsertLogAsync(LogLevel.Information, $"PostService - Create Story Error Response ", JsonConvert.SerializeObject(storyServiceResponse));
+
+                        //TODO : Story create error process must be handled!
+                    }
+
+                    storyCreateResponse = storyServiceResponse.Data;
                 }
 
                 #endregion
@@ -373,13 +400,14 @@ namespace DevPlatform.Business.Services
                 {
                     Id = newPost.Id,
                     Text = newPost.Text,
-                    ImageUrl = imageUploadResult.Url?.ToString(),
-                    CreatedByUserName = appUser.UserName,
-                    CreatedByUserPhoto = appUser.UserDetail.ProfilePhotoPath,
+                    ImageUrl = imageUploadResult?.Url?.ToString(),
+                    CreatedByUserName = appUser?.UserName,
+                    CreatedByUserPhoto = appUser?.UserDetail.ProfilePhotoPath,
                     CreatedDate = newPost.CreatedDate,
-                    VideoUrl = videoUploadResult.Url?.ToString(),
+                    VideoUrl = videoUploadResult?.Url?.ToString(),
                     PostType = newPost.PostType,
-                    Comments = null
+                    Comments = null,
+                    StoryCreateResponse = storyCreateResponse
                 };
 
                 return serviceResponse;
@@ -404,7 +432,7 @@ namespace DevPlatform.Business.Services
         /// <param name="hasImage"></param>
         /// <param name="hasVideo"></param>
         /// <returns></returns>
-        private int GetPostType(bool hasImage, bool hasVideo)
+        private static int GetPostType(bool hasImage, bool hasVideo)
         {
             return hasImage == true ? (int)PostTypeEnum.PostImage
                 : hasVideo == true ? (int)PostTypeEnum.PostVideo

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DevPlatform.Domain.Dto.StoryDto;
+using System;
 using System.Collections.Generic;
 
 namespace DevPlatform.Domain.Dto
@@ -14,9 +15,8 @@ namespace DevPlatform.Domain.Dto
         public DateTime CreatedDate { get; set; }
         public int? PostType { get; set; }
         public List<PostCommentListDto> Comments { get; set; }
+        public StoryListDto StoryListDto { get; set; }
 
-        //TODO: PostLikes might be implemented here.
-
-        //postLikes
+        //TODO: PostLikes might be implemented here!
     }
 }

@@ -6,6 +6,7 @@ using DevPlatform.Core.Domain.Identity;
 using DevPlatform.Core.Domain.Logging;
 using DevPlatform.Core.Domain.Notification;
 using DevPlatform.Core.Domain.Portal;
+using DevPlatform.Core.Domain.Story;
 using FluentMigrator;
 
 namespace DevPlatform.Data.Migrations
@@ -53,6 +54,10 @@ namespace DevPlatform.Data.Migrations
             _migrationManager.BuildTable<Album>(Create);
             _migrationManager.BuildTable<AlbumImage>(Create);
             _migrationManager.BuildTable<Log>(Create);
+            _migrationManager.BuildTable<Story>(Create);
+            _migrationManager.BuildTable<StoryComment>(Create);
+            _migrationManager.BuildTable<StoryImage>(Create);
+            _migrationManager.BuildTable<StoryVideo>(Create);
         }
     }
 }

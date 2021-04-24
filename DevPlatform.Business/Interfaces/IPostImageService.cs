@@ -10,7 +10,7 @@ namespace DevPlatform.Business.Interfaces
     public partial interface IPostImageService
     {
         /// <summary>
-        /// Creates post images for a post
+        /// Creates a post image for a post
         /// </summary>
         /// <param name="createImageForPost"></param>
         /// <returns></returns>
@@ -22,7 +22,5 @@ namespace DevPlatform.Business.Interfaces
         /// <param name="createImageForPost"></param>
         /// <returns></returns>
         ResultModel Create(List<PostImage> createImageForPost);
-
-
     }
 }

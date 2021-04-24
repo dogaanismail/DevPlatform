@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using DevPlatform.Business.Interfaces;
 using DevPlatform.Core.Domain.Identity;
@@ -60,7 +61,7 @@ namespace DevPlatform.Api.Controllers
                 return BadResponse(new ResultModel
                 {
                     Status = false,
-                    Message = serviceResponse.Warnings.First()
+                    Message = string.Join(Environment.NewLine, serviceResponse.Warnings.Select(err => string.Join(Environment.NewLine, err))),
                 });
 
             return OkResponse(Result);

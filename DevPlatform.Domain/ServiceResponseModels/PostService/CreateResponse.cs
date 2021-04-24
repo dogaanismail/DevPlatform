@@ -1,6 +1,7 @@
 ﻿using DevPlatform.Domain.Dto;
 using System;
 using System.Collections.Generic;
+using StoryCreateResponse = DevPlatform.Domain.ServiceResponseModels.StoryService.CreateResponse;
 
 namespace DevPlatform.Domain.ServiceResponseModels.PostService
 {
@@ -18,6 +19,7 @@ namespace DevPlatform.Domain.ServiceResponseModels.PostService
         public DateTime CreatedDate { get; set; }
         public int? PostType { get; set; }
         public List<PostCommentListDto> Comments { get; set; }
+        public StoryCreateResponse StoryCreateResponse { get; set; }
 
         //TODO: PostLikes might be implemented here.
 

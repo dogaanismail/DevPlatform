@@ -14,6 +14,6 @@ namespace DevPlatform.Domain.Enumerations
         StoryText = 3,
 
         [Display(Name = "STORYGIF")]
-        StoryGif = 3,
+        StoryGif = 4,
     }
 }

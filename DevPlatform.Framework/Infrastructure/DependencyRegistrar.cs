@@ -41,10 +41,12 @@ namespace DevPlatform.Framework.Infrastructure
 
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IPostService, PostService>();
-            services.AddScoped<IStoryService, StoryService>();
             services.AddScoped<IPostImageService, PostImageService>();
             services.AddScoped<IPostVideoService, PostVideoService>();
             services.AddScoped<IPostCommentService, PostCommentService>();
+            services.AddScoped<IStoryService, StoryService>();
+            services.AddScoped<IStoryImageService, StoryImageService>();
+            services.AddScoped<IStoryVideoService, StoryVideoService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IUserDetailService, UserDetailService>();
             services.AddScoped<IChatService, ChatService>();

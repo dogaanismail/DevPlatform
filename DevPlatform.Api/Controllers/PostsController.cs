@@ -2,10 +2,12 @@
 using DevPlatform.Domain.Api;
 using DevPlatform.Domain.Common;
 using DevPlatform.Domain.Dto;
+using DevPlatform.Domain.Enumerations;
 using DevPlatform.Framework.Controllers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -35,7 +37,7 @@ namespace DevPlatform.Api.Controllers
 
         [HttpPost("createpost")]
         [Authorize]
-        public virtual async Task<JsonResult> CreatePost([FromForm] PostCreateApi model)
+        public virtual JsonResult CreatePost([FromForm] PostCreateApi model)
         {
             var serviceResponse = _postService.Create(model);
 
@@ -43,10 +45,10 @@ namespace DevPlatform.Api.Controllers
                 return BadResponse(new ResultModel
                 {
                     Status = false,
-                    Message = serviceResponse.Warnings.First()
+                    Message = string.Join(Environment.NewLine, serviceResponse.Warnings.Select(err => string.Join(Environment.NewLine, err))),
                 });
 
-            await _logService.InsertLogAsync(Domain.Enumerations.LogLevel.Information, $"PostsController- Create Post Request", JsonConvert.SerializeObject(model));
+            _logService.InsertLogAsync(LogLevel.Information, $"PostsController- Create Post Request", JsonConvert.SerializeObject(model));
 
             return OkResponse(new PostListDto
             {
@@ -58,7 +60,20 @@ namespace DevPlatform.Api.Controllers
                 CreatedDate = serviceResponse.Data.CreatedDate,
                 VideoUrl = serviceResponse.Data?.VideoUrl,
                 PostType = serviceResponse.Data?.PostType,
-                Comments = null
+                Comments = null,
+                StoryListDto = new()
+                {
+                    Id = serviceResponse.Data?.StoryCreateResponse?.Id,
+                    Title = serviceResponse.Data.StoryCreateResponse?.Title,
+                    Description = serviceResponse.Data?.StoryCreateResponse?.Description,
+                    ImageUrl = serviceResponse.Data?.StoryCreateResponse?.ImageUrl,
+                    VideoUrl = serviceResponse.Data?.StoryCreateResponse?.VideoUrl,
+                    CreatedByUserName = serviceResponse.Data?.StoryCreateResponse.CreatedByUserName,
+                    CreatedByUserPhoto = serviceResponse.Data?.StoryCreateResponse?.CreatedByUserPhoto,
+                    CreatedDate = serviceResponse.Data?.StoryCreateResponse?.CreatedDate,
+                    StoryType = serviceResponse.Data?.StoryCreateResponse?.StoryType,
+                    Comments = null
+                }
             });
         }
 
@@ -80,7 +95,7 @@ namespace DevPlatform.Api.Controllers
                 return BadResponse(new ResultModel
                 {
                     Status = false,
-                    Message = serviceResponse.Warnings.First()
+                    Message = string.Join(Environment.NewLine, serviceResponse.Warnings.Select(err => string.Join(Environment.NewLine, err))),
                 });
 
             return OkResponse(new PostCommentListDto
