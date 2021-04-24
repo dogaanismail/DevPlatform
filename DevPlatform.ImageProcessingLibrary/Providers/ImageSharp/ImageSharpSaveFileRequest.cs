@@ -1,7 +1,6 @@
 ﻿using DevPlatform.ImageProcessingLibrary.Contract.Request;
 using DevPlatform.ImageProcessingLibrary.Contract.Response.Base;
 using DevPlatform.ImageProcessingLibrary.Providers.Helper;
-using System;
 
 namespace DevPlatform.ImageProcessingLibrary.Providers.ImageSharp
 {
@@ -9,7 +8,7 @@ namespace DevPlatform.ImageProcessingLibrary.Providers.ImageSharp
     {
         public ImageProcessResponse CreateFileProcessRequest(ImageProcessRequest imageProcessRequest)
         {
-            throw new NotImplementedException();
+            return new ImageProcessResponse();
         }
     }
 }
