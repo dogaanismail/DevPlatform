@@ -23,7 +23,7 @@ export class CreateAlbumModalComponent implements OnInit {
     thumbnailHeight: 768,
     createImageThumbnails: true,
     url: 'https://httpbin.org/post',
-    addRemoveLinks: true
+    addRemoveLinks: true,
   };
 
   @ViewChild(DropzoneComponent, { static: false }) componentRef?: DropzoneComponent;

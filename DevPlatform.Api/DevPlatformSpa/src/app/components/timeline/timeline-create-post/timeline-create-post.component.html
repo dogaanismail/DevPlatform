@@ -41,6 +41,7 @@
 
       <!-- Tab content -->
       <div class="tab-content">
+
         <!-- Compose form -->
         <div class="compose">
           <div class="compose-form">
@@ -50,251 +51,31 @@
                 name="text" placeholder="Write something about you..."></textarea>
             </div>
           </div>
-
-          <div id="options-summary" class="options-summary"></div>
-
-          <div id="tag-suboption" class="is-autocomplete is-suboption is-hidden">
-            <!-- Tag friends suboption -->
-            <div id="tag-list" class="tag-list"></div>
-            <div class="control">
-              <input id="users-autocpl" type="text" class="input" placeholder="Who are you with?">
-              <div class="icon">
-                <mat-icon>search</mat-icon>
-              </div>
-              <div class="close-icon is-main">
-                <mat-icon>close</mat-icon>
-              </div>
-            </div>
-          </div>
-          <!-- /Tag friends suboption -->
-
-          <!-- Activities suboption -->
-          <div id="activities-suboption" class="is-autocomplete is-suboption is-hidden">
-            <div id="activities-autocpl-wrapper" class="control has-margin">
-              <input id="activities-autocpl" type="text" class="input" placeholder="What are you doing right now?">
-              <div class="icon">
-                <mat-icon>search</mat-icon>
-              </div>
-              <div class="close-icon is-main">
-                <mat-icon>close</mat-icon>
-              </div>
-            </div>
-
-            <!-- Mood suboption -->
-            <div id="mood-autocpl-wrapper" class="is-autocomplete is-activity is-hidden">
-              <div class="control has-margin">
-                <input id="mood-autocpl" type="text" class="input is-subactivity" placeholder="How do you feel?">
-                <div class="input-block">
-                  Feels
-                </div>
-                <div class="close-icon is-subactivity">
-                  <mat-icon>close</mat-icon>
-                </div>
-              </div>
-            </div>
-
-            <!-- Drinking suboption child -->
-            <div id="drinking-autocpl-wrapper" class="is-autocomplete is-activity is-hidden">
-              <div class="control has-margin">
-                <input id="drinking-autocpl" type="text" class="input is-subactivity"
-                  placeholder="What are you drinking?">
-                <div class="input-block">
-                  Drinks
-                </div>
-                <div class="close-icon is-subactivity">
-                  <mat-icon>close</mat-icon>
-                </div>
-              </div>
-            </div>
-
-            <!-- Eating suboption child -->
-            <div id="eating-autocpl-wrapper" class="is-autocomplete is-activity is-hidden">
-              <div class="control has-margin">
-                <input id="eating-autocpl" type="text" class="input is-subactivity" placeholder="What are you eating?">
-                <div class="input-block">
-                  Eats
-                </div>
-                <div class="close-icon is-subactivity">
-                  <mat-icon>close</mat-icon>
-                </div>
-              </div>
-            </div>
-
-            <!-- Reading suboption child -->
-            <div id="reading-autocpl-wrapper" class="is-autocomplete is-activity is-hidden">
-              <div class="control has-margin">
-                <input id="reading-autocpl" type="text" class="input is-subactivity"
-                  placeholder="What are you reading?">
-                <div class="input-block">
-                  Reads
-                </div>
-                <div class="close-icon is-subactivity">
-                  <mat-icon>close</mat-icon>
-                </div>
-              </div>
-            </div>
-
-            <!-- Watching suboption child -->
-            <div id="watching-autocpl-wrapper" class="is-autocomplete is-activity is-hidden">
-              <div class="control has-margin">
-                <input id="watching-autocpl" type="text" class="input is-subactivity"
-                  placeholder="What are you watching?">
-                <div class="input-block">
-                  Watches
-                </div>
-                <div class="close-icon is-subactivity">
-                  <mat-icon>close</mat-icon>
-                </div>
-              </div>
-            </div>
-
-            <!-- Travel suboption child -->
-            <div id="travel-autocpl-wrapper" class="is-autocomplete is-activity is-hidden">
-              <div class="control has-margin">
-                <input id="travel-autocpl" type="text" class="input is-subactivity" placeholder="Where are you going?">
-                <div class="input-block">
-                  Travels
-                </div>
-                <div class="close-icon is-subactivity">
-                  <mat-icon>close</mat-icon>
-                </div>
-              </div>
-            </div>
-
-          </div>
-          <!-- /Activities suboption -->
-
-          <!-- Location suboption -->
-          <div id="location-suboption" class="is-autocomplete is-suboption is-hidden">
-            <div id="location-autocpl-wrapper" class="control is-location-wrapper has-margin">
-              <input id="location-autocpl" type="text" class="input" placeholder="Where are you now?">
-              <div class="icon">
-                <mat-icon>location_on</mat-icon>
-              </div>
-              <div class="close-icon is-main">
-                <mat-icon>close</mat-icon>
-              </div>
-            </div>
-          </div>
-
-          <!-- Link suboption -->
-          <div id="link-suboption" class="is-autocomplete is-suboption is-hidden">
-            <div id="link-autocpl-wrapper" class="control is-location-wrapper has-margin">
-              <input id="link-autocpl" type="text" class="input" placeholder="Enter the link URL">
-              <div class="icon">
-                <mat-icon>insert_link</mat-icon>
-              </div>
-              <div class="close-icon is-main">
-                <mat-icon>close</mat-icon>
-              </div>
-            </div>
-          </div>
-
-          <!-- GIF suboption -->
-          <div id="gif-suboption" class="is-autocomplete is-suboption is-hidden">
-            <div id="gif-autocpl-wrapper" class="control is-gif-wrapper has-margin">
-              <input id="gif-autocpl" type="text" class="input" placeholder="Search a GIF to add" autofocus>
-              <div class="icon">
-                <mat-icon>search</mat-icon>
-              </div>
-              <div class="close-icon is-main">
-                <mat-icon>close</mat-icon>
-              </div>
-              <div class="gif-dropdown">
-                <div class="inner">
-                  <div class="gif-block">
-                    <img src="https://via.placeholder.com/478x344" data-demo-src="assets/img/demo/gif/1.gif" alt="">
-                    <img src="https://via.placeholder.com/478x344" data-demo-src="assets/img/demo/gif/2.gif" alt="">
-                    <img src="https://via.placeholder.com/478x344" data-demo-src="assets/img/demo/gif/3.gif" alt="">
-                    <img src="https://via.placeholder.com/478x344" data-demo-src="assets/img/demo/gif/4.gif" alt="">
-                  </div>
-                  <div class="gif-block">
-                    <img src="https://via.placeholder.com/478x344" data-demo-src="assets/img/demo/gif/5.gif" alt="">
-                    <img src="https://via.placeholder.com/478x344" data-demo-src="assets/img/demo/gif/6.gif" alt="">
-                    <img src="https://via.placeholder.com/478x344" data-demo-src="assets/img/demo/gif/7.gif" alt="">
-                    <img src="https://via.placeholder.com/478x344" data-demo-src="assets/img/demo/gif/8.gif" alt="">
-                  </div>
-                  <div class="gif-block">
-                    <img src="https://via.placeholder.com/478x344" data-demo-src="assets/img/demo/gif/9.gif" alt="">
-                    <img src="https://via.placeholder.com/478x344" data-demo-src="assets/img/demo/gif/10.gif" alt="">
-                    <img src="https://via.placeholder.com/478x344" data-demo-src="assets/img/demo/gif/11.gif" alt="">
-                    <img src="https://via.placeholder.com/478x344" data-demo-src="assets/img/demo/gif/12.gif" alt="">
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
         <!-- /Compose form -->
 
-        <!-- General extended options -->
-        <div id="extended-options" class="compose-options is-hidden">
-          <div class="columns is-multiline is-full">
-            <!-- Upload action -->
-            <div class="column is-6 is-narrower">
-              <div class="compose-option is-centered">
-                <i data-feather="camera"></i>
-                <span>Photo/Video</span>
-                <input type="file">
-              </div>
-            </div>
-            <!-- Mood action -->
-            <div class="column is-6 is-narrower">
-              <div id="extended-show-activities" class="compose-option is-centered">
-                <img src="assets/img/icons/emoji/emoji-1.svg" alt="">
-                <span>Mood/Activity</span>
-              </div>
-            </div>
-            <!-- Tag friends action -->
-            <div class="column is-6 is-narrower">
-              <div id="open-tag-suboption" class="compose-option is-centered">
-                <i data-feather="tag"></i>
-                <span>Tag friends</span>
-              </div>
-            </div>
-            <!-- Post location action -->
-            <div class="column is-6 is-narrower">
-              <div id="open-location-suboption" class="compose-option is-centered">
-                <i data-feather="map-pin"></i>
-                <span>Post location</span>
-              </div>
-            </div>
-            <!-- Share link action -->
-            <div class="column is-6 is-narrower">
-              <div id="open-link-suboption" class="compose-option is-centered">
-                <i data-feather="link-2"></i>
-                <span>Share link</span>
-              </div>
-            </div>
-            <!-- Post GIF action -->
-            <div class="column is-6 is-narrower">
-              <div id="open-gif-suboption" class="compose-option is-centered">
-                <i data-feather="image"></i>
-                <span>Post GIF</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- /General extended options -->
 
         <!-- General basic options -->
-        <div id="basic-options" class="compose-options">
-          <!-- Upload action -->
-          <div class="compose-option">
-            <i data-feather="camera"></i>
-            <span>Media</span>
-            <input type="file">
+        <div class="columns is-multiline" id="previews">
+
+          <div id="template" class="column is-12 is-template">
+            <div class="vertical-container" fxLayout="column" fxLayoutAlign="stretch" fxFlex="100%">
+              <div class="content-container custom-dropzone" fxLayout="column" fxLayoutAlign="stretch" fxFlex="auto">
+                <dropzone *ngIf="type === 'component'" class="dropzone-container" [config]="config"
+                  [disabled]="disabled" fxLayout="row" fxLayoutAlign="start strech" fxFlex="auto"
+                  [message]="'Click or drag images here to upload'" (init)="onUploadInit($event)"
+                  (error)="onUploadError($event)" (success)="onUploadSuccess($event)"></dropzone>
+
+                <div *ngIf="type === 'directive'" class="dropzone dropzone-container" [dropzone]="config"
+                  [disabled]="disabled" (init)="onUploadInit($event)" (error)="onUploadError($event)"
+                  (success)="onUploadSuccess($event)"></div>
+              </div>
+            </div>
+
           </div>
-          <!-- Mood action -->
-          <div id="show-activities" class="compose-option">
-            <img src="assets/img/icons/emoji/emoji-1.svg" alt="">
-            <span>Activity</span>
-          </div>
-          <!-- Expand action -->
-          <div id="open-extended-options" class="compose-option">
-            <i data-feather="more-horizontal"></i>
-          </div>
+
         </div>
+
         <!-- /General basic options -->
 
         <!-- Hidden Options -->
@@ -304,7 +85,8 @@
             <div class="channel">
               <div class="round-checkbox is-small">
                 <div>
-                  <input id="checkbox" type="checkbox" disabled required [(ngModel)]="activityFeed" [checked]="activityFeed" (change)="changeFeed($event)">
+                  <input id="checkbox" type="checkbox" disabled required [(ngModel)]="activityFeed"
+                    [checked]="activityFeed" (change)="changeFeed($event)">
                   <label for="checkbox"></label>
                 </div>
               </div>

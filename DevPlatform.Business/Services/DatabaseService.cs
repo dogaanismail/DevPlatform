@@ -44,7 +44,7 @@ namespace DevPlatform.Business.Services
             try
             {
                 var dataProvider = DataProviderManager.GetDataProvider(DataProviderType.SqlServer);
-                var connectionString = "Data Source=ISMAILDOGAN2;Initial Catalog=DevPlatformDB;Integrated Security=True";
+                var connectionString = "Data Source=DESKTOP-STEV1LL\\SQLEXPRESS;Initial Catalog=DevPlatformDB;Integrated Security=True";
 
                 DataSettingsManager.SaveSettings(new DataSettings
                 {

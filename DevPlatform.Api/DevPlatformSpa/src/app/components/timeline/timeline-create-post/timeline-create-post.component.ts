@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FileUploader } from "ng2-file-upload";
 
 /* Services */
@@ -11,14 +11,33 @@ import { Store, select } from "@ngrx/store";
 import * as fromPost from "../../../core/ngrx/selectors/post.selectors";
 import * as postActions from "../../../core/ngrx/actions/post.actions";
 import { Observable } from "rxjs";
+import { DropzoneComponent, DropzoneConfigInterface, DropzoneDirective } from 'ngx-dropzone-wrapper';
 
 
 @Component({
   selector: 'app-timeline-create-post',
   templateUrl: './timeline-create-post.component.html',
-  styleUrls: ['./timeline-create-post.component.scss']
+  styleUrls: ['./timeline-create-post.component.css']
 })
 export class TimelineCreatePostComponent implements OnInit {
+
+  public config: DropzoneConfigInterface = {
+    clickable: true,
+    uploadMultiple: true,
+    autoReset: null,
+    errorReset: null,
+    cancelReset: null,
+    autoProcessQueue: true,
+    autoQueue: true,
+    thumbnailWidth: 1024,
+    thumbnailHeight: 768,
+    createImageThumbnails: true,
+    url: 'https://httpbin.org/post',
+    addRemoveLinks: true,
+  };
+
+  @ViewChild(DropzoneComponent, { static: false }) componentRef?: DropzoneComponent;
+  @ViewChild(DropzoneDirective, { static: false }) directiveRef?: DropzoneDirective;
 
   constructor(private modalService: ModalService,
     private postStore: Store<fromPost.State>,
@@ -31,10 +50,55 @@ export class TimelineCreatePostComponent implements OnInit {
   isHighlighted: boolean = false;
   public activityFeed = true;
   public storyFeed = false;
+  public type: string = 'component';
+  public disabled: boolean = false;
+  files: File[] = [];
 
   ngOnInit() {
   }
 
+
+  public toggleType(): void {
+    this.type = (this.type === 'component') ? 'directive' : 'component';
+  }
+
+  public toggleDisabled(): void {
+    this.disabled = !this.disabled;
+  }
+
+  public toggleAutoReset(): void {
+    this.config.autoReset = this.config.autoReset ? null : 5000;
+    this.config.errorReset = this.config.errorReset ? null : 5000;
+    this.config.cancelReset = this.config.cancelReset ? null : 5000;
+  }
+
+  public toggleMultiUpload(): void {
+    this.config.maxFiles = this.config.maxFiles ? 0 : 1;
+  }
+
+  public toggleClickAction(): void {
+    this.config.clickable = !this.config.clickable;
+  }
+
+  public resetDropzoneUploads(): void {
+    if (this.type === 'directive' && this.directiveRef) {
+      this.directiveRef.reset();
+    } else if (this.type === 'component' && this.componentRef && this.componentRef.directiveRef) {
+      this.componentRef.directiveRef.reset();
+    }
+  }
+
+  public onUploadInit(event: any): void {
+    console.log('onUploadInit:', event);
+  }
+
+  public onUploadError(event: any): void {
+    console.log('onUploadError:', event);
+  }
+
+  public onUploadSuccess(event: any): void {
+    this.files.push(event[0] as File);
+  }
 
   fileProgress(fileInput: any) {
     this.fileData = <File>fileInput.target.files[0];
@@ -114,20 +178,4 @@ export class TimelineCreatePostComponent implements OnInit {
     this.storyFeed = evt.target.checked;
   }
 
-  config: any = {
-    height: 250,
-    theme: 'modern',
-    plugins: 'print preview fullpage searchreplace autolink directionality visualblocks visualchars fullscreen image imagetools link media template codesample table charmap hr pagebreak nonbreaking anchor insertdatetime advlist lists textcolor wordcount contextmenu colorpicker textpattern | emoticons',
-    toolbar: 'formatselect | bold italic strikethrough forecolor backcolor | link | alignleft aligncenter alignright alignjustify  | numlist bullist outdent indent  | removeformat | emoticons ',
-    image_advtab: true,
-    imagetools_toolbar: 'rotateleft rotateright | flipv fliph | editimage imageoptions',
-    templates: [
-      { title: 'Test template 1', content: 'Test 1' },
-      { title: 'Test template 2', content: 'Test 2' }
-    ],
-    content_css: [
-      '//fonts.googleapis.com/css?family=Lato:300,300i,400,400i',
-      '//www.tinymce.com/css/codepen.min.css'
-    ]
-  };
 }
