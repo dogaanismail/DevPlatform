@@ -45,11 +45,11 @@ namespace DevPlatform.Api.Controllers
 
             if (serviceResponse.Warnings.Count > 0 || serviceResponse.Warnings.Any())
                 return BadResponse(new ResultModel
-                { 
+                {
                     Status = false,
                     Message = string.Join(Environment.NewLine, serviceResponse.Warnings.Select(err => string.Join(Environment.NewLine, err)))
                 });
-   
+
             return OkResponse(new PostListDto
             {
                 Id = serviceResponse.Data.Id,
@@ -61,6 +61,7 @@ namespace DevPlatform.Api.Controllers
                 VideoUrl = serviceResponse.Data?.VideoUrl,
                 PostType = serviceResponse.Data?.PostType,
                 Comments = null,
+                FancyboxData = $"post{serviceResponse.Data.Id}",
                 StoryListDto = new()
                 {
                     Id = serviceResponse.Data?.StoryCreateResponse?.Id,

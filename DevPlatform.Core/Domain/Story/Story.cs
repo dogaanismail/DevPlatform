@@ -17,13 +17,13 @@ namespace DevPlatform.Core.Domain.Story
         public string Description { get; set; }
         public int? StoryType { get; set; }
 
-        [LinqToDBAssociation.Association(ThisKey = nameof(Id), OtherKey = nameof(StoryComment.Id), CanBeNull = true)]
+        [LinqToDBAssociation.Association(ThisKey = nameof(Id), OtherKey = nameof(StoryComment.StoryId), CanBeNull = true)]
         public virtual ICollection<StoryComment> StoryComments { get; set; }
 
-        [LinqToDBAssociation.Association(ThisKey = nameof(Id), OtherKey = nameof(StoryImage.Id), CanBeNull = true)]
+        [LinqToDBAssociation.Association(ThisKey = nameof(Id), OtherKey = nameof(StoryImage.StoryId), CanBeNull = true)]
         public virtual ICollection<StoryImage> StoryImages { get; set; }
 
-        [LinqToDBAssociation.Association(ThisKey = nameof(Id), OtherKey = nameof(StoryVideo.Id), CanBeNull = true)]
+        [LinqToDBAssociation.Association(ThisKey = nameof(Id), OtherKey = nameof(StoryVideo.StoryId), CanBeNull = true)]
         public virtual ICollection<StoryVideo> StoryVideos { get; set; }
     }
 }

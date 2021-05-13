@@ -145,7 +145,7 @@ $(document).ready(function () {
 
           $.when($('#album-tag-list').append(html)).done(function () {
             //Init user popovers
-            getUserPopovers(); //Make added tag removable
+             //Make added tag removable
 
             $('.remove-tag').on('click', function () {
               $(this).closest('.tagged-user').remove();

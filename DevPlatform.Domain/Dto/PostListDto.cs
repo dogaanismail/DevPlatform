@@ -21,6 +21,7 @@ namespace DevPlatform.Domain.Dto
         public int? PostType { get; set; }
         public List<PostCommentListDto> Comments { get; set; }
         public StoryListDto StoryListDto { get; set; }
+        public string FancyboxData { get; set; }
 
         //TODO: PostLikes might be implemented here!
     }

@@ -72,7 +72,7 @@ $(document).ready(function () {
     });
   }
 
-  initAutoTag(); //Close selection modal
+
 
   $('.new-story-modal .selection-box').on('click', function () {
     $(this).closest('.modal').removeClass('is-active');

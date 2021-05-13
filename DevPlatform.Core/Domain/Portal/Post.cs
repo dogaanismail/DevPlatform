@@ -16,13 +16,13 @@ namespace DevPlatform.Core.Domain.Portal
         public string Text { get; set; }
         public int? PostType { get; set; }
 
-        [LinqToDBAssociation.Association(ThisKey = nameof(Id), OtherKey = nameof(PostComment.Id), CanBeNull = true)]
+        [LinqToDBAssociation.Association(ThisKey = nameof(Id), OtherKey = nameof(PostComment.PostId), CanBeNull = true)]
         public virtual ICollection<PostComment> PostComments { get; set; }
 
-        [LinqToDBAssociation.Association(ThisKey = nameof(Id), OtherKey = nameof(PostImage.Id), CanBeNull = true)]
+        [LinqToDBAssociation.Association(ThisKey = nameof(Id), OtherKey = nameof(PostImage.PostId), CanBeNull = true)]
         public virtual ICollection<PostImage> PostImages { get; set; }
 
-        [LinqToDBAssociation.Association(ThisKey = nameof(Id), OtherKey = nameof(PostVideo.Id), CanBeNull = true)]
+        [LinqToDBAssociation.Association(ThisKey = nameof(Id), OtherKey = nameof(PostVideo.PostId), CanBeNull = true)]
         public virtual ICollection<PostVideo> PostVideos { get; set; }
     }
 }

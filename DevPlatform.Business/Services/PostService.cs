@@ -189,6 +189,7 @@ namespace DevPlatform.Business.Services
                     CreatedByUserName = p.CreatedUser == null ? "" : p.CreatedUser.UserName,
                     CreatedByUserPhoto = p.CreatedUser == null ? "" : p.CreatedUser.UserDetail.ProfilePhotoPath,
                     PostType = p.PostType,
+                    FancyboxData = $"post{p.Id}",
                     Comments = p.PostComments.ToList().Select(y => new PostCommentListDto
                     {
                         Text = y.Text,

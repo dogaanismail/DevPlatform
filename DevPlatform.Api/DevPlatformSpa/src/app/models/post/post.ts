@@ -7,5 +7,6 @@ export class Post {
     videoUrl: string;
     createdDate: Date;
     postType: number;
-    comments: any = []
+    comments: any = [];
+    fancyboxData: string;
 }

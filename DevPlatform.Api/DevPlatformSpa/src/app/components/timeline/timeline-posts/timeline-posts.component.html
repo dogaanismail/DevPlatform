@@ -73,10 +73,14 @@
         </div>
         <!-- Featured image -->
         <div class="post-image">
-          <a data-fancybox="post1" data-lightbox-type="comments" data-thumb="assets/img/demo/unsplash/1.jpg"
-            href="https://via.placeholder.com/1600x900" data-demo-href="assets/img/demo/unsplash/1.jpg">
-            <img src="https://via.placeholder.com/1600x900" data-demo-src="assets/img/demo/unsplash/1.jpg" alt="">
-          </a>
+
+          <div *ngFor="let imageUrl of post.imageUrlList">
+            <a data-fancybox="{{post.fancyboxData}}" data-lightbox-type="comments" id="post{{post.id}}"
+              data-thumb="{{imageUrl}}" href="{{imageUrl}}" data-demo-href="{{imageUrl}}">
+              <img src="{{imageUrl}}" data-demo-src="{{imageUrl}}" alt="">
+            </a>
+          </div>
+
           <!-- Action buttons -->
           <!-- /partials/pages/feed/buttons/feed-post-actions.html -->
           <div class="like-wrapper">
