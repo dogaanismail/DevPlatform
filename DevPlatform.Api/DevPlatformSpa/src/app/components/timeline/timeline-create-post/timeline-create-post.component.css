@@ -1,13 +1,3 @@
-dropzone>.dropzone.dz-wrapper .dz-message {
-    background-color: #eee;
-    border: none !important;  /* I would like to change here.*/
-    display: inline-block;
-    margin: 8px;
-    max-height: 100%;
-    max-width: calc(100% - 16px);
-    min-height: 40px;
-    min-width: calc(100% - 16px);
-    overflow: auto;
-    position: relative;
-    width: calc(100% - 16px);
+dropzone ::ng-deep .dropzone.dz-wrapper .dz-message {
+    border: none !important;
 }

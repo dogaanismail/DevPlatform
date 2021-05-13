@@ -149,8 +149,8 @@ namespace DevPlatform.Business.Services
                 Id = getPost.Id,
                 Text = getPost.Text,
                 CreatedDate = getPost.CreatedDate,
-                ImageUrl = getPost.PostImages.Count() == 0 ? "" : getPost.PostImages.FirstOrDefault().ImageUrl, //TODO It can be more photos of the post
-                VideoUrl = getPost.PostVideos.Count() == 0 ? "" : getPost.PostVideos.FirstOrDefault().VideoUrl, //TODO It can be more videos of the post
+                ImageUrlList = getPost.PostImages.Count > 0 ? getPost.PostImages.Select(x => x.ImageUrl).ToList() : new List<string>(),
+                VideoUrl = getPost.PostVideos.Count() == 0 ? "" : getPost.PostVideos.FirstOrDefault().VideoUrl,
                 CreatedByUserName = getPost.CreatedUser == null ? "" : getPost.CreatedUser.UserName,
                 CreatedByUserPhoto = getPost.CreatedUser.UserDetail.ProfilePhotoPath,
                 PostType = getPost.PostType,
@@ -184,8 +184,8 @@ namespace DevPlatform.Business.Services
                     Id = p.Id,
                     Text = p.Text,
                     CreatedDate = p.CreatedDate,
-                    ImageUrl = p.PostImages.Count() == 0 ? "" : p.PostImages.FirstOrDefault().ImageUrl, //TODO It can be more photos of the post
-                    VideoUrl = p.PostVideos.Count() == 0 ? "" : p.PostVideos.FirstOrDefault().VideoUrl, //TODO It can be more videos of the post
+                    ImageUrlList = p.PostImages.Count > 0 ? p.PostImages.Select(x => x.ImageUrl).ToList() : new List<string>(),
+                    VideoUrl = p.PostVideos.Count() == 0 ? "" : p.PostVideos.FirstOrDefault().VideoUrl,
                     CreatedByUserName = p.CreatedUser == null ? "" : p.CreatedUser.UserName,
                     CreatedByUserPhoto = p.CreatedUser == null ? "" : p.CreatedUser.UserDetail.ProfilePhotoPath,
                     PostType = p.PostType,
@@ -236,8 +236,8 @@ namespace DevPlatform.Business.Services
                   Id = p.Id,
                   Text = p.Text,
                   CreatedDate = p.CreatedDate,
-                  ImageUrl = p.PostImages.Count() == 0 ? "" : p.PostImages.FirstOrDefault().ImageUrl, //TODO It can be more photos of the post
-                  VideoUrl = p.PostVideos.Count() == 0 ? "" : p.PostVideos.FirstOrDefault().VideoUrl, //TODO It can be more videos of the post
+                  ImageUrlList = p.PostImages.Count > 0 ? p.PostImages.Select(x => x.ImageUrl).ToList() : new List<string>(),
+                  VideoUrl = p.PostVideos.Count() == 0 ? "" : p.PostVideos.FirstOrDefault().VideoUrl,
                   CreatedByUserName = p.CreatedUser == null ? "" : p.CreatedUser.UserName,
                   CreatedByUserPhoto = p.CreatedUser == null ? "" : p.CreatedUser.UserDetail.ProfilePhotoPath,
                   PostType = p.PostType,
@@ -280,10 +280,10 @@ namespace DevPlatform.Business.Services
                 var appUser = _userService.FindByUserName(_httpContextAccessor.HttpContext.User.Identity.Name);
                 if (appUser == null)
                     return ServiceResponse((CreateResponse)null, new List<string> { "User not found!" });
-         
+
                 #region CloudinaryProcess
 
-                var imageUploadResult = new ImageUploadResult();
+                var imageUploadResult = new List<ImageUploadResult>();
                 var videoUploadResult = new VideoUploadResult();
 
                 bool hasImage = CheckItemType.HasItemImage(model);
@@ -292,10 +292,10 @@ namespace DevPlatform.Business.Services
                 #region ImageUploadingProcess
                 if (hasImage)
                 {
-                    imageUploadResult = _imageProcessingService.UploadImage(model.Photo);
+                    imageUploadResult = _imageProcessingService.UploadImage(model.Images);
 
-                    if (imageUploadResult.Error != null)
-                        return ServiceResponse((CreateResponse)null, new List<string> { imageUploadResult.Error.Message.ToString() });
+                    if (imageUploadResult.Any(x => x.Error != null))
+                        return ServiceResponse((CreateResponse)null, new List<string> { string.Join(Environment.NewLine, imageUploadResult.Select(err => string.Join(Environment.NewLine, err.Error.Message))) });
                 }
 
                 #endregion
@@ -315,7 +315,7 @@ namespace DevPlatform.Business.Services
                 #endregion
 
                 #region POST CRUD
-      
+
                 var newPost = new Post
                 {
                     Text = model.Text,
@@ -323,24 +323,13 @@ namespace DevPlatform.Business.Services
                     CreatedBy = appUser.Id
                 };
 
-                ResultModel postModel = Create(newPost);
-
-                if (!postModel.Status)
-                    return ServiceResponse((CreateResponse)null, new List<string> { postModel.Message });
-
                 #region PostImages
-                if (imageUploadResult != null && imageUploadResult.StatusCode == HttpStatusCode.OK)
+                if (imageUploadResult != null && imageUploadResult.Count > 0)
                 {
-                    var postImages = new PostImage
+                    foreach (var uploadedImage in imageUploadResult)
                     {
-                        PostId = newPost.Id,
-                        ImageUrl = imageUploadResult.Url.ToString()
-                    };
-
-                    ResultModel postImageModel = _postImageService.Create(postImages);
-
-                    if (!postImageModel.Status)
-                        return ServiceResponse((CreateResponse)null, new List<string> { postImageModel.Message });
+                        newPost.PostImages.Add(new PostImage { ImageUrl = uploadedImage.Url.ToString(), CreatedBy = appUser.Id });
+                    }
                 }
 
                 #endregion
@@ -348,19 +337,14 @@ namespace DevPlatform.Business.Services
                 #region PostVideos
 
                 if (videoUploadResult != null && videoUploadResult.StatusCode == HttpStatusCode.OK)
-                {
-                    var postVideos = new PostVideo
-                    {
-                        PostId = newPost.Id,
-                        VideoUrl = videoUploadResult.Url.ToString()
-                    };
-                    ResultModel postVideoModel = _postVideoService.Create(postVideos);
-
-                    if (!postVideoModel.Status)
-                        return ServiceResponse((CreateResponse)null, new List<string> { postVideoModel.Message });
-                }
+                    newPost.PostVideos.Add(new PostVideo { VideoUrl = videoUploadResult.Url.ToString() });
 
                 #endregion
+
+                ResultModel postModel = Create(newPost);
+
+                if (!postModel.Status)
+                    return ServiceResponse((CreateResponse)null, new List<string> { postModel.Message });
 
                 #endregion
 
@@ -368,13 +352,13 @@ namespace DevPlatform.Business.Services
 
                 StoryCreateResponse storyCreateResponse = null;
 
-                if (model.IsStory.GetValueOrDefault() && (model.Photo != null || model.Video != null))
-                {                 
+                if (model.IsStory.GetValueOrDefault() && (model.Images != null || model.Video != null))
+                {
                     var storyCreateModel = new StoryCreateApi()
                     {
                         Title = model.Text,
                         Description = model.Text,
-                        PhotoUrl = imageUploadResult?.Url?.ToString(),
+                        PhotoUrl = imageUploadResult?.Select(x => x.Url.ToString()).FirstOrDefault(),
                         VideoUrl = videoUploadResult?.Url?.ToString()
                     };
 
@@ -400,7 +384,7 @@ namespace DevPlatform.Business.Services
                 {
                     Id = newPost.Id,
                     Text = newPost.Text,
-                    ImageUrl = imageUploadResult?.Url?.ToString(),
+                    ImageUrlList = imageUploadResult?.Select(x => x.Url.ToString()).ToList(),
                     CreatedByUserName = appUser?.UserName,
                     CreatedByUserPhoto = appUser?.UserDetail.ProfilePhotoPath,
                     CreatedDate = newPost.CreatedDate,

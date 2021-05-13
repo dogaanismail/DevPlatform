@@ -21,7 +21,7 @@ namespace DevPlatform.Business.Interfaces
         /// </summary>
         /// <param name="ımageUploadParams"></param>
         /// <returns></returns>
-        IList<ImageUploadResult> UploadImage(IList<IFormFile> images, IList<ImageUploadParams> imageUploadParams = null);
+        List<ImageUploadResult> UploadImage(IList<IFormFile> images, IList<ImageUploadParams> imageUploadParams = null);
 
         /// <summary>
         /// Upload a video to Cloudinary

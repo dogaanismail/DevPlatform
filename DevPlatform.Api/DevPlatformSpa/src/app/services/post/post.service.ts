@@ -17,8 +17,8 @@ export class PostService {
     private authService: AuthService,
   ) { }
 
+
   createPost(post: any): Observable<Post> {
-    console.log("girdi");
     const headers = new HttpHeaders
       ({
         "Authorization": "Bearer " + this.authService.getToken
@@ -30,6 +30,7 @@ export class PostService {
         catchError(this.handleError)
       );
   }
+  
 
   createGif(post: any): Observable<Post> {
     const headers = new HttpHeaders
@@ -40,7 +41,6 @@ export class PostService {
       .pipe(
         tap((data: any) => {
         }),
-        catchError(this.handleError)
       );
   }
 

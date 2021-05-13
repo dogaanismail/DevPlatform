@@ -3,11 +3,16 @@ using DevPlatform.Domain.Api.StoryApi;
 
 namespace DevPlatform.Common.Helpers
 {
+    /// <summary>
+    /// CheckItemType extension method
+    /// </summary>
     public static class CheckItemType
     {
+        #region Methods
+
         public static bool HasItemImage(PostCreateApi model)
         {
-            if (model.Photo != null && model.Photo.Length > 0) return true;
+            if (model.Images != null && model.Images.Count > 0) return true;
             return false;
         }
 
@@ -28,5 +33,7 @@ namespace DevPlatform.Common.Helpers
             if (model.Video != null && model.Video.Length > 0) return true;
             return false;
         }
+
+        #endregion
     }
 }

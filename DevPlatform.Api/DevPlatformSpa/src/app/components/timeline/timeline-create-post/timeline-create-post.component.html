@@ -1,5 +1,3 @@
-<!-- Publishing Area -->
-<!-- /partials/pages/feed/compose-card.html -->
 <div id="compose-card" class="card is-new-content" [ngClass]="{'is-highlighted' : isHighlighted  == true}">
   <!-- Top tabs -->
   <div class="tabs-wrapper">
@@ -61,10 +59,11 @@
           <div id="template" class="column is-12 is-template">
             <div class="vertical-container" fxLayout="column" fxLayoutAlign="stretch" fxFlex="100%">
               <div class="content-container custom-dropzone" fxLayout="column" fxLayoutAlign="stretch" fxFlex="auto">
+
                 <dropzone *ngIf="type === 'component'" class="dropzone-container" [config]="config"
                   [disabled]="disabled" fxLayout="row" fxLayoutAlign="start strech" fxFlex="auto"
                   [message]="'Click or drag images here to upload'" (init)="onUploadInit($event)"
-                  (error)="onUploadError($event)" (success)="onUploadSuccess($event)"></dropzone>
+                  (error)="onUploadError($event)" (success)="onUploadSuccess($event)" (removedFile)="onRemovedFile($event)"></dropzone>
 
                 <div *ngIf="type === 'directive'" class="dropzone dropzone-container" [dropzone]="config"
                   [disabled]="disabled" (init)="onUploadInit($event)" (error)="onUploadError($event)"

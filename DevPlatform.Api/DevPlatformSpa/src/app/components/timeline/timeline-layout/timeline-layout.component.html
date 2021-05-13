@@ -7,6 +7,7 @@
 
     <!-- Feed page main wrapper -->
     <div id="activity-feed" class="view-wrap true-dom">
+
       <div class="columns">
         <!-- Left side column -->
         <div class="column is-3 is-hidden-mobile">
@@ -19,6 +20,16 @@
 
         <!-- Middle column -->
         <div class="column is-6">
+
+          <article *ngIf="errorMessage$ | async as errorMessage" class="message is-danger">
+            <div class="message-header">
+              <p>Warning!</p>
+              <button class="delete" aria-label="delete"></button>
+            </div>
+            <div class="message-body">
+              {{ errorMessage }}
+            </div>
+          </article>
 
           <app-timeline-create-post>
 

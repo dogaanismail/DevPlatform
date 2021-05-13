@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FileUploader } from "ng2-file-upload";
 
 /* Services */
 import { ModalService } from '../../../services/modal/modal.service';
@@ -39,10 +38,9 @@ export class TimelineCreatePostComponent implements OnInit {
   @ViewChild(DropzoneComponent, { static: false }) componentRef?: DropzoneComponent;
   @ViewChild(DropzoneDirective, { static: false }) directiveRef?: DropzoneDirective;
 
-  constructor(private modalService: ModalService,
-    private postStore: Store<fromPost.State>,
-    private authService: AuthService,
-    private spinner: NgxSpinnerService) { }
+  constructor(
+    private modalService: ModalService,
+    private postStore: Store<fromPost.State>) { }
 
   postCreate: any = {};
   fileData: File = null;
@@ -56,7 +54,6 @@ export class TimelineCreatePostComponent implements OnInit {
 
   ngOnInit() {
   }
-
 
   public toggleType(): void {
     this.type = (this.type === 'component') ? 'directive' : 'component';
@@ -100,44 +97,19 @@ export class TimelineCreatePostComponent implements OnInit {
     this.files.push(event[0] as File);
   }
 
-  fileProgress(fileInput: any) {
-    this.fileData = <File>fileInput.target.files[0];
-    this.preview();
-  }
-
-  preview() {
-    // Show preview
-    var mimeType = this.fileData.type;
-    if (mimeType.match(/(image|video)\/*/) == null) {
-      return;
-    }
-
-    if (mimeType.match(/image\/*/)) {
-      var reader = new FileReader();
-      reader.readAsDataURL(this.fileData);
-      reader.onload = _event => {
-        this.previewUrl = reader.result;
-      };
-    }
-  }
-
-  checkFileType(data: File) {
-    var type = data.type;
-    if (type.match(/image\/*/)) return "image";
-    else return "video";
-  }
-
-  closePreview() {
-    this.fileData = null;
-    this.previewUrl = null;
+  public onRemovedFile(event: File): void {
+    let removedFile = event;
+    let index = this.files.findIndex(d => d.name === removedFile.name && d.size == removedFile.size);
+    this.files.splice(index, 1);
   }
 
   savePost() {
     var formData: any = new FormData();
-    if (this.fileData != null) {
-      let checkedItem = this.checkFileType(this.fileData);
-      if (checkedItem === "image") formData.append("photo", this.fileData);
-      else if (checkedItem === "video") formData.append("video", this.fileData);
+
+    if (this.files.length > 0) {
+      for (let index = 0; index < this.files.length; index++) {
+        formData.append('images', this.files[index], this.files[index].name);
+      }
     }
 
     formData.append("Text", this.postCreate.text);
@@ -145,7 +117,6 @@ export class TimelineCreatePostComponent implements OnInit {
     formData.append("IsStory", this.storyFeed.valueOf());
     this.postStore.dispatch(new postActions.CreatePost(formData));
     this.postCreate.text = null;
-    this.closePreview();
     this.makeUnHighlighted();
   }
 

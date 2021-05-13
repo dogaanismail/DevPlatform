@@ -23,6 +23,7 @@ export class TimelineLayoutComponent implements OnInit {
   componentActive = true;
   posts$: Observable<Post[]>;
   newPost$: Observable<boolean>;
+  errorMessage$: Observable<string>;
 
   constructor(
     private modalService: ModalService,
@@ -33,6 +34,7 @@ export class TimelineLayoutComponent implements OnInit {
     this.postStore.dispatch(new postActions.Load());
     this.posts$ = this.postStore.pipe(select(fromPost.getPosts)) as Observable<Post[]>;
     this.newPost$ = this.postStore.pipe(select(fromPost.getIsNewPost));
+    this.errorMessage$ = this.postStore.pipe(select(fromPost.getError));
   }
 
   closeModal(id: string) {

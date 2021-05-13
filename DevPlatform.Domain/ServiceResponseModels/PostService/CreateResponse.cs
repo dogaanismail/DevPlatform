@@ -10,11 +10,16 @@ namespace DevPlatform.Domain.ServiceResponseModels.PostService
     /// </summary>
     public class CreateResponse
     {
+        public CreateResponse()
+        {
+            ImageUrlList = new List<string>();
+        }
+
         public int Id { get; set; }
         public string Text { get; set; }
         public string CreatedByUserName { get; set; }
         public string CreatedByUserPhoto { get; set; }
-        public string ImageUrl { get; set; }
+        public List<string> ImageUrlList { get; set; }
         public string VideoUrl { get; set; }
         public DateTime CreatedDate { get; set; }
         public int? PostType { get; set; }

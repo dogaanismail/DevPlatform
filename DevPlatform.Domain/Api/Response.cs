@@ -17,7 +17,8 @@ namespace DevPlatform.Domain.Api
         public int StatusCode { get; set; }
         public bool Status { get; set; }
 
-        public ValidationError Error { get; set; }
+        public ValidationError ValidationError { get; set; }
+
 
         public T Result { get; set; }
 
@@ -36,7 +37,7 @@ namespace DevPlatform.Domain.Api
         {
             StatusCode = (int)HttpStatusCode.BadRequest;
             Status = false;
-            Error = error;
+            ValidationError = error;
             Result = null;
         }
 
@@ -44,7 +45,7 @@ namespace DevPlatform.Domain.Api
         {
             StatusCode = (int)HttpStatusCode.InternalServerError;
             Status = false;
-            Error = new ValidationError(resultModel);
+            ValidationError = new ValidationError(resultModel);
             Result = null;
         }
 

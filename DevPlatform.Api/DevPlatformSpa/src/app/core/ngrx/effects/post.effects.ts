@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, pipe } from 'rxjs';
-import { mergeMap, map, catchError, switchMap } from 'rxjs/operators';
+import { mergeMap, map, catchError, switchMap, exhaustMap } from 'rxjs/operators';
 import { PostService } from '../../../services/post/post.service';
 
 /* NgRx */
 import { Action } from '@ngrx/store';
-import { Actions, Effect, ofType } from '@ngrx/effects';
+import { Actions, createEffect, Effect, ofType } from '@ngrx/effects';
 import * as postActions from '../actions/post.actions';
+import { Post } from 'src/app/models/post/post';
 
 @Injectable()
 export class PostEffects {
@@ -31,15 +32,11 @@ export class PostEffects {
     createPost$: Observable<Action> = this.actions$.pipe(
         ofType(postActions.PostActionTypes.CreatePost),
         map(((action: postActions.CreatePost) => action.payload)),
-        switchMap((post: any) =>
+        mergeMap((post: any) =>
             this.postService.createPost(post).pipe(
-                mergeMap((newPost: any) =>
-                    [new postActions.CreatePostSuccess(newPost.result),
-                    ]),
-                catchError(err => of(new postActions.CreatePostFail(err)))
+                map((res: any) => res.status ? new postActions.CreatePostSuccess(res.result) : new postActions.CreatePostFail(res.result.message))
             )
-        )
-    );
+        ));
 
     @Effect()
     createGif$: Observable<Action> = this.actions$.pipe(

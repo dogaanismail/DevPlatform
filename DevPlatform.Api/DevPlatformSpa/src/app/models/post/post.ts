@@ -3,7 +3,7 @@ export class Post {
     text: string;
     createdByUserName: string;
     createdByUserPhoto: string;
-    imageUrl: string;
+    imageUrlList: string[] = [];
     videoUrl: string;
     createdDate: Date;
     postType: number;

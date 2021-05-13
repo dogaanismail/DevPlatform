@@ -68,7 +68,7 @@ namespace DevPlatform.Business.Services
         /// <param name="images"></param>
         /// <param name="imageUploadParams"></param>
         /// <returns></returns>
-        public IList<ImageUploadResult> UploadImage(IList<IFormFile> images, IList<ImageUploadParams> imageUploadParams = null)
+        public List<ImageUploadResult> UploadImage(IList<IFormFile> images, IList<ImageUploadParams> imageUploadParams = null)
         {
             if (images == null)
                 throw new ArgumentNullException(nameof(images));

@@ -39,22 +39,22 @@ namespace DevPlatform.Api.Controllers
         [Authorize]
         public virtual JsonResult CreatePost([FromForm] PostCreateApi model)
         {
+            _logService.InsertLogAsync(LogLevel.Information, $"PostsController- Create Post Request", JsonConvert.SerializeObject(model));
+
             var serviceResponse = _postService.Create(model);
 
             if (serviceResponse.Warnings.Count > 0 || serviceResponse.Warnings.Any())
                 return BadResponse(new ResultModel
-                {
+                { 
                     Status = false,
-                    Message = string.Join(Environment.NewLine, serviceResponse.Warnings.Select(err => string.Join(Environment.NewLine, err))),
+                    Message = string.Join(Environment.NewLine, serviceResponse.Warnings.Select(err => string.Join(Environment.NewLine, err)))
                 });
-
-            _logService.InsertLogAsync(LogLevel.Information, $"PostsController- Create Post Request", JsonConvert.SerializeObject(model));
-
+   
             return OkResponse(new PostListDto
             {
                 Id = serviceResponse.Data.Id,
                 Text = serviceResponse.Data?.Text,
-                ImageUrl = serviceResponse.Data.ImageUrl?.ToString(),
+                ImageUrlList = serviceResponse.Data?.ImageUrlList,
                 CreatedByUserName = serviceResponse.Data?.CreatedByUserName,
                 CreatedByUserPhoto = serviceResponse.Data?.CreatedByUserPhoto,
                 CreatedDate = serviceResponse.Data.CreatedDate,
@@ -68,7 +68,7 @@ namespace DevPlatform.Api.Controllers
                     Description = serviceResponse.Data?.StoryCreateResponse?.Description,
                     ImageUrl = serviceResponse.Data?.StoryCreateResponse?.ImageUrl,
                     VideoUrl = serviceResponse.Data?.StoryCreateResponse?.VideoUrl,
-                    CreatedByUserName = serviceResponse.Data?.StoryCreateResponse.CreatedByUserName,
+                    CreatedByUserName = serviceResponse.Data?.StoryCreateResponse?.CreatedByUserName,
                     CreatedByUserPhoto = serviceResponse.Data?.StoryCreateResponse?.CreatedByUserPhoto,
                     CreatedDate = serviceResponse.Data?.StoryCreateResponse?.CreatedDate,
                     StoryType = serviceResponse.Data?.StoryCreateResponse?.StoryType,
