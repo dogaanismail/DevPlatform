@@ -74,11 +74,13 @@
         <!-- Featured image -->
         <div class="post-image">
 
-          <div *ngFor="let imageUrl of post.imageUrlList">
-            <a data-fancybox="{{post.fancyboxData}}" data-lightbox-type="comments" id="post{{post.id}}"
-              data-thumb="{{imageUrl}}" href="{{imageUrl}}" data-demo-href="{{imageUrl}}">
-              <img src="{{imageUrl}}" data-demo-src="{{imageUrl}}" alt="">
-            </a>
+          <div *ngIf="post.imageUrlList?.length > 0">
+            <div *ngFor="let imageUrl of post.imageUrlList">
+              <a data-fancybox="{{post.fancyboxData}}" data-lightbox-type="comments" id="post{{post.id}}"
+                data-thumb="{{imageUrl}}" href="{{imageUrl}}" data-demo-href="{{imageUrl}}">
+                <img src="{{imageUrl}}" data-demo-src="{{imageUrl}}" alt="">
+              </a>
+            </div>
           </div>
 
           <!-- Action buttons -->

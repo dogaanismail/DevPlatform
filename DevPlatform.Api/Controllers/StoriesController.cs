@@ -37,6 +37,8 @@ namespace DevPlatform.Api.Controllers
         [Authorize]
         public virtual JsonResult CreateStory([FromForm] StoryCreateApi model)
         {
+            _logService.InsertLogAsync(LogLevel.Information, $"StoriesController- Create Story Request", JsonConvert.SerializeObject(model));
+
             var serviceResponse = _storyService.Create(model);
 
             if (serviceResponse.Warnings.Count > 0 || serviceResponse.Warnings.Any())
@@ -45,9 +47,7 @@ namespace DevPlatform.Api.Controllers
                     Status = false,
                     Message = string.Join(Environment.NewLine, serviceResponse.Warnings.Select(err => string.Join(Environment.NewLine, err))),
                 });
-
-            _logService.InsertLogAsync(LogLevel.Information, $"StoriesController- Create Story Request", JsonConvert.SerializeObject(model));
-
+     
             return OkResponse(new StoryListDto
             {
                 Id = serviceResponse.Data.Id,

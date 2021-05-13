@@ -1,4 +1,8 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { DropzoneComponent, DropzoneConfigInterface, DropzoneDirective } from 'ngx-dropzone-wrapper';
+
+/* Models */
+import { SignedUser } from '../../../models/user/signedUser';
 
 /* Services */
 import { ModalService } from '../../../services/modal/modal.service';
@@ -10,8 +14,6 @@ import { Store, select } from "@ngrx/store";
 import * as fromPost from "../../../core/ngrx/selectors/post.selectors";
 import * as postActions from "../../../core/ngrx/actions/post.actions";
 import { Observable } from "rxjs";
-import { DropzoneComponent, DropzoneConfigInterface, DropzoneDirective } from 'ngx-dropzone-wrapper';
-
 
 @Component({
   selector: 'app-timeline-create-post',
@@ -51,6 +53,7 @@ export class TimelineCreatePostComponent implements OnInit {
   public type: string = 'component';
   public disabled: boolean = false;
   files: File[] = [];
+  @Input() signedUser: SignedUser;
 
   ngOnInit() {
   }

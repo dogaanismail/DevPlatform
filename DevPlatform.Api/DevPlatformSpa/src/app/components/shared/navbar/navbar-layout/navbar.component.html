@@ -1,7 +1,7 @@
 <div id="main-navbar" class="navbar is-inline-flex is-transparent no-shadow is-hidden-mobile">
     <div class="container is-fluid">
         <div class="navbar-brand">
-            <a href="/" class="navbar-item">
+            <a routerLink="" class="navbar-item">
                 <img class="logo" src="../../../../../assets/img/logo/friendkit-bold.svg" width="112" height="28"
                     alt="">
             </a>
@@ -405,7 +405,7 @@
 
                 </div>
 
-                <div id="account-dropdown" class="navbar-item is-account drop-trigger has-caret">
+                <div id="account-dropdown" class="navbar-item is-account drop-trigger has-caret" *ngIf="signedUser">
                     <div class="user-image">
                         <img src="https://via.placeholder.com/400x400"
                             data-demo-src="../../../../../assets/img/avatars/jenna.png" alt="">
@@ -528,6 +528,12 @@
                         </div>
                     </div>
                 </div>
+
+                <div *ngIf="!signedUser" class="navbar-item is-account drop-trigger has-caret">
+                    <a class="button is-rounded is-phantom accent-button" routerLink="account/login">Login</a>
+                    <a class="button is-rounded is-phantom accent-button" routerLink="account/register">Register</a>
+                </div>
+
                 <div class="navbar-item is-plus-menu is-hidden">
                     <a id="plus-menu" class="button action-button is-solid primary-button raised">
                         <i data-feather="plus"></i>

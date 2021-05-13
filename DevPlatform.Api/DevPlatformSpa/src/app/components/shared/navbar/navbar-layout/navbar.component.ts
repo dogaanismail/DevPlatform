@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+
+import { SignedUser } from 'src/app/models/user/signedUser';
 
 @Component({
   selector: 'app-navbar',
@@ -7,6 +9,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NavbarComponent implements OnInit {
 
+  @Input() signedUser: SignedUser;
   constructor() { }
 
   ngOnInit() {

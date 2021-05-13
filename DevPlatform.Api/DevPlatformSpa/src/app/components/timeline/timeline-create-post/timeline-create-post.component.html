@@ -1,4 +1,4 @@
-<div id="compose-card" class="card is-new-content" [ngClass]="{'is-highlighted' : isHighlighted  == true}">
+<div id="compose-card" class="card is-new-content" [ngClass]="{'is-highlighted' : isHighlighted  == true}" *ngIf="signedUser">
   <!-- Top tabs -->
   <div class="tabs-wrapper">
     <form #postCreateForm="ngForm" (ngSubmit)="savePost()">
@@ -43,7 +43,7 @@
         <!-- Compose form -->
         <div class="compose">
           <div class="compose-form">
-            <img src="https://via.placeholder.com/300x300" data-demo-src="assets/img/avatars/jenna.png" alt="">
+            <img src="{{signedUser.profilePhotoUrl}}" data-demo-src="{{signedUser.profilePhotoUrl}}" alt="" title="{{signedUser.userName}}" >
             <div class="control">
               <textarea class="textarea" (click)="makeHighlighted()" rows="3" [(ngModel)]="postCreate.text" required
                 name="text" placeholder="Write something about you..."></textarea>

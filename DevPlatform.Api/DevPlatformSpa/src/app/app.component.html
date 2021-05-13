@@ -2,7 +2,7 @@
 
 <app-snow></app-snow>
 
-<app-navbar></app-navbar>
+<app-navbar [signedUser]="signedUser$ | async"></app-navbar>
 
 <router-outlet></router-outlet>
 
