@@ -43,7 +43,7 @@
         <!-- Right side column -->
         <div class="column is-3">
 
-          <app-timeline-stories></app-timeline-stories>
+          <app-timeline-stories [signedUser]="signedUser$ | async"></app-timeline-stories>
 
           <app-timeline-birthday></app-timeline-birthday>
 
@@ -61,7 +61,11 @@
   <app-create-album-modal>
   </app-create-album-modal>
 
+  <app-create-story-modal [signedUser]="signedUser$ | async">
+  </app-create-story-modal>
+
   <!-- Google places Lib -->
   <script
     src="https://maps.google.com/maps/api/js?key=AIzaSyAGLO_M5VT7BsVdjMjciKoH1fFJWWdhDPU&libraries=places"></script>
 </div>
+

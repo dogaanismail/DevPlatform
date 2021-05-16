@@ -1,4 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+
+/*Models */
+import { SignedUser } from '../../../../models/user/signedUser';
+
+/*Services */
+import { ModalService } from '../../../../services/modal/modal.service';
 
 @Component({
   selector: 'app-timeline-stories',
@@ -7,9 +13,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TimelineStoriesComponent implements OnInit {
 
-  constructor() { }
+  constructor( private modalService: ModalService) { }
+
+  @Input() signedUser: SignedUser;
 
   ngOnInit() {
+  }
+
+  closeModal(id: string) {
+    this.modalService.close(id);
+  }
+
+  openModal(id: string) {
+    this.modalService.open(id);
   }
 
 }

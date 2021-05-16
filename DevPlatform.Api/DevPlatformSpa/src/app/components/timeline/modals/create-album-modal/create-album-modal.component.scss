@@ -1,13 +1,3 @@
-dropzone>.dropzone.dz-wrapper .dz-message{
-    background-color: #eee;
+dropzone ::ng-deep .dropzone.dz-wrapper .dz-message {
     border: none !important;
-    display: inline-block;
-    margin: 0px !important;
-    max-height: none !important;
-    max-width: none !important;
-    min-height: none !important;
-    min-width: none !important;
-    overflow: auto;
-    position: relative;
-    width: none !important;
 }

@@ -1,0 +1,62 @@
+<!-- /html/partials/pages/stories/modals/image-story-modal.html -->
+<div id="image-story-modal" class="modal image-story-modal is-medium has-light-bg" *ngIf="signedUser">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+
+        <div class="card">
+            <div class="card-heading">
+                <div class="small-avatar">
+                    <img class="avatar" src="{{signedUser.profilePhotoUrl}}" alt="" title="{{signedUser.userName}}">
+                </div>
+                <h3>Image Story</h3>
+                <!-- Close X button -->
+                <div class="close-wrap">
+                    <span class="close-modal">
+                        <mat-icon>close</mat-icon>
+                    </span>
+                </div>
+            </div>
+            <form #storyCreateForm="ngForm" (ngSubmit)="saveStory()">
+                <div class="card-body">
+                    <div class="columns">
+                        <div class="column is-6">
+                            <div class="story-meta">
+                                <p>You can share a story to your friends :) </p>
+                                <div class="field">
+                                    <div class="control">
+                                        <input type="text" class="input is-fade" [(ngModel)]="storyCreate.title" placeholder="Story title" required>
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <div class="control">
+                                        <textarea class="textarea is-fade" rows="3" [(ngModel)]="storyCreate.description"  placeholder="Describe your story" readonly required></textarea>
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <div class="control buttons">
+                                        <button class="button is-light close-modal">Cancel</button>
+                                        <button type="submit" [disabled]="!storyCreateForm.valid" class="button is-solid accent-button raised">Publish Story</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="column is-6">
+                            <div class="story-upload">
+                                <div id="image-preview" class="preview-block" *ngIf="previewUrl" >
+                                    <img id="image-upload-placeholder" class="image-upload-placeholder"
+                                        [src]="previewUrl"
+                                        alt="">
+                                </div>
+                                <div class="input-block">
+                                    <input id="image-story-upload"(change)="fileProgress($event)" type="file" accept=".jpg,.jpeg.,.gif,.png,.mov,.mp4"
+                                        id="file-input" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

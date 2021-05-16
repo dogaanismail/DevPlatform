@@ -1,6 +1,7 @@
 <!-- Stories widget -->
 <!-- /partials/widgets/stories-widget.html -->
-<div class="card">
+<div class="card" *ngIf="signedUser">
+
   <div class="card-heading is-bordered">
     <h4>Stories</h4>
     <div class="dropdown is-spaced is-neutral is-right dropdown-trigger">
@@ -13,7 +14,7 @@
         <div class="dropdown-content">
           <a href="#" class="dropdown-item">
             <div class="media">
-              <i data-feather="tv"></i>
+              <mat-icon>tv</mat-icon>
               <div class="media-content">
                 <h3>Browse stories</h3>
                 <small>View all recent stories.</small>
@@ -22,7 +23,7 @@
           </a>
           <a class="dropdown-item">
             <div class="media">
-              <i data-feather="settings"></i>
+              <mat-icon>settings</mat-icon>
               <div class="media-content">
                 <h3>Settings</h3>
                 <small>Access widget settings.</small>
@@ -32,7 +33,7 @@
           <hr class="dropdown-divider">
           <a href="#" class="dropdown-item">
             <div class="media">
-              <i data-feather="trash-2"></i>
+              <mat-icon>delete</mat-icon>
               <div class="media-content">
                 <h3>Remove</h3>
                 <small>Removes this widget from your feed.</small>
@@ -43,17 +44,20 @@
       </div>
     </div>
   </div>
+
   <div class="card-body no-padding">
+
     <!-- Story block -->
     <div class="story-block">
-      <a id="add-story-button" href="#" class="add-story">
-        <i data-feather="plus"></i>
+      <a data-modal="image-story-modal" class="add-story story modal-trigger">
+        <mat-icon>add_circle_outline</mat-icon>
       </a>
       <div class="story-meta">
         <span>Add a new Story</span>
         <span>Share an image, a video or some text</span>
       </div>
     </div>
+
     <!-- Story block -->
     <div class="story-block">
       <div class="img-wrapper">
@@ -65,6 +69,7 @@
         <span>1 hour ago</span>
       </div>
     </div>
+
     <!-- Story block -->
     <div class="story-block">
       <div class="img-wrapper">
@@ -76,6 +81,7 @@
         <span>3 days ago</span>
       </div>
     </div>
+
     <!-- Story block -->
     <div class="story-block">
       <div class="img-wrapper">
@@ -87,5 +93,6 @@
         <span>Last week</span>
       </div>
     </div>
+
   </div>
 </div>
