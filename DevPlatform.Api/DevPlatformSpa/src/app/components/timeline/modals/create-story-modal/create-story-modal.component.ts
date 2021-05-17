@@ -20,8 +20,8 @@ export class CreateStoryModalComponent implements OnInit {
 
   @Input() signedUser: SignedUser;
   storyCreate: any = {};
-  fileData: File = null;
-  previewUrl: any = null;
+  storyImage: File = null;
+  imgPreviewUrl: any = null;
 
   ngOnInit() {
   }
@@ -29,12 +29,12 @@ export class CreateStoryModalComponent implements OnInit {
   saveStory() {
     var formData: any = new FormData();
     formData.append('title', this.storyCreate.title);
-    formData.append('place', this.storyCreate.description);
+    formData.append('description', this.storyCreate.description);
 
-    if (this.fileData != null) {
-      let checkedItem = this.checkFileType(this.fileData);
-      if (checkedItem === "image") formData.append("photo", this.fileData);
-      else if (checkedItem === "video") formData.append("video", this.fileData);
+    if (this.storyImage != null) {
+      let checkedItem = this.checkFileType(this.storyImage);
+      if (checkedItem === "image") formData.append("photo", this.storyImage);
+      else if (checkedItem === "video") formData.append("video", this.storyImage);
     }
 
     this.storyStore.dispatch(new storyActions.CreateStory(formData));
@@ -47,28 +47,20 @@ export class CreateStoryModalComponent implements OnInit {
   }
 
   fileProgress(fileInput: any) {
-    this.fileData = <File>fileInput.target.files[0];
-    this.preview();
+    this.storyImage = <File>fileInput.target.files[0];
+    this.previewImg();
   }
 
-  preview() {
-    var mimeType = this.fileData.type;
-    if (mimeType.match(/(image|video)\/*/) == null) {
-      return;
-    }
+  previewImg() {
+    var mimeType = this.storyImage.type;
 
     if (mimeType.match(/image\/*/)) {
       var reader = new FileReader();
-      reader.readAsDataURL(this.fileData);
+      reader.readAsDataURL(this.storyImage);
       reader.onload = _event => {
-        this.previewUrl = reader.result;
+        this.imgPreviewUrl = reader.result;
       };
     }
-  }
-
-  closePreview() {
-    this.fileData = null;
-    this.previewUrl = null;
   }
 
 }

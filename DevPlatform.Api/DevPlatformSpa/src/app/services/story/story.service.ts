@@ -18,7 +18,6 @@ export class StoryService {
   ) { }
 
   createStory(story: any): Observable<Story> {
-    console.log("girdi");
     const headers = new HttpHeaders
       ({
         "Authorization": "Bearer " + this.authService.getToken

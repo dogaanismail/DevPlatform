@@ -30,7 +30,7 @@ export class PostService {
         catchError(this.handleError)
       );
   }
-  
+
 
   createGif(post: any): Observable<Post> {
     const headers = new HttpHeaders
@@ -54,7 +54,6 @@ export class PostService {
     return this.http.get<Post[]>(this.postUrl + "postlist", { headers: headers })
       .pipe(
         tap((data: any) => {
-          console.log(data);
         }),
         shareReplay(1),
         catchError(this.handleError)
