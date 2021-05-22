@@ -17,6 +17,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { SharedModule } from 'src/app/shared/modules/shared.module';
 import { DropzoneModule } from 'ngx-dropzone-wrapper';
 import { DevPlatformMaterialModule } from '../../shared/modules/material.module';
+import { NgxGalleryModule } from 'ngx-gallery-9';
 
 /*Ngrx and Store infrastructure implementations */
 import { storageMetaReducer } from '../../core/store-infrastructure/storage-metareducer';
@@ -38,6 +39,7 @@ export function getPostsConfig(saveKeys: string[], localStorageKey: string, stor
         SharedModule,
         RouterModule.forChild(timelineRoutes),
         DropzoneModule,
+        NgxGalleryModule,
         StoreModule.forFeature('posts', fromReducer.postReducer, POSTS_CONFIG_TOKEN),
         DevPlatformMaterialModule
     ],

@@ -1,6 +1,7 @@
 export class Story {
     Id: number;
-    text: string;
+    title: string;
+    description: string;
     createdByUserName: string;
     createdByUserPhoto: string;
     imageUrl: string;

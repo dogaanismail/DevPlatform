@@ -55,7 +55,7 @@
         <!-- Right side column -->
         <div class="column is-3">
 
-          <app-timeline-stories [stories]="stories$ | async" [signedUser]="signedUser$ | async"></app-timeline-stories>
+          <app-timeline-stories [stories]="stories$ | async" [posts]="posts$ | async" [signedUser]="signedUser$ | async"></app-timeline-stories>
 
           <app-timeline-birthday></app-timeline-birthday>
 

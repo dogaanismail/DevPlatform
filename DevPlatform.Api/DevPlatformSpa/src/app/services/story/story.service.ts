@@ -37,10 +37,9 @@ export class StoryService {
         'Content-Type': 'application/json'
       });
 
-    return this.http.get<Story[]>(this.storyUrl + "postlist", { headers: headers })
+    return this.http.get<Story[]>(this.storyUrl + "storylist", { headers: headers })
       .pipe(
         tap((data: any) => {
-          console.log(data);
         }),
         shareReplay(1),
         catchError(this.handleError)

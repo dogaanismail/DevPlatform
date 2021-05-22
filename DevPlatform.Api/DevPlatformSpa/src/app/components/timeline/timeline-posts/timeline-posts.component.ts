@@ -6,7 +6,6 @@ import { Store } from '@ngrx/store';
 import * as fromPost from '../../../core/ngrx/selectors/post.selectors';
 import * as postActions from '../../../core/ngrx/actions/post.actions';
 
-
 @Component({
   selector: 'app-timeline-posts',
   templateUrl: './timeline-posts.component.html',

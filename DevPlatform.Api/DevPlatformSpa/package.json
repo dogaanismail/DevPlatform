@@ -36,6 +36,7 @@
     "ngx-dropzone": "^2.3.0",
     "ngx-dropzone-wrapper": "^10.0.1",
     "ngx-editor": "^5.0.0-alpha.14",
+    "ngx-gallery-9": "^1.0.6",
     "ngx-order-pipe": "^2.1.1",
     "ngx-spinner": "^10.0.1",
     "ngx-tinymce": "^11.0.0",
