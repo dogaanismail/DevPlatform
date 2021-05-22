@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 
 /*Models */
 import { SignedUser } from '../../../../models/user/signedUser';
+import { Story } from '../../../../models/story/story';
 
 /*Services */
 import { ModalService } from '../../../../services/modal/modal.service';
@@ -13,9 +14,10 @@ import { ModalService } from '../../../../services/modal/modal.service';
 })
 export class TimelineStoriesComponent implements OnInit {
 
-  constructor( private modalService: ModalService) { }
+  constructor(private modalService: ModalService) { }
 
   @Input() signedUser: SignedUser;
+  @Input() stories: Story[];
 
   ngOnInit() {
   }

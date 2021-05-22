@@ -2,12 +2,11 @@ import * as fromRoot from '../states/app.state';
 import * as fromStories from '../reducers/story.reducer';
 import { createFeatureSelector, createSelector } from '@ngrx/store';
 
-
 export interface State extends fromRoot.State {
-    Storys: fromStories.StoryState;
+    stories: fromStories.StoryState;
 }
 
-const getStoryFeatureState = createFeatureSelector<fromStories.StoryState>('Stories');
+const getStoryFeatureState = createFeatureSelector<fromStories.StoryState>('stories');
 
 export const getShowStoryId = createSelector(
     getStoryFeatureState,

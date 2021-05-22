@@ -38,6 +38,10 @@ export class CreateStoryModalComponent implements OnInit {
     }
 
     this.storyStore.dispatch(new storyActions.CreateStory(formData));
+    this.storyCreate.title = null;
+    this.storyCreate.description = null;
+    this.storyCreate.photo = null;
+    document.getElementById("closeModal").click();
   }
 
   checkFileType(data: File) {

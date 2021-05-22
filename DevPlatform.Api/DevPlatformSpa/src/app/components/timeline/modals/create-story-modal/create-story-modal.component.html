@@ -11,7 +11,7 @@
                 <h3>Image Story</h3>
                 <!-- Close X button -->
                 <div class="close-wrap">
-                    <span class="close-modal">
+                    <span class="close-modal" id="closeModal">
                         <mat-icon>close</mat-icon>
                     </span>
                 </div>
@@ -52,7 +52,7 @@
                                         [src]="imgPreviewUrl" alt="">
                                 </div>
                                 <div class="input-block">
-                                    <input type="file" (change)="fileProgress($event)" id="uploadImage">
+                                    <input type="file" required (change)="fileProgress($event)" id="uploadImage">
                                 </div>
                             </div>
                         </div>
