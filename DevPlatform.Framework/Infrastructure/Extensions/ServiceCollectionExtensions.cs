@@ -8,8 +8,10 @@ using DevPlatform.Data;
 using DevPlatform.Data.IdentityFactory;
 using DevPlatform.Domain.Api;
 using DevPlatform.Domain.Api.AlbumApi;
+using DevPlatform.Domain.Api.StoryApi;
 using DevPlatform.Domain.Validation;
 using DevPlatform.Domain.Validation.AlbumValidation;
+using DevPlatform.Domain.Validation.StoryValidation;
 using DevPlatform.LinqToDB.Identity;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -227,6 +229,7 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
             services.AddSingleton<IValidator<LoginApiRequest>, LoginApiRequestValidator>();
             services.AddSingleton<IValidator<PostCreateApi>, PostCreateApiValidator>();
             services.AddSingleton<IValidator<AlbumCreateApi>, AlbumCreateApiValidator>();
+            services.AddSingleton<IValidator<StoryCreateApi>, StoryCreateApiValidator>();
         }
 
         /// <summary>
