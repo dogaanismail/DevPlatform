@@ -6,7 +6,7 @@ import { Story } from '../../../../models/story/story';
 
 /*Services */
 import { ModalService } from '../../../../services/modal/modal.service';
-import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation, NgxGalleryImageSize } from 'ngx-gallery-9';
+import { NgxGalleryOptions, NgxGalleryImage, NgxGalleryAnimation, NgxGalleryImageSize, NgxGalleryLayout } from 'ngx-gallery-9';
 import { Post } from 'src/app/models/post/post';
 
 @Component({
@@ -28,95 +28,47 @@ export class TimelineStoriesComponent implements OnInit {
 
   ngOnInit(): void {
 
-    console.log(this.posts);
-
     this.galleryOptions = [
       {
-        width: '100%',
-        height: '254px',
-        imageAutoPlay: true,
-        imageAutoPlayPauseOnHover: true,
-        imageSize: NgxGalleryImageSize.Contain,
-        imageAnimation: NgxGalleryAnimation.Slide,
-        thumbnails: true,
-        preview: true
-      },
-      // max-width 544
-      {
-        breakpoint: 544,
-        width: '100%',
-        height: '250px',
-        imageSwipe: true,
-        imageArrowsAutoHide: true,
-        imageAutoPlay: true,
-        imageAutoPlayPauseOnHover: true,
-        imageSize: NgxGalleryImageSize.Cover,
-        imageAnimation: NgxGalleryAnimation.Slide,
-        thumbnails: true,
-        preview: true
+        width: '600px',
+        height: '100px',
+        thumbnailsColumns: 4,
+        arrowPrevIcon: 'fa fa-chevron-left',
+        arrowNextIcon: 'fa fa-chevron-right',
+        imageAnimation: NgxGalleryAnimation.Fade,
+        previewZoom: true,
+        thumbnailsRemainingCount: true,
+        previewCloseOnEsc: true,
+        previewRotate: true,
+        image: false,
+        layout: NgxGalleryLayout.ThumbnailsBottom,
+        previewDownload: true,
+        thumbnailsArrows: true
       },
       {
-        breakpoint: 544,
+        breakpoint: 500,
         width: '100%',
-        height: '250px',
-        imageSwipe: true,
-        imageArrowsAutoHide: true,
-        imageAutoPlay: true,
-        imageAutoPlayPauseOnHover: true,
-        imageSize: NgxGalleryImageSize.Cover,
-        imageAnimation: NgxGalleryAnimation.Slide,
-        thumbnails: true,
-        preview: true
+        height: '100px',
+        imagePercent: 80,
+        thumbnailsPercent: 20,
+        thumbnailsMargin: 20,
+        thumbnailMargin: 20
+      },
+      {
+        breakpoint: 400,
+        preview: false
       }
     ];
 
-    this.galleryImages = [
-      {
-        small: 'https://res.cloudinary.com/dkkr1ddp3/image/upload/v1620896972/vvknqckcansuzyjxqx8b.png',
-        medium: 'https://res.cloudinary.com/dkkr1ddp3/image/upload/v1620896972/vvknqckcansuzyjxqx8b.png',
-        big: 'https://res.cloudinary.com/dkkr1ddp3/image/upload/v1620896972/vvknqckcansuzyjxqx8b.png'
-      },
-      {
-        small: 'https://res.cloudinary.com/dkkr1ddp3/image/upload/v1620896972/vvknqckcansuzyjxqx8b.png',
-        medium: 'https://res.cloudinary.com/dkkr1ddp3/image/upload/v1620896972/vvknqckcansuzyjxqx8b.png',
-        big: 'https://res.cloudinary.com/dkkr1ddp3/image/upload/v1620896972/vvknqckcansuzyjxqx8b.png'
-      },
-      {
-        small: 'https://res.cloudinary.com/dkkr1ddp3/image/upload/v1620896972/vvknqckcansuzyjxqx8b.png',
-        medium: 'https://res.cloudinary.com/dkkr1ddp3/image/upload/v1620896972/vvknqckcansuzyjxqx8b.png',
-        big: 'https://res.cloudinary.com/dkkr1ddp3/image/upload/v1620896972/vvknqckcansuzyjxqx8b.png'
+    this.posts.forEach((item, index) => {
+      if (item.imageUrlList.length > 0) {
+        this.galleryImages.push(new NgxGalleryImage({
+          small: item.imageUrlList[0],
+          medium: item.imageUrlList[0],
+          big: item.imageUrlList[0],
+        }))
       }
-      ,
-      {
-        small: 'https://res.cloudinary.com/dkkr1ddp3/image/upload/v1620896972/vvknqckcansuzyjxqx8b.png',
-        medium: 'https://res.cloudinary.com/dkkr1ddp3/image/upload/v1620896972/vvknqckcansuzyjxqx8b.png',
-        big: 'https://res.cloudinary.com/dkkr1ddp3/image/upload/v1620896972/vvknqckcansuzyjxqx8b.png'
-      },
-      ,
-      {
-        small: 'https://res.cloudinary.com/dkkr1ddp3/image/upload/v1620896972/vvknqckcansuzyjxqx8b.png',
-        medium: 'https://res.cloudinary.com/dkkr1ddp3/image/upload/v1620896972/vvknqckcansuzyjxqx8b.png',
-        big: 'https://res.cloudinary.com/dkkr1ddp3/image/upload/v1620896972/vvknqckcansuzyjxqx8b.png'
-      },
-      ,
-      {
-        small: 'https://res.cloudinary.com/dkkr1ddp3/image/upload/v1620896972/vvknqckcansuzyjxqx8b.png',
-        medium: 'https://res.cloudinary.com/dkkr1ddp3/image/upload/v1620896972/vvknqckcansuzyjxqx8b.png',
-        big: 'https://res.cloudinary.com/dkkr1ddp3/image/upload/v1620896972/vvknqckcansuzyjxqx8b.png'
-      },
-      ,
-      {
-        small: 'https://res.cloudinary.com/dkkr1ddp3/image/upload/v1620896972/vvknqckcansuzyjxqx8b.png',
-        medium: 'https://res.cloudinary.com/dkkr1ddp3/image/upload/v1620896972/vvknqckcansuzyjxqx8b.png',
-        big: 'https://res.cloudinary.com/dkkr1ddp3/image/upload/v1620896972/vvknqckcansuzyjxqx8b.png'
-      },
-      ,
-      {
-        small: 'https://res.cloudinary.com/dkkr1ddp3/image/upload/v1620896972/vvknqckcansuzyjxqx8b.png',
-        medium: 'https://res.cloudinary.com/dkkr1ddp3/image/upload/v1620896972/vvknqckcansuzyjxqx8b.png',
-        big: 'https://res.cloudinary.com/dkkr1ddp3/image/upload/v1620896972/vvknqckcansuzyjxqx8b.png'
-      },
-    ];
+    });
   }
 
 
