@@ -1,50 +1,80 @@
 <div class="view-wrapper is-full">
+  <div class="stories-wrapper is-home">
 
-  <div class="videos-wrapper is-home">
+    <!-- /html/partials/pages/stories/stories-sidebar.html -->
+    <div class="stories-sidebar is-active">
+      <app-story-sidebar [signedUser]="signedUser$ | async"></app-story-sidebar>
+    </div>
 
-    <!-- /html/partials/pages/videos/videos-sidebar.html -->
-    <app-story-sidebar></app-story-sidebar>
+    <!-- Stories -->
+    <div class="inner-wrapper">
+      <a class="mobile-sidebar-trigger is-home-v2">
+        <mat-icon>menu</mat-icon>
+      </a>
 
+      <!-- Stories content -->
+      <div class="stories-content">
+        <div class="section-title main-section-title">
+          <h2>Stories</h2>
+          <a class="view-all">View All</a>
+        </div>
 
-    <!-- Homepage content -->
-    <div class="home-wrapper">
+        <app-story-list [stories]="stories$ | async"></app-story-list>
 
-      <div class="card">
-        <div class="card-heading is-bordered">
-          <h4>Stories</h4>
-          <div class="dropdown is-spaced is-neutral is-right dropdown-trigger">
+        <div class="section-title">
+          <h2>Feed</h2>
+
+          <div class="dropdown is-spaced is-right is-accent dropdown-trigger">
             <div>
-              <div class="button">
-                <i data-feather="more-vertical"></i>
+              <div class="button is-rounded">
+                This week
               </div>
             </div>
             <div class="dropdown-menu" role="menu">
               <div class="dropdown-content">
                 <a href="#" class="dropdown-item">
                   <div class="media">
-                    <i data-feather="tv"></i>
+                    <mat-icon>view_week</mat-icon>
                     <div class="media-content">
-                      <h3>Browse stories</h3>
-                      <small>View all recent stories.</small>
+                      <h3>Today</h3>
+                      <small>View today's posts.</small>
                     </div>
                   </div>
                 </a>
                 <a class="dropdown-item">
                   <div class="media">
-                    <i data-feather="settings"></i>
+                    <mat-icon>calendar_view_week</mat-icon>
                     <div class="media-content">
-                      <h3>Settings</h3>
-                      <small>Access widget settings.</small>
+                      <h3>This Week</h3>
+                      <small>View this week's posts.</small>
+                    </div>
+                  </div>
+                </a>
+                <a class="dropdown-item">
+                  <div class="media">
+                    <mat-icon>archive</mat-icon>
+                    <div class="media-content">
+                      <h3>This Month</h3>
+                      <small>View this month's posts.</small>
                     </div>
                   </div>
                 </a>
                 <hr class="dropdown-divider">
                 <a href="#" class="dropdown-item">
                   <div class="media">
-                    <i data-feather="trash-2"></i>
+                    <mat-icon>people</mat-icon>
                     <div class="media-content">
-                      <h3>Remove</h3>
-                      <small>Removes this widget from your feed.</small>
+                      <h3>Close Friends</h3>
+                      <small>Restrict to close friends.</small>
+                    </div>
+                  </div>
+                </a>
+                <a href="#" class="dropdown-item">
+                  <div class="media">
+                    <mat-icon>favorite</mat-icon>
+                    <div class="media-content">
+                      <h3>Popular</h3>
+                      <small>Show popular posts.</small>
                     </div>
                   </div>
                 </a>
@@ -52,42 +82,11 @@
             </div>
           </div>
         </div>
-        <div class="card-body no-padding">
-          <app-story-list></app-story-list>
-        </div>
-      </div>
 
-      <!-- Home content -->
-      <div class="home-content">
-        <div class="collections-header">
-          <a class="is-active">Latest</a>
-          <a>Subscribed</a>
-          <a>Related</a>
-          <div class="search-button">
-            <i data-feather="search"></i>
-          </div>
-        </div>
+        <app-story-feed [stories]="stories$ | async"></app-story-feed>
 
-        <div class="collections-wrap is-active">
-
-          <!-- Collection -->
-          <div class="collection">
-            <div class="header">
-              <h4>Shows & Movies</h4>
-              <a>Show More</a>
-            </div>
-            <div class="video-collection">
-             <app-story-feed></app-story-feed>
-            </div>
-          </div>
-          
-         
-          <!-- Load more posts -->
-          <div class=" load-more-wrap has-text-centered">
-            <a href="#" class="load-more-button">Load More</a>
-          </div>
-        </div>
       </div>
     </div>
+
   </div>
 </div>

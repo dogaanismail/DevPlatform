@@ -13,6 +13,7 @@ import { StoreModule } from '@ngrx/store';
 import { STORIES_CONFIG_TOKEN, STORIES_LOCAL_STORAGE_KEY, STORIES_STORAGE_KEYS } from './story.tokens';
 import { StoreLocalStorageService } from '../../core/store-infrastructure/store-local-storage.service';
 import { DevPlatformMaterialModule } from 'src/app/shared/modules/material.module';
+import { SharedModule } from 'src/app/shared/modules/shared.module';
 
 const storyRoutes: Routes = [
     { path: "story", component: StoryLayoutComponent }
@@ -25,8 +26,10 @@ export function getStoriesConfig(saveKeys: string[], localStorageKey: string, st
 
 @NgModule({
     imports: [
+        SharedModule,
         RouterModule.forChild(storyRoutes),
         StoreModule.forFeature('stories', fromReducer.storyReducer, STORIES_CONFIG_TOKEN),
+        DevPlatformMaterialModule
     ],
     declarations: [
         StoryLayoutComponent,

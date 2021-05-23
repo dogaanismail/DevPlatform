@@ -5,9 +5,12 @@ import { NgxSpinnerService } from 'ngx-spinner';
 /* Models */
 import { Post } from '../../../models/post/post';
 import { SignedUser } from '../../../models/user/signedUser';
+import { Story } from '../../../models/story/story';
+
 
 /* Rxjs */
 import { Observable } from 'rxjs';
+
 /* NgRx */
 import { Store, select } from '@ngrx/store';
 import * as fromPost from '../../../core/ngrx/selectors/post.selectors';
@@ -15,7 +18,6 @@ import * as fromStory from '../../../core/ngrx/selectors/story.selectors';
 import * as fromUser from '../../../core/ngrx/selectors/user.selectors';
 import * as postActions from '../../../core/ngrx/actions/post.actions';
 import * as storyActions from '../../../core/ngrx/actions/story.actions';
-import { Story } from 'src/app/models/story/story';
 
 @Component({
   selector: 'app-timeline-layout',
