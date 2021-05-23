@@ -24,17 +24,29 @@
           <article *ngIf="errorMessage$ | async as errorMessage" class="message is-danger">
             <div class="message-header">
               <p>Warning!</p>
-              <button class="delete" aria-label="delete"></button>
+              <button class="delete" onclick="this.parentElement.parentElement.style.display='none';"
+                aria-label="delete"></button>
             </div>
             <div class="message-body">
               {{ errorMessage }}
             </div>
           </article>
 
+          <article *ngIf="storyErrorMessage$ | async as storyErrorMessage" class="message is-danger">
+            <div class="message-header">
+              <p>Warning!</p>
+              <button class="delete" onclick="this.parentElement.parentElement.style.display='none';"
+                aria-label="delete"></button>
+            </div>
+            <div class="message-body">
+              {{ storyErrorMessage }}
+            </div>
+          </article>
+
           <app-timeline-create-post [signedUser]="signedUser$ | async">
           </app-timeline-create-post>
 
-          <app-timeline-posts [posts]="posts$ | async" [newPost]="newPost$ | async">
+          <app-timeline-posts [posts]="posts$ | async" [newPost]="newPost$ | async" [newStory]="newStory$ | async">
           </app-timeline-posts>
 
         </div>
@@ -43,7 +55,7 @@
         <!-- Right side column -->
         <div class="column is-3">
 
-          <app-timeline-stories></app-timeline-stories>
+          <app-timeline-stories [stories]="stories$ | async" [posts]="posts$ | async" [signedUser]="signedUser$ | async"></app-timeline-stories>
 
           <app-timeline-birthday></app-timeline-birthday>
 
@@ -60,6 +72,9 @@
 
   <app-create-album-modal>
   </app-create-album-modal>
+
+  <app-create-story-modal [signedUser]="signedUser$ | async">
+  </app-create-story-modal>
 
   <!-- Google places Lib -->
   <script

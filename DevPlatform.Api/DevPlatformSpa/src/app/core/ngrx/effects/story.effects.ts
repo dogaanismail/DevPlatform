@@ -32,15 +32,10 @@ export class StoryEffects {
     createStory$: Observable<Action> = this.actions$.pipe(
         ofType(storyActions.StoryActionTypes.CreateStory),
         map(((action: storyActions.CreateStory) => action.payload)),
-        switchMap((story: any) =>
+        mergeMap((story: any) =>
             this.storyService.createStory(story).pipe(
-                mergeMap((newStory: any) =>
-                    [new storyActions.CreateStorySuccess(newStory.result),
-                    ]),
+                map((res: any) => res.status ? new storyActions.CreateStorySuccess(res.result) : new storyActions.CreateStoryFail(res.result.message)),
                 catchError(err => of(new storyActions.CreateStoryFail(err)))
             )
-        )
-    );
-
-
+        ));
 }

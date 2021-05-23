@@ -34,7 +34,8 @@ export class PostEffects {
         map(((action: postActions.CreatePost) => action.payload)),
         mergeMap((post: any) =>
             this.postService.createPost(post).pipe(
-                map((res: any) => res.status ? new postActions.CreatePostSuccess(res.result) : new postActions.CreatePostFail(res.result.message))
+                map((res: any) => res.status ? new postActions.CreatePostSuccess(res.result) : new postActions.CreatePostFail(res.result.message)),
+                catchError(err => of(new postActions.CreatePostFail(err)))
             )
         ));
 

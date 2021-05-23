@@ -1,106 +1,107 @@
-<div class="videos-sidebar is-active">
-  <div class="videos-sidebar-inner">
-    <div class="user-block">
-      <a class="close-videos-sidebar">
-        <i data-feather="x"></i>
-      </a>
-      <div class="avatar-wrap">
-        <img src="https://via.placeholder.com/150x150" data-demo-src="assets/img/avatars/jenna.png"
-          data-user-popover="0" alt="">
-        <div class="badge">
-          <i data-feather="check"></i>
-        </div>
-      </div>
-      <h4>Jenna Davis</h4>
-      <p>Melbourne, AU</p>
-      <div class="user-stats">
-        <div class="stat-block">
-          <span>Videos</span>
-          <span>49</span>
-        </div>
-        <div class="stat-block">
-          <span>Followers</span>
-          <span>2.3K</span>
-        </div>
+<div class="stories-sidebar-inner">
+
+  <div class="user-block">
+
+    <a class="close-stories-sidebar is-hidden">
+      <mat-icon>close</mat-icon>
+    </a>
+
+    <div class="avatar-wrap">
+      <img src="{{signedUser.profilePhotoUrl}}" data-user-popover="0" alt="" title="{{signedUser.userName}}">
+      <div class="badge">
+
+        <mat-icon>check</mat-icon>
       </div>
     </div>
-    <div class="user-menu">
-      <div class="user-menu-inner has-slimscroll">
-        <div class="menu-block">
-          <ul>
-            <li class="is-active">
-              <a>
-                <i data-feather="smile"></i>
-                <span>Featured</span>
-              </a>
-            </li>
-            <li>
-              <a>
-                <i data-feather="youtube"></i>
-                <span>Videos</span>
-              </a>
-            </li>
-            <li>
-              <a>
-                <i data-feather="cast"></i>
-                <span>TV Shows</span>
-              </a>
-            </li>
-            <li>
-              <a>
-                <i data-feather="film"></i>
-                <span>Movies</span>
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div class="separator"></div>
-        <div class="menu-block">
-          <ul>
-            <li>
-              <a>
-                <i data-feather="check-square"></i>
-                <span>Subscriptions</span>
-              </a>
-            </li>
-            <li>
-              <a>
-                <i data-feather="copy"></i>
-                <span>Library</span>
-              </a>
-            </li>
-            <li>
-              <a>
-                <i data-feather="thumbs-up"></i>
-                <span>Liked Videos</span>
-              </a>
-            </li>
-            <li>
-              <a>
-                <i data-feather="watch"></i>
-                <span>Watch Later</span>
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div class="separator"></div>
-        <div class="menu-block">
-          <ul>
-            <li>
-              <a>
-                <i data-feather="sliders"></i>
-                <span>Settings</span>
-              </a>
-            </li>
-            <li>
-              <a>
-                <i data-feather="life-buoy"></i>
-                <span>Help & Support</span>
-              </a>
-            </li>
-          </ul>
-        </div>
+
+    <h4>{{signedUser.userName}}</h4>
+    <p>Melbourne, AU</p>
+
+    <div class="user-stats">
+      <div class="stat-block">
+        <span>Followers</span>
+        <span>2.3K</span>
+      </div>
+      <div class="stat-block">
+        <span>Following</span>
+        <span>2.3K</span>
       </div>
     </div>
   </div>
+
+  <div class="user-menu">
+    <div class="user-menu-inner has-slimscroll">
+      <div class="menu-block">
+        <ul>
+          <li class="is-active">
+            <a>
+              <mat-icon>view_column</mat-icon>
+              <span>Feed</span>
+            </a>
+          </li>
+          <li>
+            <a>
+              <mat-icon>search</mat-icon>
+              <span>Explore</span>
+            </a>
+          </li>
+          <li>
+            <a>
+              <mat-icon>notifications</mat-icon>
+              <span>Notifications</span>
+            </a>
+          </li>
+          <li>
+            <a>
+              <mat-icon>email</mat-icon>
+              <span>Messages</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="separator"></div>
+
+      <div class="menu-block">
+        <ul>
+          <li>
+            <a>
+              <mat-icon>send</mat-icon>
+              <span>Direct</span>
+            </a>
+          </li>
+          <li>
+            <a>
+              <mat-icon>bar_chart</mat-icon>
+              <span>Stats</span>
+            </a>
+          </li>
+          <li>
+            <a>
+              <mat-icon>settings</mat-icon>
+              <span>Settings</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="separator"></div>
+
+      <div class="menu-block">
+        <ul>
+          <li>
+            <a>
+              <mat-icon>lock</mat-icon>
+              <span>Privacy</span>
+            </a>
+          </li>
+          <li>
+            <a>
+              <mat-icon>support</mat-icon>
+              <span>Help</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
 </div>

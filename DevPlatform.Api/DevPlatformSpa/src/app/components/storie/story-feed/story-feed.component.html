@@ -1,169 +1,36 @@
-<div class="video-collection">
+<div class="stories-feed">
+    <div class="columns is-multiline">
 
-  <!-- Episode -->
-  <a class="episode">
-    <div class="episode-thumbnail">
-      <div class="episode-overlay"></div>
-      <div class="episode-duration">01:39:43</div>
-      <div class="play-button">
-        <i data-feather="play-circle"></i>
-      </div>
-      <img src="https://via.placeholder.com/320x200" data-demo-src="assets/img/demo/video/home/collections/c17.jpg"
-        alt="">
-    </div>
-    <div class="episode-meta">
-      <img src="https://via.placeholder.com/150x150" data-demo-src="assets/img/icons/logos/metamovies.svg"
-        data-page-popover="2" alt="">
-      <div class="info">
-        <span>The Old Caban</span>
-        <span>Meta Movies</span>
-      </div>
-    </div>
-  </a>
-  <!-- Episode -->
-  <a class="episode">
-    <div class="episode-thumbnail">
-      <div class="episode-overlay"></div>
-      <div class="episode-duration">01:26:17</div>
-      <div class="play-button">
-        <i data-feather="play-circle"></i>
-      </div>
-      <img src="https://via.placeholder.com/320x200" data-demo-src="assets/img/demo/video/home/collections/c18.jpg"
-        alt="">
-    </div>
-    <div class="episode-meta">
-      <img src="https://via.placeholder.com/150x150" data-demo-src="assets/img/icons/logos/metamovies.svg"
-        data-page-popover="2" alt="">
-      <div class="info">
-        <span>Eaten Alive</span>
-        <span>Meta Movies</span>
-      </div>
-    </div>
-  </a>
-  <!-- Episode -->
-  <a class="episode">
-    <div class="episode-thumbnail">
-      <div class="episode-overlay"></div>
-      <div class="episode-duration">02:31:54</div>
-      <div class="play-button">
-        <i data-feather="play-circle"></i>
-      </div>
-      <img src="https://via.placeholder.com/320x200" data-demo-src="assets/img/demo/video/home/collections/c19.jpg"
-        alt="">
-    </div>
-    <div class="episode-meta">
-      <img src="https://via.placeholder.com/150x150" data-demo-src="assets/img/icons/logos/metamovies.svg"
-        data-page-popover="2" alt="">
-      <div class="info">
-        <span>Forgotten</span>
-        <span>Meta Movies</span>
-      </div>
-    </div>
-  </a>
-  <!-- Episode -->
-  <a class="episode">
-    <div class="episode-thumbnail">
-      <div class="episode-overlay"></div>
-      <div class="episode-duration">02:03:17</div>
-      <div class="play-button">
-        <i data-feather="play-circle"></i>
-      </div>
-      <img src="https://via.placeholder.com/320x200" data-demo-src="assets/img/demo/video/home/collections/c20.jpg"
-        alt="">
-    </div>
-    <div class="episode-meta">
-      <img src="https://via.placeholder.com/150x150" data-demo-src="assets/img/icons/logos/metamovies.svg"
-        data-page-popover="2" alt="">
-      <div class="info">
-        <span>The Wastelands</span>
-        <span>Meta Movies</span>
-      </div>
-    </div>
-  </a>
+        <div class="column is-4 is-half-tablet" *ngFor="let story of stories | orderBy : '-createdDate'">
 
+            <!--Feed item-->
+            <div class="story-feed-item">
+                <a href="{{story.imageUrl}}" data-demo-href="{{story.imageUrl}}" data-fancybox data-caption="">
+                    <img class="featured-image" src="{{story.imageUrl}}" data-demo-src="{{story.imageUrl}}" alt="">
+                </a>
+                <a class="item-meta">
+                    <div class="user-info">
+                        <div class="small-avatar">
+                            <img class="avatar" src="{{story.createdByUserPhoto}}"
+                                data-demo-src="{{story.createdByUserPhoto}}" data-user-popover="10" alt=""
+                                title="{{story.createdByUserName}}">
+                        </div>
+                        <span>{{story.createdByUserName}}</span>
+                    </div>
+                    <div class="item-stats">
+                        <div class="stat-item">
+                            <mat-icon>favorite_border</mat-icon>
+                            <span>99</span>
+                        </div>
+                        <div class="stat-item">
+                            <mat-icon>chat_bubble_outline</mat-icon>
+                            <span>23</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
 
+        </div>
 
-
-    <!-- Episode -->
-    <a class="episode">
-      <div class="episode-thumbnail">
-        <div class="episode-overlay"></div>
-        <div class="episode-duration">01:39:43</div>
-        <div class="play-button">
-          <i data-feather="play-circle"></i>
-        </div>
-        <img src="https://via.placeholder.com/320x200" data-demo-src="assets/img/demo/video/home/collections/c17.jpg"
-          alt="">
-      </div>
-      <div class="episode-meta">
-        <img src="https://via.placeholder.com/150x150" data-demo-src="assets/img/icons/logos/metamovies.svg"
-          data-page-popover="2" alt="">
-        <div class="info">
-          <span>The Old Caban</span>
-          <span>Meta Movies</span>
-        </div>
-      </div>
-    </a>
-    <!-- Episode -->
-    <a class="episode">
-      <div class="episode-thumbnail">
-        <div class="episode-overlay"></div>
-        <div class="episode-duration">01:26:17</div>
-        <div class="play-button">
-          <i data-feather="play-circle"></i>
-        </div>
-        <img src="https://via.placeholder.com/320x200" data-demo-src="assets/img/demo/video/home/collections/c18.jpg"
-          alt="">
-      </div>
-      <div class="episode-meta">
-        <img src="https://via.placeholder.com/150x150" data-demo-src="assets/img/icons/logos/metamovies.svg"
-          data-page-popover="2" alt="">
-        <div class="info">
-          <span>Eaten Alive</span>
-          <span>Meta Movies</span>
-        </div>
-      </div>
-    </a>
-    <!-- Episode -->
-    <a class="episode">
-      <div class="episode-thumbnail">
-        <div class="episode-overlay"></div>
-        <div class="episode-duration">02:31:54</div>
-        <div class="play-button">
-          <i data-feather="play-circle"></i>
-        </div>
-        <img src="https://via.placeholder.com/320x200" data-demo-src="assets/img/demo/video/home/collections/c19.jpg"
-          alt="">
-      </div>
-      <div class="episode-meta">
-        <img src="https://via.placeholder.com/150x150" data-demo-src="assets/img/icons/logos/metamovies.svg"
-          data-page-popover="2" alt="">
-        <div class="info">
-          <span>Forgotten</span>
-          <span>Meta Movies</span>
-        </div>
-      </div>
-    </a>
-    <!-- Episode -->
-    <a class="episode">
-      <div class="episode-thumbnail">
-        <div class="episode-overlay"></div>
-        <div class="episode-duration">02:03:17</div>
-        <div class="play-button">
-          <i data-feather="play-circle"></i>
-        </div>
-        <img src="https://via.placeholder.com/320x200" data-demo-src="assets/img/demo/video/home/collections/c20.jpg"
-          alt="">
-      </div>
-      <div class="episode-meta">
-        <img src="https://via.placeholder.com/150x150" data-demo-src="assets/img/icons/logos/metamovies.svg"
-          data-page-popover="2" alt="">
-        <div class="info">
-          <span>The Wastelands</span>
-          <span>Meta Movies</span>
-        </div>
-      </div>
-    </a>
-
-
+    </div>
 </div>

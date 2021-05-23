@@ -164,9 +164,11 @@ namespace DevPlatform.Business.Services
         /// <returns></returns>
         public IEnumerable<StoryListDto> GetStoryList()
         {
-            IEnumerable<StoryListDto> data = _storyRepository.Table.LoadWith(x => x.StoryImages)
-              .LoadWith(x => x.StoryVideos).LoadWith(x => x.StoryComments).ThenLoad(x => x.CreatedUser)
-              .ThenLoad(x => x.UserDetail).LoadWith(x => x.CreatedUser).ThenLoad(x => x.UserDetail)
+            IEnumerable<StoryListDto> data = _storyRepository.Table
+                .LoadWith(x => x.CreatedUser).ThenLoad(x => x.UserDetail)
+                .LoadWith(x => x.StoryImages).LoadWith(x => x.StoryVideos)
+                .LoadWith(x => x.StoryComments).ThenLoad(x => x.CreatedUser).ThenLoad(x => x.UserDetail)
+
                 .Select(p => new StoryListDto
                 {
                     Id = p.Id,
@@ -322,7 +324,8 @@ namespace DevPlatform.Business.Services
                     var postImages = new StoryImage
                     {
                         StoryId = newStory.Id,
-                        ImageUrl = imageUploadResult.Url.ToString()
+                        ImageUrl = imageUploadResult.Url.ToString(),
+                        CreatedBy = appUser.Id
                     };
 
                     ResultModel storyImageModel = _storyImageService.Create(postImages);
@@ -340,7 +343,8 @@ namespace DevPlatform.Business.Services
                     var postVideos = new StoryVideo
                     {
                         StoryId = newStory.Id,
-                        VideoUrl = videoUploadResult.Url.ToString()
+                        VideoUrl = videoUploadResult.Url.ToString(),
+                        CreatedBy = appUser.Id
                     };
                     ResultModel storyVideoModel = _storyVideoService.Create(postVideos);
 

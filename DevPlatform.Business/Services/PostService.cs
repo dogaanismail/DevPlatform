@@ -291,6 +291,7 @@ namespace DevPlatform.Business.Services
                 bool hasVideo = CheckItemType.HasItemVideo(model);
 
                 #region ImageUploadingProcess
+
                 if (hasImage)
                 {
                     imageUploadResult = _imageProcessingService.UploadImage(model.Images);
@@ -323,13 +324,31 @@ namespace DevPlatform.Business.Services
                     PostType = GetPostType(hasImage, hasVideo),
                     CreatedBy = appUser.Id
                 };
+                              
+                ResultModel postModel = Create(newPost);
+
+                if (!postModel.Status)
+                    return ServiceResponse((CreateResponse)null, new List<string> { postModel.Message });
+
+                #endregion
 
                 #region PostImages
-                if (imageUploadResult != null && imageUploadResult.Count > 0)
+
+                if (imageUploadResult != null && imageUploadResult.Count > 0 && hasImage)
                 {
-                    foreach (var uploadedImage in imageUploadResult)
+                    foreach (var uploadResult in imageUploadResult)
                     {
-                        newPost.PostImages.Add(new PostImage { ImageUrl = uploadedImage.Url.ToString(), CreatedBy = appUser.Id });
+                        var postImages = new PostImage
+                        {
+                            PostId = newPost.Id,
+                            ImageUrl = uploadResult.Url.ToString(),
+                            CreatedBy = appUser.Id
+                        };
+
+                        ResultModel postImageModel = _postImageService.Create(postImages);
+
+                        if (!postImageModel.Status)
+                            return ServiceResponse((CreateResponse)null, new List<string> { postImageModel.Message });
                     }
                 }
 
@@ -338,14 +357,18 @@ namespace DevPlatform.Business.Services
                 #region PostVideos
 
                 if (videoUploadResult != null && videoUploadResult.StatusCode == HttpStatusCode.OK)
-                    newPost.PostVideos.Add(new PostVideo { VideoUrl = videoUploadResult.Url.ToString() });
+                {
+                    var postVideos = new PostVideo
+                    {
+                        PostId = newPost.Id,
+                        VideoUrl = videoUploadResult.Url.ToString(),
+                        CreatedBy = appUser.Id
+                    };
+                    ResultModel postVideoModel = _postVideoService.Create(postVideos);
 
-                #endregion
-
-                ResultModel postModel = Create(newPost);
-
-                if (!postModel.Status)
-                    return ServiceResponse((CreateResponse)null, new List<string> { postModel.Message });
+                    if (!postVideoModel.Status)
+                        return ServiceResponse((CreateResponse)null, new List<string> { postVideoModel.Message });
+                }
 
                 #endregion
 

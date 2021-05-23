@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+
+/* Models */
+import { Story } from '../../../models/story/story';
 
 @Component({
   selector: 'app-story-list',
@@ -8,6 +11,8 @@ import { Component, OnInit } from '@angular/core';
 export class StoryListComponent implements OnInit {
 
   constructor() { }
+
+  @Input() stories: Story[];
 
   ngOnInit() {
   }

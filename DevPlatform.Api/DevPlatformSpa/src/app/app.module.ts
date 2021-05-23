@@ -19,6 +19,7 @@ import { reducers } from './core/ngrx/states/app.state';
 /* Services */
 import { AlertifyService } from './services/alertify/alertify.service';
 import { AlbumService } from './services/album/album.service';
+import { StoryService } from './services/story/story.service';
 
 /* Modules */
 import { QuestionModule } from './components/question/question.module';
@@ -83,6 +84,7 @@ export function getMetaReducers(saveKeys: string[], localStorageKey: string, sto
   providers: [
     AlertifyService,
     AlbumService,
+    StoryService,
     { provide: ROOT_STORAGE_KEYS, useValue: ['users'], multi: true },
     { provide: ROOT_LOCAL_STORAGE_KEY, useValue: '__app_storage__', multi: true },
     {
