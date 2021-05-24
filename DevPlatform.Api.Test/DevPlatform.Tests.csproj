@@ -1,0 +1,45 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentAssertions" Version="5.10.3" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
+    <PackageReference Include="Moq" Version="4.16.1" />
+    <PackageReference Include="NUnit" Version="3.13.2" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
+    <PackageReference Include="xunit" Version="2.4.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="coverlet.collector" Version="3.0.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="DevPlatform.Core.Tests\" />
+    <Folder Include="DevPlatform.Api.Tests\" />
+    <Folder Include="DevPlatform.Services.Tests\Identity\" />
+    <Folder Include="DevPlatform.Services.Tests\Chat\" />
+    <Folder Include="DevPlatform.Services.Tests\Configuration\" />
+    <Folder Include="DevPlatform.Services.Tests\Logging\" />
+    <Folder Include="DevPlatform.Services.Tests\Friendship\" />
+    <Folder Include="DevPlatform.Services.Tests\Album\" />
+    <Folder Include="DevPlatform.Services.Tests\Notification\" />
+    <Folder Include="DevPlatform.Services.Tests\Story\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DevPlatform.Business\DevPlatform.Business.csproj" />
+    <ProjectReference Include="..\DevPlatform.Data\DevPlatform.Data.csproj" />
+    <ProjectReference Include="..\DevPlatform.Repository\DevPlatform.Repository.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -33,7 +33,8 @@ namespace DevPlatform.Business.Services
             _cloudinaryOptions.ApiKey,
             _cloudinaryOptions.ApiSecret);
 
-            _cloudinary = new Cloudinary(account);
+            if (_cloudinary != null)
+                _cloudinary = new Cloudinary(account);              
         }
         #endregion
 
