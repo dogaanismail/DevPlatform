@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevPlatform.Repository", "D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevPlatform.Core", "DevPlatform.Core\DevPlatform.Core.csproj", "{BE78919D-3948-4754-838D-3445A67E0619}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevPlatform.Tests", "DevPlatform.Api.Test\DevPlatform.Tests.csproj", "{159545A3-2D2E-4273-AB6A-6F5135DB038F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevPlatform.Tests", "DevPlatform.Tests\DevPlatform.Tests.csproj", "{159545A3-2D2E-4273-AB6A-6F5135DB038F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevPlatform.Api", "DevPlatform.Api\DevPlatform.Api.csproj", "{B4882046-5D8F-4C2B-8ACA-9AB27BA37CEB}"
 EndProject

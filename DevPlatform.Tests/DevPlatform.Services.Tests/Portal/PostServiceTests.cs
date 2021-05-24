@@ -58,7 +58,7 @@ namespace DevPlatform.Tests.DevPlatform.Services.Tests.Portal
             {
                 Text = "example for test",
                 PostType = (int)PostTypeEnum.PostText,
-                CreatedBy = 1
+                CreatedBy = 0
             };
 
             _postService.Create(post);
