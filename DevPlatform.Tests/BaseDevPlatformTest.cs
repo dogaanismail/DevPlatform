@@ -6,7 +6,6 @@ using DevPlatform.Core.Configuration;
 using DevPlatform.Core.Domain.Identity;
 using DevPlatform.Core.Infrastructure;
 using DevPlatform.Core.Security;
-using DevPlatform.Core.Security.JwtSecurity;
 using DevPlatform.Data;
 using DevPlatform.Data.IdentityFactory;
 using DevPlatform.Data.Migrations;

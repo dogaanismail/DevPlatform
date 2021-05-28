@@ -33,7 +33,6 @@
     <Folder Include="DevPlatform.Services.Tests\Friendship\" />
     <Folder Include="DevPlatform.Services.Tests\Album\" />
     <Folder Include="DevPlatform.Services.Tests\Notification\" />
-    <Folder Include="DevPlatform.Services.Tests\Story\" />
   </ItemGroup>
 
   <ItemGroup>
