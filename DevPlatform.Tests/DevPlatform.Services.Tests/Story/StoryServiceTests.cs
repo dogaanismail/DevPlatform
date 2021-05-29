@@ -4,6 +4,7 @@ using FluentAssertions;
 using NUnit.Framework;
 using System;
 using System.Data.SqlClient;
+using StoryClass = DevPlatform.Core.Domain.Story.Story;
 
 namespace DevPlatform.Tests.DevPlatform.Services.Tests.Story
 {
@@ -41,7 +42,7 @@ namespace DevPlatform.Tests.DevPlatform.Services.Tests.Story
         [Test]
         public void ItShouldThrowSqlExceptionIfStoryIsNullWhenInsertStory()
         {
-            Assert.Throws<SqlException>(() => _storyService.Create(new Core.Domain.Story.Story()));
+            Assert.Throws<SqlException>(() => _storyService.Create(new StoryClass()));
         }
 
         [Test]
@@ -53,7 +54,7 @@ namespace DevPlatform.Tests.DevPlatform.Services.Tests.Story
         [Test]
         public void ItShouldInsertStory()
         {
-            var story = new Core.Domain.Story.Story
+            var story = new StoryClass
             {
                 Title = "example for test",
                 Description = "example for description",

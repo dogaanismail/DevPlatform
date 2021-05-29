@@ -6,6 +6,7 @@ using FluentAssertions;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
+using StoryClass = DevPlatform.Core.Domain.Story.Story;
 
 namespace DevPlatform.Tests.DevPlatform.Services.Tests.Story
 {
@@ -23,7 +24,7 @@ namespace DevPlatform.Tests.DevPlatform.Services.Tests.Story
         [Test]
         public void ItShouldInsertStoryVideo()
         {
-            var getStory = GetService<IRepository<Core.Domain.Story.Story>>().GetList().First();
+            var getStory = GetService<IRepository<StoryClass>>().GetList().First();
             var user = GetService<IRepository<AppUser>>().GetList().First();
 
             var storyVideo = new StoryVideo
@@ -40,7 +41,7 @@ namespace DevPlatform.Tests.DevPlatform.Services.Tests.Story
         [Test]
         public void ItShouldInsertStoryVideoWithList()
         {
-            var getStory = GetService<IRepository<Core.Domain.Story.Story>>().GetList().First();
+            var getStory = GetService<IRepository<StoryClass>>().GetList().First();
             var user = GetService<IRepository<AppUser>>().GetList().First();
 
             List<StoryVideo> storyVideos = new();

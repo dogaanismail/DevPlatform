@@ -41,7 +41,7 @@ namespace DevPlatform.Tests.DevPlatform.Services.Tests.Portal
         [Test]
         public void ItShouldThrowIfPostIsNullWhenInsertPost()
         {
-            Assert.Throws<ArgumentNullException>(() => _postService.Create(new Core.Domain.Portal.Post()));
+            Assert.Throws<ArgumentNullException>(() => _postService.Create(new Post()));
         }
 
         [Test]

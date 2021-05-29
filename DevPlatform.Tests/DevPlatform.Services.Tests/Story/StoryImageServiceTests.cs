@@ -1,10 +1,12 @@
 ﻿using DevPlatform.Business.Interfaces;
 using DevPlatform.Core.Domain.Identity;
+using DevPlatform.Core.Domain.Story;
 using DevPlatform.Repository.Generic;
 using FluentAssertions;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
+using StoryClass = DevPlatform.Core.Domain.Story.Story;
 
 namespace DevPlatform.Tests.DevPlatform.Services.Tests.Story
 {
@@ -22,10 +24,10 @@ namespace DevPlatform.Tests.DevPlatform.Services.Tests.Story
         [Test]
         public void ItShouldInsertStoryImage()
         {
-            var getStory = GetService<IRepository<Core.Domain.Story.Story>>().GetList().First();
+            var getStory = GetService<IRepository<StoryClass>>().GetList().First();
             var user = GetService<IRepository<AppUser>>().GetList().First();
 
-            var storyImage = new Core.Domain.Story.StoryImage
+            var storyImage = new StoryImage
             {
                 StoryId = getStory.Id,
                 ImageUrl = "http://placehold.it/300x300",
@@ -39,13 +41,13 @@ namespace DevPlatform.Tests.DevPlatform.Services.Tests.Story
         [Test]
         public void ItShouldInsertStoryImageWithList()
         {
-            var getStory = GetService<IRepository<Core.Domain.Story.Story>>().GetList().First();
+            var getStory = GetService<IRepository<StoryClass>>().GetList().First();
             var user = GetService<IRepository<AppUser>>().GetList().First();
 
-            List<Core.Domain.Story.StoryImage> storyImages = new();
+            List<StoryImage> storyImages = new();
             List<int> addedImages = new();
 
-            var storyImage = new Core.Domain.Story.StoryImage
+            var storyImage = new StoryImage
             {
                 StoryId = getStory.Id,
                 ImageUrl = "http://placehold.it/300x300",
