@@ -1,19 +1,23 @@
 
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+/* Components */
 import { StoryFeedComponent } from './story-feed/story-feed.component';
 import { StoryLayoutComponent } from './story-layout/story-layout.component';
 import { StoryListComponent } from './story-list/story-list.component';
 import { StorySidebarComponent } from './story-sidebar/story-sidebar.component';
+import { CreateStoryModalComponent } from '../../shared/components/create-story-modal/create-story-modal.component';
 
+/* Modules */
+import { DevPlatformMaterialModule } from 'src/app/shared/modules/material.module';
+import { SharedModule } from 'src/app/shared/modules/shared.module';
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
 
+/*Ngrx and Store infrastructure implementations */
 import { storageMetaReducer } from '../../core/store-infrastructure/storage-metareducer';
 import * as fromReducer from '../../core/ngrx/reducers/story.reducer';
 import { StoreModule } from '@ngrx/store';
 import { STORIES_CONFIG_TOKEN, STORIES_LOCAL_STORAGE_KEY, STORIES_STORAGE_KEYS } from './story.tokens';
 import { StoreLocalStorageService } from '../../core/store-infrastructure/store-local-storage.service';
-import { DevPlatformMaterialModule } from 'src/app/shared/modules/material.module';
-import { SharedModule } from 'src/app/shared/modules/shared.module';
 
 const storyRoutes: Routes = [
     { path: "story", component: StoryLayoutComponent }
@@ -35,7 +39,8 @@ export function getStoriesConfig(saveKeys: string[], localStorageKey: string, st
         StoryLayoutComponent,
         StorySidebarComponent,
         StoryListComponent,
-        StoryFeedComponent
+        StoryFeedComponent,
+        CreateStoryModalComponent
     ],
     providers: [
         StoreLocalStorageService,

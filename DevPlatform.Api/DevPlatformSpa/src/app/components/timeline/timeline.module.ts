@@ -6,7 +6,6 @@ import { TimelineSuggestFriendsComponent } from './timeline-widgets/timeline-sug
 import { TimelineStoriesComponent } from './timeline-widgets/timeline-stories/timeline-stories.component';
 import { TimelinePostsComponent } from './timeline-posts/timeline-posts.component';
 import { TimelineLayoutComponent } from './timeline-layout/timeline-layout.component';
-import { CreateStoryModalComponent } from './modals/create-story-modal/create-story-modal.component';
 import { TimelineCreatePostComponent } from './timeline-create-post/timeline-create-post.component';
 import { TimelineNewjobComponent } from './timeline-widgets/timeline-newjob/timeline-newjob.component';
 import { CreateAlbumModalComponent } from './modals/create-album-modal/create-album-modal.component';
@@ -53,8 +52,7 @@ export function getPostsConfig(saveKeys: string[], localStorageKey: string, stor
         TimelineBirthdayComponent,
         TimelineWeatherComponent,
         TimelineActivityComponent,
-        CreateAlbumModalComponent,
-        CreateStoryModalComponent
+        CreateAlbumModalComponent
     ],
     providers: [
         StoreLocalStorageService,

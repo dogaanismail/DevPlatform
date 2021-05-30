@@ -296,6 +296,8 @@ namespace DevPlatform.Business.Services
                 {
                     imageUploadResult = _imageProcessingService.UploadImage(model.Images);
 
+                    _logService.InsertLogAsync(LogLevel.Information, $"PostService- ImageUpload response from Cloudinary", JsonConvert.SerializeObject(imageUploadResult), appUser);
+
                     if (imageUploadResult.Any(x => x.Error != null))
                         return ServiceResponse((CreateResponse)null, new List<string> { string.Join(Environment.NewLine, imageUploadResult.Select(err => string.Join(Environment.NewLine, err.Error.Message))) });
                 }
@@ -307,6 +309,8 @@ namespace DevPlatform.Business.Services
                 if (hasVideo)
                 {
                     videoUploadResult = _imageProcessingService.UploadVideo(model.Video);
+
+                    _logService.InsertLogAsync(LogLevel.Information, $"PostService- VideoUpload response from Cloudinary", JsonConvert.SerializeObject(imageUploadResult), appUser);
 
                     if (videoUploadResult.Error != null)
                         return ServiceResponse((CreateResponse)null, new List<string> { videoUploadResult.Error.Message.ToString() });
@@ -324,7 +328,7 @@ namespace DevPlatform.Business.Services
                     PostType = GetPostType(hasImage, hasVideo),
                     CreatedBy = appUser.Id
                 };
-                              
+
                 ResultModel postModel = Create(newPost);
 
                 if (!postModel.Status)
@@ -448,6 +452,5 @@ namespace DevPlatform.Business.Services
         }
 
         #endregion
-
     }
 }

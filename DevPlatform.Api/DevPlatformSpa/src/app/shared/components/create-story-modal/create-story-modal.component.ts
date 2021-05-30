@@ -1,13 +1,16 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 /* Models */
-import { SignedUser } from '../../../../models/user/signedUser';
+import { SignedUser } from '../../../models/user/signedUser';
 
 /* NgRx */
 import { Store, select } from "@ngrx/store";
-import * as fromStory from "../../../../core/ngrx/selectors/story.selectors";
-import * as storyActions from "../../../../core/ngrx/actions/story.actions";
+import * as fromStory from "../../../core/ngrx/selectors/story.selectors";
+import * as storyActions from "../../../core/ngrx/actions/story.actions";
 import { Observable } from "rxjs";
+
+/* Services */
+import { ModalService } from '../../../services/modal/modal.service';
 
 @Component({
   selector: 'app-create-story-modal',
@@ -16,7 +19,9 @@ import { Observable } from "rxjs";
 })
 export class CreateStoryModalComponent implements OnInit {
 
-  constructor(private storyStore: Store<fromStory.State>) { }
+  constructor(
+    private storyStore: Store<fromStory.State>,
+    private modalService: ModalService) { }
 
   @Input() signedUser: SignedUser;
   storyCreate: any = {};
@@ -41,7 +46,8 @@ export class CreateStoryModalComponent implements OnInit {
     this.storyCreate.title = null;
     this.storyCreate.description = null;
     this.storyCreate.photo = null;
-    document.getElementById("closeModal").click();
+    this.imgPreviewUrl = null;
+    this.closeModal("image-story-modal");
   }
 
   checkFileType(data: File) {
@@ -65,6 +71,10 @@ export class CreateStoryModalComponent implements OnInit {
         this.imgPreviewUrl = reader.result;
       };
     }
+  }
+
+  closeModal(id: string) {
+    this.modalService.close(id);
   }
 
 }

@@ -44,11 +44,15 @@ namespace DevPlatform.Api.Controllers
             var serviceResponse = _postService.Create(model);
 
             if (serviceResponse.Warnings.Count > 0 || serviceResponse.Warnings.Any())
+            {
+                _logService.InsertLogAsync(LogLevel.Error, $"PostsController- Create Post Error", JsonConvert.SerializeObject(serviceResponse));
+
                 return BadResponse(new ResultModel
                 {
                     Status = false,
                     Message = string.Join(Environment.NewLine, serviceResponse.Warnings.Select(err => string.Join(Environment.NewLine, err)))
                 });
+            }
 
             return OkResponse(new PostListDto
             {
@@ -93,11 +97,15 @@ namespace DevPlatform.Api.Controllers
             var serviceResponse = _postCommentService.Create(model);
 
             if (serviceResponse.Warnings.Count > 0 || serviceResponse.Warnings.Any())
+            {
+                _logService.InsertLogAsync(LogLevel.Error, $"PostsController- Create Post Comment Error", JsonConvert.SerializeObject(serviceResponse));
+
                 return BadResponse(new ResultModel
                 {
                     Status = false,
                     Message = string.Join(Environment.NewLine, serviceResponse.Warnings.Select(err => string.Join(Environment.NewLine, err))),
                 });
+            }
 
             return OkResponse(new PostCommentListDto
             {

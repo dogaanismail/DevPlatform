@@ -7,11 +7,13 @@ using DevPlatform.Core.Security;
 using DevPlatform.Domain.Api;
 using DevPlatform.Domain.Common;
 using DevPlatform.Domain.Dto;
+using DevPlatform.Domain.Enumerations;
 using DevPlatform.Framework.Controllers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace DevPlatform.Api.Controllers
 {
@@ -25,6 +27,7 @@ namespace DevPlatform.Api.Controllers
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUserDetailService _userDetailService;
         private readonly IUserService _userService;
+        private readonly ILogService _logService;
         #endregion
 
         #region Ctor
@@ -33,7 +36,8 @@ namespace DevPlatform.Api.Controllers
             UserManager<AppUser> userManager,
             IHttpContextAccessor httpContextAccessor,
             IUserDetailService userDetailService,
-            IUserService userService)
+            IUserService userService,
+            ILogService logService)
         {
             _tokenService = tokenService;
             _signInManager = signInManager;
@@ -41,6 +45,7 @@ namespace DevPlatform.Api.Controllers
             _httpContextAccessor = httpContextAccessor;
             _userDetailService = userDetailService;
             _userService = userService;
+            _logService = logService;
         }
         #endregion
 
@@ -58,11 +63,15 @@ namespace DevPlatform.Api.Controllers
             var serviceResponse = _userService.Register(model);
 
             if (serviceResponse.Warnings.Count > 0 || serviceResponse.Warnings.Any())
+            {
+                _logService.InsertLogAsync(LogLevel.Error, $"AccountController- Register Error", JsonConvert.SerializeObject(serviceResponse));
+
                 return BadResponse(new ResultModel
                 {
                     Status = false,
                     Message = string.Join(Environment.NewLine, serviceResponse.Warnings.Select(err => string.Join(Environment.NewLine, err))),
                 });
+            }
 
             return OkResponse(Result);
         }
@@ -77,6 +86,8 @@ namespace DevPlatform.Api.Controllers
         public virtual JsonResult Login([FromBody] LoginApiRequest model)
         {
             var result = _signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, false).Result;
+
+            _logService.InsertLogAsync(LogLevel.Information, $"AccountController- Login Response", JsonConvert.SerializeObject(result));
 
             if (result.Succeeded)
             {

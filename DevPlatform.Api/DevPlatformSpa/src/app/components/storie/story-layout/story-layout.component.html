@@ -14,12 +14,24 @@
 
       <!-- Stories content -->
       <div class="stories-content">
+
+        <article *ngIf="storyErrorMessage$ | async as errorMessage" class="message is-danger">
+          <div class="message-header">
+            <p>Warning!</p>
+            <button class="delete" onclick="this.parentElement.parentElement.style.display='none';"
+              aria-label="delete"></button>
+          </div>
+          <div class="message-body">
+            {{ errorMessage }}
+          </div>
+        </article>
+
         <div class="section-title main-section-title">
           <h2>Stories</h2>
           <a class="view-all">View All</a>
         </div>
 
-        <app-story-list [stories]="stories$ | async"></app-story-list>
+        <app-story-list [stories]="stories$ | async" [newStory]="newStory$ | async"></app-story-list>
 
         <div class="section-title">
           <h2>Feed</h2>
@@ -89,4 +101,8 @@
     </div>
 
   </div>
+
+  <app-create-story-modal [signedUser]="signedUser$ | async">
+  </app-create-story-modal>
+
 </div>

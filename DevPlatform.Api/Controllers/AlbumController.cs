@@ -40,16 +40,20 @@ namespace DevPlatform.Api.Controllers
         [Authorize]
         public virtual JsonResult CreateAlbum([FromForm] AlbumCreateApi model)
         {
-            _logService.InsertLogAsync(LogLevel.Information, $"AlbumController- Create Story Request", JsonConvert.SerializeObject(model));
+            _logService.InsertLogAsync(LogLevel.Information, $"AlbumController- Create Album Request", JsonConvert.SerializeObject(model));
 
             var serviceResponse = _albumService.Create(model);
 
             if (serviceResponse.Warnings.Count > 0 || serviceResponse.Warnings.Any())
+            {
+                _logService.InsertLogAsync(LogLevel.Error, $"AlbumController- Create Album Error", JsonConvert.SerializeObject(serviceResponse));
+
                 return BadResponse(new ResultModel
                 {
                     Status = false,
                     Message = string.Join(Environment.NewLine, serviceResponse.Warnings.Select(err => string.Join(Environment.NewLine, err))),
                 });
+            }
 
             if (serviceResponse.Data.Succeeded)
                 return OkResponse(Result);

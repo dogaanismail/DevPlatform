@@ -1,5 +1,5 @@
 <!-- /html/partials/pages/stories/modals/image-story-modal.html -->
-<div id="image-story-modal" class="modal image-story-modal is-medium has-light-bg" *ngIf="signedUser">
+<app-generic-modal id="image-story-modal" class="modal image-story-modal is-medium has-light-bg" *ngIf="signedUser">
     <div class="modal-background"></div>
     <div class="modal-content">
 
@@ -11,7 +11,7 @@
                 <h3>Image Story</h3>
                 <!-- Close X button -->
                 <div class="close-wrap">
-                    <span class="close-modal" id="closeModal">
+                    <span class="close-modal" (click)="closeModal('image-story-modal');">
                         <mat-icon>close</mat-icon>
                     </span>
                 </div>
@@ -62,4 +62,4 @@
             </form>
         </div>
     </div>
-</div>
+</app-generic-modal>

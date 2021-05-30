@@ -271,6 +271,7 @@ namespace DevPlatform.Business.Services
                     return ServiceResponse((CreateResponse)null, new List<string> { "User not found!" });
 
                 #region CloudinaryProcess
+
                 var imageUploadResult = new ImageUploadResult();
                 var videoUploadResult = new VideoUploadResult();
 
@@ -283,6 +284,8 @@ namespace DevPlatform.Business.Services
                 {
                     imageUploadResult = _imageProcessingService.UploadImage(model.Photo);
 
+                    _logService.InsertLogAsync(LogLevel.Information, $"StoryService- ImageUpload response from Cloudinary", JsonConvert.SerializeObject(imageUploadResult), appUser);
+
                     if (imageUploadResult.Error != null)
                         return ServiceResponse((CreateResponse)null, new List<string> { imageUploadResult.Error.Message.ToString() });
                 }
@@ -294,6 +297,8 @@ namespace DevPlatform.Business.Services
                 if (hasVideo)
                 {
                     videoUploadResult = _imageProcessingService.UploadVideo(model.Video);
+
+                    _logService.InsertLogAsync(LogLevel.Information, $"StoryService- VideoUpload response from Cloudinary", JsonConvert.SerializeObject(imageUploadResult), appUser);
 
                     if (videoUploadResult.Error != null)
                         return ServiceResponse((CreateResponse)null, new List<string> { videoUploadResult.Error.Message.ToString() });

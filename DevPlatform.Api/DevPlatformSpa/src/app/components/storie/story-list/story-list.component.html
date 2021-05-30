@@ -1,7 +1,14 @@
+
+<!--preloader-->
+<div id="spinner-wrapper" *ngIf="!stories || newStory">
+    <div class="spinner"></div>
+  </div>
+
+
 <div class="stories-container">
     <div class="container-inner">
 
-        <a class="story modal-trigger" data-modal="new-story-modal">
+        <a class="add-story story modal-trigger" (click)="openModal('image-story-modal');">
             <div class="story-avatar">
                 <img class="avatar" src="https://via.placeholder.com/150x150"
                     data-demo-src="assets/img/avatars/jenna.png" data-user-popover="0" alt="">

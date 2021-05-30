@@ -5,6 +5,10 @@ using System.Net;
 
 namespace DevPlatform.Domain.Api
 {
+    /// <summary>
+    /// Base generic response model implementations
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class Response<T> where T : class
     {
         public static Response<T> Create(HttpStatusCode statusCode, T result, string errorMessage = null)

@@ -1,4 +1,5 @@
 import { FormatTitlePipe } from './core/pipes/format-title.pipe';
+
 /* Components */
 import { AppComponent } from './app.component';
 import { LoginComponent } from './components/authentication/login/login.component';
@@ -42,7 +43,6 @@ import { StoreLocalStorageService } from './core/store-infrastructure/store-loca
 import { ROOT_STORAGE_KEYS, ROOT_LOCAL_STORAGE_KEY } from './app.tokens';
 import { environment } from 'src/environments/environment';
 import { MultiStepFormComponent } from './components/authentication/multi-step-form/multi-step-form.component';
-
 
 // factory meta-reducer configuration function
 export function getMetaReducers(saveKeys: string[], localStorageKey: string, storageService: StoreLocalStorageService): MetaReducer<State<any>>[] {

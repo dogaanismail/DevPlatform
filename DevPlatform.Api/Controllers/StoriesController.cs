@@ -42,12 +42,16 @@ namespace DevPlatform.Api.Controllers
             var serviceResponse = _storyService.Create(model);
 
             if (serviceResponse.Warnings.Count > 0 || serviceResponse.Warnings.Any())
+            {
+                _logService.InsertLogAsync(LogLevel.Error, $"StoriesController- Create Story Error", JsonConvert.SerializeObject(serviceResponse));
+
                 return BadResponse(new ResultModel
                 {
                     Status = false,
                     Message = string.Join(Environment.NewLine, serviceResponse.Warnings.Select(err => string.Join(Environment.NewLine, err))),
                 });
-     
+            }
+
             return OkResponse(new StoryListDto
             {
                 Id = serviceResponse.Data.Id,

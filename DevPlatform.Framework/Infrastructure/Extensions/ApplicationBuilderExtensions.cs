@@ -48,9 +48,7 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
                     try
                     {
                         if (DataSettingsManager.DatabaseIsInstalled)
-                        {
                             await EngineContext.Current.Resolve<ILogService>().ErrorAsync(exception.Message, exception);
-                        }
                     }
                     finally
                     {

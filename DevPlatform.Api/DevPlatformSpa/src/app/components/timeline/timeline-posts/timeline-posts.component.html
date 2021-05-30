@@ -1,8 +1,7 @@
 <!--preloader-->
-<div id="spinner-wrapper" *ngIf="!posts || newPost || newStory">
+<div id="spinner-wrapper" *ngIf="!posts || newPost">
   <div class="spinner"></div>
 </div>
-
 
 <div *ngFor="let post of posts | orderBy : '-createdDate'">
   <div class="card is-post">

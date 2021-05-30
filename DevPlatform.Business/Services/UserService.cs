@@ -15,7 +15,7 @@ using System.Linq;
 namespace DevPlatform.Business.Services
 {
     /// <summary>
-    /// User service
+    /// User service implementations
     /// </summary>
     public partial class UserService : ServiceExecute, IUserService
     {
@@ -38,6 +38,8 @@ namespace DevPlatform.Business.Services
             _logService = logService;
         }
         #endregion
+
+        #region Methods
 
         /// <summary>
         /// Creates an appUser
@@ -161,6 +163,8 @@ namespace DevPlatform.Business.Services
 
                 if (!result.Succeeded && result.Errors != null && result.Errors.Any())
                 {
+                    _logService.InsertLogAsync(LogLevel.Error, $"UserService- Register Error", JsonConvert.SerializeObject(result));
+
                     serviceResponse.Warnings = result.Errors.Select(x => x.Description).ToList();
                     return serviceResponse;
                 }
@@ -176,7 +180,7 @@ namespace DevPlatform.Business.Services
             }
             catch (Exception ex)
             {
-                _logService.InsertLogAsync(LogLevel.Error, $"UserService- Register Error: model {JsonConvert.SerializeObject(model)}", ex.Message.ToString());
+                _logService.InsertLogAsync(LogLevel.Error, $"UserService- Register Exception Error: model {JsonConvert.SerializeObject(model)}", ex.Message.ToString());
                 serviceResponse.Success = false;
                 serviceResponse.ResultCode = ResultCode.Exception;
                 serviceResponse.Warnings.Add(ex.Message);
@@ -199,6 +203,8 @@ namespace DevPlatform.Business.Services
             _appUserDetailRepository.Insert(appUserDetail);
             return new ResultModel { Status = true, Message = "Create Process Success ! " };
         }
+
+        #endregion
 
         #endregion
     }

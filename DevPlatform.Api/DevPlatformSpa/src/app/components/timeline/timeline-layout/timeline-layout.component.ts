@@ -29,11 +29,8 @@ export class TimelineLayoutComponent implements OnInit {
 
   componentActive = true;
   posts$: Observable<Post[]>;
-  stories$: Observable<Story[]>;
   newPost$: Observable<boolean>;
-  newStory$: Observable<boolean>;
   errorMessage$: Observable<string>;
-  storyErrorMessage$: Observable<string>;
   signedUser$: Observable<SignedUser>;
 
   constructor(
@@ -45,13 +42,9 @@ export class TimelineLayoutComponent implements OnInit {
 
   ngOnInit() {
     this.postStore.dispatch(new postActions.Load());
-    this.storyStore.dispatch(new storyActions.Load());
     this.posts$ = this.postStore.pipe(select(fromPost.getPosts)) as Observable<Post[]>;
     this.newPost$ = this.postStore.pipe(select(fromPost.getIsNewPost));
     this.errorMessage$ = this.postStore.pipe(select(fromPost.getError));
-    this.stories$ = this.storyStore.pipe(select(fromStory.getStories)) as Observable<Story[]>;
-    this.newStory$ = this.storyStore.pipe(select(fromStory.getIsNewStory));
-    this.storyErrorMessage$ = this.storyStore.pipe(select(fromStory.getError));
     this.signedUser$ = this.userStore.pipe(select(fromUser.getSignedUser)) as Observable<SignedUser>;
   }
 
