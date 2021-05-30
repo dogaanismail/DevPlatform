@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevPlatform.Repository", "D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevPlatform.Core", "DevPlatform.Core\DevPlatform.Core.csproj", "{BE78919D-3948-4754-838D-3445A67E0619}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevPlatform.Api.Test", "DevPlatform.Api.Test\DevPlatform.Api.Test.csproj", "{159545A3-2D2E-4273-AB6A-6F5135DB038F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevPlatform.Tests", "DevPlatform.Tests\DevPlatform.Tests.csproj", "{159545A3-2D2E-4273-AB6A-6F5135DB038F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevPlatform.Api", "DevPlatform.Api\DevPlatform.Api.csproj", "{B4882046-5D8F-4C2B-8ACA-9AB27BA37CEB}"
 EndProject
@@ -39,7 +39,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevPlatform.LinqToDB.Includ
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ThirdParty", "ThirdParty", "{8AD743D3-90DB-4C17-BFB3-1AA002C7269D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DevPlatform.ImageProcessingLibrary", "DevPlatform.ImageProcessingLibrary\DevPlatform.ImageProcessingLibrary.csproj", "{4D24C331-9ACA-410C-B30C-997D9CA6A12A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DevPlatform.ImageProcessingLibrary", "DevPlatform.ImageProcessingLibrary\DevPlatform.ImageProcessingLibrary.csproj", "{4D24C331-9ACA-410C-B30C-997D9CA6A12A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
