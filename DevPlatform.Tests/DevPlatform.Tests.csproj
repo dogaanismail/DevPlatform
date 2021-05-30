@@ -25,7 +25,6 @@
 
   <ItemGroup>
     <Folder Include="DevPlatform.Api.Tests\" />
-    <Folder Include="DevPlatform.Services.Tests\Identity\" />
     <Folder Include="DevPlatform.Services.Tests\Chat\" />
     <Folder Include="DevPlatform.Services.Tests\Configuration\" />
     <Folder Include="DevPlatform.Services.Tests\Logging\" />
