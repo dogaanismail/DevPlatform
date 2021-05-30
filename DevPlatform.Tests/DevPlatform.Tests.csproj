@@ -27,7 +27,6 @@
     <Folder Include="DevPlatform.Api.Tests\" />
     <Folder Include="DevPlatform.Services.Tests\Chat\" />
     <Folder Include="DevPlatform.Services.Tests\Configuration\" />
-    <Folder Include="DevPlatform.Services.Tests\Logging\" />
     <Folder Include="DevPlatform.Services.Tests\Friendship\" />
     <Folder Include="DevPlatform.Services.Tests\Album\" />
     <Folder Include="DevPlatform.Services.Tests\Notification\" />

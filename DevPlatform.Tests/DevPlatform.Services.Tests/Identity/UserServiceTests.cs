@@ -1,4 +1,5 @@
 ﻿using DevPlatform.Business.Interfaces;
+using DevPlatform.Core.Domain.Identity;
 using DevPlatform.Domain.Api;
 using FluentAssertions;
 using NUnit.Framework;
@@ -28,14 +29,33 @@ namespace DevPlatform.Tests.DevPlatform.Services.Tests.Identity
         [Test]
         public void ItShouldNotReturnUserDetail()
         {
-            var user = _userService.FindById(0);
+            AppUserDetail appUserDetail = new()
+            {
+                FirstName = "User",
+                LastName = "User",
+                ProfilePhotoPath = "http://placehold.it/300x300",
+                CoverPhotoPath = "http://placehold.it/1030x360"
+            };
+
+            GetService<IUserDetailService>().Create(appUserDetail);
+
+            AppUser appUser = new()
+            {
+                UserName = "User",
+                Email = "example@gmail.com",
+                DetailId = appUserDetail.Id
+            };
+
+            _userService.Create(appUser);
+
+            var user = _userService.FindByUserName(appUser.UserName);
             user.UserDetail.Should().NotBeNull();
         }
 
         [Test]
         public void ItShouldNotReturnUserDetailByUserName()
         {
-            var user = _userService.FindByUserName("exampleUser");
+            var user = _userService.FindByUserName("User");
             user.UserDetail.Should().NotBeNull();
         }
 
