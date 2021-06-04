@@ -1,6 +1,4 @@
-﻿using DevPlatform.Domain.Dto;
-using System;
-using System.Collections.Generic;
+﻿using System;
 
 namespace DevPlatform.Domain.Api
 {
@@ -11,7 +9,6 @@ namespace DevPlatform.Domain.Api
         public string CoverPhotoUrl { get; set; }
         public string ProfilePhotoUrl { get; set; }
         public DateTime RegisteredDate { get; set; }
-        public IEnumerable<PostListDto> UserPosts { get; set; }
         public string AccessToken { get; set; }
         public string RefreshToken { get; set; }
         public long Expires { get; set; }

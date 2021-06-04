@@ -98,7 +98,6 @@ namespace DevPlatform.Api.Controllers
                     UserName = user.UserName,
                     CoverPhotoUrl = user.CoverPhotoUrl,
                     ProfilePhotoUrl = user.ProfilePhotoUrl,
-                    UserPosts = user.UserPosts, //TODO: must be refactored.
                     RegisteredDate = user.RegisteredDate
                 });
                 return OkResponse(token);
