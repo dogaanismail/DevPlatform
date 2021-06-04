@@ -29,14 +29,6 @@ export const getIsNewCover = createSelector(
     state => state.isNewCover
 );
 
-export const getUserAlbum = createSelector(
-    getUserFeatureState,
-    getCurrentUser,
-    (state, postType: any) => {
-        return postType ? state.currentUser.userPost.filter(x => x.postType === PostTypeEnum.PostImage) : null;
-    }
-);
-
 export const getUserToken = createSelector(
     getUserFeatureState,
     state => state.token
