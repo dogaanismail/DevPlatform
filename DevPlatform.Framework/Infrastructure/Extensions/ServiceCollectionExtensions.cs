@@ -150,7 +150,7 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
         {
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "devPlatform Api", Version = "1.0" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "devPlatform Api", Version = DevPlatformVersion.CurrentVersion });
 
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {

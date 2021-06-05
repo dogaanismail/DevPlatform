@@ -35,18 +35,6 @@ namespace DevPlatform.Data
                 };
             }
 
-            //if (true)
-            //{
-            //    var mpMappingSchema = new MappingSchema(new[] { Singleton<MappingSchema>.Instance });
-
-            //    mpMappingSchema.SetConvertExpression<ProfiledDbConnection, IDbConnection>(db => db.WrappedConnection);
-            //    mpMappingSchema.SetConvertExpression<ProfiledDbDataReader, IDataReader>(db => db.WrappedReader);
-            //    mpMappingSchema.SetConvertExpression<ProfiledDbTransaction, IDbTransaction>(db => db.WrappedTransaction);
-            //    mpMappingSchema.SetConvertExpression<ProfiledDbCommand, IDbCommand>(db => db.InternalCommand);
-
-            //    return mpMappingSchema;
-            //}
-
             return Singleton<MappingSchema>.Instance;
         }
 
