@@ -44,6 +44,10 @@ $(document).ready(function () {
           touch: {
             vertical: false
           },
+          slideShow: {
+            autoStart: true
+          },
+          autoplay: true,
           buttons: ["close", "thumbs", "share"],
           animationEffect: "fade",
           transitionEffect: "fade",

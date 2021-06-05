@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { SignedUser } from 'src/app/models/user/signedUser';
 import { ModalService } from 'src/app/services/modal/modal.service';
 
 /* Models */
@@ -15,6 +16,7 @@ export class StoryListComponent implements OnInit {
 
   @Input() stories: Story[];
   @Input() newStory: boolean;
+  @Input() signedUser: SignedUser;
 
   ngOnInit() {
   }
