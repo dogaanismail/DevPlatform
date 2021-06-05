@@ -111,6 +111,7 @@ $(document).ready(function () {
         touch: {
           vertical: false
         },
+        autoplay:true,
         buttons: ["close", "thumbs", "share"],
         animationEffect: "fade",
         transitionEffect: "fade",
