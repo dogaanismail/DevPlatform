@@ -1,12 +1,12 @@
 ﻿using DevPlatform.Business.Interfaces;
 using DevPlatform.Core.Domain.Identity;
-using DevPlatform.Core.Domain.Portal;
-using DevPlatform.Domain.Api;
+using DevPlatform.Core.Domain.Question;
+using DevPlatform.Domain.Api.QuestionApi;
 using DevPlatform.Domain.Common;
 using DevPlatform.Domain.Enumerations;
-using DevPlatform.Domain.ServiceResponseModels.PostCommentService;
-using DevPlatform.Repository.Extensions;
+using DevPlatform.Domain.ServiceResponseModels.QuestionCommentService;
 using DevPlatform.Repository.Generic;
+using LinqToDB;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using System;
@@ -16,101 +16,110 @@ using System.Linq;
 namespace DevPlatform.Business.Services
 {
     /// <summary>
-    /// Post comment service
+    /// Question comment service implementations
     /// </summary>
-    public partial class PostCommentService : ServiceExecute, IPostCommentService
+    public partial class QuestionCommentService : ServiceExecute, IQuestionCommentService
     {
         #region Fields
-        private readonly IRepository<PostComment> _postCommentRepository;
+        private readonly IRepository<QuestionComment> _questionCommentRepository;
         private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly IRepository<Post> _postRepository;
+        private readonly IRepository<Question> _questionRepository;
         private readonly IRepository<AppUser> _userRepository;
         private readonly ILogService _logService;
+
         #endregion
 
         #region Ctor
-        public PostCommentService(IRepository<PostComment> postCommentRepository,
+
+        public QuestionCommentService(IRepository<QuestionComment> questionCommentRepository,
             IHttpContextAccessor httpContextAccessor,
+            IRepository<Question> questionRepository,
             IRepository<AppUser> userRepository,
-            IRepository<Post> postRepository,
             ILogService logService)
         {
-            _postCommentRepository = postCommentRepository;
+            _questionCommentRepository = questionCommentRepository;
             _httpContextAccessor = httpContextAccessor;
-            _postRepository = postRepository;
+            _questionRepository = questionRepository;
             _userRepository = userRepository;
             _logService = logService;
         }
+
         #endregion
 
-        /// <summary>
-        /// Creates post comment
-        /// </summary>
-        /// <param name="createComment"></param>
-        /// <returns></returns>
-        public ResultModel Create(PostComment createComment)
-        {
-            if (createComment == null)
-                throw new ArgumentNullException(nameof(createComment));
+        #region Methods
 
-            _postCommentRepository.Insert(createComment);
+        /// <summary>
+        /// Creates a question comment
+        /// </summary>
+        /// <param name="comment"></param>
+        /// <returns></returns>
+        public ResultModel Create(QuestionComment comment)
+        {
+            if (comment == null)
+                throw new ArgumentNullException(nameof(comment));
+
+            _questionCommentRepository.Insert(comment);
             return new ResultModel { Status = true, Message = "Create Process Success ! " };
         }
 
         /// <summary>
-        /// Deletes a post comment
+        /// Deletes a question comment
         /// </summary>
-        /// <param name="deleteComment"></param>
+        /// <param name="comment"></param>
         /// <returns></returns>
-        public ResultModel Delete(PostComment deleteComment)
+        public ResultModel Delete(QuestionComment comment)
         {
-            if (deleteComment == null)
-                throw new ArgumentNullException(nameof(deleteComment));
+            if (comment == null)
+                throw new ArgumentNullException(nameof(comment));
 
-            _postCommentRepository.Delete(deleteComment);
+            _questionCommentRepository.Delete(comment);
             return new ResultModel { Status = true, Message = "Delete Process Success ! " };
         }
 
         /// <summary>
         /// Updates a post comment
         /// </summary>
-        /// <param name="updateComment"></param>
+        /// <param name="comment"></param>
         /// <returns></returns>
-        public ResultModel Update(PostComment updateComment)
+        public ResultModel Update(QuestionComment comment)
         {
-            if (updateComment == null)
-                throw new ArgumentNullException(nameof(updateComment));
+            if (comment == null)
+                throw new ArgumentNullException(nameof(comment));
 
-            _postCommentRepository.Update(updateComment);
+            _questionCommentRepository.Update(comment);
             return new ResultModel { Status = true, Message = "Update Process Success ! " };
         }
 
         /// <summary>
-        /// Returns a post comment by id
+        /// Returns a question comment by id
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public PostComment GetById(int id)
+        public QuestionComment GetById(int id)
         {
-            return _postCommentRepository.GetById(id);
+            return _questionCommentRepository.GetById(id);
         }
 
         /// <summary>
-        /// Returns a list of post comment by post id
+        /// Returns a list of question comment by questionId
         /// </summary>
-        /// <param name="postId"></param>
+        /// <param name="questionId"></param>
         /// <returns></returns>
-        public List<PostComment> GetPostCommentsByPostId(int postId)
+        public List<QuestionComment> GetQuestionCommentsByQuestionId(int questionId)
         {
-            return _postCommentRepository.GetList(x => x.PostId == postId, x => x.Include(t => t.CreatedUser).ThenInclude(e => e.UserDetail));
+            IEnumerable<QuestionComment> getComments = _questionCommentRepository.Table
+                .LoadWith(x => x.CreatedUser)
+                .ThenLoad(x => x.UserDetail).Where(y => y.QuestionId == questionId).ToList();
+
+            return (List<QuestionComment>)getComments;
         }
 
         /// <summary>
-        /// Creates a post comment and returns service response
+        /// Creates a question comment and returns service response
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public ServiceResponse<CreateResponse> Create(PostCommentCreateApi model)
+        public ServiceResponse<CreateResponse> Create(QuestionCommentCreateApi model)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -122,25 +131,25 @@ namespace DevPlatform.Business.Services
 
             try
             {
-                if (model.PostId == 0)
+                if (model.QuestionId == 0)
                     return ServiceResponse((CreateResponse)null, new List<string> { "Text can not be null !" });
 
                 if (string.IsNullOrEmpty(model.Text))
                     return ServiceResponse((CreateResponse)null, new List<string> { "Text can not be null !" });
 
-                var commentPost = _postRepository.Table.FirstOrDefault(p => p.Id == model.PostId);
+                var commentQuestion = _questionRepository.Table.FirstOrDefault(p => p.Id == model.QuestionId);
 
-                if (commentPost == null)
-                    return ServiceResponse((CreateResponse)null, new List<string> { "Post not found!" });
+                if (commentQuestion == null)
+                    return ServiceResponse((CreateResponse)null, new List<string> { "Question not found!" });
 
                 var appUser = _userRepository.Table.FirstOrDefault(x => x.UserName == _httpContextAccessor.HttpContext.User.Identity.Name);
 
                 if (appUser == null)
                     return ServiceResponse((CreateResponse)null, new List<string> { "User not found!" });
 
-                PostComment newComment = new()
+                QuestionComment newComment = new()
                 {
-                    PostId = commentPost.Id,
+                    QuestionId = commentQuestion.Id,
                     Text = model.Text,
                     CreatedBy = appUser.Id
                 };
@@ -155,7 +164,7 @@ namespace DevPlatform.Business.Services
                 {
                     Text = newComment.Text,
                     Id = newComment.Id,
-                    PostId = newComment.PostId,
+                    QuestionId = newComment.QuestionId,
                     CreatedDate = newComment.CreatedDate,
                     CreatedByUserName = appUser.UserName,
                     CreatedByUserPhoto = appUser.UserDetail?.ProfilePhotoPath
@@ -166,11 +175,13 @@ namespace DevPlatform.Business.Services
             }
             catch (Exception ex)
             {
-                _logService.InsertLogAsync(LogLevel.Error, $"PostCommentService- Create Error: model {JsonConvert.SerializeObject(model)}", ex.Message.ToString());
+                _logService.InsertLogAsync(LogLevel.Error, $"QuestionCommentService- Create Error: model {JsonConvert.SerializeObject(model)}", ex.Message.ToString());
                 serviceResponse.Success = false;
                 serviceResponse.Warnings.Add(ex.Message);
                 return serviceResponse;
             }
         }
+
+        #endregion
     }
 }
