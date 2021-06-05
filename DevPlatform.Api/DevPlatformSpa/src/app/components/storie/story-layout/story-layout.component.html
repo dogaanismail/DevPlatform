@@ -31,7 +31,7 @@
           <a class="view-all">View All</a>
         </div>
 
-        <app-story-list [stories]="stories$ | async" [newStory]="newStory$ | async"></app-story-list>
+        <app-story-list [signedUser]="signedUser$ | async" [stories]="stories$ | async" [newStory]="newStory$ | async"></app-story-list>
 
         <div class="section-title">
           <h2>Feed</h2>

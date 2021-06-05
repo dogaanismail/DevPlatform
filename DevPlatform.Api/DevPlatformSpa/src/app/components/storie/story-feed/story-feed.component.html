@@ -4,9 +4,11 @@
         <div class="column is-4 is-half-tablet" *ngFor="let story of stories | orderBy : '-createdDate'">
 
             <!--Feed item-->
-            <div class="story-feed-item">
-                <a href="{{story.imageUrl}}" data-demo-href="{{story.imageUrl}}" data-fancybox data-caption="">
-                    <img class="featured-image" src="{{story.imageUrl}}" data-demo-src="{{story.imageUrl}}" alt="">
+            <div class="story-feed-item" id="story-item">
+                <a href="{{story.imageUrl}}" title="{{story.description}}" data-demo-href="{{story.imageUrl}}"
+                    data-fancybox="images" attr.data-caption="{{story.description}}">
+                    <img class="featured-image" src="{{story.imageUrl}}" data-demo-src="{{story.imageUrl}}"
+                        alt="{{story.description}}" data-caption="{{story.description}}">
                 </a>
                 <a class="item-meta">
                     <div class="user-info">
