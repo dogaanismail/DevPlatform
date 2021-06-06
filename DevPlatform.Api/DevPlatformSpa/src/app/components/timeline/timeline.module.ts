@@ -64,6 +64,5 @@ export function getPostsConfig(saveKeys: string[], localStorageKey: string, stor
             useFactory: getPostsConfig
         },
     ]
-
 })
 export class TimelineModule { }

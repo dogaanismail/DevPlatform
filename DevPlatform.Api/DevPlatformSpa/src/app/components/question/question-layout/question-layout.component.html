@@ -25,11 +25,25 @@
         </div>
 
         <div class="column is-6">
-          <app-create-question>
+
+          <article *ngIf="errorMessage$ | async as errorMessage" class="message is-danger">
+            <div class="message-header">
+              <p>Warning!</p>
+              <button class="delete" onclick="this.parentElement.parentElement.style.display='none';"
+                aria-label="delete"></button>
+            </div>
+            <div class="message-body">
+              {{ errorMessage }}
+            </div>
+          </article>
+
+          <app-create-question [errorMessage]="errorMessage$ | async" >
           </app-create-question>
+          
           <div class="question-content">
 
-            <app-question-posts></app-question-posts>
+            <app-question-posts [questions]="questions$ | async" [newQuestion]="newQuestion$ | async">
+            </app-question-posts>
 
             <!-- Load more -->
             <div class=" load-more-wrap has-text-centered">

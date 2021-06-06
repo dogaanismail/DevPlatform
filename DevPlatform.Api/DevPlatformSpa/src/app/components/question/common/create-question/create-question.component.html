@@ -4,8 +4,13 @@
       <div class="tab-content">
 
         <div class="control">
-          <input type="text" [(ngModel)]="questionCreate.title" name="title"
-            placeholder="Enter your title for the question" class="input is-rounded" required> <br><br>
+          <input type="text" 
+          [(ngModel)]="questionCreate.title" 
+          name="title" 
+          placeholder="Enter your title for the question" 
+          class="input is-rounded" 
+          required
+          [ngModelOptions]="{standalone: true}"> <br><br>
         </div>
 
         <div class="control">
@@ -17,20 +22,29 @@
           [trimTags]="true"
           [separatorKeyCodes]="[32,188]" 
           theme='bootstrap' 
-          [ngModel]="questionCreate.tags" 
+          [(ngModel)]="questionCreate.tags" 
           [ngModelOptions]="{standalone: true}"></tag-input> <br><br>
         </div>
 
         <div class="form-group has-feedback" [ngClass]="{ 'has-error': myckeditor.invalid && myckeditor.touched }">
-          <ckeditor [(ngModel)]="questionCreate.description" #myckeditor="ngModel" name="description" required
-            [config]="ckeConfig" debounce="500" (paste)="onPaste($event)" (change)="onChange($event)">
+          <ckeditor [(ngModel)]="questionCreate.description" 
+          #myckeditor="ngModel" 
+          name="description"
+          required
+          [config]="ckeConfig"
+          debounce="500" 
+          (paste)="onPaste($event)" 
+          (change)="onChange($event)"
+          [ngModelOptions]="{standalone: true}">
           </ckeditor>
         </div>
 
         <div class="more-wrap" style="display: block !important;">
-          <button id="publish-button" type="submit" [disabled]="myForm.invalid"
-            class="button is-solid accent-button is-fullwidth">
-            Publish
+          <button id="publish-button" 
+          type="submit" 
+          [disabled]="myForm.invalid"
+          class="button is-solid accent-button is-fullwidth">
+          Publish
           </button>
         </div>
       </div>

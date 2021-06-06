@@ -20,7 +20,8 @@ export class QuestionService {
   createQuestion(question: any): Observable<Question> {
     const headers = new HttpHeaders
       ({
-        "Authorization": "Bearer " + this.authService.getToken
+        "Authorization": "Bearer " + this.authService.getToken,
+        'Content-Type': 'application/json'
       });
     return this.http.post(this.questionUrl + "createquestion", question, { headers: headers })
       .pipe(

@@ -121,12 +121,11 @@ namespace DevPlatform.Business.Services
               .LoadWith(x => x.QuestionComments).ThenLoad(x => x.CreatedUser).ThenLoad(x => x.UserDetail)
               .LoadWith(x => x.CreatedUser).ThenLoad(x => x.UserDetail).FirstOrDefault(y => y.Id == id);
 
-            QuestionListDto questionListDto = new QuestionListDto
+            QuestionListDto questionListDto = new()
             {
                 Id = getQuestion.Id,
                 Title = getQuestion.Title,
                 Description = getQuestion.Description,
-                Tags = getQuestion.Tags,
                 CreatedDate = getQuestion.CreatedDate,
                 CreatedByUserName = getQuestion.CreatedUser == null ? "" : getQuestion.CreatedUser.UserName,
                 CreatedByUserPhoto = getQuestion.CreatedUser.UserDetail.ProfilePhotoPath,
@@ -158,7 +157,6 @@ namespace DevPlatform.Business.Services
                     Id = p.Id,
                     Title = p.Title,
                     Description = p.Description,
-                    Tags = p.Tags,
                     CreatedDate = p.CreatedDate,
                     CreatedByUserName = p.CreatedUser == null ? "" : p.CreatedUser.UserName,
                     CreatedByUserPhoto = p.CreatedUser == null ? "" : p.CreatedUser.UserDetail.ProfilePhotoPath,
@@ -207,7 +205,6 @@ namespace DevPlatform.Business.Services
                   Id = p.Id,
                   Title = p.Title,
                   Description = p.Description,
-                  Tags = p.Tags,
                   CreatedDate = p.CreatedDate,
                   CreatedByUserName = p.CreatedUser == null ? "" : p.CreatedUser.UserName,
                   CreatedByUserPhoto = p.CreatedUser == null ? "" : p.CreatedUser.UserDetail.ProfilePhotoPath,
@@ -255,7 +252,7 @@ namespace DevPlatform.Business.Services
                 {
                     Title = model.Title,
                     Description = model.Description,
-                    Tags = model.Tags,
+                    Tags = string.Join(",", model.Tags.Select(err => string.Join(",", err.Value))),
                     CreatedBy = appUser.Id
                 };
 
@@ -272,7 +269,7 @@ namespace DevPlatform.Business.Services
                     Id = newQuestion.Id,
                     Title = newQuestion.Title,
                     Description = newQuestion.Description,
-                    Tags = newQuestion.Tags,
+                    Tags = newQuestion.Tags.Split(',').Select(x => new TagsModel { Display = x, Value = x }).ToList(),
                     CreatedByUserName = appUser?.UserName,
                     CreatedByUserPhoto = appUser?.UserDetail.ProfilePhotoPath,
                     CreatedDate = newQuestion.CreatedDate,

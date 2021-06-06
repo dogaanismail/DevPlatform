@@ -1,4 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+
+/* Models */
+import { Question } from '../../../../models/question/question';
 
 @Component({
   selector: 'app-question-posts',
@@ -8,6 +11,10 @@ import { Component, OnInit } from '@angular/core';
 export class QuestionPostsComponent implements OnInit {
 
   constructor() { }
+
+  pageTitle = 'Developer Questions';
+  @Input() questions: Question[];
+  @Input() newQuestion: boolean;
 
   ngOnInit() {
   }

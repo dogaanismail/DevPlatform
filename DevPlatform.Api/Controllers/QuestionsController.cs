@@ -37,7 +37,7 @@ namespace DevPlatform.Api.Controllers
 
         [HttpPost("createquestion")]
         [Authorize]
-        public virtual JsonResult CreateQuestion([FromForm] QuestionCreateApi model)
+        public virtual JsonResult CreateQuestion([FromBody] QuestionCreateApi model)
         {
             _logService.InsertLogAsync(LogLevel.Information, $"QuestionsController- Create Question Request", JsonConvert.SerializeObject(model));
 
@@ -59,12 +59,20 @@ namespace DevPlatform.Api.Controllers
                 Id = serviceResponse.Data.Id,
                 Title = serviceResponse.Data?.Title,
                 Description = serviceResponse.Data?.Description,
-                Tags = serviceResponse.Data?.Tags,
+                //Tags = serviceResponse.Data?.Tags,
                 CreatedByUserName = serviceResponse.Data?.CreatedByUserName,
                 CreatedByUserPhoto = serviceResponse.Data?.CreatedByUserPhoto,
                 CreatedDate = serviceResponse.Data.CreatedDate,
                 Comments = null
             });
+        }
+
+        [HttpGet("questionlist")]
+        [AllowAnonymous]
+        public virtual JsonResult GetQuestionList()
+        {
+            var data = _questionService.GetQuestionList();
+            return OkResponse(data);
         }
 
         [HttpPost("createcomment")]

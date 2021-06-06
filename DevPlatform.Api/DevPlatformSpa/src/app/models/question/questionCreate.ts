@@ -1,4 +1,7 @@
+import { TagModel } from "ngx-chips/core/accessor";
+
 export class QuestionCreate {
-    text: string;
-    description:string;
+    title: string;
+    description: string;
+    tags: TagModel[] = [];
 }
