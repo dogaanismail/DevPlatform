@@ -143,8 +143,8 @@ namespace DevPlatform.Business.Services
                 {
                     FirstName = model.FirstName,
                     LastName = model.LastName,
-                    ProfilePhotoPath = "http://placehold.it/300x300",
-                    CoverPhotoPath = "http://placehold.it/1030x360"
+                    ProfilePhotoPath = "https://via.placeholder.com/300x300",
+                    CoverPhotoPath = "https://via.placeholder.com/1030x360"
                 };
 
                 ResultModel resultModel = CreateUserDetail(appUserDetail);

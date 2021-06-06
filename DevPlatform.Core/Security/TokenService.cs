@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
-using System.Text;
 
 namespace DevPlatform.Core.Security
 {
@@ -41,7 +40,6 @@ namespace DevPlatform.Core.Security
                 CoverPhotoUrl = appUserDto.CoverPhotoUrl,
                 ProfilePhotoUrl = appUserDto.ProfilePhotoUrl,
                 RegisteredDate = appUserDto.RegisteredDate,
-                UserPosts = appUserDto.UserPosts,
                 AccessToken = accessToken,
                 RefreshToken = refreshToken,
                 Expires = JwtTokenDefinitions.TokenExpirationTime.Ticks

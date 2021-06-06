@@ -86,7 +86,7 @@ namespace DevPlatform.Business.Services
         }
 
         /// <summary>
-        /// Returnsa post comment by id
+        /// Returns a post comment by id
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>

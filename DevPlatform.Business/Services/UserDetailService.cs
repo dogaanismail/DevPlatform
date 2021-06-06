@@ -64,14 +64,13 @@ namespace DevPlatform.Business.Services
 
             var appUser = _appUserRepository.Table.LoadWith(t => t.UserDetail).FirstOrDefault(x => x.UserName == userName);
 
-            AppUserDetailDto dto = new AppUserDetailDto
+            AppUserDetailDto dto = new()
             {
                 Id = appUser.Id,
                 UserName = appUser.UserName,
                 CoverPhotoUrl = appUser.UserDetail.CoverPhotoPath,
                 ProfilePhotoUrl = appUser.UserDetail.ProfilePhotoPath,
                 RegisteredDate = appUser.CreatedDate,
-                UserPosts = _postService.GetUserPostsWithDto(appUser.Id)
             };
 
             return dto;

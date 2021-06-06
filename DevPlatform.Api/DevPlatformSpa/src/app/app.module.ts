@@ -15,6 +15,7 @@ import { UserEffects } from './core/ngrx/effects/user.effects';
 import { UserAccountEffects } from './core/ngrx/effects/user-account.effects';
 import { PostEffects } from './core/ngrx/effects/post.effects';
 import { StoryEffects } from './core/ngrx/effects/story.effects';
+import { QuestionEffects } from './core/ngrx/effects/question.effects';
 import { reducers } from './core/ngrx/states/app.state';
 
 /* Services */
@@ -77,7 +78,7 @@ export function getMetaReducers(saveKeys: string[], localStorageKey: string, sto
     StoreModule.forRoot(reducers),
     EffectsModule.forRoot([]),
     EffectsModule.forFeature(
-      [UserEffects, UserAccountEffects, PostEffects, StoryEffects]
+      [UserEffects, UserAccountEffects, PostEffects, StoryEffects, QuestionEffects]
     ),
     StoreDevtoolsModule.instrument({ maxAge: 25, logOnly: environment.production })
   ],

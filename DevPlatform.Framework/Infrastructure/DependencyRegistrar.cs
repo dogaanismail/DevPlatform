@@ -57,6 +57,8 @@ namespace DevPlatform.Framework.Infrastructure
             services.AddScoped<IImageProcessingService, ImageProcessingService>();
             services.AddScoped<IDatabaseService, DatabaseService>();
             services.AddScoped<ILogService, LogService>();
+            services.AddScoped<IQuestionService, QuestionService>();
+            services.AddScoped<IQuestionCommentService, QuestionCommentService>();
 
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 

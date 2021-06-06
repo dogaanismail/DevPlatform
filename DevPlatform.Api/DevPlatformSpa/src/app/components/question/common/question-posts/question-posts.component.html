@@ -1,65 +1,26 @@
-<!-- Question -->
-<div class="question-block">
-  <!-- Title -->
-  <a href="questions-single.html" class="question-title is-link">What's a mutation observer?</a>
-  <!-- Author -->
-  <div class="question-author">
-    <img src="https://via.placeholder.com/150x150" data-demo-src="assets/img/avatars/milly.jpg" data-user-popover="7"
-      alt="">
-    <div class="meta">
-      <span>Milly Augustine</span>
-      <span>54 minutes ago</span>
-    </div>
-  </div>
-  <!-- Content -->
-  <div class="question-text">
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. At eum nihili facit; Quacumque
-      enim ingredimur, in aliqua historia vestigium ponimus.</p>
-    <div class="tags">
-      <span class="tag">javascript</span>
-      <span class="tag">mutations</span>
-      <span class="tag">observers</span>
-    </div>
-  </div>
-  <!-- Footer -->
-  <div class="question-footer">
-    <div class="likes">
-      <div class="like-icon">
-        <i data-feather="heart"></i>
-      </div>
-      <span>4 Likes</span>
-    </div>
-    <div class="report">
-      <div class="report-icon">
-        <i data-feather="alert-octagon"></i>
-      </div>
-      <span>Report Topic</span>
-    </div>
-  </div>
-  <div class="answers-count">
-    <span>2 Answers</span>
-  </div>
+<!--preloader-->
+<div id="spinner-wrapper" *ngIf="!questions || newQuestion">
+  <div class="spinner"></div>
 </div>
+
 <!-- Question -->
-<div class="question-block is-top-spaced">
+<div class="question-block is-top-spaced" *ngFor="let question of questions | orderBy : '-createdDate'">
   <!-- Title -->
-  <a href="questions-single.html" class="question-title is-link">Is there a simple guide for Sass
-    Mixins?</a>
+  <a href="questions-single.html" class="question-title is-link">{{question.title}}</a>
   <!-- Author -->
   <div class="question-author">
-    <img src="https://via.placeholder.com/150x150" data-demo-src="assets/img/avatars/brian.jpg" data-user-popover="19"
-      alt="">
+    <img src="{{question.createdByUserPhoto}}" attr.data-demo-src="{{question.createdByUserPhoto}}"
+      data-user-popover="19" alt="" title="{{question.createdByUserName}}">
     <div class="meta">
-      <span>Brian Stevenson</span>
-      <span>3 hours ago</span>
+      <span>{{question.createdByUserName}}</span>
+      <span>{{question.createdDate | date:'short' }}</span>
     </div>
   </div>
   <!-- Content -->
   <div class="question-text">
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. At eum nihili facit; Quacumque
-      enim ingredimur, in aliqua
-      historia vestigium ponimus. Duo Reges: constructio interrete. Proclivi currit oratio.
-      Quae contraria sunt his, malane? Quod quidem nobis non saepe contingit.</p>
+
+    <div [innerHTML]="question.description"></div>
+
     <div class="tags">
       <span class="tag">stylesheets</span>
       <span class="tag">sass</span>
@@ -71,194 +32,18 @@
   <div class="question-footer">
     <div class="likes">
       <div class="like-icon">
-        <i data-feather="heart"></i>
+        <mat-icon>favorite_border</mat-icon>
       </div>
       <span>12 Likes</span>
     </div>
     <div class="report">
       <div class="report-icon">
-        <i data-feather="alert-octagon"></i>
+        <mat-icon>error_outline</mat-icon>
       </div>
       <span>Report Topic</span>
     </div>
   </div>
   <div class="answers-count">
     <span>9 Answers</span>
-  </div>
-</div>
-<!-- Question -->
-<div class="question-block is-top-spaced">
-  <!-- Title -->
-  <a href="questions-single.html" class="question-title is-link">Is React compatible with jQuery?</a>
-  <!-- Author -->
-  <div class="question-author">
-    <img src="https://via.placeholder.com/150x150" data-demo-src="assets/img/avatars/lana.jpeg" data-user-popover="10"
-      alt="">
-    <div class="meta">
-      <span>Lana Henrikssen</span>
-      <span>5 hours ago</span>
-    </div>
-  </div>
-  <!-- Content -->
-  <div class="question-text">
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. At eum nihili facit; Quacumque
-      enim ingredimur, in aliqua historia vestigium ponimus. Duo Reges: constructio interrete. Proclivi
-      currit oratio.
-      Quae contraria sunt his, malane? Quod quidem nobis non saepe contingit.</p>
-    <div class="tags">
-      <span class="tag">reactjs</span>
-      <span class="tag">javascript</span>
-    </div>
-  </div>
-  <!-- Footer -->
-  <div class="question-footer">
-    <div class="likes">
-      <div class="like-icon">
-        <i data-feather="heart"></i>
-      </div>
-      <span>19 Likes</span>
-    </div>
-    <div class="report">
-      <div class="report-icon">
-        <i data-feather="alert-octagon"></i>
-      </div>
-      <span>Report Topic</span>
-    </div>
-  </div>
-  <div class="answers-count">
-    <span>23 Answers</span>
-  </div>
-</div>
-<!-- Question -->
-<div class="question-block is-top-spaced">
-  <!-- Title -->
-  <a href="questions-single.html" class="question-title is-link">X-Wing animation with CSS only?</a>
-  <!-- Author -->
-  <div class="question-author">
-    <img src="https://via.placeholder.com/150x150" data-demo-src="assets/img/avatars/azzouz.jpg" data-user-popover="20"
-      alt="">
-    <div class="meta">
-      <span>Azzouz El Paytoun</span>
-      <span>11 hours ago</span>
-    </div>
-  </div>
-  <!-- Content -->
-  <div class="question-text">
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. At eum nihili facit; Quacumque
-      enim ingredimur, in aliqua historia vestigium ponimus. Duo Reges: constructio interrete. Proclivi
-      currit
-      oratio.
-      Quae contraria sunt his, malane? Quod quidem nobis non saepe contingit.</p>
-    <div class="tags">
-      <span class="tag">css</span>
-      <span class="tag">animation</span>
-      <span class="tag">starwars</span>
-    </div>
-  </div>
-  <!-- Footer -->
-  <div class="question-footer">
-    <div class="likes">
-      <div class="like-icon">
-        <i data-feather="heart"></i>
-      </div>
-      <span>48 Likes</span>
-    </div>
-    <div class="report">
-      <div class="report-icon">
-        <i data-feather="alert-octagon"></i>
-      </div>
-      <span>Report Topic</span>
-    </div>
-  </div>
-  <div class="answers-count">
-    <span>12 Answers</span>
-  </div>
-</div>
-<!-- Question -->
-<div class="question-block is-top-spaced">
-  <!-- Title -->
-  <a href="questions-single.html" class="question-title is-link">Difference between fluid and responsive
-    layouts?</a>
-  <!-- Author -->
-  <div class="question-author">
-    <img src="https://via.placeholder.com/150x150" data-demo-src="assets/img/avatars/daniel.jpg" data-user-popover="3"
-      alt="">
-    <div class="meta">
-      <span>Daniel Wellington</span>
-      <span>Yesterday</span>
-    </div>
-  </div>
-  <!-- Content -->
-  <div class="question-text">
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. At eum nihili facit; Quacumque
-      enim ingredimur, in aliqua historia vestigium ponimus.</p>
-    <div class="tags">
-      <span class="tag">webdesign</span>
-      <span class="tag">responsive</span>
-      <span class="tag">fluid</span>
-    </div>
-  </div>
-  <!-- Footer -->
-  <div class="question-footer">
-    <div class="likes">
-      <div class="like-icon">
-        <i data-feather="heart"></i>
-      </div>
-      <span>31 Likes</span>
-    </div>
-    <div class="report">
-      <div class="report-icon">
-        <i data-feather="alert-octagon"></i>
-      </div>
-      <span>Report Topic</span>
-    </div>
-  </div>
-  <div class="answers-count">
-    <span>25 Answers</span>
-  </div>
-</div>
-<!-- Question -->
-<div class="question-block is-top-spaced">
-  <!-- Title -->
-  <a href="questions-single.html" class="question-title is-link">How can I handle photos with
-    javascript?</a>
-  <!-- Author -->
-  <div class="question-author">
-    <img src="https://via.placeholder.com/150x150" data-demo-src="assets/img/avatars/dan.jpg" data-user-popover="1"
-      alt="">
-    <div class="meta">
-      <span>Dan Walker</span>
-      <span>2 days ago</span>
-    </div>
-  </div>
-  <!-- Content -->
-  <div class="question-text">
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. At eum nihili facit; Quacumque
-      enim ingredimur, in aliqua
-      historia vestigium ponimus. Duo Reges: constructio interrete. Proclivi currit oratio.
-      Quae contraria sunt his, malane? Quod quidem nobis non saepe contingit. Hoc loco tenere
-      se Triarius non potuit.</p>
-    <div class="tags">
-      <span class="tag">javascript</span>
-      <span class="tag">images</span>
-    </div>
-  </div>
-  <!-- Footer -->
-  <div class="question-footer">
-    <div class="likes">
-      <div class="like-icon">
-        <i data-feather="heart"></i>
-      </div>
-      <span>8 Likes</span>
-    </div>
-    <div class="report">
-      <div class="report-icon">
-        <i data-feather="alert-octagon"></i>
-      </div>
-      <span>Report Topic</span>
-    </div>
-  </div>
-  <div class="answers-count">
-    <span>5 Answers</span>
   </div>
 </div>

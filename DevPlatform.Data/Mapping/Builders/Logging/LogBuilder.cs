@@ -16,7 +16,6 @@ namespace DevPlatform.Data.Mapping.Builders.Logging
             .WithColumn(nameof(Log.ShortMessage)).AsString(int.MaxValue).NotNullable()
             .WithColumn(nameof(Log.FullMessage)).AsString(int.MaxValue).NotNullable()
             .WithColumn(nameof(Log.IpAddress)).AsString(128).Nullable()
-            .WithColumn(nameof(Log.CustomerId)).AsInt32().Nullable()
             .WithColumn(nameof(Log.PageUrl)).AsString(256).Nullable()
             .WithColumn(nameof(Log.ReferrerUrl)).AsString(256).Nullable()
             .WithColumn(nameof(Log.CreatedBy)).AsInt32().Nullable().ForeignKey<AppUser>(onDelete: Rule.None)

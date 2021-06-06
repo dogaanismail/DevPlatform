@@ -145,7 +145,6 @@ namespace DevPlatform.Business.Services
                 ShortMessage = shortMessage,
                 FullMessage = fullMessage,
                 IpAddress = _webHelper.GetCurrentIpAddress(),
-                CustomerId = appUser?.Id,
                 PageUrl = _webHelper.GetThisPageUrl(true),
                 ReferrerUrl = _webHelper.GetUrlReferrer(),
                 CreatedDate = DateTime.UtcNow
