@@ -14,6 +14,7 @@ import { QuestionMenuFixedComponent } from './common/question-menu-fixed/questio
 import { CreateQuestionComponent } from './common/create-question/create-question.component';
 import { QuestionLayoutComponent } from './question-layout/question-layout.component';
 import { QuestionDetailComponent } from './question-detail/question-detail.component';
+import { DevPlatformMaterialModule } from 'src/app/shared/modules/material.module';
 
 /*Ngrx and Store infrastructure implementations */
 import { storageMetaReducer } from '../../core/store-infrastructure/storage-metareducer';
@@ -40,6 +41,7 @@ const questionRoutes: Routes = [
         SharedModule,
         CKEditorModule,
         TagInputModule,
+        DevPlatformMaterialModule,
         StoreModule.forFeature('questions', fromReducer.questionReducer, QUESTIONS_CONFIG_TOKEN),
     ],
     declarations: [
