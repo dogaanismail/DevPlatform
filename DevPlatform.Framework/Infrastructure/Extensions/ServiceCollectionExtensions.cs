@@ -8,9 +8,11 @@ using DevPlatform.Data;
 using DevPlatform.Data.IdentityFactory;
 using DevPlatform.Domain.Api;
 using DevPlatform.Domain.Api.AlbumApi;
+using DevPlatform.Domain.Api.QuestionApi;
 using DevPlatform.Domain.Api.StoryApi;
 using DevPlatform.Domain.Validation;
 using DevPlatform.Domain.Validation.AlbumValidation;
+using DevPlatform.Domain.Validation.QuestionValidation;
 using DevPlatform.Domain.Validation.StoryValidation;
 using DevPlatform.LinqToDB.Identity;
 using FluentValidation;
@@ -230,6 +232,8 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
             services.AddSingleton<IValidator<PostCreateApi>, PostCreateApiValidator>();
             services.AddSingleton<IValidator<AlbumCreateApi>, AlbumCreateApiValidator>();
             services.AddSingleton<IValidator<StoryCreateApi>, StoryCreateApiValidator>();
+            services.AddSingleton<IValidator<QuestionCreateApi>, QuestionCreateApiValidator>();
+            services.AddSingleton<IValidator<RegisterApiRequest>, RegisterApiRequestValidator>();
         }
 
         /// <summary>
@@ -239,6 +243,18 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
         public static void AddDevPlatFormSignalR(this IServiceCollection services)
         {
             services.AddSignalR();
+        }
+
+        /// <summary>
+        /// Adds SignalR
+        /// </summary>
+        /// <param name="services"></param>
+        public static void AddDevPlatformBehaviorOptions(this IServiceCollection services)
+        {
+            services.Configure<ApiBehaviorOptions>(opt =>
+            {
+                opt.SuppressModelStateInvalidFilter = true;
+            });
         }
     }
 }

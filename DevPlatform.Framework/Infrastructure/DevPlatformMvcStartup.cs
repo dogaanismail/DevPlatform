@@ -35,6 +35,9 @@ namespace DevPlatform.Framework.Infrastructure
 
             //add devPlatform swagger
             services.AddDevPlatFormSignalR();
+
+            //custom states errors
+            services.AddDevPlatformBehaviorOptions();
         }
 
         /// <summary>
