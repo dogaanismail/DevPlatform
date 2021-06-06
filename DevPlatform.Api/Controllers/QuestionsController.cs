@@ -59,6 +59,7 @@ namespace DevPlatform.Api.Controllers
                 Id = serviceResponse.Data.Id,
                 Title = serviceResponse.Data?.Title,
                 Description = serviceResponse.Data?.Description,
+                Tags = serviceResponse.Data?.Tags,
                 CreatedByUserName = serviceResponse.Data?.CreatedByUserName,
                 CreatedByUserPhoto = serviceResponse.Data?.CreatedByUserPhoto,
                 CreatedDate = serviceResponse.Data.CreatedDate,

@@ -126,6 +126,7 @@ namespace DevPlatform.Business.Services
                 Id = getQuestion.Id,
                 Title = getQuestion.Title,
                 Description = getQuestion.Description,
+                Tags = getQuestion.Tags,
                 CreatedDate = getQuestion.CreatedDate,
                 CreatedByUserName = getQuestion.CreatedUser == null ? "" : getQuestion.CreatedUser.UserName,
                 CreatedByUserPhoto = getQuestion.CreatedUser.UserDetail.ProfilePhotoPath,
@@ -157,6 +158,7 @@ namespace DevPlatform.Business.Services
                     Id = p.Id,
                     Title = p.Title,
                     Description = p.Description,
+                    Tags = p.Tags,
                     CreatedDate = p.CreatedDate,
                     CreatedByUserName = p.CreatedUser == null ? "" : p.CreatedUser.UserName,
                     CreatedByUserPhoto = p.CreatedUser == null ? "" : p.CreatedUser.UserDetail.ProfilePhotoPath,
@@ -205,6 +207,7 @@ namespace DevPlatform.Business.Services
                   Id = p.Id,
                   Title = p.Title,
                   Description = p.Description,
+                  Tags = p.Tags,
                   CreatedDate = p.CreatedDate,
                   CreatedByUserName = p.CreatedUser == null ? "" : p.CreatedUser.UserName,
                   CreatedByUserPhoto = p.CreatedUser == null ? "" : p.CreatedUser.UserDetail.ProfilePhotoPath,
@@ -252,6 +255,7 @@ namespace DevPlatform.Business.Services
                 {
                     Title = model.Title,
                     Description = model.Description,
+                    Tags = model.Tags,
                     CreatedBy = appUser.Id
                 };
 
@@ -268,6 +272,7 @@ namespace DevPlatform.Business.Services
                     Id = newQuestion.Id,
                     Title = newQuestion.Title,
                     Description = newQuestion.Description,
+                    Tags = newQuestion.Tags,
                     CreatedByUserName = appUser?.UserName,
                     CreatedByUserPhoto = appUser?.UserDetail.ProfilePhotoPath,
                     CreatedDate = newQuestion.CreatedDate,

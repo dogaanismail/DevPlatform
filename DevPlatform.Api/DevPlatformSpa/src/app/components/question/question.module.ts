@@ -8,6 +8,9 @@ import { QuestionLayoutComponent } from './question-layout/question-layout.compo
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { QuestionDetailComponent } from './question-detail/question-detail.component';
+import { SharedModule } from 'src/app/shared/modules/shared.module';
+import { CKEditorModule } from 'ng2-ckeditor';
+import { TagInputModule } from 'ngx-chips';
 
 const questionRoutes: Routes = [
     { path: "question", component: QuestionLayoutComponent },
@@ -20,6 +23,9 @@ const questionRoutes: Routes = [
 @NgModule({
     imports: [
         RouterModule.forChild(questionRoutes),
+        SharedModule,
+        CKEditorModule,
+        TagInputModule
     ],
     declarations: [
         QuestionLayoutComponent,

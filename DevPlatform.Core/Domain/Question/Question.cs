@@ -8,6 +8,7 @@ namespace DevPlatform.Core.Domain.Question
     {
         public string Title { get; set; }
         public string Description { get; set; }
+        public string Tags { get; set; }
 
         [LinqToDBAssociation.Association(ThisKey = nameof(Id), OtherKey = nameof(QuestionComment.QuestionId), CanBeNull = true)]
         public virtual ICollection<QuestionComment> QuestionComments { get; set; }

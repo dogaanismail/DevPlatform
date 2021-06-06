@@ -14,6 +14,7 @@ namespace DevPlatform.Data.Mapping.Builders.Question
             table
                .WithColumn(nameof(QuestionClass.Title)).AsString(256).NotNullable()
                .WithColumn(nameof(QuestionClass.Description)).AsString(int.MaxValue).NotNullable()
+               .WithColumn(nameof(QuestionClass.Tags)).AsString(256).Nullable()
                .WithColumn(nameof(QuestionClass.CreatedBy)).AsInt32().NotNullable().WithDefaultValue(0).ForeignKey<AppUser>(onDelete: Rule.None)
                .WithColumn(nameof(QuestionClass.ModifiedBy)).AsInt32().Nullable().ForeignKey<AppUser>(onDelete: Rule.None)
                .WithColumn(nameof(QuestionClass.CreatedDate)).AsDateTime().NotNullable()

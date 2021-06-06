@@ -56,6 +56,7 @@ namespace DevPlatform.Tests.DevPlatform.Services.Tests.Question
             {
                 Title = "example for test",
                 Description = "example for test",
+                Tags = "example,example2,example3",
                 CreatedBy = 0
             };
 

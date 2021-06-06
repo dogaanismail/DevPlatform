@@ -1,6 +1,5 @@
 ﻿using DevPlatform.Core.Entities;
 using DevPlatform.Domain.Enumerations;
-using System;
 
 namespace DevPlatform.Core.Domain.Logging
 {
@@ -25,11 +24,6 @@ namespace DevPlatform.Core.Domain.Logging
         /// Gets or sets the IP address
         /// </summary>
         public string IpAddress { get; set; }
-
-        /// <summary>
-        /// Gets or sets the customer identifier
-        /// </summary>
-        public int? CustomerId { get; set; }
 
         /// <summary>
         /// Gets or sets the page URL
