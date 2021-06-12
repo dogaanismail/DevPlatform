@@ -9,6 +9,8 @@ import { TimelineLayoutComponent } from './timeline-layout/timeline-layout.compo
 import { TimelineCreatePostComponent } from './timeline-create-post/timeline-create-post.component';
 import { TimelineNewjobComponent } from './timeline-widgets/timeline-newjob/timeline-newjob.component';
 import { CreateAlbumModalComponent } from './modals/create-album-modal/create-album-modal.component';
+import { CommentLayoutComponent } from './timeline-posts/timeline-post-comments/comment-layout/comment-layout.component';
+import { CommentListComponent } from './timeline-posts/timeline-post-comments/comment-list/comment-list.component';
 
 /*Modules*/
 import { NgModule } from '@angular/core';
@@ -52,7 +54,9 @@ export function getPostsConfig(saveKeys: string[], localStorageKey: string, stor
         TimelineBirthdayComponent,
         TimelineWeatherComponent,
         TimelineActivityComponent,
-        CreateAlbumModalComponent
+        CreateAlbumModalComponent,
+        CommentLayoutComponent,
+        CommentListComponent
     ],
     providers: [
         StoreLocalStorageService,

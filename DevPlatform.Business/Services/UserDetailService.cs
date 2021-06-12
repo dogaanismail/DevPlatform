@@ -58,22 +58,19 @@ namespace DevPlatform.Business.Services
         /// <returns></returns>
         public AppUserDetailDto GetUserDetailByUserName(string userName)
         {
-            //TODO: Code needs to be refactored
             if (string.IsNullOrEmpty(userName))
-                throw new ArgumentNullException(nameof(userName));
+                return null;
 
-            var appUser = _appUserRepository.Table.LoadWith(t => t.UserDetail).FirstOrDefault(x => x.UserName == userName);
-
-            AppUserDetailDto dto = new()
+            var appUser = _appUserRepository.Table.Where(x => x.UserName == userName).Select(user => new AppUserDetailDto
             {
-                Id = appUser.Id,
-                UserName = appUser.UserName,
-                CoverPhotoUrl = appUser.UserDetail.CoverPhotoPath,
-                ProfilePhotoUrl = appUser.UserDetail.ProfilePhotoPath,
-                RegisteredDate = appUser.CreatedDate,
-            };
+                Id = user.Id,
+                UserName = user.UserName,
+                CoverPhotoUrl = user.UserDetail.CoverPhotoPath,
+                ProfilePhotoUrl = user.UserDetail.ProfilePhotoPath,
+                RegisteredDate = user.CreatedDate,
+            }).FirstOrDefault();
 
-            return dto;
+            return appUser;
         }
 
         /// <summary>

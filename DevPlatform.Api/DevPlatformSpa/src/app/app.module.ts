@@ -1,5 +1,3 @@
-import { FormatTitlePipe } from './core/pipes/format-title.pipe';
-
 /* Components */
 import { AppComponent } from './app.component';
 import { LoginComponent } from './components/authentication/login/login.component';
@@ -36,6 +34,7 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { StoryModule } from './components/storie/story.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DevPlatformMaterialModule } from './shared/modules/material.module';
+import { PipesModule } from './shared/modules/pipes.modules';
 import { NgxSpinnerModule } from "ngx-spinner";
 
 /* Store Mechanism */
@@ -58,14 +57,14 @@ export function getMetaReducers(saveKeys: string[], localStorageKey: string, sto
     LoginComponent,
     RegisterComponent,
     MultiStepFormComponent,
-    FormatTitlePipe,
-    SnowComponent
+    SnowComponent,
   ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
     DevPlatformMaterialModule,
+    PipesModule,
     NgxSpinnerModule,
     FormsModule,
     ReactiveFormsModule,

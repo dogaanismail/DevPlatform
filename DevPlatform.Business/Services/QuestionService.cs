@@ -117,30 +117,26 @@ namespace DevPlatform.Business.Services
         /// <returns></returns>
         public virtual QuestionListDto GetByIdAsDto(int id)
         {
-            Question getQuestion = _questionRepository.Table
-              .LoadWith(x => x.QuestionComments).ThenLoad(x => x.CreatedUser).ThenLoad(x => x.UserDetail)
-              .LoadWith(x => x.CreatedUser).ThenLoad(x => x.UserDetail).FirstOrDefault(y => y.Id == id);
-
-            QuestionListDto questionListDto = new()
+            var data = _questionRepository.Table.Where(x => x.Id == id).Select(p => new QuestionListDto
             {
-                Id = getQuestion.Id,
-                Title = getQuestion.Title,
-                Description = getQuestion.Description,
-                CreatedDate = getQuestion.CreatedDate,
-                CreatedByUserName = getQuestion.CreatedUser == null ? "" : getQuestion.CreatedUser.UserName,
-                CreatedByUserPhoto = getQuestion.CreatedUser.UserDetail.ProfilePhotoPath,
-                Comments = getQuestion.QuestionComments.ToList().Select(y => new QuestionCommentListDto
+                Id = p.Id,
+                Title = p.Title,
+                Description = p.Description,
+                CreatedDate = p.CreatedDate,
+                CreatedByUserName = p.CreatedUser.UserName ?? "",
+                CreatedByUserPhoto = p.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                Comments = p.QuestionComments.Select(y => new QuestionCommentListDto
                 {
                     Text = y.Text,
                     CreatedDate = y.CreatedDate,
                     Id = y.Id,
-                    CreatedByUserName = y.CreatedUser.UserName,
-                    CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath,
+                    CreatedByUserName = y.CreatedUser.UserName ?? "",
+                    CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
                     QuestionId = y.QuestionId
                 }).ToList()
-            };
+            }).OrderByDescending(sa => sa.CreatedDate).FirstOrDefault();
 
-            return questionListDto;
+            return data;
         }
 
         /// <summary>
@@ -149,27 +145,24 @@ namespace DevPlatform.Business.Services
         /// <returns></returns>
         public virtual IEnumerable<QuestionListDto> GetQuestionList()
         {
-            IEnumerable<QuestionListDto> data = _questionRepository.Table
-                .LoadWith(x => x.CreatedUser).ThenLoad(x => x.UserDetail)
-                .LoadWith(x => x.QuestionComments).LoadWith(x => x.CreatedUser).ThenLoad(x => x.UserDetail)
-                .Select(p => new QuestionListDto
+            var data = _questionRepository.Table.Select(p => new QuestionListDto
+            {
+                Id = p.Id,
+                Title = p.Title,
+                Description = p.Description,
+                CreatedDate = p.CreatedDate,
+                CreatedByUserName = p.CreatedUser.UserName ?? "",
+                CreatedByUserPhoto = p.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                Comments = p.QuestionComments.Select(y => new QuestionCommentListDto
                 {
-                    Id = p.Id,
-                    Title = p.Title,
-                    Description = p.Description,
-                    CreatedDate = p.CreatedDate,
-                    CreatedByUserName = p.CreatedUser == null ? "" : p.CreatedUser.UserName,
-                    CreatedByUserPhoto = p.CreatedUser == null ? "" : p.CreatedUser.UserDetail.ProfilePhotoPath,
-                    Comments = p.QuestionComments.ToList().Select(y => new QuestionCommentListDto
-                    {
-                        Text = y.Text,
-                        CreatedDate = y.CreatedDate,
-                        Id = y.Id,
-                        CreatedByUserName = y.CreatedUser.UserName,
-                        CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath,
-                        QuestionId = y.QuestionId
-                    }).ToList()
-                }).OrderByDescending(sa => sa.CreatedDate).AsEnumerable();
+                    Text = y.Text,
+                    CreatedDate = y.CreatedDate,
+                    Id = y.Id,
+                    CreatedByUserName = y.CreatedUser.UserName ?? "",
+                    CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                    QuestionId = y.QuestionId
+                }).ToList()
+            }).OrderByDescending(sa => sa.CreatedDate).AsEnumerable();
 
             return data;
         }
@@ -179,14 +172,28 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public virtual IEnumerable<Question> GetUserQuestionsByUserId(int userId)
+        public virtual IEnumerable<QuestionListDto> GetUserQuestionsByUserId(int userId)
         {
-            IEnumerable<Question> getQuestion = _questionRepository.Table
-              .LoadWith(x => x.QuestionComments).ThenLoad(x => x.CreatedUser)
-              .ThenLoad(x => x.UserDetail).LoadWith(x => x.CreatedUser).ThenLoad(x => x.UserDetail)
-              .Where(y => y.CreatedBy == userId).ToList();
+            var data = _questionRepository.Table.Where(que => que.CreatedBy == userId).Select(p => new QuestionListDto
+            {
+                Id = p.Id,
+                Title = p.Title,
+                Description = p.Description,
+                CreatedDate = p.CreatedDate,
+                CreatedByUserName = p.CreatedUser.UserName ?? "",
+                CreatedByUserPhoto = p.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                Comments = p.QuestionComments.Select(y => new QuestionCommentListDto
+                {
+                    Text = y.Text,
+                    CreatedDate = y.CreatedDate,
+                    Id = y.Id,
+                    CreatedByUserName = y.CreatedUser.UserName ?? "",
+                    CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                    QuestionId = y.QuestionId
+                }).ToList()
+            }).OrderByDescending(sa => sa.CreatedDate).AsEnumerable();
 
-            return getQuestion;
+            return data;
         }
 
         /// <summary>
@@ -196,30 +203,26 @@ namespace DevPlatform.Business.Services
         /// <returns></returns>
         public virtual IEnumerable<QuestionListDto> GetUserQuestionsWithDto(int userId)
         {
-            IEnumerable<QuestionListDto> getQuestions = _questionRepository.Table.
-             LoadWith(x => x.QuestionComments).ThenLoad(x => x.CreatedUser)
-             .ThenLoad(x => x.UserDetail).LoadWith(x => x.CreatedUser).ThenLoad(x => x.UserDetail)
-             .Where(y => y.CreatedBy == userId)
-              .Select(p => new QuestionListDto
-              {
-                  Id = p.Id,
-                  Title = p.Title,
-                  Description = p.Description,
-                  CreatedDate = p.CreatedDate,
-                  CreatedByUserName = p.CreatedUser == null ? "" : p.CreatedUser.UserName,
-                  CreatedByUserPhoto = p.CreatedUser == null ? "" : p.CreatedUser.UserDetail.ProfilePhotoPath,
-                  Comments = p.QuestionComments.ToList().Select(y => new QuestionCommentListDto
-                  {
-                      Text = y.Text,
-                      CreatedDate = y.CreatedDate,
-                      Id = y.Id,
-                      CreatedByUserName = y.CreatedUser.UserName,
-                      CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath,
-                      QuestionId = y.QuestionId
-                  }).ToList()
-              }).OrderByDescending(sa => sa.CreatedDate).AsEnumerable();
+            var data = _questionRepository.Table.Where(que => que.CreatedBy == userId).Select(p => new QuestionListDto
+            {
+                Id = p.Id,
+                Title = p.Title,
+                Description = p.Description,
+                CreatedDate = p.CreatedDate,
+                CreatedByUserName = p.CreatedUser.UserName ?? "",
+                CreatedByUserPhoto = p.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                Comments = p.QuestionComments.Select(y => new QuestionCommentListDto
+                {
+                    Text = y.Text,
+                    CreatedDate = y.CreatedDate,
+                    Id = y.Id,
+                    CreatedByUserName = y.CreatedUser.UserName ?? "",
+                    CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                    QuestionId = y.QuestionId
+                }).ToList()
+            }).OrderByDescending(sa => sa.CreatedDate).AsEnumerable();
 
-            return getQuestions;
+            return data;
         }
 
         /// <summary>

@@ -13,6 +13,7 @@ namespace DevPlatform.Framework.Controllers
     {
         #region Fields
         public ResultModel Result;
+
         #endregion
 
         #region Ctor

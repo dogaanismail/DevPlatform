@@ -26,6 +26,7 @@ namespace DevPlatform.Business.Services
         private readonly IRepository<Post> _postRepository;
         private readonly IRepository<AppUser> _userRepository;
         private readonly ILogService _logService;
+        private readonly IUserDetailService _userDetailService;
         #endregion
 
         #region Ctor
@@ -33,13 +34,15 @@ namespace DevPlatform.Business.Services
             IHttpContextAccessor httpContextAccessor,
             IRepository<AppUser> userRepository,
             IRepository<Post> postRepository,
-            ILogService logService)
+            ILogService logService,
+            IUserDetailService userDetailService)
         {
             _postCommentRepository = postCommentRepository;
             _httpContextAccessor = httpContextAccessor;
             _postRepository = postRepository;
             _userRepository = userRepository;
             _logService = logService;
+            _userDetailService = userDetailService;
         }
         #endregion
 
@@ -133,7 +136,7 @@ namespace DevPlatform.Business.Services
                 if (commentPost == null)
                     return ServiceResponse((CreateResponse)null, new List<string> { "Post not found!" });
 
-                var appUser = _userRepository.Table.FirstOrDefault(x => x.UserName == _httpContextAccessor.HttpContext.User.Identity.Name);
+                var appUser = _userDetailService.GetUserDetailByUserName(_httpContextAccessor.HttpContext?.User?.Identity?.Name);
 
                 if (appUser == null)
                     return ServiceResponse((CreateResponse)null, new List<string> { "User not found!" });
@@ -158,7 +161,7 @@ namespace DevPlatform.Business.Services
                     PostId = newComment.PostId,
                     CreatedDate = newComment.CreatedDate,
                     CreatedByUserName = appUser.UserName,
-                    CreatedByUserPhoto = appUser.UserDetail?.ProfilePhotoPath
+                    CreatedByUserPhoto = appUser.ProfilePhotoUrl
                 };
 
                 return serviceResponse;

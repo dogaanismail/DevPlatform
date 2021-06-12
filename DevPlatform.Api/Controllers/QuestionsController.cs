@@ -72,6 +72,7 @@ namespace DevPlatform.Api.Controllers
         public virtual JsonResult GetQuestionList()
         {
             var data = _questionService.GetQuestionList();
+
             return OkResponse(data);
         }
 

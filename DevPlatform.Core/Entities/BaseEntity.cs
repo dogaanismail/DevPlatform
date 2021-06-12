@@ -15,7 +15,7 @@ namespace DevPlatform.Core.Entities
         /// <summary>
         /// //By using CreatedUser integration, an owner of post,postComment,postLike that has been created, can be found easily thanks to it.
         /// </summary>
-        [ForeignKey("CreatedUser")]  
+        [ForeignKey("CreatedUser")]
         public virtual int? CreatedBy { get; set; }
 
         public DateTime CreatedDate { get; set; }
@@ -23,7 +23,7 @@ namespace DevPlatform.Core.Entities
         /// <summary>
         /// //ModifiedUser can be used in AdminUI.
         /// </summary>
-        [ForeignKey("ModifiedUser")]  
+        [ForeignKey("ModifiedUser")]
         public virtual int? ModifiedBy { get; set; }
 
         public DateTime? ModifiedDate { get; set; }
@@ -31,7 +31,7 @@ namespace DevPlatform.Core.Entities
         /// <summary>
         /// //This can be Enumerations.
         /// </summary>
-        public int? StatusId { get; set; } 
+        public int? StatusId { get; set; }
 
         public BaseEntity()
         {

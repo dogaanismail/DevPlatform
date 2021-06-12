@@ -19,7 +19,7 @@
   <!-- Content -->
   <div class="question-text">
 
-    <div [innerHTML]="question.description"></div>
+    <div [innerHTML]="question.description | noSanitize"></div>
 
     <div class="tags">
       <span class="tag">stylesheets</span>

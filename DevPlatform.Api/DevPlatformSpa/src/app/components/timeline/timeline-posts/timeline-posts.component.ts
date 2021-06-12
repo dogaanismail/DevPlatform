@@ -1,5 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Post } from 'src/app/models/post/post';
+
+/* Models */
+import { Post } from '../../../models/post/post';
+import { SignedUser } from '../../../models/user/signedUser';
 
 /* NgRx */
 import { Store } from '@ngrx/store';
@@ -20,6 +23,7 @@ export class TimelinePostsComponent implements OnInit {
   pageTitle = 'Timeline';
   @Input() posts: Post[];
   @Input() newPost: boolean;
+  @Input() signedUser: SignedUser;
 
   ngOnInit() {
   }

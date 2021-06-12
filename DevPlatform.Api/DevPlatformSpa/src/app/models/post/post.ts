@@ -1,3 +1,5 @@
+import { PostComment } from "./postComment";
+
 export class Post {
     Id: number;
     text: string;
@@ -7,6 +9,6 @@ export class Post {
     videoUrl: string;
     createdDate: Date;
     postType: number;
-    comments: any = [];
+    comments: PostComment[] = [];
     fancyboxData: string;
 }

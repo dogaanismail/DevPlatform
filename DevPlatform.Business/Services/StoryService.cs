@@ -126,36 +126,29 @@ namespace DevPlatform.Business.Services
         /// <returns></returns>
         public StoryListDto GetByIdAsDto(int id)
         {
-            Story getStory = _storyRepository.Table.
-                LoadWith(x => x.StoryImages)
-                .LoadWith(x => x.StoryVideos)
-                .LoadWith(x => x.StoryComments).ThenLoad(x => x.CreatedUser).ThenLoad(x => x.UserDetail)
-                .LoadWith(x => x.CreatedUser).ThenLoad(x => x.UserDetail).FirstOrDefault(y => y.Id == id);
-
-            StoryListDto storyListDto = new StoryListDto
+            var data = _storyRepository.Table.Where(x => x.Id == id).Select(p => new StoryListDto
             {
-                Id = getStory.Id,
-                Title = getStory.Title,
-                Description = getStory.Description,
-                CreatedDate = getStory.CreatedDate,
-                ImageUrl = getStory.StoryImages.Count() == 0 ? "" : getStory.StoryImages.FirstOrDefault().ImageUrl, //TODO It can be more photos of the story
-                VideoUrl = getStory.StoryVideos.Count() == 0 ? "" : getStory.StoryVideos.FirstOrDefault().VideoUrl, //TODO It can be more videos of the story
-                CreatedByUserName = getStory.CreatedUser == null ? "" : getStory.CreatedUser.UserName,
-                CreatedByUserPhoto = getStory.CreatedUser.UserDetail.ProfilePhotoPath,
-                StoryType = getStory.StoryType,
-                Comments = getStory.StoryComments.ToList().Select(y => new StoryCommentListDto
+                Id = p.Id,
+                Title = p.Title,
+                Description = p.Description,
+                CreatedDate = p.CreatedDate,
+                ImageUrl = p.StoryImages.FirstOrDefault().ImageUrl ?? "",
+                VideoUrl = p.StoryVideos.FirstOrDefault().VideoUrl ?? "",
+                CreatedByUserName = p.CreatedUser.UserName ?? "",
+                CreatedByUserPhoto = p.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                StoryType = p.StoryType,
+                Comments = p.StoryComments.Select(y => new StoryCommentListDto
                 {
                     Text = y.Text,
                     CreatedDate = y.CreatedDate,
                     Id = y.Id,
-                    CreatedByUserName = y.CreatedUser.UserName,
-                    CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath,
+                    CreatedByUserName = y.CreatedUser.UserName ?? "",
+                    CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
                     StoryId = y.StoryId
                 }).ToList()
-            };
+            }).OrderByDescending(sa => sa.CreatedDate).FirstOrDefault();
 
-            return storyListDto;
-            //TODO must be reverted to LoadWith LinqToDB extension method
+            return data;
         }
 
         /// <summary>
@@ -164,34 +157,27 @@ namespace DevPlatform.Business.Services
         /// <returns></returns>
         public IEnumerable<StoryListDto> GetStoryList()
         {
-            IEnumerable<StoryListDto> data = _storyRepository.Table
-                .LoadWith(x => x.CreatedUser).ThenLoad(x => x.UserDetail)
-                .LoadWith(x => x.StoryImages).LoadWith(x => x.StoryVideos)
-                .LoadWith(x => x.StoryComments).ThenLoad(x => x.CreatedUser).ThenLoad(x => x.UserDetail)
-
-                .Select(p => new StoryListDto
+            var data = _storyRepository.Table.Select(p => new StoryListDto
+            {
+                Id = p.Id,
+                Title = p.Title,
+                Description = p.Description,
+                CreatedDate = p.CreatedDate,
+                ImageUrl = p.StoryImages.FirstOrDefault().ImageUrl ?? "",
+                VideoUrl = p.StoryVideos.FirstOrDefault().VideoUrl ?? "",
+                CreatedByUserName = p.CreatedUser.UserName ?? "",
+                CreatedByUserPhoto = p.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                StoryType = p.StoryType,
+                Comments = p.StoryComments.Select(y => new StoryCommentListDto
                 {
-                    Id = p.Id,
-                    Title = p.Title,
-                    Description = p.Description,
-                    CreatedDate = p.CreatedDate,
-                    ImageUrl = p.StoryImages.Count() == 0 ? "" : p.StoryImages.FirstOrDefault().ImageUrl, //TODO It can be more photos of the story
-                    VideoUrl = p.StoryVideos.Count() == 0 ? "" : p.StoryVideos.FirstOrDefault().VideoUrl, //TODO It can be more videos of the story
-                    CreatedByUserName = p.CreatedUser == null ? "" : p.CreatedUser.UserName,
-                    CreatedByUserPhoto = p.CreatedUser == null ? "" : p.CreatedUser.UserDetail.ProfilePhotoPath,
-                    StoryType = p.StoryType,
-                    Comments = p.StoryComments.ToList().Select(y => new StoryCommentListDto
-                    {
-                        Text = y.Text,
-                        CreatedDate = y.CreatedDate,
-                        Id = y.Id,
-                        CreatedByUserName = y.CreatedUser.UserName,
-                        CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath,
-                        StoryId = y.StoryId
-                    }).ToList()
-
-                    //TODO must be reverted to LoadWith LinqToDB extension method
-                }).OrderByDescending(sa => sa.CreatedDate).AsEnumerable();
+                    Text = y.Text,
+                    CreatedDate = y.CreatedDate,
+                    Id = y.Id,
+                    CreatedByUserName = y.CreatedUser.UserName ?? "",
+                    CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                    StoryId = y.StoryId
+                }).ToList()
+            }).OrderByDescending(sa => sa.CreatedDate).AsEnumerable();
 
             return data;
         }
@@ -218,35 +204,29 @@ namespace DevPlatform.Business.Services
         /// <returns></returns>
         public IEnumerable<StoryListDto> GetUserStoriesWithDto(int userId)
         {
-            IEnumerable<StoryListDto> getStory = _storyRepository.Table.LoadWith(x => x.StoryImages)
-             .LoadWith(x => x.StoryVideos).LoadWith(x => x.StoryComments).ThenLoad(x => x.CreatedUser)
-             .ThenLoad(x => x.UserDetail).LoadWith(x => x.CreatedUser).ThenLoad(x => x.UserDetail)
-             .Where(y => y.CreatedBy == userId)
-              .Select(p => new StoryListDto
-              {
-                  Id = p.Id,
-                  Title = p.Title,
-                  Description = p.Description,
-                  CreatedDate = p.CreatedDate,
-                  ImageUrl = p.StoryImages.Count() == 0 ? "" : p.StoryImages.FirstOrDefault().ImageUrl, //TODO It can be more photos of the story
-                  VideoUrl = p.StoryVideos.Count() == 0 ? "" : p.StoryVideos.FirstOrDefault().VideoUrl, //TODO It can be more videos of the story
-                  CreatedByUserName = p.CreatedUser == null ? "" : p.CreatedUser.UserName,
-                  CreatedByUserPhoto = p.CreatedUser == null ? "" : p.CreatedUser.UserDetail.ProfilePhotoPath,
-                  StoryType = p.StoryType,
-                  Comments = p.StoryComments.ToList().Select(y => new StoryCommentListDto
-                  {
-                      Text = y.Text,
-                      CreatedDate = y.CreatedDate,
-                      Id = y.Id,
-                      CreatedByUserName = y.CreatedUser.UserName,
-                      CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath,
-                      StoryId = y.StoryId
-                  }).ToList()
+            var data = _storyRepository.Table.Where(x => x.CreatedBy == userId).Select(p => new StoryListDto
+            {
+                Id = p.Id,
+                Title = p.Title,
+                Description = p.Description,
+                CreatedDate = p.CreatedDate,
+                ImageUrl = p.StoryImages.FirstOrDefault().ImageUrl ?? "",
+                VideoUrl = p.StoryVideos.FirstOrDefault().VideoUrl ?? "",
+                CreatedByUserName = p.CreatedUser.UserName ?? "",
+                CreatedByUserPhoto = p.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                StoryType = p.StoryType,
+                Comments = p.StoryComments.Select(y => new StoryCommentListDto
+                {
+                    Text = y.Text,
+                    CreatedDate = y.CreatedDate,
+                    Id = y.Id,
+                    CreatedByUserName = y.CreatedUser.UserName ?? "",
+                    CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                    StoryId = y.StoryId
+                }).ToList()
+            }).OrderByDescending(sa => sa.CreatedDate).AsEnumerable();
 
-                  //TODO must be reverted to LoadWith LinqToDB extension method
-              }).OrderByDescending(sa => sa.CreatedDate).AsEnumerable();
-
-            return getStory;
+            return data;
         }
 
         /// <summary>

@@ -79,8 +79,7 @@ namespace DevPlatform.Business.Services
             if (string.IsNullOrEmpty(email))
                 throw new ArgumentNullException(nameof(email));
 
-            return _appUserRepository.Table.LoadWith(detail => detail.UserDetail)
-                 .Where(x => x.Email == email).FirstOrDefault();
+            return _appUserRepository.Table.LoadWith(detail => detail.UserDetail).Where(x => x.Email == email).FirstOrDefault();
         }
 
         /// <summary>
@@ -90,8 +89,7 @@ namespace DevPlatform.Business.Services
         /// <returns></returns>
         public AppUser FindById(int id)
         {
-            return _appUserRepository.Table.LoadWith(detail => detail.UserDetail)
-                .Where(x => x.Id == id).FirstOrDefault();
+            return _appUserRepository.Table.LoadWith(detail => detail.UserDetail).Where(x => x.Id == id).FirstOrDefault();
         }
 
         /// <summary>
@@ -104,8 +102,7 @@ namespace DevPlatform.Business.Services
             if (string.IsNullOrEmpty(userName))
                 throw new ArgumentNullException(nameof(userName));
 
-            return _appUserRepository.Table.LoadWith(detail => detail.UserDetail)
-                .Where(x => x.UserName == userName).FirstOrDefault();
+            return _appUserRepository.Table.LoadWith(detail => detail.UserDetail).Where(x => x.UserName == userName).FirstOrDefault();
         }
 
 

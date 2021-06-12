@@ -138,35 +138,29 @@ namespace DevPlatform.Business.Services
         /// <returns></returns>
         public PostListDto GetByIdAsDto(int id)
         {
-            Post getPost = _postRepository.Table.
-                LoadWith(x => x.PostImages)
-                .LoadWith(x => x.PostVideos)
-                .LoadWith(x => x.PostComments).ThenLoad(x => x.CreatedUser).ThenLoad(x => x.UserDetail)
-                .LoadWith(x => x.CreatedUser).ThenLoad(x => x.UserDetail).FirstOrDefault(y => y.Id == id);
-
-            PostListDto postListDto = new PostListDto
+            var data = _postRepository.Table.Where(x => x.Id == id).Select(p => new PostListDto
             {
-                Id = getPost.Id,
-                Text = getPost.Text,
-                CreatedDate = getPost.CreatedDate,
-                ImageUrlList = getPost.PostImages.Count > 0 ? getPost.PostImages.Select(x => x.ImageUrl).ToList() : new List<string>(),
-                VideoUrl = getPost.PostVideos.Count() == 0 ? "" : getPost.PostVideos.FirstOrDefault().VideoUrl,
-                CreatedByUserName = getPost.CreatedUser == null ? "" : getPost.CreatedUser.UserName,
-                CreatedByUserPhoto = getPost.CreatedUser.UserDetail.ProfilePhotoPath,
-                PostType = getPost.PostType,
-                Comments = getPost.PostComments.ToList().Select(y => new PostCommentListDto
+                Id = p.Id,
+                Text = p.Text,
+                CreatedDate = p.CreatedDate,
+                ImageUrlList = p.PostImages.Select(x => x.ImageUrl).ToList(),
+                VideoUrl = p.PostVideos.FirstOrDefault().VideoUrl ?? "",
+                CreatedByUserName = p.CreatedUser.UserName ?? "",
+                CreatedByUserPhoto = p.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                PostType = p.PostType,
+                FancyboxData = $"post{p.Id}",
+                Comments = p.PostComments.Select(y => new PostCommentListDto
                 {
                     Text = y.Text,
                     CreatedDate = y.CreatedDate,
                     Id = y.Id,
-                    CreatedByUserName = y.CreatedUser.UserName,
-                    CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath,
+                    CreatedByUserName = y.CreatedUser.UserName ?? "",
+                    CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
                     PostId = y.PostId
                 }).ToList()
-            };
+            }).OrderByDescending(sa => sa.CreatedDate).FirstOrDefault();
 
-            return postListDto;
-            //TODO must be reverted to LoadWith LinqToDB extension method
+            return data;
         }
 
         /// <summary>
@@ -175,33 +169,27 @@ namespace DevPlatform.Business.Services
         /// <returns></returns>
         public IEnumerable<PostListDto> GetPostList()
         {
-            IEnumerable<PostListDto> data = _postRepository.Table
-                .LoadWith(x => x.CreatedUser).ThenLoad(x => x.UserDetail)
-                .LoadWith(x => x.PostImages).LoadWith(x => x.PostVideos)
-                .LoadWith(x => x.PostComments).LoadWith(x => x.CreatedUser).ThenLoad(x => x.UserDetail)
-                .Select(p => new PostListDto
+            var data = _postRepository.Table.Select(p => new PostListDto
+            {
+                Id = p.Id,
+                Text = p.Text,
+                CreatedDate = p.CreatedDate,
+                ImageUrlList = p.PostImages.Select(x => x.ImageUrl).ToList(),
+                VideoUrl = p.PostVideos.FirstOrDefault().VideoUrl ?? "",
+                CreatedByUserName = p.CreatedUser.UserName ?? "",
+                CreatedByUserPhoto = p.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                PostType = p.PostType,
+                FancyboxData = $"post{p.Id}",
+                Comments = p.PostComments.Select(y => new PostCommentListDto
                 {
-                    Id = p.Id,
-                    Text = p.Text,
-                    CreatedDate = p.CreatedDate,
-                    ImageUrlList = p.PostImages.Count > 0 ? p.PostImages.Select(x => x.ImageUrl).ToList() : new List<string>(),
-                    VideoUrl = p.PostVideos.Count() == 0 ? "" : p.PostVideos.FirstOrDefault().VideoUrl,
-                    CreatedByUserName = p.CreatedUser == null ? "" : p.CreatedUser.UserName,
-                    CreatedByUserPhoto = p.CreatedUser == null ? "" : p.CreatedUser.UserDetail.ProfilePhotoPath,
-                    PostType = p.PostType,
-                    FancyboxData = $"post{p.Id}",
-                    Comments = p.PostComments.ToList().Select(y => new PostCommentListDto
-                    {
-                        Text = y.Text,
-                        CreatedDate = y.CreatedDate,
-                        Id = y.Id,
-                        CreatedByUserName = y.CreatedUser.UserName,
-                        CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath,
-                        PostId = y.PostId
-                    }).ToList()
-
-                    //TODO must be reverted to LoadWith LinqToDB extension method
-                }).OrderByDescending(sa => sa.CreatedDate).AsEnumerable();
+                    Text = y.Text,
+                    CreatedDate = y.CreatedDate,
+                    Id = y.Id,
+                    CreatedByUserName = y.CreatedUser.UserName ?? "",
+                    CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                    PostId = y.PostId
+                }).ToList()
+            }).OrderByDescending(sa => sa.CreatedDate).AsEnumerable();
 
             return data;
         }
@@ -228,34 +216,29 @@ namespace DevPlatform.Business.Services
         /// <returns></returns>
         public IEnumerable<PostListDto> GetUserPostsWithDto(int userId)
         {
-            IEnumerable<PostListDto> getPost = _postRepository.Table.LoadWith(x => x.PostImages)
-             .LoadWith(x => x.PostVideos).LoadWith(x => x.PostComments).ThenLoad(x => x.CreatedUser)
-             .ThenLoad(x => x.UserDetail).LoadWith(x => x.CreatedUser).ThenLoad(x => x.UserDetail)
-             .Where(y => y.CreatedBy == userId)
-              .Select(p => new PostListDto
-              {
-                  Id = p.Id,
-                  Text = p.Text,
-                  CreatedDate = p.CreatedDate,
-                  ImageUrlList = p.PostImages.Count > 0 ? p.PostImages.Select(x => x.ImageUrl).ToList() : new List<string>(),
-                  VideoUrl = p.PostVideos.Count() == 0 ? "" : p.PostVideos.FirstOrDefault().VideoUrl,
-                  CreatedByUserName = p.CreatedUser == null ? "" : p.CreatedUser.UserName,
-                  CreatedByUserPhoto = p.CreatedUser == null ? "" : p.CreatedUser.UserDetail.ProfilePhotoPath,
-                  PostType = p.PostType,
-                  Comments = p.PostComments.ToList().Select(y => new PostCommentListDto
-                  {
-                      Text = y.Text,
-                      CreatedDate = y.CreatedDate,
-                      Id = y.Id,
-                      CreatedByUserName = y.CreatedUser.UserName,
-                      CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath,
-                      PostId = y.PostId
-                  }).ToList()
+            var data = _postRepository.Table.Where(x => x.CreatedBy == userId).Select(p => new PostListDto
+            {
+                Id = p.Id,
+                Text = p.Text,
+                CreatedDate = p.CreatedDate,
+                ImageUrlList = p.PostImages.Select(x => x.ImageUrl).ToList(),
+                VideoUrl = p.PostVideos.FirstOrDefault().VideoUrl ?? "",
+                CreatedByUserName = p.CreatedUser.UserName ?? "",
+                CreatedByUserPhoto = p.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                PostType = p.PostType,
+                FancyboxData = $"post{p.Id}",
+                Comments = p.PostComments.Select(y => new PostCommentListDto
+                {
+                    Text = y.Text,
+                    CreatedDate = y.CreatedDate,
+                    Id = y.Id,
+                    CreatedByUserName = y.CreatedUser.UserName ?? "",
+                    CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                    PostId = y.PostId
+                }).ToList()
+            }).OrderByDescending(sa => sa.CreatedDate).AsEnumerable();
 
-                  //TODO must be reverted to LoadWith LinqToDB extension method
-              }).OrderByDescending(sa => sa.CreatedDate).AsEnumerable();
-
-            return getPost;
+            return data;
         }
 
         /// <summary>

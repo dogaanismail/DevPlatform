@@ -61,7 +61,7 @@ namespace DevPlatform.Business.Interfaces
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        IEnumerable<Question> GetUserQuestionsByUserId(int userId);
+        IEnumerable<QuestionListDto> GetUserQuestionsByUserId(int userId);
 
         /// <summary>
         /// Returns posts of user by userId with dto

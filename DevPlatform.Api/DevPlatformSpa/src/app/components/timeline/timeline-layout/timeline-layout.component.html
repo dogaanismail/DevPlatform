@@ -32,10 +32,14 @@
             </div>
           </article>
 
-          <app-timeline-create-post [signedUser]="signedUser$ | async">
+          <app-timeline-create-post 
+          [signedUser]="signedUser$ | async">
           </app-timeline-create-post>
 
-          <app-timeline-posts [posts]="posts$ | async" [newPost]="newPost$ | async">
+          <app-timeline-posts 
+          [posts]="posts$ | async" 
+          [newPost]="newPost$ | async"
+          [signedUser]="signedUser$ | async">
           </app-timeline-posts>
 
         </div>
