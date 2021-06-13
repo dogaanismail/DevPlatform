@@ -125,8 +125,8 @@ namespace DevPlatform.Business.Services
 
             try
             {
-                if (model.PostId == 0)
-                    return ServiceResponse((CreateResponse)null, new List<string> { "Text can not be null !" });
+                if (model.PostId < 1)
+                    return ServiceResponse((CreateResponse)null, new List<string> { "PostId can not be null !" });
 
                 if (string.IsNullOrEmpty(model.Text))
                     return ServiceResponse((CreateResponse)null, new List<string> { "Text can not be null !" });

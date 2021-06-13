@@ -8,6 +8,7 @@ import { Action } from '@ngrx/store';
 import { Actions, createEffect, Effect, ofType } from '@ngrx/effects';
 import * as postActions from '../actions/post.actions';
 import { Post } from 'src/app/models/post/post';
+import { PostComment } from 'src/app/models/post/postComment';
 
 @Injectable()
 export class PostEffects {
@@ -57,7 +58,8 @@ export class PostEffects {
         map((action: postActions.CreateComment) => action.payload),
         mergeMap((comment: any) =>
             this.postService.createComment(comment).pipe(
-                map((newComment: any) => (new postActions.CreateCommentSuccess(newComment.result))),
+                map((newComment: any) => newComment.status ? new postActions.CreateCommentSuccess(newComment.result as PostComment) :
+                    new postActions.CreateCommentFail(newComment.result.message)),
                 catchError(err => of(new postActions.CreateCommentFail(err)))
             )
         )

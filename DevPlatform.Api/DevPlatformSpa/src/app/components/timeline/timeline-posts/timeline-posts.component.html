@@ -1,5 +1,5 @@
 <!--preloader-->
-<div id="spinner-wrapper" *ngIf="!posts || newPost">
+<div id="spinner-wrapper" *ngIf="!posts || newPost || newComment">
   <div class="spinner"></div>
 </div>
 
@@ -12,8 +12,7 @@
         <!-- User meta -->
         <div class="user-block">
           <div class="image">
-            <img src="{{post.createdByUserPhoto}}" data-demo-src="{{post.createdByUserPhoto}}" data-user-popover="1"
-              alt="">
+            <img src="{{post.createdByUserPhoto}}" data-demo-src="{{post.createdByUserPhoto}}" title="{{post.createdByUserName}}">
           </div>
           <div class="user-info">
             <a href="#">{{post.createdByUserName}}</a>

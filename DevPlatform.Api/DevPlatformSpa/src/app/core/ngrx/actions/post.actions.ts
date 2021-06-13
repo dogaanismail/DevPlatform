@@ -1,4 +1,5 @@
 import { Action } from '@ngrx/store';
+import { PostComment } from 'src/app/models/post/postComment';
 import { Post } from '../../../models/post/post';
 
 export enum PostActionTypes {
@@ -89,7 +90,7 @@ export class CreateComment implements Action {
 export class CreateCommentSuccess implements Action {
     readonly type = PostActionTypes.CreateCommentSuccess;
 
-    constructor(public payload: any) { }
+    constructor(public payload: PostComment) { }
 }
 
 export class CreateCommentFail implements Action {

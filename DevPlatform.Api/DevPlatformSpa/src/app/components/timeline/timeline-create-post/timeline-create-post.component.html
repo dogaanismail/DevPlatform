@@ -45,8 +45,16 @@
           <div class="compose-form">
             <img src="{{signedUser.profilePhotoUrl}}" data-demo-src="{{signedUser.profilePhotoUrl}}" alt="" title="{{signedUser.userName}}" >
             <div class="control">
-              <textarea class="textarea" (click)="makeHighlighted()" rows="3" [(ngModel)]="postCreate.text" required
-                name="text" placeholder="Write something about you..."></textarea>
+              <textarea 
+              class="textarea" 
+              (click)="makeHighlighted()" 
+              rows="3" 
+              [(ngModel)]="postCreate.text" 
+              required
+              name="text" 
+              [ngModelOptions]="{standalone: true}"
+              placeholder="Write something about you...">
+            </textarea>
             </div>
           </div>
         </div>

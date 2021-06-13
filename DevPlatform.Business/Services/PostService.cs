@@ -183,11 +183,11 @@ namespace DevPlatform.Business.Services
                 Comments = p.PostComments.Select(y => new PostCommentListDto
                 {
                     Text = y.Text,
-                    CreatedDate = y.CreatedDate,
                     Id = y.Id,
+                    PostId = y.PostId,
+                    CreatedDate = y.CreatedDate,
                     CreatedByUserName = y.CreatedUser.UserName ?? "",
-                    CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
-                    PostId = y.PostId
+                    CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath ?? ""
                 }).ToList()
             }).OrderByDescending(sa => sa.CreatedDate).AsEnumerable();
 

@@ -32,6 +32,7 @@ export class TimelineLayoutComponent implements OnInit {
   newPost$: Observable<boolean>;
   errorMessage$: Observable<string>;
   signedUser$: Observable<SignedUser>;
+  newComment$: Observable<boolean>;
 
   constructor(
     private modalService: ModalService,
@@ -46,6 +47,7 @@ export class TimelineLayoutComponent implements OnInit {
     this.newPost$ = this.postStore.pipe(select(fromPost.getIsNewPost));
     this.errorMessage$ = this.postStore.pipe(select(fromPost.getError));
     this.signedUser$ = this.userStore.pipe(select(fromUser.getSignedUser)) as Observable<SignedUser>;
+    this.newComment$ = this.postStore.pipe(select(fromPost.getIsNewComment));
   }
 
   closeModal(id: string) {

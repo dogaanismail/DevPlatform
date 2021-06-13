@@ -29,7 +29,8 @@
             <div class="album-form">
               <div class="control">
                 <input type="text" [(ngModel)]="albumCreate.name" name="name" required
-                  class="input is-sm no-radius is-fade" placeholder="Album name">
+                  class="input is-sm no-radius is-fade" [ngModelOptions]="{standalone: true}" placeholder="Album name">
+
                 <div class="icon">
                   <i data-feather="camera"></i>
                 </div>
@@ -39,8 +40,8 @@
                   name="describe"></textarea>
               </div>
               <div class="control">
-                <input type="text" [(ngModel)]="albumCreate.place" name="place" required
-                  class="input is-sm no-radius is-fade" placeholder="Place">
+                <input type="text" [(ngModel)]="albumCreate.place" [ngModelOptions]="{standalone: true}" name="place"
+                  required class="input is-sm no-radius is-fade" placeholder="Place">
                 <div class="icon">
                   <i data-feather="map-pin"></i>
                 </div>
@@ -57,8 +58,9 @@
 
               <p>Set a date for your album. You can always change it later.</p>
               <div class="control is-hidden">
-                <input id="album-datepicker" type="text" [(ngModel)]="albumCreate.date" name="date" required
-                  class="input is-sm is-fade" placeholder="Select a date">
+                <input id="album-datepicker" type="text" [(ngModel)]="albumCreate.date"
+                  [ngModelOptions]="{standalone: true}" name="date" required class="input is-sm is-fade"
+                  placeholder="Select a date">
                 <div class="icon">
                   <i data-feather="calendar"></i>
                 </div>
@@ -76,8 +78,9 @@
               <p>Tag friends in this album. Tagged friends can see photos they are tagged in.</p>
               <div class="field is-autocomplete is-hidden">
                 <div class="control">
-                  <input id="create-album-friends-autocpl" [(ngModel)]="albumCreate.tag" required name="tag" type="text"
-                    class="input is-sm is-fade" placeholder="Search for friends">
+                  <input id="create-album-friends-autocpl" [(ngModel)]="albumCreate.tag"
+                    [ngModelOptions]="{standalone: true}" required name="tag" type="text" class="input is-sm is-fade"
+                    placeholder="Search for friends">
                   <div class="icon">
                     <i data-feather="search"></i>
                   </div>

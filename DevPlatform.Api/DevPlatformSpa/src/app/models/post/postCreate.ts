@@ -3,5 +3,5 @@ export class PostCreate {
     photo: File;
     video: File;
     IsPost: boolean;
-    IsStory:boolean;
+    IsStory: boolean;
 }

@@ -1,17 +1,19 @@
 <!-- Comment -->
 <div class="media is-comment" *ngFor="let comment of commentList">
-  <!-- User image -->
+
   <div class="media-left">
     <div class="image">
-      <img src="https://via.placeholder.com/300x300" data-demo-src="assets/img/avatars/dan.jpg" data-user-popover="1"
-        alt="" title="{{comment.createdByUserName}}">
+      <img src="{{comment.createdByUserPhoto}}" data-demo-src="{{comment.createdByUserPhoto}}" title="{{comment.createdByUserName}}">
     </div>
   </div>
-  <!-- Content -->
+
+
   <div class="media-content">
+    
     <a href="#">{{comment.createdByUserName}}</a>
     <span class="time">{{comment.createdDate | date:'short' }}</span>
     <p>{{comment.text}}</p>
+
     <!-- Actions -->
     <div class="controls">
       <div class="like-count">
@@ -32,92 +34,9 @@
       </div>
     </div>
 
-    <!-- Nested Comment -->
-    <div class="media is-comment">
-      <!-- User image -->
-      <div class="media-left">
-        <div class="image">
-          <img src="https://via.placeholder.com/300x300" data-demo-src="assets/img/avatars/david.jpg"
-            data-user-popover="4" alt="">
-        </div>
-      </div>
-      <!-- Content -->
-      <div class="media-content">
-        <a href="#">David Kim</a>
-        <span class="time">15 minutes ago</span>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempo incididunt ut labore et
-          dolore magna aliqua.</p>
-        <!-- Actions -->
-        <div class="controls">
-          <div class="like-count">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-              class="feather feather-thumbs-up">
-              <path
-                d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3">
-              </path>
-            </svg>
-            <span>0</span>
-          </div>
-          <div class="reply">
-            <a href="#">Reply</a>
-          </div>
-        </div>
-      </div>
-      <!-- Right side dropdown -->
-      <div class="media-right">
-        <div class="dropdown is-spaced is-right is-neutral dropdown-trigger">
-          <div>
-            <div class="button">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                class="feather feather-more-vertical">
-                <circle cx="12" cy="12" r="1"></circle>
-                <circle cx="12" cy="5" r="1"></circle>
-                <circle cx="12" cy="19" r="1"></circle>
-              </svg>
-            </div>
-          </div>
-          <div class="dropdown-menu" role="menu">
-            <div class="dropdown-content">
-              <a class="dropdown-item">
-                <div class="media">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    class="feather feather-x">
-                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                  </svg>
-                  <div class="media-content">
-                    <h3>Hide</h3>
-                    <small>Hide this comment.</small>
-                  </div>
-                </div>
-              </a>
-              <div class="dropdown-divider"></div>
-              <a href="#" class="dropdown-item">
-                <div class="media">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    class="feather feather-flag">
-                    <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
-                    <line x1="4" y1="22" x2="4" y2="15"></line>
-                  </svg>
-                  <div class="media-content">
-                    <h3>Report</h3>
-                    <small>Report this comment.</small>
-                  </div>
-                </div>
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- /Nested Comment -->
-
   </div>
-  <!-- Right side dropdown -->
+
+ 
   <div class="media-right">
     <!-- /partials/pages/feed/dropdowns/comment-dropdown.html -->
     <div class="dropdown is-spaced is-right is-neutral dropdown-trigger">
@@ -168,5 +87,6 @@
     </div>
 
   </div>
+
 </div>
 <!-- /Comment -->

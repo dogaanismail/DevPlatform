@@ -1,3 +1,4 @@
+import { PostComment } from 'src/app/models/post/postComment';
 import { Post } from '../../../models/post/post';
 
 import * as fromRoot from '../../ngrx/states/app.state';
@@ -98,11 +99,13 @@ export function postReducer(state = initialState, action: PostActions): PostStat
             };
 
         case PostActionTypes.CreateCommentSuccess:
-            const post: Post = state.posts.filter((item: any) => item.id == action.payload.postId)[0];
-            post.comments.push(action.payload);
+            const postIndex: number = state.posts.findIndex((item: any) => item.id == action.payload.postId);
             return {
                 ...state,
-                posts: [...state.posts, action.payload],
+                posts: [{
+                    ...state.posts[postIndex],
+                    comments: [...state.posts[postIndex].comments, action.payload]
+                }],
                 error: '',
                 isNewComment: false
             };

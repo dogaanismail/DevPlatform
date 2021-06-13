@@ -23,6 +23,7 @@ export class TimelinePostsComponent implements OnInit {
   pageTitle = 'Timeline';
   @Input() posts: Post[];
   @Input() newPost: boolean;
+  @Input() newComment: boolean;
   @Input() signedUser: SignedUser;
 
   ngOnInit() {
