@@ -100,12 +100,17 @@ export function postReducer(state = initialState, action: PostActions): PostStat
 
         case PostActionTypes.CreateCommentSuccess:
             const postIndex: number = state.posts.findIndex((item: any) => item.id == action.payload.postId);
+
             return {
                 ...state,
-                posts: [{
-                    ...state.posts[postIndex],
-                    comments: [...state.posts[postIndex].comments, action.payload]
-                }],
+                posts: [
+                    ...state.posts.slice(0, postIndex),
+                    {
+                        ...state.posts[postIndex],
+                        comments: [...state.posts[postIndex].comments, action.payload],
+                    },
+                    ...state.posts.slice(postIndex + 1)
+                ],
                 error: '',
                 isNewComment: false
             };
