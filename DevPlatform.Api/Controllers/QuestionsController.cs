@@ -76,6 +76,15 @@ namespace DevPlatform.Api.Controllers
             return OkResponse(data);
         }
 
+        [HttpGet("id/{id}")]
+        [AllowAnonymous]
+        public virtual JsonResult GetById(int id)
+        {
+            var data = _questionService.GetByIdAsDto(id);
+
+            return OkResponse(data);
+        }
+
         [HttpPost("createcomment")]
         [Authorize]
         public virtual JsonResult CreateQuestionComment([FromBody] QuestionCommentCreateApi model)
