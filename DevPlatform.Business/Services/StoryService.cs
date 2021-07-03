@@ -146,7 +146,7 @@ namespace DevPlatform.Business.Services
                     CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
                     StoryId = y.StoryId
                 }).ToList()
-            }).OrderByDescending(sa => sa.CreatedDate).FirstOrDefault();
+            }).FirstOrDefault();
 
             return data;
         }
@@ -177,7 +177,7 @@ namespace DevPlatform.Business.Services
                     CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
                     StoryId = y.StoryId
                 }).ToList()
-            }).OrderByDescending(sa => sa.CreatedDate).AsEnumerable();
+            }).AsEnumerable();
 
             return data;
         }
@@ -224,7 +224,7 @@ namespace DevPlatform.Business.Services
                     CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
                     StoryId = y.StoryId
                 }).ToList()
-            }).OrderByDescending(sa => sa.CreatedDate).AsEnumerable();
+            }).AsEnumerable();
 
             return data;
         }

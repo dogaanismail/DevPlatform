@@ -17,7 +17,7 @@
             </div>
         </a>
 
-        <a *ngFor="let story of stories | orderBy : '-createdDate'" class="story">
+        <a class="story" *ngFor="let story of stories | orderBy : -'createdDate'">
             <div class="story-avatar">
                 <a href="{{story.imageUrl}}" autoPlay="true" data-demo-href="{{story.imageUrl}}" data-fancybox="gallery"
                     attr.data-caption="{{story.createdByUserName}} - {{story.description}}">

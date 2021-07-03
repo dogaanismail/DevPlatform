@@ -15,6 +15,7 @@ export class QuestionPostsComponent implements OnInit {
   pageTitle = 'Developer Questions';
   @Input() questions: Question[];
   @Input() newQuestion: boolean;
+  @Input() newComment: boolean;
 
   ngOnInit() {
   }

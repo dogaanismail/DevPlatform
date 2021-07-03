@@ -13,6 +13,7 @@ namespace DevPlatform.Domain.ServiceResponseModels.PostService
         public CreateResponse()
         {
             ImageUrlList = new List<string>();
+            Comments = new List<PostCommentListDto>();
         }
 
         public int Id { get; set; }

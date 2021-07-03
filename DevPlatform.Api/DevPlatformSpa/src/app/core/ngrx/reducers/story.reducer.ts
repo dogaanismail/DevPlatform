@@ -79,7 +79,7 @@ export function storyReducer(state = initialState, action: StoryActions): StoryS
         case StoryActionTypes.CreateStorySuccess:
             return {
                 ...state,
-                stories: [...state.stories, action.payload].sort((a, b) => <any>new Date(b.createdDate) - <any>new Date(a.createdDate)),
+                stories: [...state.stories, action.payload],
                 error: '',
                 isNewStory: false
             };

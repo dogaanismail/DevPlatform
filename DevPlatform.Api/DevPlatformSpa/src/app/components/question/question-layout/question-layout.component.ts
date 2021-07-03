@@ -26,6 +26,7 @@ export class QuestionLayoutComponent implements OnInit {
   newQuestion$: Observable<boolean>;
   errorMessage$: Observable<string>;
   signedUser$: Observable<SignedUser>;
+  newComment$: Observable<boolean>;
 
   constructor(
     private questionStore: Store<fromQuestion.State>,
@@ -38,6 +39,7 @@ export class QuestionLayoutComponent implements OnInit {
     this.newQuestion$ = this.questionStore.pipe(select(fromQuestion.getIsNewQuestion));
     this.errorMessage$ = this.questionStore.pipe(select(fromQuestion.getError));
     this.signedUser$ = this.userStore.pipe(select(fromUser.getSignedUser)) as Observable<SignedUser>;
+    this.newComment$ = this.questionStore.pipe(select(fromQuestion.getIsNewComment));
   }
 
 }

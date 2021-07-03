@@ -1,4 +1,4 @@
-export class PostCommentCreate {
+export class QuestionCommentCreate {
     text: string;
     questionId: number;
 }

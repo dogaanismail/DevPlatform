@@ -1,7 +1,7 @@
 <div class="stories-feed">
     <div class="columns is-multiline">
 
-        <div class="column is-4 is-half-tablet" *ngFor="let story of stories | orderBy : '-createdDate'">
+        <div class="column is-4 is-half-tablet" *ngFor="let story of stories | orderBy : -'createdDate'">
 
             <!--Feed item-->
             <div class="story-feed-item" id="story-item">

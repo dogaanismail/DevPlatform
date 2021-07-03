@@ -80,7 +80,7 @@ export function postReducer(state = initialState, action: PostActions): PostStat
         case PostActionTypes.CreatePostSuccess:
             return {
                 ...state,
-                posts: [...state.posts, action.payload].sort((a, b) => <any>new Date(b.createdDate) - <any>new Date(a.createdDate)),
+                posts: [...state.posts, action.payload],
                 error: '',
                 isNewPost: false
             };
@@ -100,7 +100,6 @@ export function postReducer(state = initialState, action: PostActions): PostStat
 
         case PostActionTypes.CreateCommentSuccess:
             const postIndex: number = state.posts.findIndex((item: any) => item.id == action.payload.postId);
-
             return {
                 ...state,
                 posts: [

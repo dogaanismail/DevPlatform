@@ -1,45 +1,35 @@
 <!-- Other answer -->
-<div class="answer-block" *ngFor="let comment of commentList">
+<div class="answer-block" *ngFor="let comment of commentList | orderBy : -'createdDate'">
   <!-- Author -->
   <div class="answer-author">
     <div class="avatar-wrap">
-      <img class="avatar" src="https://via.placeholder.com/150x150" data-demo-src="assets/img/avatars/david.jpg"
-        data-user-popover="4" alt="">
+      <img class="avatar" src="{{comment.createdByUserPhoto}}" title="{{comment.createdByUserName}}">
       <div class="badge">
-        <i data-feather="check"></i>
+        <mat-icon>check</mat-icon>
       </div>
     </div>
     <div class="meta">
-      <span>David Kim</span>
-      <span>1 day ago</span>
+      <span>{{comment.createdByUserName}}</span>
+      <span>{{comment.createdDate | date:'short' }}</span>
     </div>
   </div>
   <!-- Content -->
   <div class="answer-text">
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. At eum nihili facit; Quacumque
-      enim ingredimur, in
-      aliqua historia vestigium ponimus. Duo Reges: constructio interrete. Proclivi currit
-      oratio.</p>
-    <p>First install this:</p>
-    <p class="code">
-    </p>
-    <p>Check this link:</p>
-    <p><a class="standard-link"></a></p>
+    <div [innerHTML]="comment.text | noSanitize"></div>
   </div>
   <!-- Footer -->
   <div class="answer-footer">
     <div class="upvote">
       <div class="upvote-icon">
-        <i data-feather="check"></i>
+        <mat-icon>check</mat-icon>
       </div>
       <span>Upvoted 5 times</span>
     </div>
     <div class="report">
       <div class="report-icon">
-        <i data-feather="alert-octagon"></i>
+        <mat-icon>error_outline</mat-icon>
       </div>
       <span>Report Answer</span>
     </div>
   </div>
 </div>
-

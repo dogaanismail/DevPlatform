@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace DevPlatform.Api.Controllers
@@ -63,8 +64,8 @@ namespace DevPlatform.Api.Controllers
                 CreatedDate = serviceResponse.Data.CreatedDate,
                 VideoUrl = serviceResponse.Data?.VideoUrl,
                 StoryType = serviceResponse.Data?.StoryType,
-                Comments = null
-            });
+                Comments = new List<StoryCommentListDto>()
+            }); ;
         }
 
         [HttpGet("storylist")]

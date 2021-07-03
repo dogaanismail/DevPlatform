@@ -14,8 +14,10 @@ import { QuestionCategoriesComponent } from './common/question-categories/questi
 import { QuestionMenuFixedComponent } from './common/question-menu-fixed/question-menu-fixed.component';
 import { CreateQuestionComponent } from './common/create-question/create-question.component';
 import { QuestionLayoutComponent } from './question-layout/question-layout.component';
-import { QuestionDetailComponent } from './question-detail/question-detail.component';
+import { QuestionDetailComponent } from './question-detail/question-detail-layout/question-detail.component';
 import { DevPlatformMaterialModule } from '../../shared/modules/material.module';
+import { QuestionDetailCommentsComponent } from './question-detail/question-detail-comments/question-detail-comments.component';
+import { QuestionDetailCreateCommentComponent } from './question-detail/question-detail-create-comment/question-detail-create-comment.component';
 
 /*Ngrx and Store infrastructure implementations */
 import { storageMetaReducer } from '../../core/store-infrastructure/storage-metareducer';
@@ -55,7 +57,9 @@ const questionRoutes: Routes = [
         QuestionPostsComponent,
         QuestionDetailComponent,
         QuestionSettingsComponent,
-        QuestionCategoriesComponent
+        QuestionCategoriesComponent,
+        QuestionDetailCommentsComponent,
+        QuestionDetailCreateCommentComponent
     ],
     providers: [
         StoreLocalStorageService,

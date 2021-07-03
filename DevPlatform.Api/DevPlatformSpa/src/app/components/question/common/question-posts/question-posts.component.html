@@ -1,10 +1,10 @@
 <!--preloader-->
-<div id="spinner-wrapper" *ngIf="!questions || newQuestion">
+<div id="spinner-wrapper" *ngIf="!questions || newQuestion || newComment">
   <div class="spinner"></div>
 </div>
 
 <!-- Question -->
-<div class="question-block is-top-spaced" *ngFor="let question of questions | orderBy : '-createdDate'">
+<div class="question-block is-top-spaced" *ngFor="let question of questions | orderBy : -'createdDate'">
   <!-- Title -->
   <a routerLink="/question/detail/{{question.id}}" class="question-title is-link">{{question.title}}</a>
   <!-- Author -->
@@ -43,6 +43,6 @@
     </div>
   </div>
   <div class="answers-count">
-    <span>9 Answers</span>
+    <span>{{question.comments == null ? 0 : question.comments.length}} Comments</span>
   </div>
 </div>

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace DevPlatform.Api.Controllers
@@ -63,7 +64,7 @@ namespace DevPlatform.Api.Controllers
                 CreatedByUserName = serviceResponse.Data?.CreatedByUserName,
                 CreatedByUserPhoto = serviceResponse.Data?.CreatedByUserPhoto,
                 CreatedDate = serviceResponse.Data.CreatedDate,
-                Comments = null
+                Comments = new List<QuestionCommentListDto>()
             });
         }
 

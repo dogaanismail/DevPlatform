@@ -42,7 +42,10 @@
           
           <div class="question-content">
 
-            <app-question-posts [questions]="questions$ | async" [newQuestion]="newQuestion$ | async">
+            <app-question-posts 
+            [questions]="questions$ | async" 
+            [newQuestion]="newQuestion$ | async"
+            [newComment]="newComment$ | async">
             </app-question-posts>
 
             <!-- Load more -->

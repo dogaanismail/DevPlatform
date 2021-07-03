@@ -1,0 +1,30 @@
+<div>
+  <div class="tabs-wrapper">
+    <form role="form" #myForm="ngForm" accept-charset="UTF-8" novalidate (ngSubmit)="saveComment()">
+      <div class="tab-content">
+        <div class="form-group has-feedback" [ngClass]="{ 'has-error': commenteditor.invalid && commenteditor.touched }">
+          <ckeditor 
+          [(ngModel)]="commentCreate.text"
+          #commenteditor="ngModel" 
+          name="text"
+          required
+          [config]="commentConfig"
+          debounce="500" 
+          (paste)="onPaste($event)" 
+          (change)="onChange($event)"
+          [ngModelOptions]="{standalone: true}">
+          </ckeditor>
+        </div>
+
+        <div class="more-wrap" style="display: block !important;">
+          <button id="publish-button" 
+          type="submit" 
+          [disabled]="myForm.invalid"
+          class="button is-solid accent-button is-fullwidth">
+          Publish
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

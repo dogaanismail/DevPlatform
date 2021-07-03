@@ -1,25 +1,31 @@
 <div class="view-wrapper" *ngIf="singleQuestion$ | async as question">
-  <!-- Question wrap -->
-  <div class="questions-wrap is-smaller">
-    <!-- Container -->
-    <div class="container">
 
+  <div class="questions-wrap is-smaller">
+    <div class="container">
       <div class="columns is-show">
         <div class="column is-3">
           <app-question-menu-fixed></app-question-menu-fixed>
         </div>
 
         <div class="column is-6">
-
           <div class="question-content">
-
             <div class="column">
-              <!-- Question content -->
               <div class="question-content">
-                <!--Top Bar-->
+
                 <div class="top-single-header has-text-right">
                   <a routerLink="/question" class="button is-solid grey-button is-rounded">Back To Questions</a>
                 </div>
+
+                <article *ngIf="errorMessage$ | async as errorMessage" class="message is-danger">
+                  <div class="message-header">
+                    <p>Warning!</p>
+                    <button class="delete" onclick="this.parentElement.parentElement.style.display='none';"
+                      aria-label="delete"></button>
+                  </div>
+                  <div class="message-body">
+                    {{ errorMessage }}
+                  </div>
+                </article>
 
                 <!-- Main question -->
                 <div class="question-block">
@@ -54,12 +60,16 @@
                     </div>
                   </div>
                   <div class="answers-count">
-                    <span>{{question.comments == null ? 0  : question.comments.length}} Comments</span>
+                    <span>{{question.comments == null ? 0 : question.comments.length}} Comments</span>
                   </div>
                 </div>
 
-                <app-question-detail-comments [commentList]="question.comments">
+                <app-question-detail-create-comment 
+                [currentQuestionId]="currentQuestionId">
+                </app-question-detail-create-comment>
 
+                <app-question-detail-comments 
+                [commentList]="question.comments">
                 </app-question-detail-comments>
 
                 <!-- Load more answers -->
@@ -129,8 +139,8 @@
                   </div>
                 </div>
               </div>
-            </div>
 
+            </div>
           </div>
         </div>
       </div>

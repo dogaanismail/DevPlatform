@@ -26,6 +26,7 @@ namespace DevPlatform.Business.Services
         private readonly IRepository<Question> _questionRepository;
         private readonly IRepository<AppUser> _userRepository;
         private readonly ILogService _logService;
+        private readonly IUserService _userService;
 
         #endregion
 
@@ -35,13 +36,15 @@ namespace DevPlatform.Business.Services
             IHttpContextAccessor httpContextAccessor,
             IRepository<Question> questionRepository,
             IRepository<AppUser> userRepository,
-            ILogService logService)
+            ILogService logService,
+            IUserService userService)
         {
             _questionCommentRepository = questionCommentRepository;
             _httpContextAccessor = httpContextAccessor;
             _questionRepository = questionRepository;
             _userRepository = userRepository;
             _logService = logService;
+            _userService = userService;
         }
 
         #endregion
@@ -132,7 +135,7 @@ namespace DevPlatform.Business.Services
             try
             {
                 if (model.QuestionId == 0)
-                    return ServiceResponse((CreateResponse)null, new List<string> { "Text can not be null !" });
+                    return ServiceResponse((CreateResponse)null, new List<string> { "QuestionId can not be null !" });
 
                 if (string.IsNullOrEmpty(model.Text))
                     return ServiceResponse((CreateResponse)null, new List<string> { "Text can not be null !" });
@@ -142,7 +145,7 @@ namespace DevPlatform.Business.Services
                 if (commentQuestion == null)
                     return ServiceResponse((CreateResponse)null, new List<string> { "Question not found!" });
 
-                var appUser = _userRepository.Table.FirstOrDefault(x => x.UserName == _httpContextAccessor.HttpContext.User.Identity.Name);
+                var appUser = _userService.FindByUserName(_httpContextAccessor.HttpContext.User.Identity.Name);
 
                 if (appUser == null)
                     return ServiceResponse((CreateResponse)null, new List<string> { "User not found!" });

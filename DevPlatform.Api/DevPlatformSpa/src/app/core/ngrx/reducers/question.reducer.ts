@@ -93,7 +93,7 @@ export function questionReducer(state = initialState, action: QuestionActions): 
         case QuestionActionTypes.CreateQuestionSuccess:
             return {
                 ...state,
-                questions: [...state.questions, action.payload].sort((a, b) => <any>new Date(b.createdDate) - <any>new Date(a.createdDate)),
+                questions: [...state.questions, action.payload],
                 error: '',
                 isNewQuestion: false
             };
@@ -112,11 +112,18 @@ export function questionReducer(state = initialState, action: QuestionActions): 
             };
 
         case QuestionActionTypes.CreateCommentSuccess:
-            const question: Question = state.questions.filter((item: any) => item.id == action.payload.questionId)[0];
-            question.comments.push(action.payload);
+            const questionIndex: number = state.questions.findIndex((item: any) => item.id == action.payload.questionId);
+
             return {
                 ...state,
-                questions: [...state.questions, action.payload],
+                questions: [
+                    ...state.questions.slice(0, questionIndex),
+                    {
+                        ...state.questions[questionIndex],
+                        comments: [...state.questions[questionIndex].comments, action.payload],
+                    },
+                    ...state.questions.slice(questionIndex + 1)
+                ],
                 error: '',
                 isNewComment: false
             };

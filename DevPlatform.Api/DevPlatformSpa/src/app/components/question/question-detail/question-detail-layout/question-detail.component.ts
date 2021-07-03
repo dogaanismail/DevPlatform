@@ -2,17 +2,17 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 
 /* Models */
-import { Question } from '../../../models/question/question';
-import { SignedUser } from '../../../models/user/signedUser';
+import { Question } from '../../../../models/question/question';
+import { SignedUser } from '../../../../models/user/signedUser';
 
 /* Rxjs */
 import { Observable } from 'rxjs';
 
 /* NgRx */
 import { Store, select } from '@ngrx/store';
-import * as fromQuestion from '../../../core/ngrx/selectors/question.selectors';
-import * as fromUser from '../../../core/ngrx/selectors/user.selectors';
-import * as questionActions from '../../../core/ngrx/actions/question.actions';
+import * as fromQuestion from '../../../../core/ngrx/selectors/question.selectors';
+import * as fromUser from '../../../../core/ngrx/selectors/user.selectors';
+import * as questionActions from '../../../../core/ngrx/actions/question.actions';
 
 @Component({
   selector: 'app-question-detail',
@@ -22,6 +22,9 @@ import * as questionActions from '../../../core/ngrx/actions/question.actions';
 export class QuestionDetailComponent implements OnInit {
 
   singleQuestion$: Observable<Question>;
+  currentQuestionId: number;
+  errorMessage$: Observable<string>;
+  newComment$: Observable<boolean>;
 
   constructor(
     private questionStore: Store<fromQuestion.State>,
@@ -29,8 +32,11 @@ export class QuestionDetailComponent implements OnInit {
     private route: ActivatedRoute,) { }
 
   ngOnInit() {
+    this.newComment$ = this.questionStore.pipe(select(fromQuestion.getIsNewComment));
+    this.errorMessage$ = this.questionStore.pipe(select(fromQuestion.getError));
     const questionId = +this.route.snapshot.paramMap.get('id');
     if (questionId) {
+      this.currentQuestionId = questionId;
       this.questionStore.dispatch(new questionActions.SetCurrentQuestion(questionId));
       this.singleQuestion$ = this.questionStore.pipe(select(fromQuestion.getCurrentQuestion)) as Observable<Question>;
 

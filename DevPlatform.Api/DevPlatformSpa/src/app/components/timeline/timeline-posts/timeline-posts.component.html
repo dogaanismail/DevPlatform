@@ -3,7 +3,7 @@
   <div class="spinner"></div>
 </div>
 
-<div *ngFor="let post of posts | orderBy : '-createdDate'">
+<div *ngFor="let post of posts | orderBy:-'createdDate'">
   <div class="card is-post">
 
     <div class="content-wrap">
@@ -12,7 +12,8 @@
         <!-- User meta -->
         <div class="user-block">
           <div class="image">
-            <img src="{{post.createdByUserPhoto}}" data-demo-src="{{post.createdByUserPhoto}}" title="{{post.createdByUserName}}">
+            <img src="{{post.createdByUserPhoto}}" data-demo-src="{{post.createdByUserPhoto}}"
+              title="{{post.createdByUserName}}">
           </div>
           <div class="user-info">
             <a href="#">{{post.createdByUserName}}</a>

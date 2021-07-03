@@ -7,7 +7,7 @@ import { QuestionService } from '../../../services/question/question.service';
 import { Action } from '@ngrx/store';
 import { Actions, createEffect, Effect, ofType } from '@ngrx/effects';
 import * as questionActions from '../actions/question.actions';
-import { Question } from '../../../models/question/question';
+import { QuestionComment } from 'src/app/models/question/questionComment';
 
 @Injectable()
 export class QuestionEffects {
@@ -58,7 +58,8 @@ export class QuestionEffects {
         map((action: questionActions.CreateComment) => action.payload),
         mergeMap((comment: any) =>
             this.questionService.createComment(comment).pipe(
-                map((newComment: any) => (new questionActions.CreateCommentSuccess(newComment.result))),
+                map((newComment: any) => newComment.status ? new questionActions.CreateCommentSuccess(newComment.result as QuestionComment) :
+                    new questionActions.CreateCommentFail(newComment.result.message)),
                 catchError(err => of(new questionActions.CreateCommentFail(err)))
             )
         )

@@ -1,5 +1,5 @@
 <!-- Comment -->
-<div class="media is-comment" *ngFor="let comment of commentList">
+<div class="media is-comment" *ngFor="let comment of commentList | orderBy : -'createdDate'">
 
   <div class="media-left">
     <div class="image">

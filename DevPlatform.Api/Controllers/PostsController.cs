@@ -2,14 +2,15 @@
 using DevPlatform.Domain.Api;
 using DevPlatform.Domain.Common;
 using DevPlatform.Domain.Dto;
+using DevPlatform.Domain.Dto.StoryDto;
 using DevPlatform.Domain.Enumerations;
 using DevPlatform.Framework.Controllers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace DevPlatform.Api.Controllers
 {
@@ -64,7 +65,7 @@ namespace DevPlatform.Api.Controllers
                 CreatedDate = serviceResponse.Data.CreatedDate,
                 VideoUrl = serviceResponse.Data?.VideoUrl,
                 PostType = serviceResponse.Data?.PostType,
-                Comments = null,
+                Comments = new List<PostCommentListDto>(),
                 FancyboxData = $"post{serviceResponse.Data.Id}",
                 StoryListDto = new()
                 {
@@ -77,7 +78,7 @@ namespace DevPlatform.Api.Controllers
                     CreatedByUserPhoto = serviceResponse.Data?.StoryCreateResponse?.CreatedByUserPhoto,
                     CreatedDate = serviceResponse.Data?.StoryCreateResponse?.CreatedDate,
                     StoryType = serviceResponse.Data?.StoryCreateResponse?.StoryType,
-                    Comments = null
+                    Comments = new List<StoryCommentListDto>()
                 }
             });
         }

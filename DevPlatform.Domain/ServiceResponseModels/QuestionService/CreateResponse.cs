@@ -13,6 +13,7 @@ namespace DevPlatform.Domain.ServiceResponseModels.QuestionService
         public CreateResponse()
         {
             Tags = new List<TagsModel>();
+            Comments = new List<QuestionCommentListDto>();
         }
 
         public int Id { get; set; }

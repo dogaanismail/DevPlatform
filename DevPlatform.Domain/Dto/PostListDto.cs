@@ -9,6 +9,7 @@ namespace DevPlatform.Domain.Dto
         public PostListDto()
         {
             ImageUrlList = new List<string>();
+            Comments = new List<PostCommentListDto>();
         }
 
         public int Id { get; set; }
