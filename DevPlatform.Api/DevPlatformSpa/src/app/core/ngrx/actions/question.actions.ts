@@ -9,6 +9,9 @@ export enum QuestionActionTypes {
     Load = '[Question] Load',
     LoadSuccess = '[Question] Load Success',
     LoadFail = '[Question] Load Fail',
+    LoadById = '[Question] Load By Id',
+    LoadByIdSuccess = '[Question] Load By Id Success',
+    LoadByIdFail = '[Question] Load By Id Fail',
     UpdateQuestion = '[Question] Update Question',
     UpdateQuestionSuccess = '[Question] Update Question Success',
     UpdateQuestionFail = '[Question] Update Question Fail',
@@ -59,6 +62,24 @@ export class LoadFail implements Action {
     constructor(public payload: string) { }
 }
 
+export class LoadById implements Action {
+    readonly type = QuestionActionTypes.LoadById;
+
+    constructor(public payload: number) { }
+}
+
+export class LoadByIdSuccess implements Action {
+    readonly type = QuestionActionTypes.LoadByIdSuccess;
+
+    constructor(public payload: Question) { }
+}
+
+export class LoadByIdFail implements Action {
+    readonly type = QuestionActionTypes.LoadByIdFail;
+
+    constructor(public payload: string) { }
+}
+
 export class CreateQuestion implements Action {
     readonly type = QuestionActionTypes.CreateQuestion;
 
@@ -102,6 +123,9 @@ export type QuestionActions = ToggleQuestion
     | Load
     | LoadSuccess
     | LoadFail
+    | LoadById
+    | LoadByIdSuccess
+    | LoadByIdFail
     | CreateQuestion
     | CreateQuestionSuccess
     | CreateQuestionFail

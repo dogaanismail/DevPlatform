@@ -6,11 +6,10 @@
 <!-- Question -->
 <div class="question-block is-top-spaced" *ngFor="let question of questions | orderBy : '-createdDate'">
   <!-- Title -->
-  <a href="questions-single.html" class="question-title is-link">{{question.title}}</a>
+  <a routerLink="/question/detail/{{question.id}}" class="question-title is-link">{{question.title}}</a>
   <!-- Author -->
   <div class="question-author">
-    <img src="{{question.createdByUserPhoto}}" attr.data-demo-src="{{question.createdByUserPhoto}}"
-      data-user-popover="19" alt="" title="{{question.createdByUserName}}">
+    <img src="{{question.createdByUserPhoto}}" attr.data-demo-src="{{question.createdByUserPhoto}}" title="{{question.createdByUserName}}">
     <div class="meta">
       <span>{{question.createdByUserName}}</span>
       <span>{{question.createdDate | date:'short' }}</span>

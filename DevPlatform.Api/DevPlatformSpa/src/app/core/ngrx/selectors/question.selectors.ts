@@ -18,6 +18,11 @@ export const getCurrentQuestionId = createSelector(
     state => state.currentQuestionId
 );
 
+export const getById = createSelector(
+    getQuestionsFeatureState,
+    state => state.currentQuestion
+);
+
 export const getQuestions = createSelector(
     getQuestionsFeatureState,
     state => state.questions

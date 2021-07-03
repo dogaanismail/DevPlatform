@@ -1,77 +1,4 @@
-<div class="view-wrapper">
-
-  <!-- /html/partials/pages/questions/questions-nav-single.html -->
-  <div class="questions-nav">
-    <div class="inner">
-      <div class="container">
-        <div class="question-summary">
-          <img src="https://via.placeholder.com/150x150" data-demo-src="assets/img/avatars/dan.jpg"
-            data-user-popover="1" alt="">
-          <div class="meta">
-            <h4>How can I handle photos with javascript?</h4>
-            <span>Dan Walker | 2 day ago</span>
-          </div>
-          <div class="dropdown is-spaced is-accent is-right dropdown-trigger">
-            <div>
-              <div class="button">
-                <i data-feather="more-vertical"></i>
-              </div>
-            </div>
-            <div class="dropdown-menu" role="menu">
-              <div class="dropdown-content">
-                <a href="#" class="dropdown-item">
-                  <div class="media">
-                    <i data-feather="message-circle"></i>
-                    <div class="media-content">
-                      <h3>My Questions</h3>
-                      <small>All questions you posted.</small>
-                    </div>
-                  </div>
-                </a>
-                <a class="dropdown-item">
-                  <div class="media">
-                    <i data-feather="hexagon"></i>
-                    <div class="media-content">
-                      <h3>My Groups</h3>
-                      <small>View the groups you are part of.</small>
-                    </div>
-                  </div>
-                </a>
-                <a class="dropdown-item">
-                  <div class="media">
-                    <i data-feather="delete"></i>
-                    <div class="media-content">
-                      <h3>Unsolved</h3>
-                      <small>View unsolved questions.</small>
-                    </div>
-                  </div>
-                </a>
-                <a class="dropdown-item">
-                  <div class="media">
-                    <i data-feather="disc"></i>
-                    <div class="media-content">
-                      <h3>Solved</h3>
-                      <small>View solved questions.</small>
-                    </div>
-                  </div>
-                </a>
-                <hr class="dropdown-divider">
-                <a href="#" class="dropdown-item">
-                  <div class="media">
-                    <i data-feather="message-square"></i>
-                    <div class="media-content">
-                      <h3>Ask</h3>
-                      <small>Post a new question.</small>
-                    </div>
-                  </div>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+<div class="view-wrapper" *ngIf="singleQuestion$ | async as question">
   <!-- Question wrap -->
   <div class="questions-wrap is-smaller">
     <!-- Container -->
@@ -91,180 +18,50 @@
               <div class="question-content">
                 <!--Top Bar-->
                 <div class="top-single-header has-text-right">
-                  <a class="button is-solid grey-button is-rounded">Back To Questions</a>
+                  <a routerLink="/question" class="button is-solid grey-button is-rounded">Back To Questions</a>
                 </div>
+
                 <!-- Main question -->
                 <div class="question-block">
                   <!-- Title -->
-                  <h2 class="question-title">How can I handle photos with javascript?</h2>
+                  <h2 class="question-title">{{question.title}}</h2>
                   <!-- Author -->
                   <div class="question-author">
-                    <img src="https://via.placeholder.com/150x150" data-demo-src="assets/img/avatars/dan.jpg"
-                      data-user-popover="1" alt="">
+                    <img src="{{question.createdByUserPhoto}}" data-demo-src="{{question.createdByUserPhoto}}"
+                      alt="{{question.createdByUserName}}">
                     <div class="meta">
-                      <span>Dan Walker</span>
-                      <span>2 days ago</span>
+                      <span>{{question.createdByUserName}}</span>
+                      <span>{{question.createdDate | date:'short' }}</span>
                     </div>
                   </div>
                   <!-- Content -->
                   <div class="question-text">
-                    <p></p>
+                    <div [innerHTML]="question.description | noSanitize"></div>
                   </div>
                   <!-- Footer -->
                   <div class="question-footer">
                     <div class="likes">
                       <div class="like-icon">
-                        <i data-feather="heart"></i>
+                        <mat-icon>favorite_border</mat-icon>
                       </div>
                       <span>8 Likes</span>
                     </div>
                     <div class="report">
                       <div class="report-icon">
-                        <i data-feather="alert-octagon"></i>
+                        <mat-icon>error_outline</mat-icon>
                       </div>
                       <span>Report Topic</span>
                     </div>
                   </div>
                   <div class="answers-count">
-                    <span>5 Answers</span>
+                    <span>{{question.comments == null ? 0  : question.comments.length}} Comments</span>
                   </div>
                 </div>
-                <!-- Main answer -->
-                <div class="answer-block is-best">
-                  <!-- Author -->
-                  <div class="answer-author">
-                    <div class="avatar-wrap">
-                      <img class="avatar" src="https://via.placeholder.com/150x150"
-                        data-demo-src="assets/img/avatars/elise.jpg" data-user-popover="6" alt="">
-                      <div class="badge">
-                        <i data-feather="check"></i>
-                      </div>
-                    </div>
-                    <div class="meta">
-                      <span>Elise Walker <small class="best-tag">Best Answer</small></span>
-                      <span>1 day ago</span>
-                    </div>
-                  </div>
-                  <!-- Content -->
-                  <div class="answer-text">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. At eum nihili facit; Quacumque
-                      enim ingredimur, in
-                      aliqua historia vestigium ponimus. Duo Reges: constructio interrete. Proclivi currit
-                      oratio.</p>
-                    <p>First install this</p>
-                    <p class="code">
 
-                    </p>
-                    <p>Then configure your photos:</p>
-                    <p class="code">
+                <app-question-detail-comments [commentList]="question.comments">
 
-                      <br>
+                </app-question-detail-comments>
 
-                    <p>You can
-                      also check the documentation:</p>
-                    <p><a class="standard-link"></a></p>
-                  </div>
-                  <!-- Footer -->
-                  <div class="answer-footer">
-                    <div class="upvote">
-                      <div class="upvote-icon">
-                        <i data-feather="check"></i>
-                      </div>
-                      <span>Upvoted 56 times</span>
-                    </div>
-                    <div class="report">
-                      <div class="report-icon">
-                        <i data-feather="alert-octagon"></i>
-                      </div>
-                      <span>Report Answer</span>
-                    </div>
-                  </div>
-                </div>
-                <!-- Other answer -->
-                <div class="answer-block">
-                  <!-- Author -->
-                  <div class="answer-author">
-                    <div class="avatar-wrap">
-                      <img class="avatar" src="https://via.placeholder.com/150x150"
-                        data-demo-src="assets/img/avatars/david.jpg" data-user-popover="4" alt="">
-                      <div class="badge">
-                        <i data-feather="check"></i>
-                      </div>
-                    </div>
-                    <div class="meta">
-                      <span>David Kim</span>
-                      <span>1 day ago</span>
-                    </div>
-                  </div>
-                  <!-- Content -->
-                  <div class="answer-text">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. At eum nihili facit; Quacumque
-                      enim ingredimur, in
-                      aliqua historia vestigium ponimus. Duo Reges: constructio interrete. Proclivi currit
-                      oratio.</p>
-                    <p>First install this:</p>
-                    <p class="code">
-                    </p>
-                    <p>Check this link:</p>
-                    <p><a class="standard-link"></a></p>
-                  </div>
-                  <!-- Footer -->
-                  <div class="answer-footer">
-                    <div class="upvote">
-                      <div class="upvote-icon">
-                        <i data-feather="check"></i>
-                      </div>
-                      <span>Upvoted 5 times</span>
-                    </div>
-                    <div class="report">
-                      <div class="report-icon">
-                        <i data-feather="alert-octagon"></i>
-                      </div>
-                      <span>Report Answer</span>
-                    </div>
-                  </div>
-                </div>
-                <!-- Other answer -->
-                <div class="answer-block">
-                  <!-- Author -->
-                  <div class="answer-author">
-                    <div class="avatar-wrap">
-                      <img class="avatar" src="https://via.placeholder.com/150x150"
-                        data-demo-src="assets/img/avatars/elise.jpg" data-user-popover="6" alt="">
-                      <div class="badge">
-                        <i data-feather="check"></i>
-                      </div>
-                    </div>
-                    <div class="meta">
-                      <span>Elise Walker</span>
-                      <span>1 day ago</span>
-                    </div>
-                  </div>
-                  <!-- Content -->
-                  <div class="answer-text">
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. At eum nihili facit Quacumque
-                      enim ingredimur, in
-                      aliqua historia vestigium ponimus. Duo Reges: constructio interrete. Proclivi currit
-                      oratio.</p>
-                    <p>It would ne nice to be more specific about it.</p>
-                    <p>Any suggestions?</p>
-                  </div>
-                  <!-- Footer -->
-                  <div class="answer-footer">
-                    <div class="upvote">
-                      <div class="upvote-icon">
-                        <i data-feather="check"></i>
-                      </div>
-                      <span>Upvoted once</span>
-                    </div>
-                    <div class="report">
-                      <div class="report-icon">
-                        <i data-feather="alert-octagon"></i>
-                      </div>
-                      <span>Report Answer</span>
-                    </div>
-                  </div>
-                </div>
                 <!-- Load more answers -->
                 <div class=" load-more-wrap has-text-centered">
                   <a href="#" class="load-more-button">Load More</a>

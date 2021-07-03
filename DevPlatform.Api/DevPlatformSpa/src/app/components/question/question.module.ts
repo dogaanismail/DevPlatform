@@ -30,7 +30,7 @@ export function getQuestionsConfig(saveKeys: string[], localStorageKey: string, 
 
 const questionRoutes: Routes = [
     { path: "question", component: QuestionLayoutComponent },
-    { path: "question/detail", component: QuestionDetailComponent },
+    { path: "question/detail/:id", component: QuestionDetailComponent },
     { path: "question/setting", component: QuestionSettingsComponent },
     { path: "question/categories", component: QuestionCategoriesComponent }
     //TODO: must be question/detail/id?= 

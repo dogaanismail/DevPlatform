@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { HttpHeaders, HttpClient } from "@angular/common/http";
+import { HttpHeaders, HttpClient, HttpParams } from "@angular/common/http";
 import { AuthService } from "../user/auth/auth.service";
 import { Observable, throwError } from 'rxjs';
 import { catchError, tap, map, shareReplay } from 'rxjs/operators';
@@ -41,6 +41,23 @@ export class QuestionService {
     return this.http.get<Question[]>(this.questionUrl + "questionlist", { headers: headers })
       .pipe(
         tap((data: any) => {
+        }),
+        shareReplay(1),
+        catchError(this.handleError)
+      );
+  }
+
+  getQuestionById(questionId: number): Observable<Question> {
+    const headers = new HttpHeaders
+      ({
+        "Authorization": "Bearer " + this.authService.getToken,
+        'Content-Type': 'application/json'
+      });
+
+    return this.http.get<Question>(this.questionUrl + "id/" + questionId, { headers: headers })
+      .pipe(
+        tap((data: any) => {
+          console.log(data);
         }),
         shareReplay(1),
         catchError(this.handleError)

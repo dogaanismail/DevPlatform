@@ -29,6 +29,18 @@ export class QuestionEffects {
     );
 
     @Effect()
+    loadQuestionById$: Observable<Action> = this.actions$.pipe(
+        ofType(questionActions.QuestionActionTypes.LoadById),
+        map((action: questionActions.LoadById) => action.payload),
+        mergeMap((questionId: number) =>
+            this.questionService.getQuestionById(questionId).pipe(
+                map((question: any) => (new questionActions.LoadByIdSuccess(question.result))),
+                catchError(err => of(new questionActions.LoadByIdSuccess(err)))
+            )
+        )
+    );
+
+    @Effect()
     createQuestion$: Observable<Action> = this.actions$.pipe(
         ofType(questionActions.QuestionActionTypes.CreateQuestion),
         map(((action: questionActions.CreateQuestion) => action.payload)),

@@ -1,8 +1,6 @@
 import { User } from "../../../models/user/user";
 import { UserActions, UserActionTypes } from "../actions/user.actions";
 import { SignedUser } from '../../../models/user/signedUser';
-import * as fromRoot from '../../ngrx/states/app.state';
-import * as userAccountReducer from '../reducers/user-account.reducer';
 
 export interface UserState {
     currentUser: User;

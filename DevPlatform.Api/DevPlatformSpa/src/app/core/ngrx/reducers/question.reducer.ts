@@ -58,6 +58,20 @@ export function questionReducer(state = initialState, action: QuestionActions): 
                 error: action.payload
             };
 
+        case QuestionActionTypes.LoadByIdSuccess:
+            return {
+                ...state,
+                currentQuestion: action.payload,
+                error: ''
+            };
+
+        case QuestionActionTypes.LoadByIdFail:
+            return {
+                ...state,
+                currentQuestion: null,
+                error: action.payload
+            };
+
         case QuestionActionTypes.ClearCurrentQuestion:
             return {
                 ...state,
