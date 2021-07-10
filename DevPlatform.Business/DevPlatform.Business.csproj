@@ -12,6 +12,7 @@
   <ItemGroup>
     <PackageReference Include="Aspose.Imaging" Version="21.3.0" />
     <PackageReference Include="CloudinaryDotNet" Version="1.15.0" />
+    <PackageReference Include="MaxMind.GeoIP2" Version="4.0.1" />
   </ItemGroup>
 
   <ItemGroup>

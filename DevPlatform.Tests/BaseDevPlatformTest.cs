@@ -169,6 +169,7 @@ namespace DevPlatform.Tests
             services.AddTransient<ILogService, LogService>();
             services.AddTransient<IQuestionService, QuestionService>();
             services.AddTransient<IQuestionCommentService, QuestionCommentService>();
+            services.AddTransient<IGeoLookupService, GeoLookupService>();
 
             #region ImageProcessingLibrary services
             services.AddScoped<IImageProcessorService, ImageProcessorService>();

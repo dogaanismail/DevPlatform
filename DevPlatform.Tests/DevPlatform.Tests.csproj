@@ -29,6 +29,7 @@
     <Folder Include="DevPlatform.Services.Tests\Configuration\" />
     <Folder Include="DevPlatform.Services.Tests\Friendship\" />
     <Folder Include="DevPlatform.Services.Tests\Album\" />
+    <Folder Include="DevPlatform.Services.Tests\Common\" />
     <Folder Include="DevPlatform.Services.Tests\Notification\" />
   </ItemGroup>
 

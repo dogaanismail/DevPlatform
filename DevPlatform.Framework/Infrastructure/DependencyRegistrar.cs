@@ -59,6 +59,7 @@ namespace DevPlatform.Framework.Infrastructure
             services.AddScoped<ILogService, LogService>();
             services.AddScoped<IQuestionService, QuestionService>();
             services.AddScoped<IQuestionCommentService, QuestionCommentService>();
+            services.AddScoped<IGeoLookupService, GeoLookupService>();
 
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
