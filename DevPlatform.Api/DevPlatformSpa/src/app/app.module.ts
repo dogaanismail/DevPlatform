@@ -20,6 +20,7 @@ import { reducers } from './core/ngrx/states/app.state';
 import { AlertifyService } from './services/alertify/alertify.service';
 import { AlbumService } from './services/album/album.service';
 import { StoryService } from './services/story/story.service';
+import { GeoLookupService } from './services/common/geolookup/geolookup.service';
 
 /* Modules */
 import { QuestionModule } from './components/question/question.module';
@@ -85,6 +86,7 @@ export function getMetaReducers(saveKeys: string[], localStorageKey: string, sto
     AlertifyService,
     AlbumService,
     StoryService,
+    GeoLookupService,
     { provide: ROOT_STORAGE_KEYS, useValue: ['users'], multi: true },
     { provide: ROOT_LOCAL_STORAGE_KEY, useValue: '__app_storage__', multi: true },
     {

@@ -5,14 +5,14 @@
     <div class="dropdown is-spaced is-accent is-right dropdown-trigger is-light">
       <div>
         <div class="button">
-          <i data-feather="more-vertical"></i>
+          <mat-icon>more_vert</mat-icon>
         </div>
       </div>
       <div class="dropdown-menu" role="menu">
         <div class="dropdown-content">
           <a href="#" class="dropdown-item">
             <div class="media">
-              <i data-feather="map-pin"></i>
+              <mat-icon>location_on</mat-icon>
               <div class="media-content">
                 <h3>Change City</h3>
                 <small>Change the displayed city.</small>
@@ -21,7 +21,7 @@
           </a>
           <a href="#" class="dropdown-item">
             <div class="media">
-              <i data-feather="rotate-ccw"></i>
+              <mat-icon>autorenew</mat-icon>
               <div class="media-content">
                 <h3>Synchronize</h3>
                 <small>Synchronize with a weather source.</small>
@@ -30,7 +30,7 @@
           </a>
           <a class="dropdown-item">
             <div class="media">
-              <i data-feather="settings"></i>
+              <mat-icon>settings</mat-icon>
               <div class="media-content">
                 <h3>Settings</h3>
                 <small>Access widget settings.</small>
@@ -40,7 +40,7 @@
           <hr class="dropdown-divider">
           <a href="#" class="dropdown-item">
             <div class="media">
-              <i data-feather="trash-2"></i>
+              <mat-icon>delete_outline</mat-icon>
               <div class="media-content">
                 <h3>Remove</h3>
                 <small>Removes this widget from your feed.</small>
@@ -53,37 +53,38 @@
   </div>
   <div class="card-body">
     <div class="temperature">
-      <span>71</span>
+      <span>{{currentWeather.main.temp-273.15 | number:'1.0-0'}}</span>
     </div>
     <div class="weather-icon">
       <div>
-        <i data-feather="sun"></i>
-        <h4>Sunny</h4>
+        <!-- <img src="https://openweathermap.org/img/wn/{{currentWeather?.weather[0]?.icon}}@2x.png" /> -->
+        <!-- <h4 *ngIf="currentWeather.weather">{{currentWeather?.weather[0]?.main}}</h4> -->
         <div class="details">
-          <span>Real Feel: 78° </span>
-          <span>Rain Chance: 5%</span>
+          <span>Real Feel {{currentWeather.main?.feels_like-273.15 | number:'1.0-0'}}° </span>
+          <span>Humidity {{currentWeather.main?.humidity}}%</span>
+          <span>Wind Speed {{currentWeather.wind?.speed}}</span>
         </div>
       </div>
     </div>
     <div class="previsions">
       <div class="day">
         <span>Mon</span>
-        <i data-feather="sun"></i>
+        <mat-icon>wb_sunny</mat-icon>
         <span>69°</span>
       </div>
       <div class="day">
         <span>Tue</span>
-        <i data-feather="cloud-lightning"></i>
+        <mat-icon>cloud</mat-icon>
         <span>74°</span>
       </div>
       <div class="day">
         <span>Wed</span>
-        <i data-feather="cloud-lightning"></i>
+        <mat-icon>cloud</mat-icon>
         <span>73°</span>
       </div>
       <div class="day">
         <span>Thu</span>
-        <i data-feather="sun"></i>
+        <mat-icon>wb_sunny</mat-icon>
         <span>68°</span>
       </div>
       <div class="day">
@@ -93,18 +94,21 @@
       </div>
       <div class="day">
         <span>Sat</span>
-        <i data-feather="cloud-rain"></i>
+        <mat-icon>umbrella</mat-icon>
         <span>58°</span>
       </div>
       <div class="day">
         <span>Sun</span>
-        <i data-feather="sun"></i>
+        <mat-icon>wb_sunny</mat-icon>
         <span>64°</span>
       </div>
     </div>
     <div class="current-date-location has-text-centered">
-      <span class="date">Sunday, 18th 2018</span>
-      <span class="location"> <i data-feather="map-pin"></i> Los Angeles, CA</span>
+      <span class="date">{{currentDate | date : 'EEE'}}, {{currentDate | date: 'shortDate' }}</span>
+      <span class="location">
+        <mat-icon>location_on</mat-icon>
+        {{geoLookupModel.currentCityName}}, {{geoLookupModel.currentCountryName}}
+      </span>
     </div>
   </div>
 </div>

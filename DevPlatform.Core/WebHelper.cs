@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Mvc.Routing;
+using DevPlatform.Core.Configuration.Settings.Common;
 
 namespace DevPlatform.Core
 {
@@ -25,6 +26,7 @@ namespace DevPlatform.Core
         private readonly IHostApplicationLifetime _hostApplicationLifetime;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUrlHelperFactory _urlHelperFactory;
+        private readonly CommonSettings _commonSettings;
 
         #endregion
 
@@ -33,12 +35,14 @@ namespace DevPlatform.Core
         public WebHelper(IActionContextAccessor actionContextAccessor,
             IHostApplicationLifetime hostApplicationLifetime,
             IHttpContextAccessor httpContextAccessor,
-            IUrlHelperFactory urlHelperFactory)
+            IUrlHelperFactory urlHelperFactory,
+            CommonSettings commonSettings)
         {
             _actionContextAccessor = actionContextAccessor;
             _hostApplicationLifetime = hostApplicationLifetime;
             _httpContextAccessor = httpContextAccessor;
             _urlHelperFactory = urlHelperFactory;
+            _commonSettings = commonSettings;
         }
 
         #endregion
@@ -119,8 +123,13 @@ namespace DevPlatform.Core
 
             //some of the validation
             if (result != null && result.Equals(IPAddress.IPv6Loopback.ToString(), StringComparison.InvariantCultureIgnoreCase))
-                result = IPAddress.Loopback.ToString();
-
+            {
+                if (_commonSettings.UseDefaultIpAddressForLocal && !string.IsNullOrEmpty(_commonSettings.DefaultIpAddress))
+                    result = _commonSettings.DefaultIpAddress;
+                else
+                    result = IPAddress.Loopback.ToString();
+            }
+                
             //"TryParse" doesn't support IPv4 with port number
             if (IPAddress.TryParse(result ?? string.Empty, out var ip))
                 //IP address is valid 
