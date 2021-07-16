@@ -60,6 +60,7 @@ namespace DevPlatform.Framework.Infrastructure
             services.AddScoped<IQuestionService, QuestionService>();
             services.AddScoped<IQuestionCommentService, QuestionCommentService>();
             services.AddScoped<IGeoLookupService, GeoLookupService>();
+            services.AddScoped<IOpenWeatherService, OpenWeatherService>();
 
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 

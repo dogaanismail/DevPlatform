@@ -97,7 +97,7 @@ namespace DevPlatform.Business.Services
                 sw.Stop();
 
                 if (_geoLookupSettings.EnabledLogging)
-                    _logService.InsertLogAsync(LogLevel.Information, $"MaxMind.GeoIP2 current city reading process has finished! Millisecond: {sw.ElapsedMilliseconds}", ipAddress);
+                    _logService.InsertLogAsync(LogLevel.Information, $"MaxMind.GeoIP2 current city reading process has finished! Millisecond: {sw.ElapsedMilliseconds}", $"Ip address: {ipAddress}");
 
                 return currentCity;
             }
@@ -196,10 +196,8 @@ namespace DevPlatform.Business.Services
                     Longitude = response.Location?.Longitude?.ToString(),
                     TimeZone = response.Location?.TimeZone,
                     IsInEuropeanUnion = response?.RegisteredCountry?.IsInEuropeanUnion,
-
                 };
             }
-
             return new GeoLookupDto();
         }
 
