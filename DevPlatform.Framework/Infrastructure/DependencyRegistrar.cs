@@ -1,8 +1,9 @@
-﻿using Autofac;
-using DevPlatform.Business.Interfaces;
+﻿using DevPlatform.Business.Interfaces;
 using DevPlatform.Business.Services;
 using DevPlatform.Core;
+using DevPlatform.Core.Caching;
 using DevPlatform.Core.Configuration;
+using DevPlatform.Core.Configuration.Settings;
 using DevPlatform.Core.Infrastructure;
 using DevPlatform.Core.Infrastructure.DependencyManagement;
 using DevPlatform.Core.Security;
@@ -38,6 +39,18 @@ namespace DevPlatform.Framework.Infrastructure
 
             //web helper
             services.AddScoped<IWebHelper, WebHelper>();
+
+            //static cache manager
+            if (config.UseRedisForCaching)
+            {
+                services.AddScoped<ILocker, DistributedCacheManager>();
+                services.AddScoped<IStaticCacheManager, DistributedCacheManager>();
+            }
+            else
+            {
+                services.AddSingleton<ILocker, MemoryCacheManager>();
+                services.AddSingleton<IStaticCacheManager, MemoryCacheManager>();
+            }
 
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IPostService, PostService>();

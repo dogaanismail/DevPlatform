@@ -1,4 +1,4 @@
-﻿using DevPlatform.Core.Configuration;
+﻿using DevPlatform.Core.Configuration.Settings;
 using DevPlatform.Core.Domain.Configuration;
 using System;
 using System.Collections.Generic;

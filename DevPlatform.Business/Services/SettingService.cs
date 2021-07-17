@@ -1,6 +1,6 @@
 ﻿using DevPlatform.Business.Interfaces;
 using DevPlatform.Core;
-using DevPlatform.Core.Configuration;
+using DevPlatform.Core.Configuration.Settings;
 using DevPlatform.Core.Domain.Configuration;
 using DevPlatform.Repository.Generic;
 using System;
@@ -9,7 +9,6 @@ using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
 
 namespace DevPlatform.Business.Services
 {

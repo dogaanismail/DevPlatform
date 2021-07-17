@@ -1,4 +1,4 @@
-﻿namespace DevPlatform.Core.Configuration
+﻿namespace DevPlatform.Core.Configuration.Settings
 {
     /// <summary>
     /// Setting interface

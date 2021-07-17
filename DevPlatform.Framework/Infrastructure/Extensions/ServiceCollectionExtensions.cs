@@ -64,6 +64,9 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
             //add cloudinary configuration parameters
             services.ConfigureStartupConfig<CloudinaryConfig>(configuration.GetSection("CloudinarySettings"));
 
+            //add cloudinary configuration parameters
+            services.ConfigureStartupConfig<CacheConfig>(configuration.GetSection("CacheSettings"));
+
             //add accessor to HttpContext
             services.AddHttpContextAccessor();
 
