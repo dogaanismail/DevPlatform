@@ -1,12 +1,13 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+
+/* Services */
 import { ModalService } from '../../../services/modal/modal.service';
-import { NgxSpinnerService } from 'ngx-spinner';
+import { WeatherService } from 'src/app/services/common/weather/Weather.service';
 
 /* Models */
 import { Post } from '../../../models/post/post';
 import { SignedUser } from '../../../models/user/signedUser';
-import { Story } from '../../../models/story/story';
-
+import { WeatherResponse } from '../../../models/common/weatherResponse';
 
 /* Rxjs */
 import { Observable } from 'rxjs';
@@ -14,10 +15,8 @@ import { Observable } from 'rxjs';
 /* NgRx */
 import { Store, select } from '@ngrx/store';
 import * as fromPost from '../../../core/ngrx/selectors/post.selectors';
-import * as fromStory from '../../../core/ngrx/selectors/story.selectors';
 import * as fromUser from '../../../core/ngrx/selectors/user.selectors';
 import * as postActions from '../../../core/ngrx/actions/post.actions';
-import * as storyActions from '../../../core/ngrx/actions/story.actions';
 
 @Component({
   selector: 'app-timeline-layout',
@@ -33,13 +32,13 @@ export class TimelineLayoutComponent implements OnInit {
   errorMessage$: Observable<string>;
   signedUser$: Observable<SignedUser>;
   newComment$: Observable<boolean>;
+  currentWeather: WeatherResponse;
 
   constructor(
     private modalService: ModalService,
     private postStore: Store<fromPost.State>,
     private userStore: Store<fromUser.State>,
-    private storyStore: Store<fromStory.State>,
-    private spinner: NgxSpinnerService) { }
+    private weatherService: WeatherService) { }
 
   ngOnInit() {
     this.postStore.dispatch(new postActions.Load());
@@ -48,6 +47,9 @@ export class TimelineLayoutComponent implements OnInit {
     this.errorMessage$ = this.postStore.pipe(select(fromPost.getError));
     this.signedUser$ = this.userStore.pipe(select(fromUser.getSignedUser)) as Observable<SignedUser>;
     this.newComment$ = this.postStore.pipe(select(fromPost.getIsNewComment));
+    this.weatherService.getCurrentWeather().subscribe((response: any) => {
+      this.currentWeather = response.result;
+    })
   }
 
   closeModal(id: string) {

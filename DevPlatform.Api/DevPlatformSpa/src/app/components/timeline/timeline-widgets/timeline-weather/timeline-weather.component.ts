@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 /* Services */
 import { GeoLookupService } from '../../../../services/common/geolookup/geolookup.service';
@@ -7,6 +7,7 @@ import { WeatherService } from '../../../../services/common/weather/Weather.serv
 /* Models */
 import { GeoLookupModel } from '../../../../models/common/geolookup';
 import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
+import { WeatherResponse } from 'src/app/models/common/weatherResponse';
 
 @Component({
   selector: 'app-timeline-weather',
@@ -15,42 +16,13 @@ import { connectableObservableDescriptor } from 'rxjs/internal/observable/Connec
 })
 export class TimelineWeatherComponent implements OnInit {
 
-  geoLookupModel: GeoLookupModel;
-  currentWeather: any = <any>{};
-  currentDate: Date;
-  msg: string;
   constructor(
-    private geoLookupService: GeoLookupService,
-    private weatherService: WeatherService
   ) { }
 
+  @Input() currentWeather: WeatherResponse;
+
   ngOnInit() {
-    this.getCurrentLocation();
-    this.currentDate = new Date();
+
   }
 
-  private getCurrentLocation(): void {
-    this.geoLookupService.getCityAndCountryInformations().subscribe((response: any) => {
-      this.geoLookupModel = response.result as GeoLookupModel;
-    }, err => { }, () => {
-      this.getCurrentWeather(this.geoLookupModel.currentCityName);
-    })
-  }
-
-
-  private getCurrentWeather(currentCityName: string) {
-    this.weatherService.getCurrentWeather(currentCityName)
-      .subscribe(response => {
-        console.log(response);
-        this.currentWeather = response;
-      }, err => {
-        if (err.error && err.error.message) {
-          alert(err.error.message);
-          this.msg = err.error.message;
-          return;
-        }
-        alert('Failed to get weather.');
-      }, () => {
-      })
-  }
 }

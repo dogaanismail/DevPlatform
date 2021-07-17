@@ -53,61 +53,24 @@
   </div>
   <div class="card-body">
     <div class="temperature">
-      <span>{{currentWeather.main.temp-273.15 | number:'1.0-0'}}</span>
+      <span>{{currentWeather.temperature}}°</span>
     </div>
     <div class="weather-icon">
       <div>
-        <!-- <img src="https://openweathermap.org/img/wn/{{currentWeather?.weather[0]?.icon}}@2x.png" /> -->
-        <!-- <h4 *ngIf="currentWeather.weather">{{currentWeather?.weather[0]?.main}}</h4> -->
+        <img src="{{currentWeather.weatherIcon}}" />
+        <h4>{{currentWeather.weatherMain}}</h4>
         <div class="details">
-          <span>Real Feel {{currentWeather.main?.feels_like-273.15 | number:'1.0-0'}}° </span>
-          <span>Humidity {{currentWeather.main?.humidity}}%</span>
-          <span>Wind Speed {{currentWeather.wind?.speed}}</span>
+          <span>Real Feel {{currentWeather.feelsLike}}° </span>
+          <span>Humidity {{currentWeather.humidity}}%</span>
+          <span>Wind Speed {{currentWeather.windSpeed}}</span>
         </div>
       </div>
     </div>
-    <div class="previsions">
-      <div class="day">
-        <span>Mon</span>
-        <mat-icon>wb_sunny</mat-icon>
-        <span>69°</span>
-      </div>
-      <div class="day">
-        <span>Tue</span>
-        <mat-icon>cloud</mat-icon>
-        <span>74°</span>
-      </div>
-      <div class="day">
-        <span>Wed</span>
-        <mat-icon>cloud</mat-icon>
-        <span>73°</span>
-      </div>
-      <div class="day">
-        <span>Thu</span>
-        <mat-icon>wb_sunny</mat-icon>
-        <span>68°</span>
-      </div>
-      <div class="day">
-        <span>Fri</span>
-        <i data-feather="cloud-drizzle"></i>
-        <span>55°</span>
-      </div>
-      <div class="day">
-        <span>Sat</span>
-        <mat-icon>umbrella</mat-icon>
-        <span>58°</span>
-      </div>
-      <div class="day">
-        <span>Sun</span>
-        <mat-icon>wb_sunny</mat-icon>
-        <span>64°</span>
-      </div>
-    </div>
     <div class="current-date-location has-text-centered">
-      <span class="date">{{currentDate | date : 'EEE'}}, {{currentDate | date: 'shortDate' }}</span>
+      <span class="date"></span>
       <span class="location">
         <mat-icon>location_on</mat-icon>
-        {{geoLookupModel.currentCityName}}, {{geoLookupModel.currentCountryName}}
+        {{currentWeather.currentCityName}}, {{currentWeather.currentCountryName}}
       </span>
     </div>
   </div>

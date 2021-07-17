@@ -126,6 +126,7 @@ namespace DevPlatform.Business.Services
             return null;
         }
 
+ 
         #endregion
 
         #region Private Methods
@@ -138,6 +139,18 @@ namespace DevPlatform.Business.Services
         private static double CalCelsius(double temp)
         {
             return Math.Floor(temp - 273.15);
+        }
+
+        /// <summary>
+        /// Returns forecast by city
+        /// </summary>
+        /// <returns>Forecast for the city</returns>
+        private object GetForecast(string city)
+        {
+            var endPoint = $"{_openWeatherSettings.ApiUrl}/forecast?q={city}&appid={_openWeatherSettings.ApiKey}";
+            var response = CreateRequest<object>(endPoint, Method.GET);
+
+            return response;
         }
 
         #endregion
