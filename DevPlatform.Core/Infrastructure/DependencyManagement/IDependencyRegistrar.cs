@@ -1,4 +1,4 @@
-﻿using DevPlatform.Core.Configuration;
+﻿using DevPlatform.Core.Configuration.Configs;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DevPlatform.Core.Infrastructure.DependencyManagement

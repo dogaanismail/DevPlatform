@@ -1,8 +1,10 @@
 ﻿using DevPlatform.Business.Interfaces;
 using DevPlatform.Business.Services;
 using DevPlatform.Core;
+using DevPlatform.Core.Caching;
 using DevPlatform.Core.ComponentModel;
-using DevPlatform.Core.Configuration;
+using DevPlatform.Core.Configuration.Configs;
+using DevPlatform.Core.Configuration.Settings;
 using DevPlatform.Core.Domain.Identity;
 using DevPlatform.Core.Infrastructure;
 using DevPlatform.Core.Security;
@@ -30,6 +32,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Net.Http.Headers;
@@ -61,6 +64,7 @@ namespace DevPlatform.Tests
             services.AddHttpClient();
 
             var typeFinder = new AppDomainTypeFinder();
+            var memoryCache = new MemoryCache(new MemoryCacheOptions());
 
             Singleton<DataSettings>.Instance = new DataSettings
             {
@@ -147,6 +151,10 @@ namespace DevPlatform.Tests
 
             //repositories
             services.AddTransient(typeof(IRepository<>), typeof(RepositoryBase<>));
+
+            services.AddSingleton<IMemoryCache>(memoryCache);
+            services.AddSingleton<IStaticCacheManager, MemoryCacheManager>();
+            services.AddSingleton<ILocker, MemoryCacheManager>();
 
             //services
             services.AddTransient<ITokenService, TokenService>();

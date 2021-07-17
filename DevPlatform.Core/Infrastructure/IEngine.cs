@@ -1,5 +1,4 @@
-﻿using Autofac;
-using DevPlatform.Core.Configuration;
+﻿using DevPlatform.Core.Configuration.Configs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

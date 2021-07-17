@@ -1,5 +1,7 @@
-﻿using DevPlatform.Business.Interfaces;
+﻿using DevPlatform.Business.Common.CacheKeys.Common;
+using DevPlatform.Business.Interfaces;
 using DevPlatform.Core;
+using DevPlatform.Core.Caching;
 using DevPlatform.Core.Configuration.Settings.Common;
 using DevPlatform.Domain.Dto.CommonDto;
 using DevPlatform.Domain.Enumerations;
@@ -20,6 +22,7 @@ namespace DevPlatform.Business.Services
         private readonly IGeoLookupService _geoLookupService;
         private readonly IWebHelper _webHelper;
         private readonly ILogService _logService;
+        private readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 
@@ -28,12 +31,14 @@ namespace DevPlatform.Business.Services
         public OpenWeatherService(OpenWeatherSettings openWeatherSettings,
             IGeoLookupService geoLookupService,
             IWebHelper webHelper,
-            ILogService logService)
+            ILogService logService,
+            IStaticCacheManager staticCacheManager)
         {
             _openWeatherSettings = openWeatherSettings;
             _geoLookupService = geoLookupService;
             _webHelper = webHelper;
             _logService = logService;
+            _staticCacheManager = staticCacheManager;
         }
 
         #endregion
@@ -98,10 +103,13 @@ namespace DevPlatform.Business.Services
         /// <returns>Current weather</returns>
         public virtual WeatherResponseDto GetCurrentWeather()
         {
-            var locationInformation = _geoLookupService.GetCityAndCountryInformations(_webHelper.GetCurrentIpAddress());
+            string currentIpAddress = _webHelper.GetCurrentIpAddress();
 
-            if (locationInformation != null)
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(CommonCacheKeys.WeatherByIdAddressCacheKey, currentIpAddress);
+
+            return _staticCacheManager.Get<WeatherResponseDto>(key, () =>
             {
+                var locationInformation = _geoLookupService.GetCityAndCountryInformations(currentIpAddress);
                 var endPoint = $"{_openWeatherSettings.ApiUrl}/weather?q={locationInformation.CurrentCityName}&appid={_openWeatherSettings.ApiKey}";
                 var response = CreateRequest<RootObject>(endPoint, Method.GET);
 
@@ -121,12 +129,11 @@ namespace DevPlatform.Business.Services
                     };
                 }
 
-            }
-
-            return null;
+                return new WeatherResponseDto();
+            });
         }
 
- 
+
         #endregion
 
         #region Private Methods

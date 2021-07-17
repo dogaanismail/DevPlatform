@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace DevPlatform.Core.Configuration
+namespace DevPlatform.Core.Configuration.Configs
 {
     /// <summary>
     /// Represents startup devPlatform configuration parameters
@@ -144,9 +144,5 @@ namespace DevPlatform.Core.Configuration
         /// </summary>
         [JsonIgnore]
         public bool EncryptDataProtectionKeysWithAzureKeyVault => !string.IsNullOrEmpty(AzureKeyVaultIdForDataProtectionKeys);
-
-        public string CloudName { get; set; }
-        public string CloudinaryApiKey { get; set; }
-        public string CloudinaryApiSecret { get; set; }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using DevPlatform.Core;
 using DevPlatform.Core.Attributes;
-using DevPlatform.Core.Configuration;
+using DevPlatform.Core.Configuration.Configs;
 using DevPlatform.Core.Domain.Identity;
 using DevPlatform.Core.Infrastructure;
 using DevPlatform.Core.Security.JwtSecurity;
@@ -63,6 +63,9 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
 
             //add cloudinary configuration parameters
             services.ConfigureStartupConfig<CloudinaryConfig>(configuration.GetSection("CloudinarySettings"));
+
+            //add cloudinary configuration parameters
+            services.ConfigureStartupConfig<CacheConfig>(configuration.GetSection("CacheSettings"));
 
             //add accessor to HttpContext
             services.AddHttpContextAccessor();
@@ -246,7 +249,7 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
         }
 
         /// <summary>
-        /// Adds SignalR
+        /// Adds DevPlatform behavior options
         /// </summary>
         /// <param name="services"></param>
         public static void AddDevPlatformBehaviorOptions(this IServiceCollection services)
