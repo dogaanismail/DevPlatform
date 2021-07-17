@@ -18,6 +18,7 @@ using DevPlatform.Domain.ServiceResponseModels.PostService;
 using Newtonsoft.Json;
 using DevPlatform.Domain.Api.StoryApi;
 using StoryCreateResponse = DevPlatform.Domain.ServiceResponseModels.StoryService.CreateResponse;
+using DevPlatform.Core.Caching;
 
 namespace DevPlatform.Business.Services
 {
@@ -37,6 +38,7 @@ namespace DevPlatform.Business.Services
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ILogService _logService;
         private readonly IStoryService _storyService;
+        private readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 
@@ -50,7 +52,8 @@ namespace DevPlatform.Business.Services
             IHttpContextAccessor httpContextAccessor,
             IImageProcessingService imageProcessingService,
             ILogService logService,
-            IStoryService storyService)
+            IStoryService storyService,
+            IStaticCacheManager staticCacheManager)
         {
             _postRepository = postRepository;
             _userRepository = userRepository;
@@ -62,6 +65,7 @@ namespace DevPlatform.Business.Services
             _httpContextAccessor = httpContextAccessor;
             _logService = logService;
             _storyService = storyService;
+            _staticCacheManager = staticCacheManager;
         }
         #endregion
 
@@ -89,7 +93,12 @@ namespace DevPlatform.Business.Services
             if (postId == 0)
                 return null;
 
-            return _postRepository.GetById(postId);
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(DevPlatformEntityCacheDefaults<Post>.ByIdCacheKey, postId);
+
+            return _staticCacheManager.Get<Post>(cacheKey, () =>
+            {
+                return _postRepository.GetById(postId);
+            });
         }
 
         /// <summary>
@@ -138,29 +147,34 @@ namespace DevPlatform.Business.Services
         /// <returns></returns>
         public PostListDto GetByIdAsDto(int id)
         {
-            var data = _postRepository.Table.Where(x => x.Id == id).Select(p => new PostListDto
-            {
-                Id = p.Id,
-                Text = p.Text,
-                CreatedDate = p.CreatedDate,
-                ImageUrlList = p.PostImages.Select(x => x.ImageUrl).ToList(),
-                VideoUrl = p.PostVideos.FirstOrDefault().VideoUrl ?? "",
-                CreatedByUserName = p.CreatedUser.UserName ?? "",
-                CreatedByUserPhoto = p.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
-                PostType = p.PostType,
-                FancyboxData = $"post{p.Id}",
-                Comments = p.PostComments.Select(y => new PostCommentListDto
-                {
-                    Text = y.Text,
-                    CreatedDate = y.CreatedDate,
-                    Id = y.Id,
-                    CreatedByUserName = y.CreatedUser.UserName ?? "",
-                    CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
-                    PostId = y.PostId
-                }).ToList()
-            }).FirstOrDefault();
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(DevPlatformEntityCacheDefaults<Post>.ByIdCacheKey, id);
 
-            return data;
+            return _staticCacheManager.Get<PostListDto>(cacheKey, () =>
+            {
+                var data = _postRepository.Table.Where(x => x.Id == id).Select(p => new PostListDto
+                {
+                    Id = p.Id,
+                    Text = p.Text,
+                    CreatedDate = p.CreatedDate,
+                    ImageUrlList = p.PostImages.Select(x => x.ImageUrl).ToList(),
+                    VideoUrl = p.PostVideos.FirstOrDefault().VideoUrl ?? "",
+                    CreatedByUserName = p.CreatedUser.UserName ?? "",
+                    CreatedByUserPhoto = p.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                    PostType = p.PostType,
+                    FancyboxData = $"post{p.Id}",
+                    Comments = p.PostComments.Select(y => new PostCommentListDto
+                    {
+                        Text = y.Text,
+                        CreatedDate = y.CreatedDate,
+                        Id = y.Id,
+                        CreatedByUserName = y.CreatedUser.UserName ?? "",
+                        CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                        PostId = y.PostId
+                    }).ToList()
+                }).FirstOrDefault();
+
+                return data;
+            });
         }
 
         /// <summary>
@@ -169,29 +183,34 @@ namespace DevPlatform.Business.Services
         /// <returns></returns>
         public IEnumerable<PostListDto> GetPostList()
         {
-            var data = _postRepository.Table.Select(p => new PostListDto
-            {
-                Id = p.Id,
-                Text = p.Text,
-                CreatedDate = p.CreatedDate,
-                ImageUrlList = p.PostImages.Select(x => x.ImageUrl).ToList(),
-                VideoUrl = p.PostVideos.FirstOrDefault().VideoUrl ?? "",
-                CreatedByUserName = p.CreatedUser.UserName ?? "",
-                CreatedByUserPhoto = p.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
-                PostType = p.PostType,
-                FancyboxData = $"post{p.Id}",
-                Comments = p.PostComments.Select(y => new PostCommentListDto
-                {
-                    Text = y.Text,
-                    Id = y.Id,
-                    PostId = y.PostId,
-                    CreatedDate = y.CreatedDate,
-                    CreatedByUserName = y.CreatedUser.UserName ?? "",
-                    CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath ?? ""
-                }).ToList()
-            }).AsEnumerable();
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(DevPlatformEntityCacheDefaults<Post>.AllCacheKey);
 
-            return data;
+            return _staticCacheManager.Get<IEnumerable<PostListDto>>(cacheKey, () =>
+            {
+                var data = _postRepository.Table.Select(p => new PostListDto
+                {
+                    Id = p.Id,
+                    Text = p.Text,
+                    CreatedDate = p.CreatedDate,
+                    ImageUrlList = p.PostImages.Select(x => x.ImageUrl).ToList(),
+                    VideoUrl = p.PostVideos.FirstOrDefault().VideoUrl ?? "",
+                    CreatedByUserName = p.CreatedUser.UserName ?? "",
+                    CreatedByUserPhoto = p.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                    PostType = p.PostType,
+                    FancyboxData = $"post{p.Id}",
+                    Comments = p.PostComments.Select(y => new PostCommentListDto
+                    {
+                        Text = y.Text,
+                        Id = y.Id,
+                        PostId = y.PostId,
+                        CreatedDate = y.CreatedDate,
+                        CreatedByUserName = y.CreatedUser.UserName ?? "",
+                        CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath ?? ""
+                    }).ToList()
+                }).AsEnumerable();
+
+                return data;
+            });
         }
 
         /// <summary>

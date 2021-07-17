@@ -43,14 +43,13 @@ namespace DevPlatform.Repository.Generic
         /// Insert entity
         /// </summary>
         /// <param name="entity">Entity</param>
-        void Insert(TEntity entity);
+        void Insert(TEntity entity, bool publishEvent = true);
 
         /// <summary>
         /// Insert entities
         /// </summary>
         /// <param name="entities">Entities</param>
-        void Insert(IEnumerable<TEntity> entities);
-
+        void Insert(IEnumerable<TEntity> entities, bool publishEvent = true);
 
         /// <summary>
         /// Insert the entity entry
@@ -58,7 +57,7 @@ namespace DevPlatform.Repository.Generic
         /// <param name="entity">Entity entry</param>
         /// <param name="publishEvent">Whether to publish event notification</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        Task InsertAsync(TEntity entity);
+        Task InsertAsync(TEntity entity, bool publishEvent = true);
 
         /// <summary>
         /// Insert entity entries
@@ -66,7 +65,7 @@ namespace DevPlatform.Repository.Generic
         /// <param name="entities">Entity entries</param>
         /// <param name="publishEvent">Whether to publish event notification</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        Task InsertAsync(IList<TEntity> entities);
+        Task InsertAsync(IList<TEntity> entities, bool publishEvent = true);
 
         /// <summary>
         /// Loads the original copy of the entity
@@ -80,13 +79,13 @@ namespace DevPlatform.Repository.Generic
         /// Update entity
         /// </summary>
         /// <param name="entity">Entity</param>
-        void Update(TEntity entity);
+        void Update(TEntity entity, bool publishEvent = true);
 
         /// <summary>
         /// Update entities
         /// </summary>
         /// <param name="entities">Entities</param>
-        void Update(IEnumerable<TEntity> entities);
+        void Update(IEnumerable<TEntity> entities, bool publishEvent = true);
 
         /// <summary>
         /// Update the entity entry
@@ -94,7 +93,7 @@ namespace DevPlatform.Repository.Generic
         /// <param name="entity">Entity entry</param>
         /// <param name="publishEvent">Whether to publish event notification</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        Task UpdateAsync(TEntity entity);
+        Task UpdateAsync(TEntity entity, bool publishEvent = true);
 
         /// <summary>
         /// Update entity entries
@@ -102,19 +101,19 @@ namespace DevPlatform.Repository.Generic
         /// <param name="entities">Entity entries</param>
         /// <param name="publishEvent">Whether to publish event notification</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        Task UpdateAsync(IList<TEntity> entities);
+        Task UpdateAsync(IList<TEntity> entities, bool publishEvent = true);
 
         /// <summary>
         /// Delete entity
         /// </summary>
         /// <param name="entity">Entity</param>
-        void Delete(TEntity entity);
+        void Delete(TEntity entity, bool publishEvent = true);
 
         /// <summary>
         /// Delete entities
         /// </summary>
         /// <param name="entities">Entities</param>
-        void Delete(IEnumerable<TEntity> entities);
+        void Delete(IEnumerable<TEntity> entities, bool publishEvent = true);
 
         /// <summary>
         /// Delete entities
@@ -128,7 +127,7 @@ namespace DevPlatform.Repository.Generic
         /// <param name="entity">Entity entry</param>
         /// <param name="publishEvent">Whether to publish event notification</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        Task DeleteAsync(TEntity entity);
+        Task DeleteAsync(TEntity entity, bool publishEvent = true);
 
         /// <summary>
         /// Delete entity entries
@@ -136,7 +135,7 @@ namespace DevPlatform.Repository.Generic
         /// <param name="entities">Entity entries</param>
         /// <param name="publishEvent">Whether to publish event notification</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        Task DeleteAsync(IList<TEntity> entities);
+        Task DeleteAsync(IList<TEntity> entities, bool publishEvent = true);
 
         /// <summary>
         /// Executes command using System.Data.CommandType.StoredProcedure command type
