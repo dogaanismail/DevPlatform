@@ -1,6 +1,4 @@
-﻿using DevPlatform.Core.Configuration;
-using DevPlatform.Core.Infrastructure;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -66,7 +64,7 @@ namespace DevPlatform.Core.Caching
         /// <summary>
         /// Gets or sets a cache time in minutes
         /// </summary>
-        public int CacheTime { get; set; } = 60;
+        public int CacheTime { get; set; } = 60; //TODO: It must be given from a configuration. It should not be hardcoded!
 
         #endregion
     }

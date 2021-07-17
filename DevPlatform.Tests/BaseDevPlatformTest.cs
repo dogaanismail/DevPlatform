@@ -3,7 +3,7 @@ using DevPlatform.Business.Services;
 using DevPlatform.Core;
 using DevPlatform.Core.Caching;
 using DevPlatform.Core.ComponentModel;
-using DevPlatform.Core.Configuration;
+using DevPlatform.Core.Configuration.Configs;
 using DevPlatform.Core.Configuration.Settings;
 using DevPlatform.Core.Domain.Identity;
 using DevPlatform.Core.Infrastructure;

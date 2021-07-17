@@ -1,7 +1,7 @@
 ﻿using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using DevPlatform.Business.Interfaces;
-using DevPlatform.Core.Configuration;
+using DevPlatform.Core.Configuration.Configs;
 using DevPlatform.ImageProcessingLibrary.Contract;
 using Microsoft.AspNetCore.Http;
 using System;

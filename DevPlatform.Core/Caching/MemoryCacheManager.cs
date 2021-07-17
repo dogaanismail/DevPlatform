@@ -1,4 +1,4 @@
-﻿using DevPlatform.Core.Configuration;
+﻿using DevPlatform.Core.Configuration.Configs;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using System;

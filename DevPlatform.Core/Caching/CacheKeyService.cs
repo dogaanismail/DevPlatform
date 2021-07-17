@@ -1,5 +1,5 @@
 ﻿using DevPlatform.Common.Helpers;
-using DevPlatform.Core.Configuration;
+using DevPlatform.Core.Configuration.Configs;
 using DevPlatform.Core.Entities;
 using System.Collections.Generic;
 using System.Globalization;

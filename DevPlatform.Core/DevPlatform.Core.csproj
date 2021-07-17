@@ -27,7 +27,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Configuration\Configs\" />
     <Folder Include="Infrastructure\Mapper\" />
   </ItemGroup>
 

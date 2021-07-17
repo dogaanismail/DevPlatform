@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace DevPlatform.Core.Configuration
+namespace DevPlatform.Core.Configuration.Configs
 {
     /// <summary>
     /// Represents startup devPlatform configuration parameters

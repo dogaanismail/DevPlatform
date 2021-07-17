@@ -1,5 +1,4 @@
-﻿using Autofac;
-using DevPlatform.Core.Configuration;
+﻿using DevPlatform.Core.Configuration.Configs;
 using DevPlatform.Core.Infrastructure.DependencyManagement;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;

@@ -1,5 +1,5 @@
 ﻿using DevPlatform.Core.ComponentModel;
-using DevPlatform.Core.Configuration;
+using DevPlatform.Core.Configuration.Configs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Distributed;
 using Newtonsoft.Json;
