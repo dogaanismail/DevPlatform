@@ -1,12 +1,12 @@
-﻿using System.Threading.Tasks;
-using QuestionEntity = DevPlatform.Core.Domain.Question.Question;
+﻿using DevPlatform.Core.Domain.Identity;
+using System.Threading.Tasks;
 
-namespace DevPlatform.Business.Common.Caching.Question
+namespace DevPlatform.Business.Common.Caching.Identity
 {
     /// <summary>
-    /// Represents a question cache event consumer
+    /// Represents an appUserDetail cache event consumer
     /// </summary>
-    public partial class QuestionCacheEventConsumer : CacheEventConsumer<QuestionEntity>
+    public partial class AppUserDetailCacheEventConsumer : CacheEventConsumer<AppUserDetail>
     {
         /// <summary>
         /// Clear cache data
@@ -14,7 +14,7 @@ namespace DevPlatform.Business.Common.Caching.Question
         /// <param name="entity">Entity</param>
         /// <param name="entityEventType">Entity event type</param>
         /// <returns>A task that represents the asynchronous operation</returns>
-        protected override async Task ClearCacheAsync(QuestionEntity entity, EntityEventType entityEventType)
+        protected override async Task ClearCacheAsync(AppUserDetail entity, EntityEventType entityEventType)
         {
             await base.ClearCacheAsync(entity, entityEventType);
         }

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 namespace DevPlatform.Business.Common.Caching.Portal
 {
     /// <summary>
-    /// Represents a category cache event consumer
+    /// Represents a post cache event consumer
     /// </summary>
     public partial class PostCacheEventConsumer : CacheEventConsumer<Post>
     {

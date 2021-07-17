@@ -28,7 +28,6 @@ namespace DevPlatform.Business.Common.Events
             {
                 try
                 {
-                    //try to handle published event
                     await consumer.HandleEventAsync(@event);
                 }
                 catch (Exception exception)

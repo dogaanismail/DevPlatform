@@ -1,4 +1,6 @@
-﻿using DevPlatform.Business.Interfaces;
+﻿using DevPlatform.Business.Common.CacheKeys.Identity;
+using DevPlatform.Business.Interfaces;
+using DevPlatform.Core.Caching;
 using DevPlatform.Core.Domain.Identity;
 using DevPlatform.Domain.Api;
 using DevPlatform.Domain.Common;
@@ -24,18 +26,22 @@ namespace DevPlatform.Business.Services
         private readonly IRepository<AppUser> _appUserRepository;
         private readonly IRepository<AppUserDetail> _appUserDetailRepository;
         private readonly ILogService _logService;
+        private readonly IStaticCacheManager _staticCacheManager;
+
         #endregion
 
         #region Ctor
         public UserService(UserManager<AppUser> userManager,
             IRepository<AppUser> appUserRepository,
             IRepository<AppUserDetail> appUserDetailRepository,
-            ILogService logService)
+            ILogService logService,
+            IStaticCacheManager staticCacheManager)
         {
             _userManager = userManager;
             _appUserRepository = appUserRepository;
             _appUserDetailRepository = appUserDetailRepository;
             _logService = logService;
+            _staticCacheManager = staticCacheManager;
         }
         #endregion
 
@@ -79,7 +85,12 @@ namespace DevPlatform.Business.Services
             if (string.IsNullOrEmpty(email))
                 throw new ArgumentNullException(nameof(email));
 
-            return _appUserRepository.Table.LoadWith(detail => detail.UserDetail).Where(x => x.Email == email).FirstOrDefault();
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(AppUserCacheKeys.UserByEmailCacheKey, email);
+
+            return _staticCacheManager.Get<AppUser>(cacheKey, () =>
+            {
+                return _appUserRepository.Table.LoadWith(detail => detail.UserDetail).Where(x => x.Email == email).FirstOrDefault();
+            });
         }
 
         /// <summary>
@@ -89,7 +100,13 @@ namespace DevPlatform.Business.Services
         /// <returns></returns>
         public AppUser FindById(int id)
         {
-            return _appUserRepository.Table.LoadWith(detail => detail.UserDetail).Where(x => x.Id == id).FirstOrDefault();
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(DevPlatformEntityCacheDefaults<AppUser>.ByIdCacheKey, id);
+
+            return _staticCacheManager.Get<AppUser>(cacheKey, () =>
+            {
+                return _appUserRepository.Table.LoadWith(detail => detail.UserDetail).Where(x => x.Id == id).FirstOrDefault();
+
+            });
         }
 
         /// <summary>
@@ -102,7 +119,12 @@ namespace DevPlatform.Business.Services
             if (string.IsNullOrEmpty(userName))
                 throw new ArgumentNullException(nameof(userName));
 
-            return _appUserRepository.Table.LoadWith(detail => detail.UserDetail).Where(x => x.UserName == userName).FirstOrDefault();
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(AppUserCacheKeys.UserByUserNameCacheKey, userName);
+
+            return _staticCacheManager.Get<AppUser>(cacheKey, () =>
+            {
+                return _appUserRepository.Table.LoadWith(detail => detail.UserDetail).Where(x => x.UserName == userName).FirstOrDefault();
+            });
         }
 
 

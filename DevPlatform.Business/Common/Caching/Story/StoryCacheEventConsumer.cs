@@ -4,7 +4,7 @@ using StoryEntity = DevPlatform.Core.Domain.Story.Story;
 namespace DevPlatform.Business.Common.Caching.Story
 {
     /// <summary>
-    /// Represents a category cache event consumer
+    /// Represents a story cache event consumer
     /// </summary>
     public partial class QuestionCacheEventConsumer : CacheEventConsumer<StoryEntity>
     {
