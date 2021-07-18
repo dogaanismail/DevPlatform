@@ -34,6 +34,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using StackExchange.Profiling.Storage;
+
 
 namespace DevPlatform.Framework.Infrastructure.Extensions
 {
@@ -257,6 +259,29 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
             services.Configure<ApiBehaviorOptions>(opt =>
             {
                 opt.SuppressModelStateInvalidFilter = true;
+            });
+        }
+
+        /// <summary>
+        /// Add and configure MiniProfiler service
+        /// </summary>
+        /// <param name="services">Collection of service descriptors</param>
+        public static void AddDevPlatformMiniProfiler(this IServiceCollection services)
+        {
+            //whether database is already installed
+            if (!DataSettingsManager.DatabaseIsInstalled)
+                return;
+
+            services.AddMiniProfiler(miniProfilerOptions =>
+            {
+                //use memory cache provider for storing each result
+                ((MemoryCacheStorage)miniProfilerOptions.Storage).CacheDuration = TimeSpan.FromMinutes(60);
+
+                //whether MiniProfiler should be displayed
+                miniProfilerOptions.ShouldProfile = request => true;
+
+                //determine who can access the MiniProfiler results
+                miniProfilerOptions.ResultsAuthorize = request => true;         
             });
         }
     }
