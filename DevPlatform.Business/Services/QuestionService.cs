@@ -1,4 +1,5 @@
 ﻿using DevPlatform.Business.Interfaces;
+using DevPlatform.Core.Caching;
 using DevPlatform.Core.Domain.Question;
 using DevPlatform.Domain.Api.QuestionApi;
 using DevPlatform.Domain.Common;
@@ -25,6 +26,7 @@ namespace DevPlatform.Business.Services
         private readonly IUserService _userService;
         private readonly ILogService _logService;
         private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 
@@ -33,12 +35,14 @@ namespace DevPlatform.Business.Services
         public QuestionService(IRepository<Question> questionRepository,
             IUserService userService,
             ILogService logService,
-            IHttpContextAccessor httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor,
+            IStaticCacheManager staticCacheManager)
         {
             _questionRepository = questionRepository;
             _userService = userService;
             _logService = logService;
             _httpContextAccessor = httpContextAccessor;
+            _staticCacheManager = staticCacheManager;
         }
 
         #endregion
@@ -107,7 +111,12 @@ namespace DevPlatform.Business.Services
             if (questionId == 0)
                 return null;
 
-            return _questionRepository.GetById(questionId);
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(DevPlatformEntityCacheDefaults<Question>.ByIdCacheKey, questionId);
+
+            return _staticCacheManager.Get<Question>(cacheKey, () =>
+            {
+                return _questionRepository.GetById(questionId);
+            });
         }
 
         /// <summary>
@@ -117,26 +126,31 @@ namespace DevPlatform.Business.Services
         /// <returns></returns>
         public virtual QuestionListDto GetByIdAsDto(int id)
         {
-            var data = _questionRepository.Table.Where(x => x.Id == id).Select(p => new QuestionListDto
-            {
-                Id = p.Id,
-                Title = p.Title,
-                Description = p.Description,
-                CreatedDate = p.CreatedDate,
-                CreatedByUserName = p.CreatedUser.UserName ?? "",
-                CreatedByUserPhoto = p.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
-                Comments = p.QuestionComments.Select(y => new QuestionCommentListDto
-                {
-                    Text = y.Text,
-                    CreatedDate = y.CreatedDate,
-                    Id = y.Id,
-                    CreatedByUserName = y.CreatedUser.UserName ?? "",
-                    CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
-                    QuestionId = y.QuestionId
-                }).ToList()
-            }).FirstOrDefault();
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(DevPlatformEntityCacheDefaults<Question>.ByIdCacheKey, id);
 
-            return data;
+            return _staticCacheManager.Get<QuestionListDto>(cacheKey, () =>
+            {
+                var data = _questionRepository.Table.Where(x => x.Id == id).Select(p => new QuestionListDto
+                {
+                    Id = p.Id,
+                    Title = p.Title,
+                    Description = p.Description,
+                    CreatedDate = p.CreatedDate,
+                    CreatedByUserName = p.CreatedUser.UserName ?? "",
+                    CreatedByUserPhoto = p.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                    Comments = p.QuestionComments.Select(y => new QuestionCommentListDto
+                    {
+                        Text = y.Text,
+                        CreatedDate = y.CreatedDate,
+                        Id = y.Id,
+                        CreatedByUserName = y.CreatedUser.UserName ?? "",
+                        CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                        QuestionId = y.QuestionId
+                    }).ToList()
+                }).FirstOrDefault();
+
+                return data;
+            });
         }
 
         /// <summary>
@@ -145,26 +159,31 @@ namespace DevPlatform.Business.Services
         /// <returns></returns>
         public virtual IEnumerable<QuestionListDto> GetQuestionList()
         {
-            var data = _questionRepository.Table.Select(p => new QuestionListDto
-            {
-                Id = p.Id,
-                Title = p.Title,
-                Description = p.Description,
-                CreatedDate = p.CreatedDate,
-                CreatedByUserName = p.CreatedUser.UserName ?? "",
-                CreatedByUserPhoto = p.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
-                Comments = p.QuestionComments.Select(y => new QuestionCommentListDto
-                {
-                    Text = y.Text,
-                    CreatedDate = y.CreatedDate,
-                    Id = y.Id,
-                    CreatedByUserName = y.CreatedUser.UserName ?? "",
-                    CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
-                    QuestionId = y.QuestionId
-                }).ToList()
-            }).AsEnumerable();
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(DevPlatformEntityCacheDefaults<Question>.AllCacheKey);
 
-            return data;
+            return _staticCacheManager.Get<IEnumerable<QuestionListDto>>(cacheKey, () =>
+            {
+                var data = _questionRepository.Table.Select(p => new QuestionListDto
+                {
+                    Id = p.Id,
+                    Title = p.Title,
+                    Description = p.Description,
+                    CreatedDate = p.CreatedDate,
+                    CreatedByUserName = p.CreatedUser.UserName ?? "",
+                    CreatedByUserPhoto = p.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                    Comments = p.QuestionComments.Select(y => new QuestionCommentListDto
+                    {
+                        Text = y.Text,
+                        CreatedDate = y.CreatedDate,
+                        Id = y.Id,
+                        CreatedByUserName = y.CreatedUser.UserName ?? "",
+                        CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                        QuestionId = y.QuestionId
+                    }).ToList()
+                }).AsEnumerable();
+
+                return data;
+            });
         }
 
         /// <summary>

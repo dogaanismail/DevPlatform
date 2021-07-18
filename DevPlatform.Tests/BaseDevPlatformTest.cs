@@ -1,4 +1,5 @@
-﻿using DevPlatform.Business.Interfaces;
+﻿using DevPlatform.Business.Common.Events;
+using DevPlatform.Business.Interfaces;
 using DevPlatform.Business.Services;
 using DevPlatform.Core;
 using DevPlatform.Core.Caching;
@@ -6,6 +7,7 @@ using DevPlatform.Core.ComponentModel;
 using DevPlatform.Core.Configuration.Configs;
 using DevPlatform.Core.Configuration.Settings;
 using DevPlatform.Core.Domain.Identity;
+using DevPlatform.Core.Events;
 using DevPlatform.Core.Infrastructure;
 using DevPlatform.Core.Security;
 using DevPlatform.Data;
@@ -179,6 +181,8 @@ namespace DevPlatform.Tests
             services.AddTransient<IQuestionCommentService, QuestionCommentService>();
             services.AddTransient<IGeoLookupService, GeoLookupService>();
 
+            services.AddSingleton<IEventPublisher, EventPublisher>();
+
             #region ImageProcessingLibrary services
             services.AddScoped<IImageProcessorService, ImageProcessorService>();
             services.AddTransient<IFileProcessorCreater, FileProcessorCreater>();
@@ -190,6 +194,16 @@ namespace DevPlatform.Tests
             foreach (var setting in settings)
                 services.AddTransient(setting,
                     context => context.GetRequiredService<ISettingService>().LoadSetting(setting));
+
+            //event consumers
+            var consumers = typeFinder.FindClassesOfType(typeof(IConsumer<>)).ToList();
+            foreach (var consumer in consumers)
+                foreach (var findInterface in consumer.FindInterfaces((type, criteria) =>
+                {
+                    var isMatch = type.IsGenericType && ((Type)criteria).IsAssignableFrom(type.GetGenericTypeDefinition());
+                    return isMatch;
+                }, typeof(IConsumer<>)))
+                    services.AddTransient(findInterface, consumer);
 
             services
               // add common FluentMigrator services

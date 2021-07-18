@@ -1,6 +1,7 @@
 ﻿using CloudinaryDotNet.Actions;
 using DevPlatform.Business.Interfaces;
 using DevPlatform.Common.Helpers;
+using DevPlatform.Core.Caching;
 using DevPlatform.Core.Domain.Story;
 using DevPlatform.Domain.Api.StoryApi;
 using DevPlatform.Domain.Common;
@@ -31,6 +32,7 @@ namespace DevPlatform.Business.Services
         private readonly IImageProcessingService _imageProcessingService;
         private readonly IStoryImageService _storyImageService;
         private readonly IStoryVideoService _storyVideoService;
+        private readonly IStaticCacheManager _staticCacheManager;
 
         #endregion
 
@@ -41,7 +43,8 @@ namespace DevPlatform.Business.Services
             IUserService userService,
             IImageProcessingService imageProcessingService,
             IStoryImageService storyImageService,
-            IStoryVideoService storyVideoService)
+            IStoryVideoService storyVideoService,
+            IStaticCacheManager staticCacheManager)
         {
             _storyRepository = storyRepository;
             _logService = logService;
@@ -50,6 +53,7 @@ namespace DevPlatform.Business.Services
             _imageProcessingService = imageProcessingService;
             _storyImageService = storyImageService;
             _storyVideoService = storyVideoService;
+            _staticCacheManager = staticCacheManager;
         }
         #endregion
 
@@ -77,7 +81,12 @@ namespace DevPlatform.Business.Services
             if (storyId == 0)
                 return null;
 
-            return _storyRepository.GetById(storyId);
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(DevPlatformEntityCacheDefaults<Story>.ByIdCacheKey, storyId);
+
+            return _staticCacheManager.Get<Story>(cacheKey, () =>
+            {
+                return _storyRepository.GetById(storyId);
+            });
         }
 
         /// <summary>
@@ -126,29 +135,34 @@ namespace DevPlatform.Business.Services
         /// <returns></returns>
         public StoryListDto GetByIdAsDto(int id)
         {
-            var data = _storyRepository.Table.Where(x => x.Id == id).Select(p => new StoryListDto
-            {
-                Id = p.Id,
-                Title = p.Title,
-                Description = p.Description,
-                CreatedDate = p.CreatedDate,
-                ImageUrl = p.StoryImages.FirstOrDefault().ImageUrl ?? "",
-                VideoUrl = p.StoryVideos.FirstOrDefault().VideoUrl ?? "",
-                CreatedByUserName = p.CreatedUser.UserName ?? "",
-                CreatedByUserPhoto = p.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
-                StoryType = p.StoryType,
-                Comments = p.StoryComments.Select(y => new StoryCommentListDto
-                {
-                    Text = y.Text,
-                    CreatedDate = y.CreatedDate,
-                    Id = y.Id,
-                    CreatedByUserName = y.CreatedUser.UserName ?? "",
-                    CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
-                    StoryId = y.StoryId
-                }).ToList()
-            }).FirstOrDefault();
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(DevPlatformEntityCacheDefaults<Story>.ByIdCacheKey, id);
 
-            return data;
+            return _staticCacheManager.Get<StoryListDto>(cacheKey, () =>
+            {
+                var data = _storyRepository.Table.Where(x => x.Id == id).Select(p => new StoryListDto
+                {
+                    Id = p.Id,
+                    Title = p.Title,
+                    Description = p.Description,
+                    CreatedDate = p.CreatedDate,
+                    ImageUrl = p.StoryImages.FirstOrDefault().ImageUrl ?? "",
+                    VideoUrl = p.StoryVideos.FirstOrDefault().VideoUrl ?? "",
+                    CreatedByUserName = p.CreatedUser.UserName ?? "",
+                    CreatedByUserPhoto = p.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                    StoryType = p.StoryType,
+                    Comments = p.StoryComments.Select(y => new StoryCommentListDto
+                    {
+                        Text = y.Text,
+                        CreatedDate = y.CreatedDate,
+                        Id = y.Id,
+                        CreatedByUserName = y.CreatedUser.UserName ?? "",
+                        CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                        StoryId = y.StoryId
+                    }).ToList()
+                }).FirstOrDefault();
+
+                return data;
+            });
         }
 
         /// <summary>
@@ -157,29 +171,34 @@ namespace DevPlatform.Business.Services
         /// <returns></returns>
         public IEnumerable<StoryListDto> GetStoryList()
         {
-            var data = _storyRepository.Table.Select(p => new StoryListDto
-            {
-                Id = p.Id,
-                Title = p.Title,
-                Description = p.Description,
-                CreatedDate = p.CreatedDate,
-                ImageUrl = p.StoryImages.FirstOrDefault().ImageUrl ?? "",
-                VideoUrl = p.StoryVideos.FirstOrDefault().VideoUrl ?? "",
-                CreatedByUserName = p.CreatedUser.UserName ?? "",
-                CreatedByUserPhoto = p.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
-                StoryType = p.StoryType,
-                Comments = p.StoryComments.Select(y => new StoryCommentListDto
-                {
-                    Text = y.Text,
-                    CreatedDate = y.CreatedDate,
-                    Id = y.Id,
-                    CreatedByUserName = y.CreatedUser.UserName ?? "",
-                    CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
-                    StoryId = y.StoryId
-                }).ToList()
-            }).AsEnumerable();
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(DevPlatformEntityCacheDefaults<Story>.AllCacheKey);
 
-            return data;
+            return _staticCacheManager.Get<IEnumerable<StoryListDto>>(cacheKey, () =>
+            {
+                var data = _storyRepository.Table.Select(p => new StoryListDto
+                {
+                    Id = p.Id,
+                    Title = p.Title,
+                    Description = p.Description,
+                    CreatedDate = p.CreatedDate,
+                    ImageUrl = p.StoryImages.FirstOrDefault().ImageUrl ?? "",
+                    VideoUrl = p.StoryVideos.FirstOrDefault().VideoUrl ?? "",
+                    CreatedByUserName = p.CreatedUser.UserName ?? "",
+                    CreatedByUserPhoto = p.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                    StoryType = p.StoryType,
+                    Comments = p.StoryComments.Select(y => new StoryCommentListDto
+                    {
+                        Text = y.Text,
+                        CreatedDate = y.CreatedDate,
+                        Id = y.Id,
+                        CreatedByUserName = y.CreatedUser.UserName ?? "",
+                        CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                        StoryId = y.StoryId
+                    }).ToList()
+                }).AsEnumerable();
+
+                return data;
+            });
         }
 
         /// <summary>

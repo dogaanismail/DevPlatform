@@ -38,6 +38,12 @@ namespace DevPlatform.Framework.Infrastructure
 
             //custom states errors
             services.AddDevPlatformBehaviorOptions();
+
+            //add memory cache
+            services.AddMemoryCache();
+
+            //add MiniProfiler services
+            services.AddDevPlatformMiniProfiler();
         }
 
         /// <summary>
@@ -72,6 +78,9 @@ namespace DevPlatform.Framework.Infrastructure
 
             //used for signalR
             application.AddDevPlatformSignalR();
+
+            //use MiniProfiler
+            application.UseMiniProfiler();
         }
 
         /// <summary>

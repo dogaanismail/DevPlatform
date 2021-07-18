@@ -11,7 +11,7 @@ namespace DevPlatform.Business.Common.CacheKeys.Common
         /// <remarks>
         /// {0} : ip address
         /// </remarks>
-        public static CacheKey WeatherByIdAddressCacheKey => new("DevPlatform.weather.byipaddress.{0}");
+        public static CacheKey WeatherByIpAddressCacheKey => new("DevPlatform.weather.byipaddress.{0}");
 
         #endregion
     }

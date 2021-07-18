@@ -105,7 +105,7 @@ namespace DevPlatform.Business.Services
         {
             string currentIpAddress = _webHelper.GetCurrentIpAddress();
 
-            var key = _staticCacheManager.PrepareKeyForDefaultCache(CommonCacheKeys.WeatherByIdAddressCacheKey, currentIpAddress);
+            var key = _staticCacheManager.PrepareKeyForDefaultCache(CommonCacheKeys.WeatherByIpAddressCacheKey, currentIpAddress);
 
             return _staticCacheManager.Get<WeatherResponseDto>(key, () =>
             {

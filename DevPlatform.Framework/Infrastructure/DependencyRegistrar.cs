@@ -1,10 +1,12 @@
-﻿using DevPlatform.Business.Interfaces;
+﻿using DevPlatform.Business.Common.Events;
+using DevPlatform.Business.Interfaces;
 using DevPlatform.Business.Services;
 using DevPlatform.Core;
 using DevPlatform.Core.Caching;
 using DevPlatform.Core.Configuration;
 using DevPlatform.Core.Configuration.Configs;
 using DevPlatform.Core.Configuration.Settings;
+using DevPlatform.Core.Events;
 using DevPlatform.Core.Infrastructure;
 using DevPlatform.Core.Infrastructure.DependencyManagement;
 using DevPlatform.Core.Security;
@@ -14,6 +16,7 @@ using DevPlatform.ImageProcessingLibrary.Providers;
 using DevPlatform.Repository.Generic;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Linq;
 
 namespace DevPlatform.Framework.Infrastructure
@@ -77,6 +80,7 @@ namespace DevPlatform.Framework.Infrastructure
             services.AddScoped<IOpenWeatherService, OpenWeatherService>();
 
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+            services.AddSingleton<IEventPublisher, EventPublisher>();
 
             #region ImageProcessingLibrary services
             services.AddScoped<IImageProcessorService, ImageProcessorService>();
@@ -94,6 +98,16 @@ namespace DevPlatform.Framework.Infrastructure
                     return serviceProvider.GetRequiredService<ISettingService>().LoadSetting(setting);
                 });
             }
+
+            //event consumers
+            var consumers = typeFinder.FindClassesOfType(typeof(IConsumer<>)).ToList();
+            foreach (var consumer in consumers)
+                foreach (var findInterface in consumer.FindInterfaces((type, criteria) =>
+                {
+                    var isMatch = type.IsGenericType && ((Type)criteria).IsAssignableFrom(type.GetGenericTypeDefinition());
+                    return isMatch;
+                }, typeof(IConsumer<>)))
+                    services.AddScoped(findInterface, consumer);
         }
 
         /// <summary>

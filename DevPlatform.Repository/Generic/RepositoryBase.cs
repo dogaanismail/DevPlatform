@@ -1,4 +1,5 @@
 ﻿using DevPlatform.Core.Entities;
+using DevPlatform.Core.Events;
 using DevPlatform.Data;
 using DevPlatform.Repository.Extensions;
 using LinqToDB;
@@ -22,14 +23,17 @@ namespace DevPlatform.Repository.Generic
 
         private readonly IDevPlatformDataProvider _dataProvider;
         private ITable<TEntity> _entities;
+        private readonly IEventPublisher _eventPublisher;
 
         #endregion
 
         #region Ctor
 
-        public RepositoryBase(IDevPlatformDataProvider dataProvider)
+        public RepositoryBase(IDevPlatformDataProvider dataProvider,
+            IEventPublisher eventPublisher)
         {
             _dataProvider = dataProvider;
+            _eventPublisher = eventPublisher;
         }
 
         #endregion
@@ -50,19 +54,23 @@ namespace DevPlatform.Repository.Generic
         /// Insert entity
         /// </summary>
         /// <param name="entity">Entity</param>
-        public virtual void Insert(TEntity entity)
+        public virtual void Insert(TEntity entity, bool publishEvent = true)
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
             _dataProvider.InsertEntity(entity);
+
+            //event notification
+            if (publishEvent)
+                _ = _eventPublisher.EntityInsertedAsync(entity);
         }
 
         /// <summary>
         /// Insert entities
         /// </summary>
         /// <param name="entities">Entities</param>
-        public virtual void Insert(IEnumerable<TEntity> entities)
+        public virtual void Insert(IEnumerable<TEntity> entities, bool publishEvent = true)
         {
             if (entities == null)
                 throw new ArgumentNullException(nameof(entities));
@@ -72,6 +80,13 @@ namespace DevPlatform.Repository.Generic
                 _dataProvider.BulkInsertEntities(entities);
                 transaction.Complete();
             }
+
+            if (!publishEvent)
+                return;
+
+            //event notification
+            foreach (var entity in entities)
+                _ = _eventPublisher.EntityInsertedAsync(entity);
         }
 
         /// <summary>
@@ -79,12 +94,16 @@ namespace DevPlatform.Repository.Generic
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public virtual async Task InsertAsync(TEntity entity)
+        public virtual async Task InsertAsync(TEntity entity, bool publishEvent = true)
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
             await _dataProvider.InsertEntityAsync(entity);
+
+            //event notification
+            if (publishEvent)
+                await _eventPublisher.EntityInsertedAsync(entity);
         }
 
         /// <summary>
@@ -92,7 +111,7 @@ namespace DevPlatform.Repository.Generic
         /// </summary>
         /// <param name="entities"></param>
         /// <returns></returns>
-        public virtual async Task InsertAsync(IList<TEntity> entities)
+        public virtual async Task InsertAsync(IList<TEntity> entities, bool publishEvent = true)
         {
             if (entities == null)
                 throw new ArgumentNullException(nameof(entities));
@@ -100,6 +119,13 @@ namespace DevPlatform.Repository.Generic
             using var transaction = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
             await _dataProvider.BulkInsertEntitiesAsync(entities);
             transaction.Complete();
+
+            if (!publishEvent)
+                return;
+
+            //event notification
+            foreach (var entity in entities)
+                await _eventPublisher.EntityInsertedAsync(entity);
         }
 
         /// <summary>
@@ -118,26 +144,30 @@ namespace DevPlatform.Repository.Generic
         /// Update entity
         /// </summary>
         /// <param name="entity">Entity</param>
-        public virtual void Update(TEntity entity)
+        public virtual void Update(TEntity entity, bool publishEvent = true)
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
             _dataProvider.UpdateEntity(entity);
+
+            //event notification
+            if (publishEvent)
+                _ = _eventPublisher.EntityUpdatedAsync(entity);
         }
 
         /// <summary>
         /// Update entities
         /// </summary>
         /// <param name="entities">Entities</param>
-        public virtual void Update(IEnumerable<TEntity> entities)
+        public virtual void Update(IEnumerable<TEntity> entities, bool publishEvent = true)
         {
             if (entities == null)
                 throw new ArgumentNullException(nameof(entities));
 
             foreach (var entity in entities)
             {
-                Update(entity);
+                Update(entity, publishEvent);
             }
         }
 
@@ -146,12 +176,16 @@ namespace DevPlatform.Repository.Generic
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public virtual async Task UpdateAsync(TEntity entity)
+        public virtual async Task UpdateAsync(TEntity entity, bool publishEvent = true)
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
             await _dataProvider.UpdateEntityAsync(entity);
+
+            //event notification
+            if (publishEvent)
+                await _eventPublisher.EntityUpdatedAsync(entity);
         }
 
         /// <summary>
@@ -159,7 +193,7 @@ namespace DevPlatform.Repository.Generic
         /// </summary>
         /// <param name="entities"></param>
         /// <returns></returns>
-        public virtual async Task UpdateAsync(IList<TEntity> entities)
+        public virtual async Task UpdateAsync(IList<TEntity> entities, bool publishEvent = true)
         {
             if (entities == null)
                 throw new ArgumentNullException(nameof(entities));
@@ -168,18 +202,29 @@ namespace DevPlatform.Repository.Generic
                 return;
 
             await _dataProvider.UpdateEntitiesAsync(entities);
+
+            //event notification
+            if (!publishEvent)
+                return;
+
+            foreach (var entity in entities)
+                await _eventPublisher.EntityUpdatedAsync(entity);
         }
 
         /// <summary>
         /// Delete entity
         /// </summary>
         /// <param name="entity">Entity</param>
-        public virtual void Delete(TEntity entity)
+        public virtual void Delete(TEntity entity, bool publishEvent = true)
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
             _dataProvider.DeleteEntity(entity);
+
+            //event notification
+            if (publishEvent)
+                _ = _eventPublisher.EntityDeletedAsync(entity);
         }
 
 
@@ -187,12 +232,19 @@ namespace DevPlatform.Repository.Generic
         /// Delete entities
         /// </summary>
         /// <param name="entities">Entities</param>
-        public virtual void Delete(IEnumerable<TEntity> entities)
+        public virtual void Delete(IEnumerable<TEntity> entities, bool publishEvent = true)
         {
             if (entities == null)
                 throw new ArgumentNullException(nameof(entities));
 
             _dataProvider.BulkDeleteEntities(entities.ToList());
+
+            //event notification
+            if (!publishEvent)
+                return;
+
+            foreach (var entity in entities)
+                _ = _eventPublisher.EntityDeletedAsync(entity);
         }
 
         /// <summary>
@@ -212,12 +264,16 @@ namespace DevPlatform.Repository.Generic
         /// </summary>
         /// <param name="entity"></param>
         /// <returns></returns>
-        public virtual async Task DeleteAsync(TEntity entity)
+        public virtual async Task DeleteAsync(TEntity entity, bool publishEvent = true)
         {
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
 
             await _dataProvider.DeleteEntityAsync(entity);
+
+            //event notification
+            if (publishEvent)
+                await _eventPublisher.EntityDeletedAsync(entity);
         }
 
         /// <summary>
@@ -225,12 +281,15 @@ namespace DevPlatform.Repository.Generic
         /// </summary>
         /// <param name="entities"></param>
         /// <returns></returns>
-        public virtual async Task DeleteAsync(IList<TEntity> entities)
+        public virtual async Task DeleteAsync(IList<TEntity> entities, bool publishEvent = true)
         {
             if (entities == null)
                 throw new ArgumentNullException(nameof(entities));
 
             await _dataProvider.BulkDeleteEntitiesAsync(entities);
+
+            foreach (var entity in entities)
+                await _eventPublisher.EntityDeletedAsync(entity);
         }
 
         /// <summary>
@@ -320,7 +379,7 @@ namespace DevPlatform.Repository.Generic
         /// <summary>
         /// Gets an entity set
         /// </summary>
-        public virtual ITable<TEntity> Entities => _entities ?? (_entities = _dataProvider.GetTable<TEntity>());
+        public virtual ITable<TEntity> Entities => _entities ??= _dataProvider.GetTable<TEntity>();
 
         #endregion
     }

@@ -1,4 +1,6 @@
-﻿using DevPlatform.Business.Interfaces;
+﻿using DevPlatform.Business.Common.CacheKeys.Identity;
+using DevPlatform.Business.Interfaces;
+using DevPlatform.Core.Caching;
 using DevPlatform.Core.Domain.Identity;
 using DevPlatform.Domain.Common;
 using DevPlatform.Domain.Dto;
@@ -7,7 +9,6 @@ using LinqToDB;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Linq;
-
 
 namespace DevPlatform.Business.Services
 {
@@ -20,20 +21,20 @@ namespace DevPlatform.Business.Services
         private readonly IRepository<AppUserDetail> _appUserDetailRepository;
         private readonly IRepository<AppUser> _appUserRepository;
         private readonly UserManager<AppUser> _userManager;
-        private readonly IUserService _userService;
-        private readonly IPostService _postService;
+        private readonly IStaticCacheManager _staticCacheManager;
+
         #endregion
 
         #region Ctor
         public UserDetailService(IRepository<AppUserDetail> appUserDetailRepository,
-            IUserService userService, IPostService postService,
-            UserManager<AppUser> userManager, IRepository<AppUser> appUserRepository)
+            UserManager<AppUser> userManager,
+            IRepository<AppUser> appUserRepository,
+            IStaticCacheManager staticCacheManager)
         {
             _appUserDetailRepository = appUserDetailRepository;
-            _userService = userService;
-            _postService = postService;
             _userManager = userManager;
             _appUserRepository = appUserRepository;
+            _staticCacheManager = staticCacheManager;
         }
         #endregion
 
@@ -61,16 +62,22 @@ namespace DevPlatform.Business.Services
             if (string.IsNullOrEmpty(userName))
                 return null;
 
-            var appUser = _appUserRepository.Table.Where(x => x.UserName == userName).Select(user => new AppUserDetailDto
-            {
-                Id = user.Id,
-                UserName = user.UserName,
-                CoverPhotoUrl = user.UserDetail.CoverPhotoPath,
-                ProfilePhotoUrl = user.UserDetail.ProfilePhotoPath,
-                RegisteredDate = user.CreatedDate,
-            }).FirstOrDefault();
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(AppUserCacheKeys.UserDetailByUserNameCacheKey, userName);
 
-            return appUser;
+            return _staticCacheManager.Get<AppUserDetailDto>(cacheKey, () =>
+            {
+                var appUser = _appUserRepository.Table.Where(x => x.UserName == userName)
+                .Select(user => new AppUserDetailDto
+                {
+                    Id = user.Id,
+                    UserName = user.UserName,
+                    CoverPhotoUrl = user.UserDetail.CoverPhotoPath,
+                    ProfilePhotoUrl = user.UserDetail.ProfilePhotoPath,
+                    RegisteredDate = user.CreatedDate,
+                }).FirstOrDefault();
+
+                return appUser;
+            });
         }
 
         /// <summary>
