@@ -14,6 +14,15 @@ namespace DevPlatform.Business.Common.CacheKeys.Identity
         /// </remarks>
         public static CacheKey UserDetailByUserNameCacheKey => new("DevPlatform.userdetail.byusername.{0}");
 
+
+        /// <summary>
+        /// Gets a key for caching
+        /// </summary>
+        /// <remarks>
+        /// {0} : userName
+        /// </remarks>
+        public static CacheKey UserDetailForProfileByUserNameCacheKey => new("DevPlatform.profile.byusername.{0}");
+
         /// <summary>
         /// Gets a key for caching
         /// </summary>

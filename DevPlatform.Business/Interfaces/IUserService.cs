@@ -1,6 +1,7 @@
 ﻿using DevPlatform.Core.Domain.Identity;
 using DevPlatform.Domain.Api;
 using DevPlatform.Domain.Common;
+using DevPlatform.Domain.Dto.UserDto;
 using DevPlatform.Domain.ServiceResponseModels.UserService;
 using Microsoft.AspNetCore.Identity;
 
@@ -59,5 +60,12 @@ namespace DevPlatform.Business.Interfaces
         /// <param name="model"></param>
         /// <returns></returns>
         ServiceResponse<RegisterResponse> Register(RegisterApiRequest model);
+
+        /// <summary>
+        /// Returns a user detail by username
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <returns>Returns user's detail, such as personal informations, user posts, user albums</returns>
+        AppUserProfileDto GetUserDetailByUserName(string userName);
     }
 }

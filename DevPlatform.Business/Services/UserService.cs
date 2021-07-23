@@ -2,8 +2,10 @@
 using DevPlatform.Business.Interfaces;
 using DevPlatform.Core.Caching;
 using DevPlatform.Core.Domain.Identity;
+using DevPlatform.Core.Infrastructure;
 using DevPlatform.Domain.Api;
 using DevPlatform.Domain.Common;
+using DevPlatform.Domain.Dto.UserDto;
 using DevPlatform.Domain.Enumerations;
 using DevPlatform.Domain.ServiceResponseModels.UserService;
 using DevPlatform.Repository.Generic;
@@ -27,6 +29,7 @@ namespace DevPlatform.Business.Services
         private readonly IRepository<AppUserDetail> _appUserDetailRepository;
         private readonly ILogService _logService;
         private readonly IStaticCacheManager _staticCacheManager;
+        private readonly IUserDetailService _userDetailService;
 
         #endregion
 
@@ -35,13 +38,15 @@ namespace DevPlatform.Business.Services
             IRepository<AppUser> appUserRepository,
             IRepository<AppUserDetail> appUserDetailRepository,
             ILogService logService,
-            IStaticCacheManager staticCacheManager)
+            IStaticCacheManager staticCacheManager,
+            IUserDetailService userDetailService)
         {
             _userManager = userManager;
             _appUserRepository = appUserRepository;
             _appUserDetailRepository = appUserDetailRepository;
             _logService = logService;
             _staticCacheManager = staticCacheManager;
+            _userDetailService = userDetailService;
         }
         #endregion
 
@@ -205,6 +210,28 @@ namespace DevPlatform.Business.Services
                 serviceResponse.Warnings.Add(ex.Message);
                 return serviceResponse;
             }
+        }
+
+        /// <summary>
+        /// Returns a user detail by username
+        /// </summary>
+        /// <param name="userName"></param>
+        /// <returns>Returns user's detail, such as personal informations, user posts, user albums</returns>
+        public virtual AppUserProfileDto GetUserDetailByUserName(string userName)
+        {
+            if (string.IsNullOrEmpty(userName))
+                throw new ArgumentNullException(nameof(userName));
+
+            var postService = EngineContext.Current.Resolve<IPostService>();
+
+            var detailDto = new AppUserProfileDto
+            {
+                AppUserDetail = _userDetailService.GetUserDetailByUserName(userName)
+            };
+
+            detailDto.UserPosts = postService.GetUserPostsWithDto(detailDto.AppUserDetail.Id);
+
+            return detailDto;
         }
 
         #region Private Methods
