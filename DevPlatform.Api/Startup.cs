@@ -1,5 +1,3 @@
-using DevPlatform.Core.Configuration.Configs;
-using DevPlatform.Core.Infrastructure;
 using DevPlatform.Framework.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -17,14 +15,13 @@ namespace DevPlatform.Api
 
         private readonly IConfiguration _configuration;
         private readonly IWebHostEnvironment _webHostEnvironment;
-        private IEngine _engine;
-        private DevPlatformConfig _devPlatformConfig;
 
         #endregion
 
         #region Ctor
 
-        public Startup(IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
+        public Startup(IConfiguration configuration, 
+            IWebHostEnvironment webHostEnvironment)
         {
             _configuration = configuration;
             _webHostEnvironment = webHostEnvironment;
@@ -32,22 +29,15 @@ namespace DevPlatform.Api
 
         #endregion
 
+        #region Configures
+
         /// <summary>
         /// Add services to the application and configure service provider
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
         public void ConfigureServices(IServiceCollection services)
         {
-            (_engine, _devPlatformConfig) = services.ConfigureApplicationServices(_configuration, _webHostEnvironment);
-        }
-
-        /// <summary>
-        /// Configure the DI container 
-        /// </summary>
-        /// <param name="services">Collection of service descriptors</param>
-        public void ConfigureContainer(IServiceCollection services)
-        {
-            _engine.RegisterDependencies(services, _devPlatformConfig);
+           services.ConfigureApplicationServices(_configuration, _webHostEnvironment);
         }
 
         /// <summary>
@@ -58,5 +48,7 @@ namespace DevPlatform.Api
         {
             application.ConfigureRequestPipeline();
         }
+
+        #endregion
     }
 }

@@ -1,5 +1,7 @@
-﻿using DevPlatform.Business.Interfaces;
+﻿using DevPlatform.Business.Configuration.Common;
+using DevPlatform.Business.Interfaces;
 using DevPlatform.Core;
+using DevPlatform.Core.Caching;
 using DevPlatform.Core.Configuration.Settings;
 using DevPlatform.Core.Domain.Configuration;
 using DevPlatform.Repository.Generic;
@@ -19,12 +21,15 @@ namespace DevPlatform.Business.Services
     {
         #region Fields
         private readonly IRepository<Setting> _settingRepository;
+        private readonly IStaticCacheManager _staticCacheManager;
         #endregion
 
         #region Ctor
-        public SettingService(IRepository<Setting> settingRepository)
+        public SettingService(IRepository<Setting> settingRepository,
+            IStaticCacheManager staticCacheManager)
         {
             _settingRepository = settingRepository;
+            _staticCacheManager = staticCacheManager;
         }
         #endregion
 
@@ -35,33 +40,33 @@ namespace DevPlatform.Business.Services
         /// <returns>Settings</returns>
         protected virtual IDictionary<string, IList<Setting>> GetAllSettingsDictionary()
         {
-            var settings = GetAllSettings();
+            return _staticCacheManager.Get(DevPlatformConfigurationDefaults.SettingsAllAsDictionaryCacheKey, () =>
+           {
+               var settings = GetAllSettings();
 
-            var dictionary = new Dictionary<string, IList<Setting>>();
-            foreach (var s in settings)
-            {
-                var resourceName = s.Name.ToLowerInvariant();
-                var settingForCaching = new Setting
-                {
-                    Id = s.Id,
-                    Name = s.Name,
-                    Value = s.Value,
-                };
-                if (!dictionary.ContainsKey(resourceName))
-                {
-                    //first setting
-                    dictionary.Add(resourceName, new List<Setting>
-                        {
+               var dictionary = new Dictionary<string, IList<Setting>>();
+               foreach (var s in settings)
+               {
+                   var resourceName = s.Name.ToLowerInvariant();
+                   var settingForCaching = new Setting
+                   {
+                       Id = s.Id,
+                       Name = s.Name,
+                       Value = s.Value,
+                   };
+                   if (!dictionary.ContainsKey(resourceName))
+                   {
+                       dictionary.Add(resourceName, new List<Setting>
+                       {
                             settingForCaching
-                        });
-                }
-                else
-                {
-                    dictionary[resourceName].Add(settingForCaching);
-                }
-            }
+                       });
+                   }
+                   else
+                       dictionary[resourceName].Add(settingForCaching);
+               }
 
-            return dictionary;
+               return dictionary;
+           });
         }
 
         /// <summary>

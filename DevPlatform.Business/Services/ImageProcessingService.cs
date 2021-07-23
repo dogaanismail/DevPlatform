@@ -15,23 +15,23 @@ namespace DevPlatform.Business.Services
     public partial class ImageProcessingService : IImageProcessingService
     {
         #region Fields
-        private CloudinaryConfig _cloudinaryOptions;
+        private AppConfigs _appConfigs;
         private Cloudinary _cloudinary;
         private readonly IImageProcessorService _imageProcessorService;
         #endregion
 
         #region Ctor
 
-        public ImageProcessingService(CloudinaryConfig cloudinaryOptions,
+        public ImageProcessingService(AppConfigs appConfigs,
             IImageProcessorService imageProcessorService)
         {
             _imageProcessorService = imageProcessorService;
-            _cloudinaryOptions = cloudinaryOptions;
+            _appConfigs = appConfigs;
 
             Account account = new Account(
-            _cloudinaryOptions.CloudName,
-            _cloudinaryOptions.ApiKey,
-            _cloudinaryOptions.ApiSecret);
+            _appConfigs.CloudinaryConfig.CloudName,
+            _appConfigs.CloudinaryConfig.ApiKey,
+            _appConfigs.CloudinaryConfig.ApiSecret);
 
             _cloudinary = new Cloudinary(account);
         }

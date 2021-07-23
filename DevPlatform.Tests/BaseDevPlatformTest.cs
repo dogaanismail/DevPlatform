@@ -81,9 +81,9 @@ namespace DevPlatform.Tests
             services.AddTransient<IActionContextAccessor, ActionContextAccessor>();
 
             //add configuration parameters
-            var appSettings = new DevPlatformConfig();
+            var appSettings = new AppConfigs();
             services.AddSingleton(appSettings);
-            Singleton<DevPlatformConfig>.Instance = appSettings;
+            Singleton<AppConfigs>.Instance = appSettings;
 
             var cloudinaryConfig = new CloudinaryConfig();
             services.AddSingleton(cloudinaryConfig);

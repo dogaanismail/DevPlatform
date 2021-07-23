@@ -14,7 +14,7 @@ namespace DevPlatform.Core.Infrastructure.DependencyManagement
         /// <param name="services"></param>
         /// <param name="typeFinder"></param>
         /// <param name="config"></param>
-        void Register(IServiceCollection services, ITypeFinder typeFinder, DevPlatformConfig config);
+        void Register(IServiceCollection services, ITypeFinder typeFinder, AppConfigs appConfigs);
 
         /// <summary>
         /// Gets order of this dependency registrar implementation

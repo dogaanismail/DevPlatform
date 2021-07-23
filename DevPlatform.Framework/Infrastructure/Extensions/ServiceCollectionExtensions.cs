@@ -35,7 +35,8 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using StackExchange.Profiling.Storage;
-
+using DevPlatform.Business.Configuration.Common;
+using DevPlatform.Domain.Enumerations;
 
 namespace DevPlatform.Framework.Infrastructure.Extensions
 {
@@ -51,36 +52,31 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
         /// <param name="configuration">Configuration of the application</param>
         /// <param name="webHostEnvironment">Hosting environment</param>
         /// <returns>Configured service provider</returns>
-        public static (IEngine, DevPlatformConfig) ConfigureApplicationServices(this IServiceCollection services,
+        public static (IEngine, AppConfigs) ConfigureApplicationServices(this IServiceCollection services,
             IConfiguration configuration, IWebHostEnvironment webHostEnvironment)
         {
             //most of API providers require TLS 1.2 nowadays
-            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-
-            //add DevPlatformConfig configuration parameters
-            var devPlatformConfig = services.ConfigureStartupConfig<DevPlatformConfig>(configuration.GetSection("devPlatform"));
-
-            //add hosting configuration parameters
-            services.ConfigureStartupConfig<HostingConfig>(configuration.GetSection("Hosting"));
-
-            //add cloudinary configuration parameters
-            services.ConfigureStartupConfig<CloudinaryConfig>(configuration.GetSection("CloudinarySettings"));
-
-            //add cloudinary configuration parameters
-            services.ConfigureStartupConfig<CacheConfig>(configuration.GetSection("CacheSettings"));
-
-            //add accessor to HttpContext
-            services.AddHttpContextAccessor();
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.SystemDefault;
 
             //create default file provider
             CommonHelper.DefaultFileProvider = new DevPlatformFileProvider(webHostEnvironment);
 
+            //add accessor to HttpContext
+            services.AddHttpContextAccessor();
+
+            //add configuration parameters
+            var appConfigs = new AppConfigs();
+            configuration.Bind(appConfigs);
+            services.AddSingleton(appConfigs);
+            AppConfigsHelper.SaveAppSettings(appConfigs);
+
             //create engine and configure service provider
             var engine = EngineContext.Create();
 
-            engine.ConfigureServices(services, configuration, devPlatformConfig);
+            engine.ConfigureServices(services, configuration);
+            engine.RegisterDependencies(services, appConfigs);
 
-            return (engine, devPlatformConfig);
+            return (engine, appConfigs);
         }
 
         /// <summary>
@@ -110,6 +106,27 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
             return config;
         }
 
+        /// <summary>
+        /// Create, bind and register as service the specified configuration parameters 
+        /// </summary>
+        /// <typeparam name="TConfig">Configuration parameters</typeparam>
+        /// <param name="services">Collection of service descriptors</param>
+        /// <param name="configuration">Set of key/value application configuration properties</param>
+        /// <returns>Instance of configuration parameters</returns>
+        public static TConfig AddConfig<TConfig>(this IServiceCollection services, IConfiguration configuration)
+            where TConfig : class, IConfig, new()
+        {
+            //create instance of config
+            var config = new TConfig();
+
+            //bind it to the appropriate section of configuration
+            configuration.Bind(config.Name, config);
+
+            //and register it as a service
+            services.AddSingleton(config);
+
+            return config;
+        }
 
         /// <summary>
         /// Add and configure MVC for the application
@@ -192,6 +209,9 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
         {
             if (DataSettingsManager.DatabaseIsInstalled)
             {
+                var appSettings = Singleton<AppConfigs>.Instance;
+                var jwtConfig = appSettings.JwtConfig;
+
                 services.AddIdentity<AppUser, AppRole>(options =>
                 {
                     options.Password.RequireDigit = true;
@@ -221,7 +241,7 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
                          DataProtectionProvider.Create(new DirectoryInfo("C:\\Github\\Identity\\artifacts"));
                  });
 
-                JwtTokenDefinitions.LoadFromConfiguration(configuration);
+                JwtTokenDefinitions.LoadFromConfiguration(jwtConfig);
                 services.ConfigureJwtAuthentication();
                 services.ConfigureJwtAuthorization();
             }
@@ -281,8 +301,44 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
                 miniProfilerOptions.ShouldProfile = request => true;
 
                 //determine who can access the MiniProfiler results
-                miniProfilerOptions.ResultsAuthorize = request => true;         
+                miniProfilerOptions.ResultsAuthorize = request => true;
             });
+        }
+
+        /// <summary>
+        /// Adds services required for distributed cache
+        /// </summary>
+        /// <param name="services">Collection of service descriptors</param>
+        public static void AddDistributedCache(this IServiceCollection services)
+        {
+            var appSettings = Singleton<AppConfigs>.Instance;
+            var distributedCacheConfig = appSettings.DistributedCacheConfig;
+
+            if (!distributedCacheConfig.Enabled)
+                return;
+
+            switch (distributedCacheConfig.DistributedCacheType)
+            {
+                case DistributedCacheType.Memory:
+                    services.AddDistributedCache();
+                    break;
+
+                case DistributedCacheType.SqlServer:
+                    services.AddDistributedSqlServerCache(options =>
+                    {
+                        options.ConnectionString = distributedCacheConfig.ConnectionString;
+                        options.SchemaName = distributedCacheConfig.SchemaName;
+                        options.TableName = distributedCacheConfig.TableName;
+                    });
+                    break;
+
+                case DistributedCacheType.Redis:
+                    services.AddStackExchangeRedisCache(options =>
+                    {
+                        options.Configuration = distributedCacheConfig.ConnectionString;
+                    });
+                    break;
+            }
         }
     }
 }
