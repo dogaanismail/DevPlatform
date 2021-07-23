@@ -1,4 +1,5 @@
-﻿using DevPlatform.Core.Caching;
+﻿using DevPlatform.Business.Common.CacheKeys.Question;
+using DevPlatform.Core.Caching;
 using DevPlatform.Core.Domain.Question;
 using System.Threading.Tasks;
 using QuestionEntity = DevPlatform.Core.Domain.Question.Question;
@@ -18,7 +19,7 @@ namespace DevPlatform.Business.Common.Caching.Question
         /// <returns>A task that represents the asynchronous operation</returns>
         protected override async Task ClearCacheAsync(QuestionComment entity, EntityEventType entityEventType)
         {
-            await RemoveByPrefixAsync(DevPlatformEntityCacheDefaults<QuestionEntity>.AllPrefix);
+            await RemoveAsync(QuestionCacheKeys.QuestionsAllCacheKey);
             await RemoveAsync(DevPlatformEntityCacheDefaults<QuestionEntity>.ByIdCacheKey, entity.QuestionId);
 
             await base.ClearCacheAsync(entity, entityEventType);

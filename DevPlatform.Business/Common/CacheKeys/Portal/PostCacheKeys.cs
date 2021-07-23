@@ -10,6 +10,6 @@ namespace DevPlatform.Business.Common.CacheKeys.Portal
         /// </summary>
         /// <remarks>
         /// </remarks>
-        public static CacheKey PostsAllCacheKey => new CacheKey("DevPlatform.post.all.", DevPlatformEntityCacheDefaults<Post>.AllPrefix);
+        public static CacheKey PostsAllCacheKey => new("DevPlatform.post.all.", DevPlatformEntityCacheDefaults<Post>.AllPrefix);
     }
 }

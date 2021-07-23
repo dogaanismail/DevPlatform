@@ -1,4 +1,5 @@
-﻿using DevPlatform.Business.Interfaces;
+﻿using DevPlatform.Business.Common.CacheKeys.Question;
+using DevPlatform.Business.Interfaces;
 using DevPlatform.Core.Caching;
 using DevPlatform.Core.Domain.Question;
 using DevPlatform.Domain.Api.QuestionApi;
@@ -159,7 +160,7 @@ namespace DevPlatform.Business.Services
         /// <returns></returns>
         public virtual IEnumerable<QuestionListDto> GetQuestionList()
         {
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(DevPlatformEntityCacheDefaults<Question>.AllCacheKey);
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(QuestionCacheKeys.QuestionsAllCacheKey);
 
             return _staticCacheManager.Get<IEnumerable<QuestionListDto>>(cacheKey, () =>
             {

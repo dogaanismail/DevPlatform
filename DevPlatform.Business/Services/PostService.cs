@@ -19,6 +19,7 @@ using Newtonsoft.Json;
 using DevPlatform.Domain.Api.StoryApi;
 using StoryCreateResponse = DevPlatform.Domain.ServiceResponseModels.StoryService.CreateResponse;
 using DevPlatform.Core.Caching;
+using DevPlatform.Business.Common.CacheKeys.Portal;
 
 namespace DevPlatform.Business.Services
 {
@@ -183,7 +184,7 @@ namespace DevPlatform.Business.Services
         /// <returns></returns>
         public IEnumerable<PostListDto> GetPostList()
         {
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(DevPlatformEntityCacheDefaults<Post>.AllCacheKey);
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(PostCacheKeys.PostsAllCacheKey);
 
             return _staticCacheManager.Get<IEnumerable<PostListDto>>(cacheKey, () =>
             {

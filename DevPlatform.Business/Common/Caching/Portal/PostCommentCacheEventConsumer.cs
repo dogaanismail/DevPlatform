@@ -1,4 +1,5 @@
-﻿using DevPlatform.Core.Caching;
+﻿using DevPlatform.Business.Common.CacheKeys.Portal;
+using DevPlatform.Core.Caching;
 using DevPlatform.Core.Domain.Portal;
 using System.Threading.Tasks;
 
@@ -17,7 +18,7 @@ namespace DevPlatform.Business.Common.Caching.Portal
         /// <returns>A task that represents the asynchronous operation</returns>
         protected override async Task ClearCacheAsync(PostComment entity, EntityEventType entityEventType)
         {
-            await RemoveByPrefixAsync(DevPlatformEntityCacheDefaults<Post>.AllPrefix);
+            await RemoveAsync(PostCacheKeys.PostsAllCacheKey);
             await RemoveAsync(DevPlatformEntityCacheDefaults<Post>.ByIdCacheKey, entity.PostId);
 
             await base.ClearCacheAsync(entity, entityEventType);
