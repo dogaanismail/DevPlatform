@@ -56,7 +56,7 @@ namespace DevPlatform.Core.Infrastructure
         /// </summary>
         /// <param name="containerBuilder">Container builder</param>
         /// <param name="config">DevPlatform configuration parameters</param>
-        public virtual void RegisterDependencies(IServiceCollection services, DevPlatformConfig config)
+        public virtual void RegisterDependencies(IServiceCollection services, AppConfigs appConfigs)
         {
             var typeFinder = new WebAppTypeFinder();
 
@@ -76,7 +76,7 @@ namespace DevPlatform.Core.Infrastructure
 
             //register all provided dependencies
             foreach (var dependencyRegistrar in instances)
-                dependencyRegistrar.Register(services, typeFinder, config);
+                dependencyRegistrar.Register(services, typeFinder, appConfigs);
 
             services.AddSingleton(services);
         }
@@ -134,7 +134,7 @@ namespace DevPlatform.Core.Infrastructure
         /// <param name="services">Collection of service descriptors</param>
         /// <param name="configuration">Configuration of the application</param>
         /// <param name="config">DevPlatform configuration parameters</param>
-        public void ConfigureServices(IServiceCollection services, IConfiguration configuration, DevPlatformConfig config)
+        public void ConfigureServices(IServiceCollection services, IConfiguration configuration)
         {
             //find startup configurations provided by other assemblies
             var typeFinder = new WebAppTypeFinder();

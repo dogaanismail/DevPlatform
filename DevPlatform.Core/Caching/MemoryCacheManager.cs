@@ -28,7 +28,9 @@ namespace DevPlatform.Core.Caching
 
         #region Ctor
 
-        public MemoryCacheManager(CacheConfig cacheConfig, IMemoryCache memoryCache) : base(cacheConfig)
+        public MemoryCacheManager(AppConfigs appConfigs,
+            IMemoryCache memoryCache) 
+            : base(appConfigs)
         {
             _memoryCache = memoryCache;
         }

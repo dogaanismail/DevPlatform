@@ -3,7 +3,6 @@ using DevPlatform.Business.Interfaces;
 using DevPlatform.Business.Services;
 using DevPlatform.Core;
 using DevPlatform.Core.Caching;
-using DevPlatform.Core.Configuration;
 using DevPlatform.Core.Configuration.Configs;
 using DevPlatform.Core.Configuration.Settings;
 using DevPlatform.Core.Events;
@@ -29,7 +28,7 @@ namespace DevPlatform.Framework.Infrastructure
         /// <param name="builder"></param>
         /// <param name="typeFinder"></param>
         /// <param name="config"></param>
-        public void Register(IServiceCollection services, ITypeFinder typeFinder, DevPlatformConfig config)
+        public void Register(IServiceCollection services, ITypeFinder typeFinder, AppConfigs appConfigs)
         {
             services.AddScoped<IDevPlatformFileProvider, DevPlatformFileProvider>();
 
@@ -45,7 +44,7 @@ namespace DevPlatform.Framework.Infrastructure
             services.AddScoped<IWebHelper, WebHelper>();
 
             //static cache manager
-            if (config.UseRedisForCaching)
+            if (appConfigs.DistributedCacheConfig.Enabled)
             {
                 services.AddScoped<ILocker, DistributedCacheManager>();
                 services.AddScoped<IStaticCacheManager, DistributedCacheManager>();

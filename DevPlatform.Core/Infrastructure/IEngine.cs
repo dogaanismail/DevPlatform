@@ -18,8 +18,7 @@ namespace DevPlatform.Core.Infrastructure
         /// </summary>
         /// <param name="services">Collection of service descriptors</param>
         /// <param name="configuration">Configuration of the application</param>
-        /// <param name="config">devPlatform configuration parameters</param>
-        void ConfigureServices(IServiceCollection services, IConfiguration configuration, DevPlatformConfig config);
+        void ConfigureServices(IServiceCollection services, IConfiguration configuration);
 
         /// <summary>
         /// Configure HTTP request pipeline
@@ -62,6 +61,6 @@ namespace DevPlatform.Core.Infrastructure
         /// </summary>
         /// <param name="containerBuilder">Container builder</param>
         /// <param name="config">devPlatform configuration parameters</param>
-        void RegisterDependencies(IServiceCollection services, DevPlatformConfig config);
+        void RegisterDependencies(IServiceCollection services, AppConfigs appConfigs);
     }
 }

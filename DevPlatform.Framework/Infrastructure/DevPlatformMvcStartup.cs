@@ -40,7 +40,7 @@ namespace DevPlatform.Framework.Infrastructure
             services.AddDevPlatformBehaviorOptions();
 
             //add memory cache
-            services.AddMemoryCache();
+            services.AddDistributedCache();
 
             //add MiniProfiler services
             services.AddDevPlatformMiniProfiler();

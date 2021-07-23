@@ -36,7 +36,10 @@ namespace DevPlatform.Core.Caching
             _keys = new List<string>();
         }
 
-        public DistributedCacheManager(CacheConfig cacheConfig, IDistributedCache distributedCache, IHttpContextAccessor httpContextAccessor) : base(cacheConfig)
+        public DistributedCacheManager(AppConfigs appConfigs,
+            IDistributedCache distributedCache, 
+            IHttpContextAccessor httpContextAccessor) 
+            : base(appConfigs)
         {
             _distributedCache = distributedCache;
             _perRequestCache = new PerRequestCache(httpContextAccessor);

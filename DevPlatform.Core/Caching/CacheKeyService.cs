@@ -24,15 +24,15 @@ namespace DevPlatform.Core.Caching
 
         #region Fields
 
-        protected readonly CacheConfig _cacheConfig;
+        protected readonly AppConfigs _appConfigs;
 
         #endregion
 
         #region Ctor
 
-        protected CacheKeyService(CacheConfig cacheConfig)
+        protected CacheKeyService(AppConfigs appConfigs)
         {
-            _cacheConfig = cacheConfig;
+            _appConfigs = appConfigs;
         }
 
         #endregion
@@ -110,7 +110,7 @@ namespace DevPlatform.Core.Caching
         {
             var key = cacheKey.Create(CreateCacheKeyParameters, cacheKeyParameters);
 
-            key.CacheTime = _cacheConfig.DefaultCacheTime;
+            key.CacheTime = _appConfigs.CacheConfig.DefaultCacheTime;
 
             return key;
         }
@@ -125,7 +125,7 @@ namespace DevPlatform.Core.Caching
         {
             var key = cacheKey.Create(CreateCacheKeyParameters, cacheKeyParameters);
 
-            key.CacheTime = _cacheConfig.ShortTermCacheTime;
+            key.CacheTime = _appConfigs.CacheConfig.ShortTermCacheTime;
 
             return key;
         }
