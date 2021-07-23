@@ -2,16 +2,14 @@
 using LinqToDB.Data;
 using LinqToDB.DataProvider;
 using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Text;
 
 namespace DevPlatform.LinqToDB.Identity
 {
-	/// <summary>
-	///     Base class for the LinqToDB database context used for identity.
-	/// </summary>
-	public class IdentityDataConnection : IdentityDataConnection<IdentityUser, IdentityRole, string>
+    /// <summary>
+    ///     Base class for the LinqToDB database context used for identity.
+    /// </summary>
+    public class IdentityDataConnection : IdentityDataConnection<IdentityUser, IdentityRole, string>
 	{
 		#region Constructors 
 

@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,11 +12,11 @@ using Microsoft.AspNetCore.Identity;
 
 namespace DevPlatform.LinqToDB.Identity
 {
-	/// <summary>
-	///     Creates a new instance of a persistence store for the specified user type.
-	/// </summary>
-	/// <typeparam name="TUser">The type representing a user.</typeparam>
-	public class UserStore<TUser> : UserStore<string, TUser, IdentityRole>
+    /// <summary>
+    ///     Creates a new instance of a persistence store for the specified user type.
+    /// </summary>
+    /// <typeparam name="TUser">The type representing a user.</typeparam>
+    public class UserStore<TUser> : UserStore<string, TUser, IdentityRole>
 		where TUser : IdentityUser<string>, new()
 	{
 		/// <summary>

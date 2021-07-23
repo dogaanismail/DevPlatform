@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -13,7 +12,6 @@ using DevPlatform.Data.Migrations;
 using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.DataProvider;
-using LinqToDB.DataProvider.MySql;
 using LinqToDB.SqlQuery;
 using MySql.Data.MySqlClient;
 using MySqlDevPlatformProvider = LinqToDB.DataProvider.MySql.MySqlDataProvider;

@@ -38,7 +38,7 @@ namespace DevPlatform.Data
             return Singleton<MappingSchema>.Instance;
         }
 
-        private void UpdateParameterValue(DataConnection dataConnection, DataParameter parameter)
+        private static void UpdateParameterValue(DataConnection dataConnection, DataParameter parameter)
         {
             if (dataConnection is null)
                 throw new ArgumentNullException(nameof(dataConnection));
@@ -476,7 +476,7 @@ namespace DevPlatform.Data
         /// <summary>
         /// Database connection string
         /// </summary>
-        protected string CurrentConnectionString => DataSettingsManager.LoadSettings().ConnectionString;
+        protected static string CurrentConnectionString => DataSettingsManager.LoadSettings().ConnectionString;
 
         /// <summary>
         /// Name of database provider
@@ -487,11 +487,10 @@ namespace DevPlatform.Data
         /// Database connection string
         /// </summary>
         /// <returns>A task that represents the asynchronous operation</returns>
-        protected async Task<string> GetCurrentConnectionStringAsync()
+        protected static async Task<string> GetCurrentConnectionStringAsync()
         {
             return (await DataSettingsManager.LoadSettingsAsync()).ConnectionString;
         }
-
 
         #endregion
     }
