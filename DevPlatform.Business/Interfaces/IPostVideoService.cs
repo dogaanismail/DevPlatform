@@ -1,5 +1,6 @@
 ﻿using DevPlatform.Core.Domain.Portal;
 using DevPlatform.Domain.Common;
+using System.Threading.Tasks;
 
 namespace DevPlatform.Business.Interfaces
 {
@@ -13,6 +14,6 @@ namespace DevPlatform.Business.Interfaces
         /// </summary>
         /// <param name="createVideoForPost"></param>
         /// <returns></returns>
-        ResultModel Create(PostVideo createVideoForPost);
+        Task<ResultModel> Create(PostVideo createVideoForPost);
     }
 }

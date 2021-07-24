@@ -1,4 +1,5 @@
 ﻿using DevPlatform.Core.Domain.Chat;
+using DevPlatform.Core.Domain.Common;
 using DevPlatform.Core.Domain.Identity.Interfaces;
 using DevPlatform.Core.Domain.Portal;
 using DevPlatform.Core.Entities;
@@ -11,7 +12,7 @@ using LinqToDBAssociation = LinqToDB.Mapping;
 
 namespace DevPlatform.Core.Domain.Identity
 {
-    public class AppUser : BaseEntity, IAppUser
+    public class AppUser : BaseEntity, IAppUser, ISoftDeletedEntity
     {
         [Required, Identity]
         [Key]
@@ -38,6 +39,11 @@ namespace DevPlatform.Core.Domain.Identity
         public string SecurityStamp { get; set; }
         public bool TwoFactorEnabled { get; set; }
         public string ConcurrencyStamp { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the entity has been deleted
+        /// </summary>
+        public bool Deleted { get; set; }
 
         [LinqToDBAssociation.Association(ThisKey = nameof(Id), OtherKey = nameof(Post.CreatedBy), CanBeNull = true)]
         public virtual IEnumerable<Post> UserPosts { get; set; }

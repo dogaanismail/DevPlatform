@@ -4,6 +4,7 @@ using DevPlatform.Domain.Common;
 using DevPlatform.Domain.Dto.StoryDto;
 using DevPlatform.Domain.ServiceResponseModels.StoryService;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DevPlatform.Business.Interfaces
 {
@@ -16,72 +17,72 @@ namespace DevPlatform.Business.Interfaces
         /// Inserts a story
         /// </summary>
         /// <param name="story"></param>
-        ResultModel Create(Story story);
+        Task<ResultModel> Create(Story story);
 
         /// <summary>
         /// Inserts stories by using bulk
         /// </summary>
         /// <param name="stories"></param>
-        ResultModel Create(List<Story> stories);
+        Task<ResultModel> Create(List<Story> stories);
 
         /// <summary>
         /// Deletes a story
         /// </summary>
         /// <param name="story"></param>
-        void Delete(Story story);
+        Task Delete(Story story);
 
         /// <summary>
         /// Updates a story
         /// </summary>
         /// <param name="story"></param>
-        void Update(Story story);
+        Task Update(Story story);
 
         /// <summary>
         /// Gets a story by id
         /// </summary>
         /// <param name="storyId"></param>
         /// <returns></returns>
-        Story GetById(int storyId);
+        Task<Story> GetById(int storyId);
 
         /// <summary>
         /// Returns a story as Dto by StoryId
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        StoryListDto GetByIdAsDto(int id);
+        Task<StoryListDto> GetByIdAsDto(int id);
 
         /// <summary>
         /// Returns the story lists
         /// </summary>
         /// <returns></returns>
-        IEnumerable<StoryListDto> GetStoryList();
+        Task<IEnumerable<StoryListDto>> GetStoryList();
 
         /// <summary>
         /// Returns stories of user by userId
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        IEnumerable<Story> GetUserStoriesByUserId(int userId);
+        Task<IEnumerable<Story>> GetUserStoriesByUserId(int userId);
 
         /// <summary>
         /// Returns stories of user by userId with dto
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        IEnumerable<StoryListDto> GetUserStoriesWithDto(int userId);
+        Task<IEnumerable<StoryListDto>> GetUserStoriesWithDto(int userId);
 
         /// <summary>
         /// Inserts stories and returns service response
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        ServiceResponse<CreateResponse> Create(StoryCreateApi model);
+        Task<ServiceResponse<CreateResponse>> Create(StoryCreateApi model);
 
         /// <summary>
         /// Inserts stories for post and returns service response
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        ServiceResponse<CreateResponse> Create(StoryCreateApi model, bool isCreateWithPost = true);
+        Task<ServiceResponse<CreateResponse>> Create(StoryCreateApi model, bool isCreateWithPost = true);
     }
 }

@@ -97,7 +97,7 @@ namespace DevPlatform.Business.Services
             if (albumId == 0)
                 return null;
 
-            return _albumRepository.GetById(albumId);
+            return await _albumRepository.GetByIdAsync(albumId);
         }
 
         public virtual async Task<AlbumListDto> GetByIdAsDto(int id)

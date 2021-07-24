@@ -4,6 +4,7 @@ using DevPlatform.Domain.Common;
 using DevPlatform.Domain.Dto.UserDto;
 using DevPlatform.Domain.ServiceResponseModels.UserService;
 using Microsoft.AspNetCore.Identity;
+using System.Threading.Tasks;
 
 namespace DevPlatform.Business.Interfaces
 {
@@ -17,42 +18,42 @@ namespace DevPlatform.Business.Interfaces
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        AppUser FindById(int id);
+        Task<AppUser> FindById(int id);
 
         /// <summary>
         /// Returns an user by userName
         /// </summary>
         /// <param name="userName"></param>
         /// <returns></returns>
-        AppUser FindByUserName(string userName);
+        Task<AppUser> FindByUserName(string userName);
 
         /// <summary>
         /// Returns an 
         /// </summary>
         /// <param name="email"></param>
         /// <returns></returns>
-        AppUser FindByEmail(string email);
+        Task<AppUser> FindByEmail(string email);
 
         /// <summary>
         /// Creates an user
         /// </summary>
         /// <param name="appUser"></param>
         /// <returns></returns>
-        IdentityResult Create(AppUser appUser);
+        Task<IdentityResult> Create(AppUser appUser);
 
         /// <summary>
         /// Updates an user
         /// </summary>
         /// <param name="appUser"></param>
         /// <returns></returns>
-        IdentityResult Update(AppUser appUser);
+        Task<IdentityResult> Update(AppUser appUser);
 
         /// <summary>
         /// Deletes an user
         /// </summary>
         /// <param name="appUser"></param>
         /// <returns></returns>
-        IdentityResult Delete(AppUser appUser);
+        Task<IdentityResult> Delete(AppUser appUser);
 
         /// <summary>
         /// Register a user and returns a service response model
@@ -66,6 +67,6 @@ namespace DevPlatform.Business.Interfaces
         /// </summary>
         /// <param name="userName"></param>
         /// <returns>Returns user's detail, such as personal informations, user posts, user albums</returns>
-        AppUserProfileDto GetUserDetailByUserName(string userName);
+        Task<AppUserProfileDto> GetUserDetailByUserName(string userName);
     }
 }

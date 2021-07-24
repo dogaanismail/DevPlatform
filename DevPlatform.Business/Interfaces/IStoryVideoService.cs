@@ -1,5 +1,6 @@
 ﻿using DevPlatform.Core.Domain.Story;
 using DevPlatform.Domain.Common;
+using System.Threading.Tasks;
 
 namespace DevPlatform.Business.Interfaces
 {
@@ -13,6 +14,6 @@ namespace DevPlatform.Business.Interfaces
         /// </summary>
         /// <param name="createVideoForStory"></param>
         /// <returns></returns>
-        ResultModel Create(StoryVideo createVideoForStory);
+        Task<ResultModel> CreateAsync(StoryVideo createVideoForStory);
     }
 }

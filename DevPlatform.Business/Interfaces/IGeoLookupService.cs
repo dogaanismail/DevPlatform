@@ -1,5 +1,6 @@
 ﻿using DevPlatform.Domain.Dto.CommonDto;
 using MaxMind.GeoIP2.Model;
+using System.Threading.Tasks;
 
 namespace DevPlatform.Business.Interfaces
 {
@@ -13,34 +14,34 @@ namespace DevPlatform.Business.Interfaces
         /// </summary>
         /// <param name="ipAddress">IP address</param>
         /// <returns>Country name</returns>
-        string LookupCountryIsoCode(string ipAddress);
+        Task<string> LookupCountryIsoCode(string ipAddress);
 
         /// <summary>
         /// Get country name
         /// </summary>
         /// <param name="ipAddress">IP address</param>
         /// <returns>Country name</returns>
-        string LookupCountryName(string ipAddress);
+        Task<string> LookupCountryName(string ipAddress);
 
         /// <summary>
         /// Get current city informations
         /// </summary>
         /// <param name="ipAddress"></param>
         /// <returns>Current city informations</returns>
-        City GetCurrentCityInformations(string ipAddress);
+        Task<City> GetCurrentCityInformations(string ipAddress);
 
         /// <summary>
         /// Get current country informations
         /// </summary>
         /// <param name="ipAddress"></param>
         /// <returns>Current country informations</returns>
-        Country GetCurrentCountryInformations(string ipAddress);
+        Task<Country> GetCurrentCountryInformations(string ipAddress);
 
         /// <summary>
         /// Get city and country informations
         /// </summary>
         /// <param name="ipAddress"></param>
         /// <returns>Current city and country informations</returns>
-        GeoLookupDto GetCityAndCountryInformations(string ipAddress);
+        Task<GeoLookupDto> GetCityAndCountryInformations(string ipAddress);
     }
 }

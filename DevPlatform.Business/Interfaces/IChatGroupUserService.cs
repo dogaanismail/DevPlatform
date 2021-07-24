@@ -1,4 +1,5 @@
 ﻿using DevPlatform.Domain.Common;
+using System.Threading.Tasks;
 
 namespace DevPlatform.Business.Interfaces
 {
@@ -11,6 +12,6 @@ namespace DevPlatform.Business.Interfaces
         /// Returns chat groups by user Id.
         /// </summary>
         /// <returns></returns>
-        ResultModel GetChatGroupUsers(int userId);
+        Task<ResultModel> GetChatGroupUsers(int userId);
     }
 }
