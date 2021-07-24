@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
+using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using DevPlatform.Core.Entities;
 using DevPlatform.Core.Infrastructure;
 using DevPlatform.Data.Migrations;
@@ -14,53 +13,27 @@ using LinqToDB.Data;
 using LinqToDB.DataProvider;
 using LinqToDB.DataProvider.SqlServer;
 
-namespace DevPlatform.Data
+namespace DevPlatform.Data.DataProviders
 {
     /// <summary>
     /// Represents the MS SQL Server data provider
     /// </summary>
     public partial class MsSqlDataProvider : BaseDataProvider, IDevPlatformDataProvider
     {
+        #region Fields
+
+        private static readonly Lazy<IDataProvider> _dataProvider = new(() => new SqlServerDataProvider(ProviderName.SqlServer, SqlServerVersion.v2017, SqlServerProvider.SystemDataSqlClient), true);
+
+        #endregion
+
         #region Utils
 
-        /// <summary>
-        /// Get SQL commands from the script
-        /// </summary>
-        /// <param name="sql">SQL script</param>
-        /// <returns>List of commands</returns>
-        private static IList<string> GetCommandsFromScript(string sql)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected virtual async Task<SqlConnectionStringBuilder> GetConnectionStringBuilderAsync()
         {
-            var commands = new List<string>();
+            var connectionString = (await DataSettingsManager.LoadSettingsAsync()).ConnectionString;
 
-            //origin from the Microsoft.EntityFrameworkCore.Migrations.SqlServerMigrationsSqlGenerator.Generate method
-            sql = Regex.Replace(sql, @"\\\r?\n", string.Empty);
-            var batches = Regex.Split(sql, @"^\s*(GO[ \t]+[0-9]+|GO)(?:\s+|$)", RegexOptions.IgnoreCase | RegexOptions.Multiline);
-
-            for (var i = 0; i < batches.Length; i++)
-            {
-                if (string.IsNullOrWhiteSpace(batches[i]) || batches[i].StartsWith("GO", StringComparison.OrdinalIgnoreCase))
-                    continue;
-
-                var count = 1;
-                if (i != batches.Length - 1 && batches[i + 1].StartsWith("GO", StringComparison.OrdinalIgnoreCase))
-                {
-                    var match = Regex.Match(batches[i + 1], "([0-9]+)");
-                    if (match.Success)
-                        count = int.Parse(match.Value);
-                }
-
-                var builder = new StringBuilder();
-                for (var j = 0; j < count; j++)
-                {
-                    builder.Append(batches[i]);
-                    if (i == batches.Length - 1)
-                        builder.AppendLine();
-                }
-
-                commands.Add(builder.ToString());
-            }
-
-            return commands;
+            return new SqlConnectionStringBuilder(connectionString);
         }
 
         protected virtual SqlConnectionStringBuilder GetConnectionStringBuilder()
@@ -72,20 +45,24 @@ namespace DevPlatform.Data
 
         #endregion
 
-        #region Methods
+        #region Utils
 
         /// <summary>
         /// Gets a connection to the database for a current data provider
         /// </summary>
         /// <param name="connectionString">Connection string</param>
         /// <returns>Connection to a database</returns>
-        protected override IDbConnection GetInternalDbConnection(string connectionString)
+        protected override DbConnection GetInternalDbConnection(string connectionString)
         {
             if (string.IsNullOrEmpty(connectionString))
                 throw new ArgumentException(nameof(connectionString));
 
             return new SqlConnection(connectionString);
         }
+
+        #endregion
+
+        #region Methods
 
         /// <summary>
         /// Create the database
@@ -94,7 +71,7 @@ namespace DevPlatform.Data
         /// <param name="triesToConnect">Count of tries to connect to the database after creating; set 0 if no need to connect after creating</param>
         public void CreateDatabase(string collation, int triesToConnect = 10)
         {
-            if (IsDatabaseExists())
+            if (DatabaseExists())
                 return;
 
             var builder = GetConnectionStringBuilder();
@@ -105,13 +82,14 @@ namespace DevPlatform.Data
             //now create connection string to 'master' dabatase. It always exists.
             builder.InitialCatalog = "master";
 
-            using (var connection = new SqlConnection(builder.ConnectionString))
+            using (var connection = GetInternalDbConnection(builder.ConnectionString))
             {
                 var query = $"CREATE DATABASE [{databaseName}]";
                 if (!string.IsNullOrWhiteSpace(collation))
                     query = $"{query} COLLATE {collation}";
 
-                var command = new SqlCommand(query, connection);
+                var command = connection.CreateCommand();
+                command.CommandText = query;
                 command.Connection.Open();
 
                 command.ExecuteNonQuery();
@@ -130,7 +108,7 @@ namespace DevPlatform.Data
                 if (i == triesToConnect)
                     throw new Exception("Unable to connect to the new database. Please try one more time");
 
-                if (!IsDatabaseExists())
+                if (!DatabaseExists())
                     Thread.Sleep(1000);
                 else
                     break;
@@ -140,16 +118,18 @@ namespace DevPlatform.Data
         /// <summary>
         /// Checks if the specified database exists, returns true if database exists
         /// </summary>
-        /// <returns>Returns true if the database exists.</returns>
-        public bool IsDatabaseExists()
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the returns true if the database exists.
+        /// </returns>
+        public async Task<bool> DatabaseExistsAsync()
         {
             try
             {
-                using (var connection = new SqlConnection(GetConnectionStringBuilder().ConnectionString))
-                {
-                    //just try to connect
-                    connection.Open();
-                }
+                await using var connection = GetInternalDbConnection(await GetCurrentConnectionStringAsync());
+
+                //just try to connect
+                await connection.OpenAsync();
 
                 return true;
             }
@@ -160,30 +140,23 @@ namespace DevPlatform.Data
         }
 
         /// <summary>
-        /// Execute commands from a file with SQL script against the context database
+        /// Checks if the specified database exists, returns true if database exists
         /// </summary>
-        /// <param name="fileProvider">File provider</param>
-        /// <param name="filePath">Path to the file</param>
-        protected void ExecuteSqlScriptFromFile(IDevPlatformFileProvider fileProvider, string filePath)
+        /// <returns>Returns true if the database exists.</returns>
+        public bool DatabaseExists()
         {
-            filePath = fileProvider.MapPath(filePath);
-            if (!fileProvider.FileExists(filePath))
-                return;
+            try
+            {
+                using var connection = GetInternalDbConnection(GetCurrentConnectionString());
+                //just try to connect
+                connection.Open();
 
-            ExecuteSqlScript(fileProvider.ReadAllText(filePath, Encoding.Default));
-        }
-
-        /// <summary>
-        /// Execute commands from the SQL script
-        /// </summary>
-        /// <param name="sql">SQL script</param>
-        public void ExecuteSqlScript(string sql)
-        {
-            var sqlCommands = GetCommandsFromScript(sql);
-
-            using var currentConnection = CreateDataConnection();
-            foreach (var command in sqlCommands)
-                currentConnection.Execute(command);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         /// <summary>
@@ -193,21 +166,20 @@ namespace DevPlatform.Data
         {
             var migrationManager = EngineContext.Current.Resolve<IMigrationManager>();
             migrationManager.ApplyUpMigrations(typeof(DevPlatformDbStartup).Assembly);
-
-            //create stored procedures 
-            var fileProvider = EngineContext.Current.Resolve<IDevPlatformFileProvider>();
-            ExecuteSqlScriptFromFile(fileProvider, DevPlatformDataDefaults.SqlServerStoredProceduresFilePath);
         }
 
         /// <summary>
         /// Get the current identity value
         /// </summary>
-        /// <typeparam name="T">Entity</typeparam>
-        /// <returns>Integer identity; null if cannot get the result</returns>
-        public virtual int? GetTableIdent<T>() where T : BaseEntity
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the integer identity; null if cannot get the result
+        /// </returns>
+        public virtual async Task<int?> GetTableIdentAsync<TEntity>() where TEntity : BaseEntity
         {
-            using var currentConnection = CreateDataConnection();
-            var tableName = currentConnection.GetTable<T>().TableName;
+            using var currentConnection = await CreateDataConnectionAsync();
+            var tableName = GetEntityDescriptor<TEntity>().TableName;
 
             var result = currentConnection.Query<decimal?>($"SELECT IDENT_CURRENT('[{tableName}]') as Value")
                 .FirstOrDefault();
@@ -218,37 +190,40 @@ namespace DevPlatform.Data
         /// <summary>
         /// Set table identity (is supported)
         /// </summary>
-        /// <typeparam name="T">Entity</typeparam>
+        /// <typeparam name="TEntity">Entity type</typeparam>
         /// <param name="ident">Identity value</param>
-        public virtual void SetTableIdent<T>(int ident) where T : BaseEntity
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task SetTableIdentAsync<TEntity>(int ident) where TEntity : BaseEntity
         {
-            using var currentConnection = CreateDataConnection();
-            var currentIdent = GetTableIdent<T>();
+            using var currentConnection = await CreateDataConnectionAsync();
+            var currentIdent = await GetTableIdentAsync<TEntity>();
             if (!currentIdent.HasValue || ident <= currentIdent.Value)
                 return;
 
-            var tableName = currentConnection.GetTable<T>().TableName;
+            var tableName = GetEntityDescriptor<TEntity>().TableName;
 
-            currentConnection.Execute($"DBCC CHECKIDENT([{tableName}], RESEED, {ident})");
+            await currentConnection.ExecuteAsync($"DBCC CHECKIDENT([{tableName}], RESEED, {ident})");
         }
 
         /// <summary>
         /// Creates a backup of the database
         /// </summary>
-        public virtual void BackupDatabase(string fileName)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task BackupDatabaseAsync(string fileName)
         {
-            using var currentConnection = CreateDataConnection();
+            using var currentConnection = await CreateDataConnectionAsync();
             var commandText = $"BACKUP DATABASE [{currentConnection.Connection.Database}] TO DISK = '{fileName}' WITH FORMAT";
-            currentConnection.Execute(commandText);
+            await currentConnection.ExecuteAsync(commandText);
         }
 
         /// <summary>
         /// Restores the database from a backup
         /// </summary>
         /// <param name="backupFileName">The name of the backup file</param>
-        public virtual void RestoreDatabase(string backupFileName)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task RestoreDatabaseAsync(string backupFileName)
         {
-            using var currentConnection = CreateDataConnection();
+            using var currentConnection = await CreateDataConnectionAsync();
             var commandText = string.Format(
                 "DECLARE @ErrorMessage NVARCHAR(4000)\n" +
                 "ALTER DATABASE [{0}] SET OFFLINE WITH ROLLBACK IMMEDIATE\n" +
@@ -266,15 +241,16 @@ namespace DevPlatform.Data
                 currentConnection.Connection.Database,
                 backupFileName);
 
-            currentConnection.Execute(commandText);
+            await currentConnection.ExecuteAsync(commandText);
         }
 
         /// <summary>
         /// Re-index database tables
         /// </summary>
-        public virtual void ReIndexTables()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task ReIndexTablesAsync()
         {
-            using var currentConnection = CreateDataConnection();
+            using var currentConnection = await CreateDataConnectionAsync();
             var commandText = $@"
                     DECLARE @TableName sysname 
                     DECLARE cur_reindex CURSOR FOR
@@ -291,31 +267,31 @@ namespace DevPlatform.Data
                     CLOSE cur_reindex
                     DEALLOCATE cur_reindex";
 
-            currentConnection.Execute(commandText);
+            await currentConnection.ExecuteAsync(commandText);
         }
 
         /// <summary>
         /// Build the connection string
         /// </summary>
-        /// <param name="connectionStringInfo">Connection string info</param>
+        /// <param name="nopConnectionString">Connection string info</param>
         /// <returns>Connection string</returns>
-        public virtual string BuildConnectionString(IDevPlatformConnectionStringInfo connectionStringInfo)
+        public virtual string BuildConnectionString(IDevPlatformConnectionStringInfo nopConnectionString)
         {
-            if (connectionStringInfo is null)
-                throw new ArgumentNullException(nameof(connectionStringInfo));
+            if (nopConnectionString is null)
+                throw new ArgumentNullException(nameof(nopConnectionString));
 
             var builder = new SqlConnectionStringBuilder
             {
-                DataSource = connectionStringInfo.ServerName,
-                InitialCatalog = connectionStringInfo.DatabaseName,
+                DataSource = nopConnectionString.ServerName,
+                InitialCatalog = nopConnectionString.DatabaseName,
                 PersistSecurityInfo = false,
-                IntegratedSecurity = connectionStringInfo.IntegratedSecurity
+                IntegratedSecurity = nopConnectionString.IntegratedSecurity
             };
 
-            if (!connectionStringInfo.IntegratedSecurity)
+            if (!nopConnectionString.IntegratedSecurity)
             {
-                builder.UserID = connectionStringInfo.Username;
-                builder.Password = connectionStringInfo.Password;
+                builder.UserID = nopConnectionString.Username;
+                builder.Password = nopConnectionString.Password;
             }
 
             return builder.ConnectionString;
@@ -345,6 +321,24 @@ namespace DevPlatform.Data
             return $"IX_{targetTable}_{targetColumn}";
         }
 
+        /// <summary>
+        /// Updates records in table, using values from entity parameter. 
+        /// Records to update are identified by match on primary key value from obj value.
+        /// </summary>
+        /// <param name="entities">Entities with data to update</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public override async Task UpdateEntitiesAsync<TEntity>(IEnumerable<TEntity> entities)
+        {
+            using var dataContext = await CreateDataConnectionAsync();
+            await dataContext.GetTable<TEntity>()
+                .Merge()
+                .Using(entities)
+                .OnTargetKey()
+                .UpdateWhenMatched()
+                .MergeAsync();
+        }
+
         #endregion
 
         #region Properties
@@ -352,7 +346,7 @@ namespace DevPlatform.Data
         /// <summary>
         /// Sql server data provider
         /// </summary>
-        protected override IDataProvider LinqToDbDataProvider => new SqlServerDataProvider(ProviderName.SqlServer, SqlServerVersion.v2017);
+        protected override IDataProvider LinqToDbDataProvider => _dataProvider.Value;
 
         /// <summary>
         /// Gets allowed a limit input value of the data for hashing functions, returns 0 if not limited

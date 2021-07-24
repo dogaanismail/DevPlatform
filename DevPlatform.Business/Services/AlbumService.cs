@@ -11,6 +11,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DevPlatform.Business.Services
 {
@@ -46,12 +47,12 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="album"></param>
         /// <returns></returns>
-        public ResultModel Create(Album album)
+        public virtual async Task<ResultModel> Create(Album album)
         {
             if (album == null)
                 throw new ArgumentNullException(nameof(album));
 
-            _albumRepository.Insert(album);
+            await _albumRepository.InsertAsync(album);
             return new ResultModel { Status = true, Message = "Create Process Success ! " };
         }
 
@@ -60,12 +61,12 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="albums"></param>
         /// <returns></returns>
-        public ResultModel Create(List<Album> albums)
+        public virtual async Task<ResultModel> Create(List<Album> albums)
         {
             if (albums == null)
                 throw new ArgumentNullException(nameof(albums));
 
-            _albumRepository.Insert(albums);
+            await _albumRepository.InsertAsync(albums);
             return new ResultModel { Status = true, Message = "Create Process Success ! " };
         }
 
@@ -73,15 +74,15 @@ namespace DevPlatform.Business.Services
         /// Deletes an album
         /// </summary>
         /// <param name="album"></param>
-        public void Delete(Album album)
+        public virtual async Task Delete(Album album)
         {
             if (album == null)
                 throw new ArgumentNullException(nameof(album));
 
-            _albumRepository.Delete(album);
+            await _albumRepository.DeleteAsync(album);
         }
 
-        public IEnumerable<AlbumListDto> GetAlbumList()
+        public async Task<IEnumerable<AlbumListDto>> GetAlbumList()
         {
             throw new NotImplementedException();
         }
@@ -91,7 +92,7 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="albumId"></param>
         /// <returns></returns>
-        public Album GetById(int albumId)
+        public virtual async Task<Album> GetById(int albumId)
         {
             if (albumId == 0)
                 return null;
@@ -99,17 +100,17 @@ namespace DevPlatform.Business.Services
             return _albumRepository.GetById(albumId);
         }
 
-        public AlbumListDto GetByIdAsDto(int id)
+        public virtual async Task<AlbumListDto> GetByIdAsDto(int id)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Album> GetUserAlbumsByUserId(int userId)
+        public virtual async Task<IEnumerable<Album>> GetUserAlbumsByUserId(int userId)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<AlbumListDto> GetUserAlbumsWithDto(int userId)
+        public virtual async Task<IEnumerable<AlbumListDto>> GetUserAlbumsWithDto(int userId)
         {
             throw new NotImplementedException();
         }
@@ -118,12 +119,12 @@ namespace DevPlatform.Business.Services
         /// Updates an album
         /// </summary>
         /// <param name="album"></param>
-        public void Update(Album album)
+        public virtual async Task Update(Album album)
         {
             if (album == null)
                 throw new ArgumentNullException(nameof(album));
 
-            _albumRepository.Update(album);
+            await _albumRepository.UpdateAsync(album);
         }
 
         /// <summary>
@@ -131,7 +132,7 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public ServiceResponse<CreateResponse> Create(AlbumCreateApi model)
+        public virtual async Task<ServiceResponse<CreateResponse>> Create(AlbumCreateApi model)
         {
             if (model == null || model.Images == null || model.Images.Count == 0)
                 return ServiceResponse((CreateResponse)null, new List<string> { "The upload process can not be done !" });
@@ -172,7 +173,7 @@ namespace DevPlatform.Business.Services
                     });
                 }
 
-                ResultModel createResult = Create(album);
+                ResultModel createResult = await Create(album);
 
                 if (!createResult.Status)
                     return ServiceResponse((CreateResponse)null, new List<string> { createResult.Message });
@@ -189,7 +190,7 @@ namespace DevPlatform.Business.Services
             }
             catch (Exception ex)
             {
-                _logService.InsertLogAsync(LogLevel.Error, $"AlbumService- Create Error: model {JsonConvert.SerializeObject(model)}", ex.Message.ToString());
+                await _logService.InsertLogAsync(LogLevel.Error, $"AlbumService- Create Error: model {JsonConvert.SerializeObject(model)}", ex.Message.ToString());
                 serviceResponse.Success = false;
                 serviceResponse.ResultCode = ResultCode.Exception;
                 serviceResponse.Warnings.Add(ex.Message);

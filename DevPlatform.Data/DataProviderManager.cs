@@ -1,4 +1,5 @@
 ﻿using DevPlatform.Core.Infrastructure;
+using DevPlatform.Data.DataProviders;
 using System;
 
 namespace DevPlatform.Data
@@ -20,7 +21,7 @@ namespace DevPlatform.Data
             return dataProviderType switch
             {
                 DataProviderType.SqlServer => new MsSqlDataProvider(),
-                DataProviderType.MySql => new MySqlDataProvider(),
+                DataProviderType.MySql => new MySqlDbDataProvider(),
                 //DataProviderType.PostgreSQL => new PostgreSqlDataProvider(),
                 _ => throw new Exception($"Not supported data provider name: '{dataProviderType}'"),
             };
