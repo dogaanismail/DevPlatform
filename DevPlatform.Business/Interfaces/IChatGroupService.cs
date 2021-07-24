@@ -14,19 +14,19 @@ namespace DevPlatform.Business.Interfaces
         /// Creates a chat group.
         /// </summary>
         /// <returns></returns>
-        Task<ResultModel> CreateChatGroup();
+        Task<ResultModel> CreateChatGroupAsync();
 
         /// <summary>
         /// Returns chat groups by username.
         /// </summary>
         /// <returns></returns>
-        Task<IEnumerable<ChatGroupDto>> GetChatGroups(string username);
+        Task<IEnumerable<ChatGroupDto>> GetChatGroupsAsync(string username);
 
         /// <summary>
         /// Returns group member details by group name.
         /// </summary>
         /// <param name="groupName"></param>
         /// <returns></returns>
-        Task<GroupMemberDetails> GetMemberDetailsByGroupName(string groupName, string userName);
+        Task<GroupMemberDetails> GetMemberDetailsByGroupNameAsync(string groupName, string userName);
     }
 }

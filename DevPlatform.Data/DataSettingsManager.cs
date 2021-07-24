@@ -86,7 +86,7 @@ namespace DevPlatform.Data
             //check whether file exists
             if (!fileProvider.FileExists(filePath))
             {
-                //if not, try to parse the file that was used in previous nopCommerce versions
+                //if not, try to parse the file that was used in previous devPlatform versions
                 filePath = fileProvider.MapPath(DevPlatformDataSettingsDefaults.ObsoleteFilePath);
                 if (!fileProvider.FileExists(filePath))
                     return new DataSettings();

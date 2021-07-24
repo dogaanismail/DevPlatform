@@ -12,6 +12,6 @@ namespace DevPlatform.Business.Interfaces
         /// Returns chat groups by user Id.
         /// </summary>
         /// <returns></returns>
-        Task<ResultModel> GetChatGroupUsers(int userId);
+        Task<ResultModel> GetChatGroupUsersAsync(int userId);
     }
 }

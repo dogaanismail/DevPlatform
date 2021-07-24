@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DevPlatform.Api.Controllers
 {
@@ -32,13 +33,13 @@ namespace DevPlatform.Api.Controllers
 
         [HttpGet("install")]
         [AllowAnonymous]
-        public virtual JsonResult InstallDb()
+        public virtual async Task<JsonResult> InstallDbAsync()
         {
-            var serviceResponse = _databaseService.InstallDatabase();
+            var serviceResponse = await _databaseService.InstallDatabaseAsync();
 
             if (serviceResponse.Warnings.Count > 0 || serviceResponse.Warnings.Any())
             {
-                _logService.InsertLogAsync(LogLevel.Error, $"InstallDatabaseController- Create Database Error", JsonConvert.SerializeObject(serviceResponse));
+                _ = _logService.InsertLogAsync(LogLevel.Error, $"InstallDatabaseController- Create Database Error", JsonConvert.SerializeObject(serviceResponse));
 
                 return BadResponse(new ResultModel
                 {

@@ -3,6 +3,7 @@ using DevPlatform.Core;
 using DevPlatform.Framework.Controllers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace DevPlatform.Api.Controllers
 {
@@ -29,41 +30,46 @@ namespace DevPlatform.Api.Controllers
 
         [HttpGet("currentcountryname")]
         [AllowAnonymous]
-        public virtual JsonResult GetCurrentCountryName()
+        public virtual async Task<JsonResult> GetCurrentCountryNameAsync()
         {
-            var data = _geoLookupService.LookupCountryName(_webHelper.GetCurrentIpAddress());
+            var data = await _geoLookupService.LookupCountryNameAsync(_webHelper.GetCurrentIpAddress());
+
             return OkResponse(data);
         }
 
         [HttpGet("currentcountryisocode")]
         [AllowAnonymous]
-        public virtual JsonResult GetCurrentCountryIsoCode()
+        public virtual async Task<JsonResult> GetCurrentCountryIsoCodeAsync()
         {
-            var data = _geoLookupService.LookupCountryIsoCode(_webHelper.GetCurrentIpAddress());
+            var data = await _geoLookupService.LookupCountryIsoCodeAsync(_webHelper.GetCurrentIpAddress());
+
             return OkResponse(data);
         }
 
         [HttpGet("currentcountry")]
         [AllowAnonymous]
-        public virtual JsonResult GetCurrentCountryInformations()
+        public virtual async Task<JsonResult> GetCurrentCountryInformationsAsync()
         {
-            var data = _geoLookupService.GetCurrentCountryInformations(_webHelper.GetCurrentIpAddress());
+            var data = await _geoLookupService.GetCurrentCountryInformationsAsync(_webHelper.GetCurrentIpAddress());
+
             return OkResponse(data);
         }
 
         [HttpGet("currentcity")]
         [AllowAnonymous]
-        public virtual JsonResult GetCurrentCityInformations()
+        public virtual async Task<JsonResult> GetCurrentCityInformationsAsync()
         {
-            var data = _geoLookupService.GetCurrentCityInformations(_webHelper.GetCurrentIpAddress());
+            var data = await _geoLookupService.GetCurrentCityInformationsAsync(_webHelper.GetCurrentIpAddress());
+
             return OkResponse(data);
         }
 
         [HttpGet("cityandcountryinformations")]
         [AllowAnonymous]
-        public virtual JsonResult GetCurrentCityAndCountryInformations()
+        public virtual async Task<JsonResult> GetCurrentCityAndCountryInformationsAsync()
         {
-            var data = _geoLookupService.GetCityAndCountryInformations(_webHelper.GetCurrentIpAddress());
+            var data = await _geoLookupService.GetCityAndCountryInformationsAsync(_webHelper.GetCurrentIpAddress());
+
             return OkResponse(data);
         }
 

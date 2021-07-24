@@ -13,6 +13,6 @@ namespace DevPlatform.Business.Interfaces
         /// Installs a database according to giving informations
         /// </summary>
         /// <returns></returns>
-        Task<ServiceResponse<InstallResponse>> InstallDatabase();
+        Task<ServiceResponse<InstallResponse>> InstallDatabaseAsync();
     }
 }

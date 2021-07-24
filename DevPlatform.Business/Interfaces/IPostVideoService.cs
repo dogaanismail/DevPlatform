@@ -14,6 +14,6 @@ namespace DevPlatform.Business.Interfaces
         /// </summary>
         /// <param name="createVideoForPost"></param>
         /// <returns></returns>
-        Task<ResultModel> Create(PostVideo createVideoForPost);
+        Task<ResultModel> CreateAsync(PostVideo createVideoForPost);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using DevPlatform.Data;
+using DevPlatform.Data.DataProviders;
 
 namespace DevPlatform.Tests
 {

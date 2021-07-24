@@ -17,72 +17,72 @@ namespace DevPlatform.Business.Interfaces
         /// Inserts a story
         /// </summary>
         /// <param name="story"></param>
-        Task<ResultModel> Create(Story story);
+        Task<ResultModel> CreateAsync(Story story);
 
         /// <summary>
         /// Inserts stories by using bulk
         /// </summary>
         /// <param name="stories"></param>
-        Task<ResultModel> Create(List<Story> stories);
-
-        /// <summary>
-        /// Deletes a story
-        /// </summary>
-        /// <param name="story"></param>
-        Task Delete(Story story);
-
-        /// <summary>
-        /// Updates a story
-        /// </summary>
-        /// <param name="story"></param>
-        Task Update(Story story);
-
-        /// <summary>
-        /// Gets a story by id
-        /// </summary>
-        /// <param name="storyId"></param>
-        /// <returns></returns>
-        Task<Story> GetById(int storyId);
-
-        /// <summary>
-        /// Returns a story as Dto by StoryId
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        Task<StoryListDto> GetByIdAsDto(int id);
-
-        /// <summary>
-        /// Returns the story lists
-        /// </summary>
-        /// <returns></returns>
-        Task<IEnumerable<StoryListDto>> GetStoryList();
-
-        /// <summary>
-        /// Returns stories of user by userId
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <returns></returns>
-        Task<IEnumerable<Story>> GetUserStoriesByUserId(int userId);
-
-        /// <summary>
-        /// Returns stories of user by userId with dto
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <returns></returns>
-        Task<IEnumerable<StoryListDto>> GetUserStoriesWithDto(int userId);
+        Task<ResultModel> CreateAsync(List<Story> stories);
 
         /// <summary>
         /// Inserts stories and returns service response
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        Task<ServiceResponse<CreateResponse>> Create(StoryCreateApi model);
+        Task<ServiceResponse<CreateResponse>> CreateAsync(StoryCreateApi model);
 
         /// <summary>
         /// Inserts stories for post and returns service response
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        Task<ServiceResponse<CreateResponse>> Create(StoryCreateApi model, bool isCreateWithPost = true);
+        Task<ServiceResponse<CreateResponse>> CreateAsync(StoryCreateApi model, bool isCreateWithPost = true);
+
+        /// <summary>
+        /// Deletes a story
+        /// </summary>
+        /// <param name="story"></param>
+        Task DeleteAsync(Story story);
+
+        /// <summary>
+        /// Updates a story
+        /// </summary>
+        /// <param name="story"></param>
+        Task UpdateAsync(Story story);
+
+        /// <summary>
+        /// Gets a story by id
+        /// </summary>
+        /// <param name="storyId"></param>
+        /// <returns></returns>
+        Task<Story> GetByIdAsync(int storyId);
+
+        /// <summary>
+        /// Returns a story as Dto by StoryId
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<StoryListDto> GetByIdAsDtoAsync(int id);
+
+        /// <summary>
+        /// Returns the story lists
+        /// </summary>
+        /// <returns></returns>
+        Task<IEnumerable<StoryListDto>> GetStoryListAsync();
+
+        /// <summary>
+        /// Returns stories of user by userId
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        Task<IEnumerable<Story>> GetUserStoriesByUserIdAsync(int userId);
+
+        /// <summary>
+        /// Returns stories of user by userId with dto
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        Task<IEnumerable<StoryListDto>> GetUserStoriesWithDtoAsync(int userId);
     }
 }

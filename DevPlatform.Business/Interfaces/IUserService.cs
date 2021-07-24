@@ -18,55 +18,55 @@ namespace DevPlatform.Business.Interfaces
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        Task<AppUser> FindById(int id);
+        Task<AppUser> FindByIdAsync(int id);
 
         /// <summary>
         /// Returns an user by userName
         /// </summary>
         /// <param name="userName"></param>
         /// <returns></returns>
-        Task<AppUser> FindByUserName(string userName);
+        Task<AppUser> FindByUserNameAsync(string userName);
 
         /// <summary>
         /// Returns an 
         /// </summary>
         /// <param name="email"></param>
         /// <returns></returns>
-        Task<AppUser> FindByEmail(string email);
+        Task<AppUser> FindByEmailAsync(string email);
 
         /// <summary>
         /// Creates an user
         /// </summary>
         /// <param name="appUser"></param>
         /// <returns></returns>
-        Task<IdentityResult> Create(AppUser appUser);
+        Task<IdentityResult> CreateAsync(AppUser appUser);
 
         /// <summary>
         /// Updates an user
         /// </summary>
         /// <param name="appUser"></param>
         /// <returns></returns>
-        Task<IdentityResult> Update(AppUser appUser);
+        Task<IdentityResult> UpdateAsync(AppUser appUser);
 
         /// <summary>
         /// Deletes an user
         /// </summary>
         /// <param name="appUser"></param>
         /// <returns></returns>
-        Task<IdentityResult> Delete(AppUser appUser);
+        Task<IdentityResult> DeleteAsync(AppUser appUser);
 
         /// <summary>
         /// Register a user and returns a service response model
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        ServiceResponse<RegisterResponse> Register(RegisterApiRequest model);
+        Task<ServiceResponse<RegisterResponse>> RegisterAsync(RegisterApiRequest model);
 
         /// <summary>
         /// Returns a user detail by username
         /// </summary>
         /// <param name="userName"></param>
         /// <returns>Returns user's detail, such as personal informations, user posts, user albums</returns>
-        Task<AppUserProfileDto> GetUserDetailByUserName(string userName);
+        Task<AppUserProfileDto> GetUserDetailByUserNameAsync(string userName);
     }
 }

@@ -207,7 +207,7 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
         /// <param name="services">Collection of service descriptors</param>
         public static void AddDevPlatformAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
-            if (DataSettingsManager.DatabaseIsInstalled)
+            if (DataSettingsManager.IsDatabaseInstalled())
             {
                 var appSettings = Singleton<AppConfigs>.Instance;
                 var jwtConfig = appSettings.JwtConfig;
@@ -289,7 +289,7 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
         public static void AddDevPlatformMiniProfiler(this IServiceCollection services)
         {
             //whether database is already installed
-            if (!DataSettingsManager.DatabaseIsInstalled)
+            if (!DataSettingsManager.IsDatabaseInstalled())
                 return;
 
             services.AddMiniProfiler(miniProfilerOptions =>

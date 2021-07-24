@@ -14,34 +14,34 @@ namespace DevPlatform.Business.Interfaces
         /// </summary>
         /// <param name="ipAddress">IP address</param>
         /// <returns>Country name</returns>
-        Task<string> LookupCountryIsoCode(string ipAddress);
+        Task<string> LookupCountryIsoCodeAsync(string ipAddress);
 
         /// <summary>
         /// Get country name
         /// </summary>
         /// <param name="ipAddress">IP address</param>
         /// <returns>Country name</returns>
-        Task<string> LookupCountryName(string ipAddress);
+        Task<string> LookupCountryNameAsync(string ipAddress);
 
         /// <summary>
         /// Get current city informations
         /// </summary>
         /// <param name="ipAddress"></param>
         /// <returns>Current city informations</returns>
-        Task<City> GetCurrentCityInformations(string ipAddress);
+        Task<City> GetCurrentCityInformationsAsync(string ipAddress);
 
         /// <summary>
         /// Get current country informations
         /// </summary>
         /// <param name="ipAddress"></param>
         /// <returns>Current country informations</returns>
-        Task<Country> GetCurrentCountryInformations(string ipAddress);
+        Task<Country> GetCurrentCountryInformationsAsync(string ipAddress);
 
         /// <summary>
         /// Get city and country informations
         /// </summary>
         /// <param name="ipAddress"></param>
         /// <returns>Current city and country informations</returns>
-        Task<GeoLookupDto> GetCityAndCountryInformations(string ipAddress);
+        Task<GeoLookupDto> GetCityAndCountryInformationsAsync(string ipAddress);
     }
 }

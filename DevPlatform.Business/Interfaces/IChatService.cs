@@ -14,21 +14,21 @@ namespace DevPlatform.Business.Interfaces
         /// Returns all chat messages in the system.
         /// </summary>
         /// <returns></returns>
-        Task<IEnumerable<MessageDto>> GetAllMessages();
+        Task<IEnumerable<MessageDto>> GetAllMessagesAsync();
 
         /// <summary>
         /// Returns the messages by chatId.
         /// </summary>
         /// <param name="chatId"></param>
         /// <returns></returns>
-        Task<MessageDto> GetMessageById(int chatId);
+        Task<MessageDto> GetMessageByIdAsync(int chatId);
 
         /// <summary>
         /// Returns the messages by chat group name.
         /// </summary>
         /// <param name="chatId"></param>
         /// <returns></returns>
-        Task<IEnumerable<MessageDto>> GetMessagesByGroupName(string groupName);
+        Task<IEnumerable<MessageDto>> GetMessagesByGroupNameAsync(string groupName);
 
 
         /// <summary>
@@ -36,6 +36,6 @@ namespace DevPlatform.Business.Interfaces
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        Task<ResultModel> Create(MessageDto message);
+        Task<ResultModel> CreateAsync(MessageDto message);
     }
 }

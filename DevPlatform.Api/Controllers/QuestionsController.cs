@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DevPlatform.Api.Controllers
 {
@@ -38,15 +39,15 @@ namespace DevPlatform.Api.Controllers
 
         [HttpPost("createquestion")]
         [Authorize]
-        public virtual JsonResult CreateQuestion([FromBody] QuestionCreateApi model)
+        public virtual async Task<JsonResult> CreateQuestionAsync([FromBody] QuestionCreateApi model)
         {
-            _logService.InsertLogAsync(LogLevel.Information, $"QuestionsController- Create Question Request", JsonConvert.SerializeObject(model));
+            _ = _logService.InsertLogAsync(LogLevel.Information, $"QuestionsController- Create Question Request", JsonConvert.SerializeObject(model));
 
-            var serviceResponse = _questionService.Create(model);
+            var serviceResponse = await _questionService.CreateAsync(model);
 
             if (serviceResponse.Warnings.Count > 0 || serviceResponse.Warnings.Any())
             {
-                _logService.InsertLogAsync(LogLevel.Error, $"QuestionsController- Create Question Error", JsonConvert.SerializeObject(serviceResponse));
+                _ = _logService.InsertLogAsync(LogLevel.Error, $"QuestionsController- Create Question Error", JsonConvert.SerializeObject(serviceResponse));
 
                 return BadResponse(new ResultModel
                 {
@@ -70,31 +71,31 @@ namespace DevPlatform.Api.Controllers
 
         [HttpGet("questionlist")]
         [AllowAnonymous]
-        public virtual JsonResult GetQuestionList()
+        public virtual async Task<JsonResult> GetQuestionListAsync()
         {
-            var data = _questionService.GetQuestionList();
+            var data = await _questionService.GetQuestionListAsync();
 
             return OkResponse(data);
         }
 
         [HttpGet("id/{id}")]
         [AllowAnonymous]
-        public virtual JsonResult GetById(int id)
+        public virtual async Task<JsonResult> GetByIdAsync(int id)
         {
-            var data = _questionService.GetByIdAsDto(id);
+            var data = await _questionService.GetByIdAsDtoAsync(id);
 
             return OkResponse(data);
         }
 
         [HttpPost("createcomment")]
         [Authorize]
-        public virtual JsonResult CreateQuestionComment([FromBody] QuestionCommentCreateApi model)
+        public virtual async Task<JsonResult> CreateQuestionCommentAsync([FromBody] QuestionCommentCreateApi model)
         {
-            var serviceResponse = _questionCommentService.Create(model);
+            var serviceResponse = await _questionCommentService.CreateAsync(model);
 
             if (serviceResponse.Warnings.Count > 0 || serviceResponse.Warnings.Any())
             {
-                _logService.InsertLogAsync(LogLevel.Error, $"QuestionsController- Create Question Comment Error", JsonConvert.SerializeObject(serviceResponse));
+                _ = _logService.InsertLogAsync(LogLevel.Error, $"QuestionsController- Create Question Comment Error", JsonConvert.SerializeObject(serviceResponse));
 
                 return BadResponse(new ResultModel
                 {

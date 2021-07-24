@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DevPlatform.Api.Controllers
 {
@@ -38,15 +39,15 @@ namespace DevPlatform.Api.Controllers
         /// <returns></returns>
         [HttpPost("createalbum")]
         [Authorize]
-        public virtual JsonResult CreateAlbum([FromForm] AlbumCreateApi model)
+        public virtual async Task<JsonResult> CreateAlbumAsync([FromForm] AlbumCreateApi model)
         {
-            _logService.InsertLogAsync(LogLevel.Information, $"AlbumController- Create Album Request", JsonConvert.SerializeObject(model));
+            _ = _logService.InsertLogAsync(LogLevel.Information, $"AlbumController- Create Album Request", JsonConvert.SerializeObject(model));
 
-            var serviceResponse = _albumService.Create(model);
+            var serviceResponse = await _albumService.CreateAsync(model);
 
             if (serviceResponse.Warnings.Count > 0 || serviceResponse.Warnings.Any())
             {
-                _logService.InsertLogAsync(LogLevel.Error, $"AlbumController- Create Album Error", JsonConvert.SerializeObject(serviceResponse));
+                _ = _logService.InsertLogAsync(LogLevel.Error, $"AlbumController- Create Album Error", JsonConvert.SerializeObject(serviceResponse));
 
                 return BadResponse(new ResultModel
                 {

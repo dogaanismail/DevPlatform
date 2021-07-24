@@ -10,7 +10,6 @@ using DevPlatform.Domain.Dto;
 using DevPlatform.Domain.Enumerations;
 using DevPlatform.Framework.Controllers;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -23,8 +22,6 @@ namespace DevPlatform.Api.Controllers
         #region Fields
         private readonly ITokenService _tokenService;
         private readonly SignInManager<AppUser> _signInManager;
-        private readonly UserManager<AppUser> _userManager;
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUserDetailService _userDetailService;
         private readonly IUserService _userService;
         private readonly ILogService _logService;
@@ -33,16 +30,12 @@ namespace DevPlatform.Api.Controllers
         #region Ctor
         public AccountController(ITokenService tokenService,
             SignInManager<AppUser> signInManager,
-            UserManager<AppUser> userManager,
-            IHttpContextAccessor httpContextAccessor,
             IUserDetailService userDetailService,
             IUserService userService,
             ILogService logService)
         {
             _tokenService = tokenService;
             _signInManager = signInManager;
-            _userManager = userManager;
-            _httpContextAccessor = httpContextAccessor;
             _userDetailService = userDetailService;
             _userService = userService;
             _logService = logService;
@@ -58,13 +51,13 @@ namespace DevPlatform.Api.Controllers
         /// <returns></returns>
         [HttpPost("register")]
         [AllowAnonymous]
-        public virtual JsonResult Register([FromBody] RegisterApiRequest model)
+        public virtual async Task<JsonResult> RegisterAsync([FromBody] RegisterApiRequest model)
         {
-            var serviceResponse = _userService.Register(model);
+            var serviceResponse = await _userService.RegisterAsync(model);
 
             if (serviceResponse.Warnings.Count > 0 || serviceResponse.Warnings.Any())
             {
-                _logService.InsertLogAsync(LogLevel.Error, $"AccountController- Register Error", JsonConvert.SerializeObject(serviceResponse));
+                _ = _logService.InsertLogAsync(LogLevel.Error, $"AccountController- Register Error", JsonConvert.SerializeObject(serviceResponse));
 
                 return BadResponse(new ResultModel
                 {
@@ -83,15 +76,16 @@ namespace DevPlatform.Api.Controllers
         /// <returns></returns>
         [HttpPost("login")]
         [AllowAnonymous]
-        public virtual JsonResult Login([FromBody] LoginApiRequest model)
+        public virtual async Task<JsonResult> LoginAsync([FromBody] LoginApiRequest model)
         {
-            var result = _signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, false).Result;
+            var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, false);
 
-            _logService.InsertLogAsync(LogLevel.Information, $"AccountController- Login Response", JsonConvert.SerializeObject(result));
+            _ = _logService.InsertLogAsync(LogLevel.Information, $"AccountController- Login Response", JsonConvert.SerializeObject(result));
 
             if (result.Succeeded)
             {
-                var user = _userDetailService.GetUserDetailByUserName(model.UserName);
+                var user = await _userDetailService.GetUserDetailByUserNameAsync(model.UserName);
+
                 var token = _tokenService.GenerateToken(new AppUserDto
                 {
                     AppUserId = user.Id,
@@ -100,6 +94,7 @@ namespace DevPlatform.Api.Controllers
                     ProfilePhotoUrl = user.ProfilePhotoUrl,
                     RegisteredDate = user.RegisteredDate
                 });
+
                 return OkResponse(token);
             }
             else

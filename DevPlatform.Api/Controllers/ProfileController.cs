@@ -2,6 +2,7 @@
 using DevPlatform.Framework.Controllers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace DevPlatform.Api.Controllers
 {
@@ -26,9 +27,10 @@ namespace DevPlatform.Api.Controllers
 
         [HttpGet("getuserdetail")]
         [AllowAnonymous]
-        public JsonResult GetUserDetail(string username)
+        public virtual async Task<JsonResult> GetUserDetailAsync(string username)
         {
-            var data = _userService.GetUserDetailByUserName(username);
+            var data = await _userService.GetUserDetailByUserNameAsync(username);
+
             return OkResponse(data);
         }
 

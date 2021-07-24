@@ -26,6 +26,13 @@ namespace DevPlatform.Business.Interfaces
         Task<ResultModel> CreateAsync(List<Album> albums);
 
         /// <summary>
+        /// Inserts an album with images and returns service response
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        Task<ServiceResponse<CreateResponse>> CreateAsync(AlbumCreateApi model);
+
+        /// <summary>
         /// Deletes an album
         /// </summary>
         /// <param name="album"></param>
@@ -70,12 +77,5 @@ namespace DevPlatform.Business.Interfaces
         /// <param name="userId"></param>
         /// <returns></returns>
         Task<IEnumerable<AlbumListDto>> GetUserAlbumsWithDtoAsync(int userId);
-
-        /// <summary>
-        /// Inserts an album with images and returns service response
-        /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
-        Task<ServiceResponse<CreateResponse>> CreateAsync(AlbumCreateApi model);
     }
 }

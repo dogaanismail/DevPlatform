@@ -15,13 +15,13 @@ namespace DevPlatform.Business.Interfaces
         /// </summary>
         /// <param name="createImageForPost"></param>
         /// <returns></returns>
-        Task<ResultModel> Create(PostImage createImageForPost);
+        Task<ResultModel> CreateAsync(PostImage createImageForPost);
 
         /// <summary>
         /// Creates post images by using bulk entities
         /// </summary>
         /// <param name="createImageForPost"></param>
         /// <returns></returns>
-        Task<ResultModel> Create(List<PostImage> createImageForPost);
+        Task<ResultModel> CreateAsync(List<PostImage> createImageForPost);
     }
 }

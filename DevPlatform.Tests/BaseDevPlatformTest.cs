@@ -193,7 +193,7 @@ namespace DevPlatform.Tests
             var settings = typeFinder.FindClassesOfType(typeof(ISettings), false).ToList();
             foreach (var setting in settings)
                 services.AddTransient(setting,
-                    context => context.GetRequiredService<ISettingService>().LoadSetting(setting));
+                    context => context.GetRequiredService<ISettingService>().LoadSettingAsync(setting).Result);
 
             //event consumers
             var consumers = typeFinder.FindClassesOfType(typeof(IConsumer<>)).ToList();

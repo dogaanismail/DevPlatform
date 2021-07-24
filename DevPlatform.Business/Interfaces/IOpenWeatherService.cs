@@ -12,6 +12,6 @@ namespace DevPlatform.Business.Interfaces
         /// Returns current weather by city
         /// </summary>
         /// <returns>Current weather</returns>
-        Task<WeatherResponseDto> GetCurrentWeather();
+        Task<WeatherResponseDto> GetCurrentWeatherAsync();
     }
 }

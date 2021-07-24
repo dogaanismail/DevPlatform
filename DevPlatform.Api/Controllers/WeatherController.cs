@@ -2,6 +2,7 @@
 using DevPlatform.Framework.Controllers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace DevPlatform.Api.Controllers
 {
@@ -24,9 +25,10 @@ namespace DevPlatform.Api.Controllers
 
         [HttpGet("currentweather")]
         [AllowAnonymous]
-        public virtual JsonResult GetCurrentWeather()
+        public virtual async Task<JsonResult> GetCurrentWeatherAsync()
         {
-            var data = _openWeatherService.GetCurrentWeather();
+            var data = await _openWeatherService.GetCurrentWeatherAsync();
+
             return OkResponse(data);
         }
 

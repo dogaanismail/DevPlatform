@@ -5,7 +5,6 @@ using DevPlatform.Core.Entities;
 using DevPlatform.Core.Events;
 using DevPlatform.Data;
 using DevPlatform.Data.Extensions;
-using DevPlatform.Repository.Extensions;
 using LinqToDB;
 using LinqToDB.Data;
 using System;
@@ -21,7 +20,7 @@ namespace DevPlatform.Repository.Generic
     /// Represents the entity repository implementation
     /// </summary>
     /// <typeparam name="TEntity">Entity type</typeparam>
-    public partial class EntityRepository<TEntity> : IRepository<TEntity> where TEntity : BaseEntity
+    public partial class RepositoryBase<TEntity> : IRepository<TEntity> where TEntity : BaseEntity
     {
         #region Fields
 
@@ -33,7 +32,7 @@ namespace DevPlatform.Repository.Generic
 
         #region Ctor
 
-        public EntityRepository(IEventPublisher eventPublisher,
+        public RepositoryBase(IEventPublisher eventPublisher,
             IDevPlatformDataProvider dataProvider,
             IStaticCacheManager staticCacheManager)
         {
