@@ -3,6 +3,7 @@ using DevPlatform.Core.Domain.Portal;
 using DevPlatform.Domain.Common;
 using DevPlatform.Repository.Generic;
 using System;
+using System.Threading.Tasks;
 
 namespace DevPlatform.Business.Services
 {
@@ -23,19 +24,22 @@ namespace DevPlatform.Business.Services
 
         #endregion
 
+        #region Methods
+
         /// <summary>
         /// Creates a post video
         /// </summary>
         /// <param name="createVideoForPost"></param>
         /// <returns></returns>
-        public ResultModel Create(PostVideo createVideoForPost)
+        public virtual async Task<ResultModel> CreateAsync(PostVideo createVideoForPost)
         {
             if (createVideoForPost == null)
                 throw new ArgumentNullException(nameof(createVideoForPost));
 
-            _postVideoRepository.Insert(createVideoForPost);
-
+            await _postVideoRepository.InsertAsync(createVideoForPost);
             return new ResultModel { Status = true, Message = "Create Process Success ! " };
         }
+
+        #endregion
     }
 }

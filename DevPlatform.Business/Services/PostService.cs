@@ -4,10 +4,8 @@ using DevPlatform.Core.Domain.Portal;
 using DevPlatform.Domain.Common;
 using DevPlatform.Domain.Dto;
 using DevPlatform.Repository.Generic;
-using LinqToDB;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using DevPlatform.Domain.Api;
 using DevPlatform.Common.Helpers;
 using CloudinaryDotNet.Actions;
@@ -20,6 +18,9 @@ using DevPlatform.Domain.Api.StoryApi;
 using StoryCreateResponse = DevPlatform.Domain.ServiceResponseModels.StoryService.CreateResponse;
 using DevPlatform.Core.Caching;
 using DevPlatform.Business.Common.CacheKeys.Portal;
+using System.Threading.Tasks;
+using LinqToDB;
+using System.Linq;
 
 namespace DevPlatform.Business.Services
 {
@@ -76,12 +77,12 @@ namespace DevPlatform.Business.Services
         /// Deletes a post
         /// </summary>
         /// <param name="post"></param>
-        public virtual void Delete(Post post)
+        public virtual async Task DeleteAsync(Post post)
         {
             if (post == null)
                 throw new ArgumentNullException(nameof(post));
 
-            _postRepository.Delete(post);
+            await _postRepository.DeleteAsync(post);
         }
 
         /// <summary>
@@ -89,29 +90,24 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="postId"></param>
         /// <returns></returns>
-        public virtual Post GetById(int postId)
+        public virtual async Task<Post> GetByIdAsync(int postId)
         {
             if (postId == 0)
                 return null;
 
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(DevPlatformEntityCacheDefaults<Post>.ByIdCacheKey, postId);
-
-            return _staticCacheManager.Get<Post>(cacheKey, () =>
-            {
-                return _postRepository.GetById(postId);
-            });
+            return await _postRepository.GetByIdAsync(postId, cache => default);
         }
 
         /// <summary>
         /// Inserts a post
         /// </summary>
         /// <param name="post"></param>
-        public virtual ResultModel Create(Post post)
+        public virtual async Task<ResultModel> CreateAsync(Post post)
         {
             if (post == null)
                 throw new ArgumentNullException(nameof(post));
 
-            _postRepository.Insert(post);
+            await _postRepository.InsertAsync(post);
             return new ResultModel { Status = true, Message = "Create Process Success ! " };
         }
 
@@ -120,153 +116,22 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="posts"></param>
         /// <returns></returns>
-        public ResultModel Create(List<Post> posts)
+        public virtual async Task<ResultModel> CreateAsync(List<Post> posts)
         {
             if (posts == null)
                 throw new ArgumentNullException(nameof(posts));
 
-            _postRepository.Insert(posts);
+            await _postRepository.InsertAsync(posts);
             return new ResultModel { Status = true, Message = "Create Process Success ! " };
         }
 
-        /// <summary>
-        /// Updates a post
-        /// </summary>
-        /// <param name="post"></param>
-        public virtual void Update(Post post)
-        {
-            if (post == null)
-                throw new ArgumentNullException(nameof(post));
-
-            _postRepository.Update(post);
-        }
-
-        /// <summary>
-        /// Returns a post by id as dto
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public PostListDto GetByIdAsDto(int id)
-        {
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(DevPlatformEntityCacheDefaults<Post>.ByIdCacheKey, id);
-
-            return _staticCacheManager.Get<PostListDto>(cacheKey, () =>
-            {
-                var data = _postRepository.Table.Where(x => x.Id == id).Select(p => new PostListDto
-                {
-                    Id = p.Id,
-                    Text = p.Text,
-                    CreatedDate = p.CreatedDate,
-                    ImageUrlList = p.PostImages.Select(x => x.ImageUrl).ToList(),
-                    VideoUrl = p.PostVideos.FirstOrDefault().VideoUrl ?? "",
-                    CreatedByUserName = p.CreatedUser.UserName ?? "",
-                    CreatedByUserPhoto = p.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
-                    PostType = p.PostType,
-                    FancyboxData = $"post{p.Id}",
-                    Comments = p.PostComments.Select(y => new PostCommentListDto
-                    {
-                        Text = y.Text,
-                        CreatedDate = y.CreatedDate,
-                        Id = y.Id,
-                        CreatedByUserName = y.CreatedUser.UserName ?? "",
-                        CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
-                        PostId = y.PostId
-                    }).ToList()
-                }).FirstOrDefault();
-
-                return data;
-            });
-        }
-
-        /// <summary>
-        /// Returns a list of posts as dto
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<PostListDto> GetPostList()
-        {
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(PostCacheKeys.PostsAllCacheKey);
-
-            return _staticCacheManager.Get<IEnumerable<PostListDto>>(cacheKey, () =>
-            {
-                var data = _postRepository.Table.Select(p => new PostListDto
-                {
-                    Id = p.Id,
-                    Text = p.Text,
-                    CreatedDate = p.CreatedDate,
-                    ImageUrlList = p.PostImages.Select(x => x.ImageUrl).ToList(),
-                    VideoUrl = p.PostVideos.FirstOrDefault().VideoUrl ?? "",
-                    CreatedByUserName = p.CreatedUser.UserName ?? "",
-                    CreatedByUserPhoto = p.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
-                    PostType = p.PostType,
-                    FancyboxData = $"post{p.Id}",
-                    Comments = p.PostComments.Select(y => new PostCommentListDto
-                    {
-                        Text = y.Text,
-                        Id = y.Id,
-                        PostId = y.PostId,
-                        CreatedDate = y.CreatedDate,
-                        CreatedByUserName = y.CreatedUser.UserName ?? "",
-                        CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath ?? ""
-                    }).ToList()
-                }).AsEnumerable();
-
-                return data;
-            });
-        }
-
-        /// <summary>
-        /// Returns a list of post by user Id
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <returns></returns>
-        public IEnumerable<Post> GetUserPostsByUserId(int userId)
-        {
-            IEnumerable<Post> getPost = _postRepository.Table.LoadWith(x => x.PostImages)
-              .LoadWith(x => x.PostVideos).LoadWith(x => x.PostComments).ThenLoad(x => x.CreatedUser)
-              .ThenLoad(x => x.UserDetail).LoadWith(x => x.CreatedUser).ThenLoad(x => x.UserDetail)
-              .Where(y => y.CreatedBy == userId).ToList();
-
-            return getPost;
-        }
-
-        /// <summary>
-        /// Returns a list of post as dto by user Id
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <returns></returns>
-        public IEnumerable<PostListDto> GetUserPostsWithDto(int userId)
-        {
-            var data = _postRepository.Table.Where(x => x.CreatedBy == userId).Select(p => new PostListDto
-            {
-                Id = p.Id,
-                Text = p.Text,
-                CreatedDate = p.CreatedDate,
-                ImageUrlList = p.PostImages.Select(x => x.ImageUrl).ToList(),
-                VideoUrl = p.PostVideos.FirstOrDefault().VideoUrl ?? "",
-                CreatedByUserName = p.CreatedUser.UserName ?? "",
-                CreatedByUserPhoto = p.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
-                PostType = p.PostType,
-                FancyboxData = $"post{p.Id}",
-                Comments = p.PostComments.Select(y => new PostCommentListDto
-                {
-                    Text = y.Text,
-                    CreatedDate = y.CreatedDate,
-                    Id = y.Id,
-                    CreatedByUserName = y.CreatedUser.UserName ?? "",
-                    CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
-                    PostId = y.PostId
-                }).ToList()
-            }).AsEnumerable();
-
-            return data;
-        }
 
         /// <summary>
         /// Inserts posts and returns service response
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public ServiceResponse<CreateResponse> Create(PostCreateApi model)
+        public virtual async Task<ServiceResponse<CreateResponse>> CreateAsync(PostCreateApi model)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -281,7 +146,7 @@ namespace DevPlatform.Business.Services
                 if (string.IsNullOrEmpty(model.Text))
                     return ServiceResponse((CreateResponse)null, new List<string> { "Text can not be null !" });
 
-                var appUser = _userService.FindByUserName(_httpContextAccessor.HttpContext.User.Identity.Name);
+                var appUser = await _userService.FindByUserNameAsync(_httpContextAccessor.HttpContext.User.Identity.Name);
                 if (appUser == null)
                     return ServiceResponse((CreateResponse)null, new List<string> { "User not found!" });
 
@@ -297,9 +162,9 @@ namespace DevPlatform.Business.Services
 
                 if (hasImage)
                 {
-                    imageUploadResult = _imageProcessingService.UploadImage(model.Images);
+                    imageUploadResult = await _imageProcessingService.UploadImageAsync(model.Images);
 
-                    _logService.InsertLogAsync(LogLevel.Information, $"PostService- ImageUpload response from Cloudinary", JsonConvert.SerializeObject(imageUploadResult), appUser);
+                    _ = _logService.InsertLogAsync(LogLevel.Information, $"PostService- ImageUpload response from Cloudinary", JsonConvert.SerializeObject(imageUploadResult), appUser);
 
                     if (imageUploadResult.Any(x => x.Error != null))
                         return ServiceResponse((CreateResponse)null, new List<string> { string.Join(Environment.NewLine, imageUploadResult.Select(err => string.Join(Environment.NewLine, err.Error.Message))) });
@@ -311,9 +176,9 @@ namespace DevPlatform.Business.Services
 
                 if (hasVideo)
                 {
-                    videoUploadResult = _imageProcessingService.UploadVideo(model.Video);
+                    videoUploadResult = await _imageProcessingService.UploadVideoAsync(model.Video);
 
-                    _logService.InsertLogAsync(LogLevel.Information, $"PostService- VideoUpload response from Cloudinary", JsonConvert.SerializeObject(imageUploadResult), appUser);
+                    _ = _logService.InsertLogAsync(LogLevel.Information, $"PostService- VideoUpload response from Cloudinary", JsonConvert.SerializeObject(imageUploadResult), appUser);
 
                     if (videoUploadResult.Error != null)
                         return ServiceResponse((CreateResponse)null, new List<string> { videoUploadResult.Error.Message.ToString() });
@@ -332,7 +197,7 @@ namespace DevPlatform.Business.Services
                     CreatedBy = appUser.Id
                 };
 
-                ResultModel postModel = Create(newPost);
+                ResultModel postModel = await CreateAsync(newPost);
 
                 if (!postModel.Status)
                     return ServiceResponse((CreateResponse)null, new List<string> { postModel.Message });
@@ -352,7 +217,7 @@ namespace DevPlatform.Business.Services
                             CreatedBy = appUser.Id
                         };
 
-                        ResultModel postImageModel = _postImageService.Create(postImages);
+                        ResultModel postImageModel = await _postImageService.CreateAsync(postImages);
 
                         if (!postImageModel.Status)
                             return ServiceResponse((CreateResponse)null, new List<string> { postImageModel.Message });
@@ -371,7 +236,7 @@ namespace DevPlatform.Business.Services
                         VideoUrl = videoUploadResult.Url.ToString(),
                         CreatedBy = appUser.Id
                     };
-                    ResultModel postVideoModel = _postVideoService.Create(postVideos);
+                    ResultModel postVideoModel = await _postVideoService.CreateAsync(postVideos);
 
                     if (!postVideoModel.Status)
                         return ServiceResponse((CreateResponse)null, new List<string> { postVideoModel.Message });
@@ -393,13 +258,13 @@ namespace DevPlatform.Business.Services
                         VideoUrl = videoUploadResult?.Url?.ToString()
                     };
 
-                    _logService.InsertLogAsync(LogLevel.Information, $"PostService - Create Story Request", JsonConvert.SerializeObject(storyCreateModel));
+                    _ = _logService.InsertLogAsync(LogLevel.Information, $"PostService - Create Story Request", JsonConvert.SerializeObject(storyCreateModel));
 
-                    var storyServiceResponse = _storyService.Create(storyCreateModel, isCreateWithPost: true);
+                    var storyServiceResponse = await _storyService.CreateAsync(storyCreateModel, isCreateWithPost: true);
 
                     if (storyServiceResponse.Warnings.Any())
                     {
-                        _logService.InsertLogAsync(LogLevel.Information, $"PostService - Create Story Error Response ", JsonConvert.SerializeObject(storyServiceResponse));
+                        _ = _logService.InsertLogAsync(LogLevel.Information, $"PostService - Create Story Error Response ", JsonConvert.SerializeObject(storyServiceResponse));
 
                         //TODO : Story create error process must be handled!
                     }
@@ -429,12 +294,136 @@ namespace DevPlatform.Business.Services
             }
             catch (Exception ex)
             {
-                _logService.InsertLogAsync(LogLevel.Error, $"PostService- Create Error: model {JsonConvert.SerializeObject(model)}", ex.Message.ToString());
+                await _logService.InsertLogAsync(LogLevel.Error, $"PostService- Create Error: model {JsonConvert.SerializeObject(model)}", ex.Message.ToString());
                 serviceResponse.Success = false;
                 serviceResponse.ResultCode = ResultCode.Exception;
                 serviceResponse.Warnings.Add(ex.Message);
                 return serviceResponse;
             }
+        }
+
+        /// <summary>
+        /// Updates a post
+        /// </summary>
+        /// <param name="post"></param>
+        public virtual async Task UpdateAsync(Post post)
+        {
+            if (post == null)
+                throw new ArgumentNullException(nameof(post));
+
+            await _postRepository.UpdateAsync(post);
+        }
+
+        /// <summary>
+        /// Returns a post by id as dto
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public virtual async Task<PostListDto> GetByIdAsDtoAsync(int id)
+        {
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(DevPlatformEntityCacheDefaults<Post>.ByIdCacheKey, id);
+
+            return await _staticCacheManager.GetAsync(cacheKey, async () =>
+            {
+                return await _postRepository.Table.Where(x => x.Id == id).Select(p => new PostListDto
+                {
+                    Id = p.Id,
+                    Text = p.Text,
+                    CreatedDate = p.CreatedDate,
+                    ImageUrlList = p.PostImages.Select(x => x.ImageUrl).ToList(),
+                    VideoUrl = p.PostVideos.FirstOrDefault().VideoUrl ?? "",
+                    CreatedByUserName = p.CreatedUser.UserName ?? "",
+                    CreatedByUserPhoto = p.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                    PostType = p.PostType,
+                    FancyboxData = $"post{p.Id}",
+                    Comments = p.PostComments.Select(y => new PostCommentListDto
+                    {
+                        Text = y.Text,
+                        CreatedDate = y.CreatedDate,
+                        Id = y.Id,
+                        CreatedByUserName = y.CreatedUser.UserName ?? "",
+                        CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                        PostId = y.PostId
+                    }).ToList()
+                }).FirstOrDefaultAsyncMethod();
+            });
+        }
+
+        /// <summary>
+        /// Returns a list of posts as dto
+        /// </summary>
+        /// <returns></returns>
+        public virtual async Task<List<PostListDto>> GetPostListAsync()
+        {
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(PostCacheKeys.PostsAllCacheKey);
+
+            return await _staticCacheManager.GetAsync(cacheKey, async () =>
+            {
+                return await _postRepository.Table.Select(p => new PostListDto
+                {
+                    Id = p.Id,
+                    Text = p.Text,
+                    CreatedDate = p.CreatedDate,
+                    ImageUrlList = p.PostImages.Select(x => x.ImageUrl).ToList(),
+                    VideoUrl = p.PostVideos.FirstOrDefault().VideoUrl ?? "",
+                    CreatedByUserName = p.CreatedUser.UserName ?? "",
+                    CreatedByUserPhoto = p.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                    PostType = p.PostType,
+                    FancyboxData = $"post{p.Id}",
+                    Comments = p.PostComments.Select(y => new PostCommentListDto
+                    {
+                        Text = y.Text,
+                        Id = y.Id,
+                        PostId = y.PostId,
+                        CreatedDate = y.CreatedDate,
+                        CreatedByUserName = y.CreatedUser.UserName ?? "",
+                        CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath ?? ""
+                    }).ToList()
+                }).ToListAsyncMethod();
+            });
+        }
+
+        /// <summary>
+        /// Returns a list of post by user Id
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public virtual async Task<List<Post>> GetUserPostsByUserIdAsync(int userId)
+        {
+            return await _postRepository.Table.Where(y => y.CreatedBy == userId)
+                .LoadWith(x => x.PostImages)
+              .LoadWith(x => x.PostVideos).LoadWith(x => x.PostComments).ThenLoad(x => x.CreatedUser)
+              .ThenLoad(x => x.UserDetail).LoadWith(x => x.CreatedUser).ThenLoad(x => x.UserDetail).ToListAsyncMethod();
+        }
+
+        /// <summary>
+        /// Returns a list of post as dto by user Id
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public virtual async Task<List<PostListDto>> GetUserPostsWithDtoAsync(int userId)
+        {
+            return await _postRepository.Table.Where(x => x.CreatedBy == userId).Select(p => new PostListDto
+            {
+                Id = p.Id,
+                Text = p.Text,
+                CreatedDate = p.CreatedDate,
+                ImageUrlList = p.PostImages.Select(x => x.ImageUrl).ToList(),
+                VideoUrl = p.PostVideos.FirstOrDefault().VideoUrl ?? "",
+                CreatedByUserName = p.CreatedUser.UserName ?? "",
+                CreatedByUserPhoto = p.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                PostType = p.PostType,
+                FancyboxData = $"post{p.Id}",
+                Comments = p.PostComments.Select(y => new PostCommentListDto
+                {
+                    Text = y.Text,
+                    CreatedDate = y.CreatedDate,
+                    Id = y.Id,
+                    CreatedByUserName = y.CreatedUser.UserName ?? "",
+                    CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                    PostId = y.PostId
+                }).ToList()
+            }).ToListAsyncMethod();
         }
 
         #endregion

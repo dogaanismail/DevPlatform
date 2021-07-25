@@ -62,20 +62,20 @@ namespace DevPlatform.Business.Interfaces
         /// Returns the question lists
         /// </summary>
         /// <returns></returns>
-        Task<IEnumerable<QuestionListDto>> GetQuestionListAsync();
+        Task<List<QuestionListDto>> GetQuestionListAsync();
 
         /// <summary>
         /// Returns questions of user by userId
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        Task<IEnumerable<QuestionListDto>> GetUserQuestionsByUserIdAsync(int userId);
+        Task<List<QuestionListDto>> GetUserQuestionsByUserIdAsync(int userId);
 
         /// <summary>
         /// Returns posts of user by userId with dto
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        Task<IEnumerable<QuestionListDto>> GetUserQuestionsWithDtoAsync(int userId);
+        Task<List<QuestionListDto>> GetUserQuestionsWithDtoAsync(int userId);
     }
 }

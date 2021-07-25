@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DevPlatform.Business.Services
 {
@@ -56,12 +57,12 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="comment"></param>
         /// <returns></returns>
-        public ResultModel Create(QuestionComment comment)
+        public virtual async Task<ResultModel> CreateAsync(QuestionComment comment)
         {
             if (comment == null)
                 throw new ArgumentNullException(nameof(comment));
 
-            _questionCommentRepository.Insert(comment);
+            await _questionCommentRepository.InsertAsync(comment);
             return new ResultModel { Status = true, Message = "Create Process Success ! " };
         }
 
@@ -70,12 +71,12 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="comment"></param>
         /// <returns></returns>
-        public ResultModel Delete(QuestionComment comment)
+        public virtual async Task<ResultModel> DeleteAsync(QuestionComment comment)
         {
             if (comment == null)
                 throw new ArgumentNullException(nameof(comment));
 
-            _questionCommentRepository.Delete(comment);
+            await _questionCommentRepository.DeleteAsync(comment);
             return new ResultModel { Status = true, Message = "Delete Process Success ! " };
         }
 
@@ -84,12 +85,12 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="comment"></param>
         /// <returns></returns>
-        public ResultModel Update(QuestionComment comment)
+        public virtual async Task<ResultModel> UpdateAsync(QuestionComment comment)
         {
             if (comment == null)
                 throw new ArgumentNullException(nameof(comment));
 
-            _questionCommentRepository.Update(comment);
+            await _questionCommentRepository.UpdateAsync(comment);
             return new ResultModel { Status = true, Message = "Update Process Success ! " };
         }
 
@@ -98,9 +99,9 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public QuestionComment GetById(int id)
+        public virtual async Task<QuestionComment> GetByIdAsync(int id)
         {
-            return _questionCommentRepository.GetById(id);
+            return await _questionCommentRepository.GetByIdAsync(id);
         }
 
         /// <summary>
@@ -108,13 +109,12 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="questionId"></param>
         /// <returns></returns>
-        public List<QuestionComment> GetQuestionCommentsByQuestionId(int questionId)
+        public virtual async Task<List<QuestionComment>> GetQuestionCommentsByQuestionIdAsync(int questionId)
         {
-            IEnumerable<QuestionComment> getComments = _questionCommentRepository.Table
+            return await _questionCommentRepository.Table.Where(y => y.QuestionId == questionId)
                 .LoadWith(x => x.CreatedUser)
-                .ThenLoad(x => x.UserDetail).Where(y => y.QuestionId == questionId).ToList();
-
-            return (List<QuestionComment>)getComments;
+                .ThenLoad(x => x.UserDetail)
+                .ToListAsyncMethod();
         }
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public ServiceResponse<CreateResponse> Create(QuestionCommentCreateApi model)
+        public virtual async Task <ServiceResponse<CreateResponse>> CreateAsync(QuestionCommentCreateApi model)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -145,7 +145,7 @@ namespace DevPlatform.Business.Services
                 if (commentQuestion == null)
                     return ServiceResponse((CreateResponse)null, new List<string> { "Question not found!" });
 
-                var appUser = _userService.FindByUserName(_httpContextAccessor.HttpContext.User.Identity.Name);
+                var appUser = await _userService.FindByUserNameAsync(_httpContextAccessor.HttpContext.User.Identity.Name);
 
                 if (appUser == null)
                     return ServiceResponse((CreateResponse)null, new List<string> { "User not found!" });
@@ -157,7 +157,7 @@ namespace DevPlatform.Business.Services
                     CreatedBy = appUser.Id
                 };
 
-                ResultModel result = Create(newComment);
+                ResultModel result = await CreateAsync(newComment);
 
                 if (!result.Status)
                     return ServiceResponse((CreateResponse)null, new List<string> { result.Message });
@@ -178,7 +178,7 @@ namespace DevPlatform.Business.Services
             }
             catch (Exception ex)
             {
-                _logService.InsertLogAsync(LogLevel.Error, $"QuestionCommentService- Create Error: model {JsonConvert.SerializeObject(model)}", ex.Message.ToString());
+                await _logService.InsertLogAsync(LogLevel.Error, $"QuestionCommentService- Create Error: model {JsonConvert.SerializeObject(model)}", ex.Message.ToString());
                 serviceResponse.Success = false;
                 serviceResponse.Warnings.Add(ex.Message);
                 return serviceResponse;

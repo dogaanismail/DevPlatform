@@ -14,6 +14,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DevPlatform.Business.Services
 {
@@ -55,12 +56,12 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="question"></param>
         /// <returns></returns>
-        public virtual ResultModel Create(Question question)
+        public virtual async Task<ResultModel> CreateAsync(Question question)
         {
             if (question == null)
                 throw new ArgumentNullException(nameof(question));
 
-            _questionRepository.Insert(question);
+            await _questionRepository.InsertAsync(question);
             return new ResultModel { Status = true, Message = "Create Process Success ! " };
         }
 
@@ -69,180 +70,13 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="questions"></param>
         /// <returns></returns>
-        public virtual ResultModel Create(List<Question> questions)
+        public virtual async Task<ResultModel> CreateAsync(List<Question> questions)
         {
             if (questions == null)
                 throw new ArgumentNullException(nameof(questions));
 
-            _questionRepository.Insert(questions);
+            await _questionRepository.InsertAsync(questions);
             return new ResultModel { Status = true, Message = "Create Process Success ! " };
-        }
-
-        /// <summary>
-        /// Deletes q question
-        /// </summary>
-        /// <param name="question"></param>
-        public virtual void Delete(Question question)
-        {
-            if (question == null)
-                throw new ArgumentNullException(nameof(question));
-
-            _questionRepository.Delete(question);
-        }
-
-        /// <summary>
-        /// Updates a question
-        /// </summary>
-        /// <param name="question"></param>
-        public virtual void Update(Question question)
-        {
-            if (question == null)
-                throw new ArgumentNullException(nameof(question));
-
-            _questionRepository.Update(question);
-        }
-
-        /// <summary>
-        /// Gets a question by id
-        /// </summary>
-        /// <param name="questionId"></param>
-        /// <returns></returns>
-        public virtual Question GetById(int questionId)
-        {
-            if (questionId == 0)
-                return null;
-
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(DevPlatformEntityCacheDefaults<Question>.ByIdCacheKey, questionId);
-
-            return _staticCacheManager.Get<Question>(cacheKey, () =>
-            {
-                return _questionRepository.GetById(questionId);
-            });
-        }
-
-        /// <summary>
-        /// Returns a question by id as dto
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public virtual QuestionListDto GetByIdAsDto(int id)
-        {
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(DevPlatformEntityCacheDefaults<Question>.ByIdCacheKey, id);
-
-            return _staticCacheManager.Get<QuestionListDto>(cacheKey, () =>
-            {
-                var data = _questionRepository.Table.Where(x => x.Id == id).Select(p => new QuestionListDto
-                {
-                    Id = p.Id,
-                    Title = p.Title,
-                    Description = p.Description,
-                    CreatedDate = p.CreatedDate,
-                    CreatedByUserName = p.CreatedUser.UserName ?? "",
-                    CreatedByUserPhoto = p.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
-                    Comments = p.QuestionComments.Select(y => new QuestionCommentListDto
-                    {
-                        Text = y.Text,
-                        CreatedDate = y.CreatedDate,
-                        Id = y.Id,
-                        CreatedByUserName = y.CreatedUser.UserName ?? "",
-                        CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
-                        QuestionId = y.QuestionId
-                    }).ToList()
-                }).FirstOrDefault();
-
-                return data;
-            });
-        }
-
-        /// <summary>
-        /// Returns a list of questions as dto
-        /// </summary>
-        /// <returns></returns>
-        public virtual IEnumerable<QuestionListDto> GetQuestionList()
-        {
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(QuestionCacheKeys.QuestionsAllCacheKey);
-
-            return _staticCacheManager.Get<IEnumerable<QuestionListDto>>(cacheKey, () =>
-            {
-                var data = _questionRepository.Table.Select(p => new QuestionListDto
-                {
-                    Id = p.Id,
-                    Title = p.Title,
-                    Description = p.Description,
-                    CreatedDate = p.CreatedDate,
-                    CreatedByUserName = p.CreatedUser.UserName ?? "",
-                    CreatedByUserPhoto = p.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
-                    Comments = p.QuestionComments.Select(y => new QuestionCommentListDto
-                    {
-                        Text = y.Text,
-                        CreatedDate = y.CreatedDate,
-                        Id = y.Id,
-                        CreatedByUserName = y.CreatedUser.UserName ?? "",
-                        CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
-                        QuestionId = y.QuestionId
-                    }).ToList()
-                }).AsEnumerable();
-
-                return data;
-            });
-        }
-
-        /// <summary>
-        /// Returns a list of question by user Id
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <returns></returns>
-        public virtual IEnumerable<QuestionListDto> GetUserQuestionsByUserId(int userId)
-        {
-            var data = _questionRepository.Table.Where(que => que.CreatedBy == userId).Select(p => new QuestionListDto
-            {
-                Id = p.Id,
-                Title = p.Title,
-                Description = p.Description,
-                CreatedDate = p.CreatedDate,
-                CreatedByUserName = p.CreatedUser.UserName ?? "",
-                CreatedByUserPhoto = p.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
-                Comments = p.QuestionComments.Select(y => new QuestionCommentListDto
-                {
-                    Text = y.Text,
-                    CreatedDate = y.CreatedDate,
-                    Id = y.Id,
-                    CreatedByUserName = y.CreatedUser.UserName ?? "",
-                    CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
-                    QuestionId = y.QuestionId
-                }).ToList()
-            }).AsEnumerable();
-
-            return data;
-        }
-
-        /// <summary>
-        /// Returns a list of question as dto by user Id
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <returns></returns>
-        public virtual IEnumerable<QuestionListDto> GetUserQuestionsWithDto(int userId)
-        {
-            var data = _questionRepository.Table.Where(que => que.CreatedBy == userId).Select(p => new QuestionListDto
-            {
-                Id = p.Id,
-                Title = p.Title,
-                Description = p.Description,
-                CreatedDate = p.CreatedDate,
-                CreatedByUserName = p.CreatedUser.UserName ?? "",
-                CreatedByUserPhoto = p.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
-                Comments = p.QuestionComments.Select(y => new QuestionCommentListDto
-                {
-                    Text = y.Text,
-                    CreatedDate = y.CreatedDate,
-                    Id = y.Id,
-                    CreatedByUserName = y.CreatedUser.UserName ?? "",
-                    CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
-                    QuestionId = y.QuestionId
-                }).ToList()
-            }).AsEnumerable();
-
-            return data;
         }
 
         /// <summary>
@@ -250,7 +84,7 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public ServiceResponse<CreateResponse> Create(QuestionCreateApi model)
+        public virtual async Task<ServiceResponse<CreateResponse>> CreateAsync(QuestionCreateApi model)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -265,7 +99,7 @@ namespace DevPlatform.Business.Services
                 if (string.IsNullOrEmpty(model.Title))
                     return ServiceResponse((CreateResponse)null, new List<string> { "Title can not be null !" });
 
-                var appUser = _userService.FindByUserName(_httpContextAccessor.HttpContext.User.Identity.Name);
+                var appUser = await _userService.FindByUserNameAsync(_httpContextAccessor.HttpContext.User.Identity.Name);
                 if (appUser == null)
                     return ServiceResponse((CreateResponse)null, new List<string> { "User not found!" });
 
@@ -279,7 +113,7 @@ namespace DevPlatform.Business.Services
                     CreatedBy = appUser.Id
                 };
 
-                ResultModel questionModel = Create(newQuestion);
+                ResultModel questionModel = await CreateAsync(newQuestion);
 
                 if (!questionModel.Status)
                     return ServiceResponse((CreateResponse)null, new List<string> { questionModel.Message });
@@ -304,12 +138,171 @@ namespace DevPlatform.Business.Services
             }
             catch (Exception ex)
             {
-                _logService.InsertLogAsync(LogLevel.Error, $"QuestionService- Create Error: model {JsonConvert.SerializeObject(model)}", ex.Message.ToString());
+                await _logService.InsertLogAsync(LogLevel.Error, $"QuestionService- Create Error: model {JsonConvert.SerializeObject(model)}", ex.Message.ToString());
                 serviceResponse.Success = false;
                 serviceResponse.ResultCode = ResultCode.Exception;
                 serviceResponse.Warnings.Add(ex.Message);
                 return serviceResponse;
             }
+        }
+
+        /// <summary>
+        /// Deletes q question
+        /// </summary>
+        /// <param name="question"></param>
+        public virtual async Task DeleteAsync(Question question)
+        {
+            if (question == null)
+                throw new ArgumentNullException(nameof(question));
+
+            await _questionRepository.DeleteAsync(question);
+        }
+
+        /// <summary>
+        /// Updates a question
+        /// </summary>
+        /// <param name="question"></param>
+        public virtual async Task UpdateAsync(Question question)
+        {
+            if (question == null)
+                throw new ArgumentNullException(nameof(question));
+
+            await _questionRepository.UpdateAsync(question);
+        }
+
+        /// <summary>
+        /// Gets a question by id
+        /// </summary>
+        /// <param name="questionId"></param>
+        /// <returns></returns>
+        public virtual async Task<Question> GetByIdAsync(int questionId)
+        {
+            if (questionId == 0)
+                return null;
+
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(DevPlatformEntityCacheDefaults<Question>.ByIdCacheKey, questionId);
+
+            return await _staticCacheManager.GetAsync(cacheKey, async () =>
+            {
+                return await _questionRepository.GetByIdAsync(questionId);
+            });
+        }
+
+        /// <summary>
+        /// Returns a question by id as dto
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public virtual async Task<QuestionListDto> GetByIdAsDtoAsync(int id)
+        {
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(DevPlatformEntityCacheDefaults<Question>.ByIdCacheKey, id);
+
+            return await _staticCacheManager.GetAsync(cacheKey, async () =>
+            {
+                return await _questionRepository.Table.Where(x => x.Id == id).Select(p => new QuestionListDto
+                {
+                    Id = p.Id,
+                    Title = p.Title,
+                    Description = p.Description,
+                    CreatedDate = p.CreatedDate,
+                    CreatedByUserName = p.CreatedUser.UserName ?? "",
+                    CreatedByUserPhoto = p.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                    Comments = p.QuestionComments.Select(y => new QuestionCommentListDto
+                    {
+                        Text = y.Text,
+                        CreatedDate = y.CreatedDate,
+                        Id = y.Id,
+                        CreatedByUserName = y.CreatedUser.UserName ?? "",
+                        CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                        QuestionId = y.QuestionId
+                    }).ToList()
+                }).FirstOrDefaultAsyncMethod();
+            });
+        }
+
+        /// <summary>
+        /// Returns a list of questions as dto
+        /// </summary>
+        /// <returns></returns>
+        public virtual async Task<List<QuestionListDto>> GetQuestionListAsync()
+        {
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(QuestionCacheKeys.QuestionsAllCacheKey);
+
+            return await _staticCacheManager.GetAsync(cacheKey, async () =>
+            {
+                return await _questionRepository.Table.Select(p => new QuestionListDto
+                {
+                    Id = p.Id,
+                    Title = p.Title,
+                    Description = p.Description,
+                    CreatedDate = p.CreatedDate,
+                    CreatedByUserName = p.CreatedUser.UserName ?? "",
+                    CreatedByUserPhoto = p.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                    Comments = p.QuestionComments.Select(y => new QuestionCommentListDto
+                    {
+                        Text = y.Text,
+                        CreatedDate = y.CreatedDate,
+                        Id = y.Id,
+                        CreatedByUserName = y.CreatedUser.UserName ?? "",
+                        CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                        QuestionId = y.QuestionId
+                    }).ToList()
+                }).ToListAsyncMethod();
+            });
+        }
+
+        /// <summary>
+        /// Returns a list of question by user Id
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public virtual async Task<List<QuestionListDto>> GetUserQuestionsByUserIdAsync(int userId)
+        {
+            return await _questionRepository.Table.Where(que => que.CreatedBy == userId).Select(p => new QuestionListDto
+            {
+                Id = p.Id,
+                Title = p.Title,
+                Description = p.Description,
+                CreatedDate = p.CreatedDate,
+                CreatedByUserName = p.CreatedUser.UserName ?? "",
+                CreatedByUserPhoto = p.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                Comments = p.QuestionComments.Select(y => new QuestionCommentListDto
+                {
+                    Text = y.Text,
+                    CreatedDate = y.CreatedDate,
+                    Id = y.Id,
+                    CreatedByUserName = y.CreatedUser.UserName ?? "",
+                    CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                    QuestionId = y.QuestionId
+                }).ToList()
+            }).ToListAsyncMethod();
+        }
+
+        /// <summary>
+        /// Returns a list of question as dto by user Id
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public virtual async Task<List<QuestionListDto>> GetUserQuestionsWithDtoAsync(int userId)
+        {
+            return await _questionRepository.Table.Where(que => que.CreatedBy == userId).Select(p => new QuestionListDto
+            {
+                Id = p.Id,
+                Title = p.Title,
+                Description = p.Description,
+                CreatedDate = p.CreatedDate,
+                CreatedByUserName = p.CreatedUser.UserName ?? "",
+                CreatedByUserPhoto = p.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                Comments = p.QuestionComments.Select(y => new QuestionCommentListDto
+                {
+                    Text = y.Text,
+                    CreatedDate = y.CreatedDate,
+                    Id = y.Id,
+                    CreatedByUserName = y.CreatedUser.UserName ?? "",
+                    CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                    QuestionId = y.QuestionId
+                }).ToList()
+            }).ToListAsyncMethod();
         }
 
         #endregion

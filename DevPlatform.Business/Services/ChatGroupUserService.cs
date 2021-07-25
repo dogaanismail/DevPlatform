@@ -1,6 +1,7 @@
 ﻿using DevPlatform.Business.Interfaces;
 using DevPlatform.Domain.Common;
 using System;
+using System.Threading.Tasks;
 
 namespace DevPlatform.Business.Services
 {
@@ -9,7 +10,7 @@ namespace DevPlatform.Business.Services
     /// </summary>
     public partial class ChatGroupUserService : IChatGroupUserService
     {
-        public ResultModel GetChatGroupUsers(int userId)
+        public virtual async Task<ResultModel> GetChatGroupUsersAsync(int userId)
         {
             throw new NotImplementedException();
         }

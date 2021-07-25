@@ -69,20 +69,20 @@ namespace DevPlatform.Business.Interfaces
         /// Returns the story lists
         /// </summary>
         /// <returns></returns>
-        Task<IEnumerable<StoryListDto>> GetStoryListAsync();
+        Task<List<StoryListDto>> GetStoryListAsync();
 
         /// <summary>
         /// Returns stories of user by userId
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        Task<IEnumerable<Story>> GetUserStoriesByUserIdAsync(int userId);
+        Task<List<Story>> GetUserStoriesByUserIdAsync(int userId);
 
         /// <summary>
         /// Returns stories of user by userId with dto
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        Task<IEnumerable<StoryListDto>> GetUserStoriesWithDtoAsync(int userId);
+        Task<List<StoryListDto>> GetUserStoriesWithDtoAsync(int userId);
     }
 }

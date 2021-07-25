@@ -14,7 +14,7 @@ namespace DevPlatform.Business.Interfaces
         /// Returns all chat messages in the system.
         /// </summary>
         /// <returns></returns>
-        Task<IEnumerable<MessageDto>> GetAllMessagesAsync();
+        Task<List<MessageDto>> GetAllMessagesAsync();
 
         /// <summary>
         /// Returns the messages by chatId.
@@ -28,7 +28,7 @@ namespace DevPlatform.Business.Interfaces
         /// </summary>
         /// <param name="chatId"></param>
         /// <returns></returns>
-        Task<IEnumerable<MessageDto>> GetMessagesByGroupNameAsync(string groupName);
+        Task<List<MessageDto>> GetMessagesByGroupNameAsync(string groupName);
 
 
         /// <summary>

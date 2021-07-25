@@ -62,20 +62,20 @@ namespace DevPlatform.Business.Interfaces
         /// Returns an album lists
         /// </summary>
         /// <returns></returns>
-        Task<IEnumerable<AlbumListDto>> GetAlbumListAsync();
+        Task<List<AlbumListDto>> GetAlbumListAsync();
 
         /// <summary>
         /// Returns albums of user by userId
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        Task<IEnumerable<Album>> GetUserAlbumsByUserIdAsync(int userId);
+        Task<List<Album>> GetUserAlbumsByUserIdAsync(int userId);
 
         /// <summary>
         /// Returns albums of user by userId with dto
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        Task<IEnumerable<AlbumListDto>> GetUserAlbumsWithDtoAsync(int userId);
+        Task<List<AlbumListDto>> GetUserAlbumsWithDtoAsync(int userId);
     }
 }

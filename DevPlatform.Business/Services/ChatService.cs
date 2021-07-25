@@ -2,11 +2,10 @@
 using DevPlatform.Core.Domain.Chat;
 using DevPlatform.Domain.Common;
 using DevPlatform.Domain.Dto;
-using DevPlatform.Repository.Extensions;
 using DevPlatform.Repository.Generic;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 
 namespace DevPlatform.Business.Services
 {
@@ -36,19 +35,9 @@ namespace DevPlatform.Business.Services
         /// Returns all messages
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<MessageDto> GetAllMessages()
+        public virtual async Task<List<MessageDto>> GetAllMessagesAsync()
         {
-            IEnumerable<MessageDto> data = _chatRepository.Find(null, x => x.Include(u => u.Sender).
-            Include(r => r.ChatGroup)).ToList().Select(x => new MessageDto
-            {
-                CreateDate = x.CreatedDate,
-                IsRead = x.IsRead,
-                SenderName = x.Sender.UserName,
-                Text = x.Text,
-                GroupName = x.ChatGroup.Name
-            }).AsEnumerable();
-
-            return data;
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -56,18 +45,9 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="chatId"></param>
         /// <returns></returns>
-        public MessageDto GetMessageById(int chatId)
+        public virtual async Task<MessageDto> GetMessageByIdAsync(int chatId)
         {
-            var chat = _chatRepository.GetById(chatId, x => x.Include(y => y.Sender));
-
-            MessageDto messageDto = new MessageDto
-            {
-                SenderName = chat.Sender.UserName,
-                CreateDate = chat.CreatedDate,
-                IsRead = chat.IsRead,
-                Text = chat.Text
-            };
-            return messageDto;
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -75,27 +55,9 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="groupName"></param>
         /// <returns></returns>
-        public IEnumerable<MessageDto> GetMessagesByGroupName(string groupName)
+        public virtual async Task<List<MessageDto>> GetMessagesByGroupNameAsync(string groupName)
         {
-            if (string.IsNullOrEmpty(groupName))
-                throw new ArgumentNullException(nameof(groupName));
-
-            var chatGroup = _chatGroup.Find(x => x.Name == groupName).FirstOrDefault();
-
-            IEnumerable<MessageDto> data = _chatRepository.Find(x => x.ChatGroupId == chatGroup.Id,
-                x => x.Include(u => u.Sender).ThenInclude(t => t.UserDetail)
-            .Include(r => r.ChatGroup).ThenInclude(tt => tt.CreatedUser)).ToList().Select(x => new MessageDto
-            {
-                Text = x.Text,
-                CreateDate = x.CreatedDate,
-                IsRead = x.IsRead,
-                SenderName = x.Sender.UserName,
-                SenderId = x.Sender.Id,
-                ProfilePhotoUrl = x.Sender.UserDetail.ProfilePhotoPath,
-                GroupName = x.ChatGroup.Name
-            }).AsEnumerable();
-
-            return data;
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -103,21 +65,9 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        public ResultModel Create(MessageDto message)
+        public virtual async Task<ResultModel> CreateAsync (MessageDto message)
         {
-            if (message == null)
-                throw new ArgumentNullException(nameof(message));
-
-            var chatGroup = _chatGroup.Find(x => x.Name == message.GroupName).FirstOrDefault();
-            ChatMessage newChat = new ChatMessage
-            {
-                Text = message.Text,
-                SenderId = message.SenderId,
-                IsRead = message.IsRead,
-                ChatGroupId = chatGroup.Id,
-            };
-            _chatRepository.Insert(newChat);
-            return new ResultModel { Status = true, Message = "Create Process Success ! " };
+            throw new NotImplementedException();
         }
     }
 }

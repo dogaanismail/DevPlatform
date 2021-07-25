@@ -47,7 +47,7 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="album"></param>
         /// <returns></returns>
-        public virtual async Task<ResultModel> Create(Album album)
+        public virtual async Task<ResultModel> CreateAsync(Album album)
         {
             if (album == null)
                 throw new ArgumentNullException(nameof(album));
@@ -61,7 +61,7 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="albums"></param>
         /// <returns></returns>
-        public virtual async Task<ResultModel> Create(List<Album> albums)
+        public virtual async Task<ResultModel> CreateAsync(List<Album> albums)
         {
             if (albums == null)
                 throw new ArgumentNullException(nameof(albums));
@@ -71,68 +71,11 @@ namespace DevPlatform.Business.Services
         }
 
         /// <summary>
-        /// Deletes an album
-        /// </summary>
-        /// <param name="album"></param>
-        public virtual async Task Delete(Album album)
-        {
-            if (album == null)
-                throw new ArgumentNullException(nameof(album));
-
-            await _albumRepository.DeleteAsync(album);
-        }
-
-        public async Task<IEnumerable<AlbumListDto>> GetAlbumList()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="albumId"></param>
-        /// <returns></returns>
-        public virtual async Task<Album> GetById(int albumId)
-        {
-            if (albumId == 0)
-                return null;
-
-            return await _albumRepository.GetByIdAsync(albumId);
-        }
-
-        public virtual async Task<AlbumListDto> GetByIdAsDto(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public virtual async Task<IEnumerable<Album>> GetUserAlbumsByUserId(int userId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public virtual async Task<IEnumerable<AlbumListDto>> GetUserAlbumsWithDto(int userId)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Updates an album
-        /// </summary>
-        /// <param name="album"></param>
-        public virtual async Task Update(Album album)
-        {
-            if (album == null)
-                throw new ArgumentNullException(nameof(album));
-
-            await _albumRepository.UpdateAsync(album);
-        }
-
-        /// <summary>
         /// Inserts an album with images and returns service response
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public virtual async Task<ServiceResponse<CreateResponse>> Create(AlbumCreateApi model)
+        public virtual async Task<ServiceResponse<CreateResponse>> CreateAsync(AlbumCreateApi model)
         {
             if (model == null || model.Images == null || model.Images.Count == 0)
                 return ServiceResponse((CreateResponse)null, new List<string> { "The upload process can not be done !" });
@@ -156,7 +99,7 @@ namespace DevPlatform.Business.Services
                     Tag = model.Tag
                 };
 
-                var uploadResults = _imageProcessingService.UploadImage(model.Images);
+                var uploadResults = await _imageProcessingService.UploadImageAsync(model.Images);
 
                 if (uploadResults.Any(x => x.Error != null || x.StatusCode != System.Net.HttpStatusCode.OK))
                     return ServiceResponse((CreateResponse)null, new List<string>
@@ -173,7 +116,7 @@ namespace DevPlatform.Business.Services
                     });
                 }
 
-                ResultModel createResult = await Create(album);
+                ResultModel createResult = await CreateAsync(album);
 
                 if (!createResult.Status)
                     return ServiceResponse((CreateResponse)null, new List<string> { createResult.Message });
@@ -196,6 +139,63 @@ namespace DevPlatform.Business.Services
                 serviceResponse.Warnings.Add(ex.Message);
                 return serviceResponse;
             }
+        }
+
+        /// <summary>
+        /// Deletes an album
+        /// </summary>
+        /// <param name="album"></param>
+        public virtual async Task DeleteAsync(Album album)
+        {
+            if (album == null)
+                throw new ArgumentNullException(nameof(album));
+
+            await _albumRepository.DeleteAsync(album);
+        }
+
+        public virtual async Task<List<AlbumListDto>> GetAlbumListAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="albumId"></param>
+        /// <returns></returns>
+        public virtual async Task<Album> GetByIdAsync(int albumId)
+        {
+            if (albumId == 0)
+                return null;
+
+            return await _albumRepository.GetByIdAsync(albumId);
+        }
+
+        public virtual async Task<AlbumListDto> GetByIdAsDtoAsync(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual async Task<List<Album>> GetUserAlbumsByUserIdAsync(int userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual async Task<List<AlbumListDto>> GetUserAlbumsWithDtoAsync(int userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Updates an album
+        /// </summary>
+        /// <param name="album"></param>
+        public virtual async Task UpdateAsync(Album album)
+        {
+            if (album == null)
+                throw new ArgumentNullException(nameof(album));
+
+            await _albumRepository.UpdateAsync(album);
         }
 
         #endregion

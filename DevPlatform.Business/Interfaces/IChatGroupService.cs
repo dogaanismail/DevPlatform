@@ -20,7 +20,7 @@ namespace DevPlatform.Business.Interfaces
         /// Returns chat groups by username.
         /// </summary>
         /// <returns></returns>
-        Task<IEnumerable<ChatGroupDto>> GetChatGroupsAsync(string username);
+        Task<List<ChatGroupDto>> GetChatGroupsAsync(string username);
 
         /// <summary>
         /// Returns group member details by group name.

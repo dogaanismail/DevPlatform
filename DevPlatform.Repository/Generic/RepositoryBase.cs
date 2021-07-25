@@ -4,7 +4,6 @@ using DevPlatform.Core.Domain.Common;
 using DevPlatform.Core.Entities;
 using DevPlatform.Core.Events;
 using DevPlatform.Data;
-using DevPlatform.Data.Extensions;
 using LinqToDB;
 using LinqToDB.Data;
 using System;

@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Linq;
 
-namespace DevPlatform.Data.Extensions
+namespace System.Linq
 {
     public static class AsyncIEnumerableExtensions
     {
@@ -23,7 +21,7 @@ namespace DevPlatform.Data.Extensions
         /// An async-enumerable sequence whose elements are the result of invoking the transform
         /// function on each element of the source sequence and awaiting the result
         /// </returns>
-        public static IAsyncEnumerable<TResult> SelectAwait<TSource, TResult>(this IEnumerable<TSource> source,
+        public static IAsyncEnumerable<TResult> SelectAwaitMethod<TSource, TResult>(this IEnumerable<TSource> source,
             Func<TSource, ValueTask<TResult>> predicate)
         {
             return source.ToAsyncEnumerable().SelectAwait(predicate);
@@ -42,7 +40,7 @@ namespace DevPlatform.Data.Extensions
         /// or a default value if no element satisfies the predicate
         /// </returns>
         /// <returns>A task that represents the asynchronous operation</returns>
-        public static Task<TSource> FirstOrDefaultAwaitAsync<TSource>(this IEnumerable<TSource> source,
+        public static Task<TSource> FirstOrDefaultAwaitAsyncMethod<TSource>(this IEnumerable<TSource> source,
             Func<TSource, ValueTask<bool>> predicate)
         {
             return source.ToAsyncEnumerable().FirstOrDefaultAwaitAsync(predicate).AsTask();
@@ -59,7 +57,7 @@ namespace DevPlatform.Data.Extensions
         /// pass the test in the specified predicate
         /// </returns>
         /// <returns>A task that represents the asynchronous operation</returns>
-        public static Task<bool> AllAwaitAsync<TSource>(this IEnumerable<TSource> source,
+        public static Task<bool> AllAwaitAsyncMethod<TSource>(this IEnumerable<TSource> source,
             Func<TSource, ValueTask<bool>> predicate)
         {
             return source.ToAsyncEnumerable().AllAwaitAsync(predicate).AsTask();
@@ -78,7 +76,7 @@ namespace DevPlatform.Data.Extensions
         /// An async-enumerable sequence whose elements are the result of invoking the one-to-many
         /// transform function on each element of the source sequence and awaiting the result
         /// </returns>
-        public static IAsyncEnumerable<TResult> SelectManyAwait<TSource, TResult>(this IEnumerable<TSource> source,
+        public static IAsyncEnumerable<TResult> SelectManyAwaitMethod<TSource, TResult>(this IEnumerable<TSource> source,
             Func<TSource, Task<IList<TResult>>> predicate)
         {
             async ValueTask<IAsyncEnumerable<TResult>> getAsyncEnumerable(TSource items)
@@ -103,7 +101,7 @@ namespace DevPlatform.Data.Extensions
         /// An async-enumerable sequence whose elements are the result of invoking the one-to-many
         /// transform function on each element of the source sequence and awaiting the result
         /// </returns>
-        public static IAsyncEnumerable<TResult> SelectManyAwait<TSource, TResult>(this IEnumerable<TSource> source,
+        public static IAsyncEnumerable<TResult> SelectManyAwaitMethod<TSource, TResult>(this IEnumerable<TSource> source,
             Func<TSource, Task<IEnumerable<TResult>>> predicate)
         {
             async ValueTask<IAsyncEnumerable<TResult>> getAsyncEnumerable(TSource items)
@@ -126,7 +124,7 @@ namespace DevPlatform.Data.Extensions
         /// An async-enumerable sequence that contains elements from the input sequence that
         /// satisfy the condition
         /// </returns>
-        public static IAsyncEnumerable<TSource> WhereAwait<TSource>(this IEnumerable<TSource> source,
+        public static IAsyncEnumerable<TSource> WhereAwaitMethod<TSource>(this IEnumerable<TSource> source,
             Func<TSource, ValueTask<bool>> predicate)
         {
             return source.ToAsyncEnumerable().WhereAwait(predicate);
@@ -143,7 +141,7 @@ namespace DevPlatform.Data.Extensions
         /// sequence pass the test in the specified predicate
         /// </returns>
         /// <returns>A task that represents the asynchronous operation</returns>
-        public static Task<bool> AnyAwaitAsync<TSource>(this IEnumerable<TSource> source,
+        public static Task<bool> AnyAwaitAsyncMethod<TSource>(this IEnumerable<TSource> source,
             Func<TSource, ValueTask<bool>> predicate)
         {
             return source.ToAsyncEnumerable().AnyAwaitAsync(predicate).AsTask();
@@ -164,7 +162,7 @@ namespace DevPlatform.Data.Extensions
         /// exists
         /// </returns>
         /// <returns>A task that represents the asynchronous operation</returns>
-        public static Task<TSource> SingleOrDefaultAwaitAsync<TSource>(this IEnumerable<TSource> source,
+        public static Task<TSource> SingleOrDefaultAwaitAsyncMethod<TSource>(this IEnumerable<TSource> source,
             Func<TSource, ValueTask<bool>> predicate)
         {
             return source.ToAsyncEnumerable().SingleOrDefaultAwaitAsync(predicate).AsTask();
@@ -180,7 +178,7 @@ namespace DevPlatform.Data.Extensions
         /// all the elements of the source sequence
         /// </returns>
         /// <returns>A task that represents the asynchronous operation</returns>
-        public static Task<List<TSource>> ToListAsync<TSource>(this IEnumerable<TSource> source)
+        public static Task<List<TSource>> ToListAsyncMethod<TSource>(this IEnumerable<TSource> source)
         {
             return source.ToAsyncEnumerable().ToListAsync().AsTask();
         }
@@ -197,7 +195,7 @@ namespace DevPlatform.Data.Extensions
         /// An ordered async-enumerable sequence whose elements are sorted in descending
         /// order according to a key
         /// </returns>
-        public static IOrderedAsyncEnumerable<TSource> OrderByDescendingAwait<TSource, TKey>(
+        public static IOrderedAsyncEnumerable<TSource> OrderByDescendingAwaitMethod<TSource, TKey>(
             this IEnumerable<TSource> source, Func<TSource, ValueTask<TKey>> keySelector)
         {
             return source.ToAsyncEnumerable().OrderByDescendingAwait(keySelector);
@@ -217,7 +215,7 @@ namespace DevPlatform.Data.Extensions
         /// A sequence of async-enumerable groups, each of which corresponds to a unique
         /// key value, containing all elements that share that same key value
         /// </returns>
-        public static IAsyncEnumerable<IAsyncGrouping<TKey, TElement>> GroupByAwait<TSource, TKey, TElement>(
+        public static IAsyncEnumerable<IAsyncGrouping<TKey, TElement>> GroupByAwaitMethod<TSource, TKey, TElement>(
             this IEnumerable<TSource> source, Func<TSource, ValueTask<TKey>> keySelector,
             Func<TSource, ValueTask<TElement>> elementSelector)
         {
@@ -235,7 +233,7 @@ namespace DevPlatform.Data.Extensions
         /// <param name="seed">The initial accumulator value</param>
         /// <param name="accumulator">An asynchronous accumulator function to be invoked and awaited on each element</param>
         /// <returns>A Task containing the final accumulator value</returns>
-        public static ValueTask<TAccumulate> AggregateAwaitAsync<TSource, TAccumulate>(
+        public static ValueTask<TAccumulate> AggregateAwaitAsyncMethod<TSource, TAccumulate>(
             this IEnumerable<TSource> source, TAccumulate seed,
             Func<TAccumulate, TSource, ValueTask<TAccumulate>> accumulator)
         {
@@ -256,7 +254,7 @@ namespace DevPlatform.Data.Extensions
         /// A Task containing a dictionary mapping unique key values onto the corresponding
         /// source sequence's element
         /// </returns>
-        public static ValueTask<Dictionary<TKey, TElement>> ToDictionaryAwaitAsync<TSource, TKey, TElement>(
+        public static ValueTask<Dictionary<TKey, TElement>> ToDictionaryAwaitAsyncMethod<TSource, TKey, TElement>(
             this IEnumerable<TSource> source, Func<TSource, ValueTask<TKey>> keySelector,
             Func<TSource, ValueTask<TElement>> elementSelector) where TKey : notnull
         {
@@ -275,7 +273,7 @@ namespace DevPlatform.Data.Extensions
         /// A sequence of async-enumerable groups, each of which corresponds to a unique
         /// key value, containing all elements that share that same key value
         /// </returns>
-        public static IAsyncEnumerable<IAsyncGrouping<TKey, TSource>> GroupByAwait<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, ValueTask<TKey>> keySelector)
+        public static IAsyncEnumerable<IAsyncGrouping<TKey, TSource>> GroupByAwaitMethod<TSource, TKey>(this IEnumerable<TSource> source, Func<TSource, ValueTask<TKey>> keySelector)
         {
             return source.ToAsyncEnumerable().GroupByAwait(keySelector);
         }
@@ -289,7 +287,7 @@ namespace DevPlatform.Data.Extensions
         /// <param name="source">A sequence of values that are used to calculate a sum</param>
         /// <param name="selector">An asynchronous transform function to apply to each element</param>
         /// <returns>A Task containing the sum of the values in the source sequence</returns>
-        public static ValueTask<decimal> SumAwaitAsync<TSource>(this IEnumerable<TSource> source,
+        public static ValueTask<decimal> SumAwaitAsyncMethod<TSource>(this IEnumerable<TSource> source,
             Func<TSource, ValueTask<decimal>> selector)
         {
             return source.ToAsyncEnumerable().SumAwaitAsync(selector);
