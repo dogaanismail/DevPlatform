@@ -18,7 +18,8 @@ namespace DevPlatform.Data.Mapping.Builders.Portal
                .WithColumn(nameof(Post.ModifiedBy)).AsInt32().Nullable().ForeignKey<AppUser>(onDelete: Rule.None)
                .WithColumn(nameof(Post.CreatedDate)).AsDateTime().NotNullable()
                .WithColumn(nameof(Post.ModifiedDate)).AsDateTime().Nullable()
-               .WithColumn(nameof(Post.StatusId)).AsInt32().Nullable();
+               .WithColumn(nameof(Post.StatusId)).AsInt32().Nullable()
+               .WithColumn(nameof(Post.Deleted)).AsBoolean().WithDefaultValue(0).NotNullable();
             #endregion
         }
     }

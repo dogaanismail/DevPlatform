@@ -20,7 +20,8 @@ namespace DevPlatform.Data.Mapping.Builders.Album
                .WithColumn(nameof(AlbumEntity.ModifiedBy)).AsInt32().Nullable().ForeignKey<AppUser>(onDelete: Rule.None)
                .WithColumn(nameof(AlbumEntity.CreatedDate)).AsDateTime().NotNullable()
                .WithColumn(nameof(AlbumEntity.ModifiedDate)).AsDateTime().Nullable()
-               .WithColumn(nameof(AlbumEntity.StatusId)).AsInt32().Nullable();
+               .WithColumn(nameof(AlbumEntity.StatusId)).AsInt32().Nullable()
+               .WithColumn(nameof(AlbumEntity.Deleted)).AsBoolean().WithDefaultValue(0).NotNullable();
             #endregion
         }
     }

@@ -207,8 +207,6 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
         /// <param name="services">Collection of service descriptors</param>
         public static void AddDevPlatformAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
-            if (DataSettingsManager.IsDatabaseInstalled())
-            {
                 var appSettings = Singleton<AppConfigs>.Instance;
                 var jwtConfig = appSettings.JwtConfig;
 
@@ -243,8 +241,7 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
 
                 JwtTokenDefinitions.LoadFromConfiguration(jwtConfig);
                 services.ConfigureJwtAuthentication();
-                services.ConfigureJwtAuthorization();
-            }
+                services.ConfigureJwtAuthorization(); 
         }
 
         /// <summary>

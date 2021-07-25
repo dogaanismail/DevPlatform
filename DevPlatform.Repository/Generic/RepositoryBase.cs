@@ -206,7 +206,7 @@ namespace DevPlatform.Repository.Generic
         {
             async Task<IList<TEntity>> getAllAsync()
             {
-                var query = AddDeletedFilter(Table, includeDeleted);
+                var query = AddDeletedFilter(Table, false);
                 query = func != null ? func(query) : query;
 
                 return await query.ToListAsync();

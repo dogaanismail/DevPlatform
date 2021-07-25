@@ -18,7 +18,8 @@ namespace DevPlatform.Data.Mapping.Builders.Story
                .WithColumn(nameof(StoryEntity.ModifiedBy)).AsInt32().Nullable().ForeignKey<AppUser>(onDelete: Rule.None)
                .WithColumn(nameof(StoryEntity.CreatedDate)).AsDateTime().NotNullable()
                .WithColumn(nameof(StoryEntity.ModifiedDate)).AsDateTime().Nullable()
-               .WithColumn(nameof(StoryEntity.StatusId)).AsInt32().Nullable();
+               .WithColumn(nameof(StoryEntity.StatusId)).AsInt32().Nullable()
+               .WithColumn(nameof(StoryEntity.Deleted)).AsBoolean().WithDefaultValue(0).NotNullable();
             #endregion
         }
     }
