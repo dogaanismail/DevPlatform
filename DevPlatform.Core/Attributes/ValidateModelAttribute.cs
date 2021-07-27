@@ -17,6 +17,5 @@ namespace DevPlatform.Core.Attributes
         {
             base.OnActionExecuted(context);
         }
-
     }
 }

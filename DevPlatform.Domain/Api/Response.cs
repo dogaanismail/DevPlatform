@@ -23,7 +23,6 @@ namespace DevPlatform.Domain.Api
 
         public ValidationError ValidationError { get; set; }
 
-
         public T Result { get; set; }
 
         public Response()
@@ -37,19 +36,17 @@ namespace DevPlatform.Domain.Api
             Result = result;
         }
 
-        protected Response(ValidationError error)
+        protected Response(T error)
         {
             StatusCode = (int)HttpStatusCode.BadRequest;
             Status = false;
-            ValidationError = error;
-            Result = null;
+            Result = error;
         }
 
         protected Response(ResultModel resultModel)
         {
             StatusCode = (int)HttpStatusCode.InternalServerError;
             Status = false;
-            ValidationError = new ValidationError(resultModel);
             Result = null;
         }
 
