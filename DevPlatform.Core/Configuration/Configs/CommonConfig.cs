@@ -39,5 +39,15 @@
         /// Gets or sets a value of "Cache-Control" header value for static content (in seconds)
         /// </summary>
         public string StaticFilesCacheControl { get; set; } = "public,max-age=31536000";
+
+        /// <summary>
+        /// Gets or sets a value that indicates whether to use default ip address for local environment
+        /// </summary>
+        public bool UseDefaultIpAddressForLocal { get; set; } = true;
+
+        /// <summary>
+        /// Gets or sets a value that returns default ip address for local environment
+        /// </summary>
+        public string DefaultIpAddress { get; set; } = "85.103.104.238";
     }
 }

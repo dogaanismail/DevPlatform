@@ -1,10 +1,12 @@
-﻿using System.Runtime.Serialization;
+﻿using System.ComponentModel;
+using System.Runtime.Serialization;
 
 namespace DevPlatform.Data
 {
     /// <summary>
     /// Represents data provider type enumeration
     /// </summary>
+    [DefaultValue(SqlServer)]
     public enum DataProviderType
     {
         /// <summary>
@@ -24,6 +26,11 @@ namespace DevPlatform.Data
         /// </summary>
         [EnumMember(Value = "mysql")]
         MySql,
-        PostgreSQL
+
+        /// <summary>
+        /// MySQL
+        /// </summary>
+        [EnumMember(Value = "postgresql")]
+        PostgreSQL       
     }
 }

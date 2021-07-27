@@ -140,7 +140,7 @@ namespace DevPlatform.Business.Services
                 if (string.IsNullOrEmpty(model.Text))
                     return ServiceResponse((CreateResponse)null, new List<string> { "Text can not be null !" });
 
-                var commentQuestion = _questionRepository.Table.FirstOrDefault(p => p.Id == model.QuestionId);
+                var commentQuestion = await _questionRepository.Table.FirstOrDefaultAsync(p => p.Id == model.QuestionId);
 
                 if (commentQuestion == null)
                     return ServiceResponse((CreateResponse)null, new List<string> { "Question not found!" });

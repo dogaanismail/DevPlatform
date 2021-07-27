@@ -58,12 +58,12 @@ namespace DevPlatform.Framework.Infrastructure
             //used for routing
             application.UseDevPlatformRouting();
 
-            //used for swagger
-            application.UseDevPlatformSwagger();
-
             //check whether database is installed
             application.UseInstallUrl();
 
+            //used for swagger
+            application.UseDevPlatformSwagger();
+       
             //used for angular
             application.UseAngular();
 
