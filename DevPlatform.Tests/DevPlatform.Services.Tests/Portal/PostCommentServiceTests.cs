@@ -4,6 +4,7 @@ using DevPlatform.Repository.Generic;
 using FluentAssertions;
 using NUnit.Framework;
 using System;
+using System.Threading.Tasks;
 
 namespace DevPlatform.Tests.DevPlatform.Services.Tests.Portal
 {
@@ -19,39 +20,39 @@ namespace DevPlatform.Tests.DevPlatform.Services.Tests.Portal
         }
 
         [Test]
-        public void ItShouldReturnNullPostCommentWhenPostCommentIdIsZero()
+        public async Task ItShouldReturnNullPostCommentWhenPostCommentIdIsZero()
         {
-            var comment = _postCommentService.GetById(0);
+            var comment = await _postCommentService.GetByIdAsync(0);
             comment.Should().BeNull();
         }
 
         [Test]
-        public void ItShouldReturnNullPostCommentAsDtoWhenPostCommentIdIsZero()
+        public async Task ItShouldReturnNullPostCommentAsDtoWhenPostCommentIdIsZero()
         {
-            var commentList = _postCommentService.GetPostCommentsByPostId(0);
+            var commentList = await _postCommentService.GetPostCommentsByPostIdAsync(0);
             commentList.Should().HaveCount(0);
         }
 
         [Test]
         public void ItShouldThrowExceptionIfPostCommentIsNullWhenPostComment()
         {
-            Assert.Throws(typeof(ArgumentNullException), () => _postCommentService.Delete(null));
+            Assert.Throws(typeof(ArgumentNullException), () => _postCommentService.DeleteAsync(null));
         }
 
         [Test]
         public void ItShouldThrowIfPostCommentIsNullWhenInsertPostComment()
         {
-            Assert.Throws<ArgumentNullException>(() => _postCommentService.Create(new PostComment()));
+            Assert.Throws<ArgumentNullException>(() => _postCommentService.CreateAsync(new PostComment()));
         }
 
         [Test]
         public void ItShouldThrowIfPostCommentIsNullWhenUpdatePostComment()
         {
-            Assert.Throws<ArgumentNullException>(() => _postCommentService.Update(null));
+            Assert.Throws<ArgumentNullException>(() => _postCommentService.UpdateAsync(null));
         }
 
         [Test]
-        public void ItShouldInsertPostComment()
+        public async Task ItShouldInsertPostComment()
         {
             var postComment = new PostComment
             {
@@ -60,9 +61,9 @@ namespace DevPlatform.Tests.DevPlatform.Services.Tests.Portal
                 CreatedBy = 1
             };
 
-            _postCommentService.Create(postComment);
+            await _postCommentService.CreateAsync(postComment);
             postComment.Id.Should().BeGreaterThan(0);
-            GetService<IRepository<PostComment>>().Delete(postComment);
+            await GetService<IRepository<PostComment>>().DeleteAsync(postComment);
         }
     }
 }

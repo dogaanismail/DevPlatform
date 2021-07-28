@@ -2,6 +2,7 @@
 using DevPlatform.Core;
 using FluentAssertions;
 using NUnit.Framework;
+using System.Threading.Tasks;
 
 namespace DevPlatform.Tests.DevPlatform.Services.Tests.Common
 {
@@ -17,42 +18,42 @@ namespace DevPlatform.Tests.DevPlatform.Services.Tests.Common
         }
 
         [Test]
-        public void ItShouldReturnEmptyCountryName()
+        public async Task ItShouldReturnEmptyCountryName()
         {
-            var response = _geoLookupService.LookupCountryName("127.0.0.1");
+            var response = await _geoLookupService.LookupCountryNameAsync("127.0.0.1");
             response.Should().BeEmpty();
         }
 
 
         [Test]
-        public void ItShouldReturnEmptyCountryIsoCode()
+        public async Task ItShouldReturnEmptyCountryIsoCode()
         {
-            var response = _geoLookupService.LookupCountryIsoCode("127.0.0.1");
+            var response = await _geoLookupService.LookupCountryIsoCodeAsync("127.0.0.1");
             response.Should().BeEmpty();
         }
 
         [Test]
-        public void ItShouldReturnCountryName()
+        public async Task ItShouldReturnCountryName()
         {
             var webHelper = GetService<IWebHelper>();
 
-            var response = _geoLookupService.LookupCountryName(webHelper.GetCurrentIpAddress());
+            var response = await _geoLookupService.LookupCountryNameAsync(webHelper.GetCurrentIpAddress());
             response.Should().NotBeEmpty();
         }
 
         [Test]
-        public void ItShouldReturnCountryIsoCode()
+        public async Task ItShouldReturnCountryIsoCode()
         {
             var webHelper = GetService<IWebHelper>();
 
-            var response = _geoLookupService.LookupCountryIsoCode(webHelper.GetCurrentIpAddress());
+            var response = await _geoLookupService.LookupCountryIsoCodeAsync(webHelper.GetCurrentIpAddress());
             response.Should().NotBeEmpty();
         }
 
         [Test]
-        public void ItShouldReturnNullCityAndCountry()
+        public async Task ItShouldReturnNullCityAndCountry()
         {
-            var response = _geoLookupService.GetCityAndCountryInformations("127.0.0.1");
+            var response = await _geoLookupService.GetCityAndCountryInformationsAsync("127.0.0.1");
             response.CurrentCityName.Should().BeNull();
         }
     }

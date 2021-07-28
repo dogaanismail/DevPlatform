@@ -2,6 +2,7 @@
 using FluentAssertions;
 using NUnit.Framework;
 using System;
+using System.Threading.Tasks;
 using QuestionClass = DevPlatform.Core.Domain.Question.Question;
 
 namespace DevPlatform.Tests.DevPlatform.Services.Tests.Question
@@ -18,39 +19,39 @@ namespace DevPlatform.Tests.DevPlatform.Services.Tests.Question
         }
 
         [Test]
-        public void ItShouldReturnNullQuestionWhenQuestionIdIsZero()
+        public async Task ItShouldReturnNullQuestionWhenQuestionIdIsZero()
         {
-            var question = _questionService.GetById(0);
+            var question = await _questionService.GetByIdAsync(0);
             question.Should().BeNull();
         }
 
         [Test]
-        public void ItShouldReturnNullQuestionAsDtoWhenQuestionIdIsZero()
+        public async Task ItShouldReturnNullQuestionAsDtoWhenQuestionIdIsZero()
         {
-            var question = _questionService.GetByIdAsDto(0);
+            var question = await _questionService.GetByIdAsDtoAsync(0);
             question.Should().BeNull();
         }
 
         [Test]
         public void ItShouldThrowExceptionIfQuestionIsNullWhenQuestion()
         {
-            Assert.Throws(typeof(ArgumentNullException), () => _questionService.Delete(null));
+            Assert.Throws(typeof(ArgumentNullException), () => _questionService.DeleteAsync(null));
         }
 
         [Test]
         public void ItShouldThrowIfQuestionIsNullWhenInsertQuestion()
         {
-            Assert.Throws<ArgumentNullException>(() => _questionService.Create(new QuestionClass()));
+            Assert.Throws<ArgumentNullException>(() => _questionService.CreateAsync(new QuestionClass()));
         }
 
         [Test]
         public void ItShouldThrowIfQuestionIsNullWhenUpdateQuestion()
         {
-            Assert.Throws<ArgumentNullException>(() => _questionService.Update(null));
+            Assert.Throws<ArgumentNullException>(() => _questionService.UpdateAsync(null));
         }
 
         [Test]
-        public void ItShouldInsertQuestion()
+        public async Task ItShouldInsertQuestion()
         {
             var question = new QuestionClass
             {
@@ -60,7 +61,7 @@ namespace DevPlatform.Tests.DevPlatform.Services.Tests.Question
                 CreatedBy = 0
             };
 
-            _questionService.Create(question);
+            await _questionService.CreateAsync(question);
             question.Id.Should().BeGreaterThan(0);
         }
     }

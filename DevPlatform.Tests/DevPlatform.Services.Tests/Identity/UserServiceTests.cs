@@ -4,6 +4,7 @@ using DevPlatform.Domain.Api;
 using FluentAssertions;
 using NUnit.Framework;
 using System;
+using System.Threading.Tasks;
 
 namespace DevPlatform.Tests.DevPlatform.Services.Tests.Identity
 {
@@ -18,16 +19,15 @@ namespace DevPlatform.Tests.DevPlatform.Services.Tests.Identity
             _userService = GetService<IUserService>();
         }
 
-
         [Test]
-        public void ItShouldReturnNullUserWhenUserIdIsZero()
+        public async Task ItShouldReturnNullUserWhenUserIdIsZero()
         {
-            var user = _userService.FindById(0);
+            var user = await _userService.FindByIdAsync(0);
             user.Should().BeNull();
         }
 
         [Test]
-        public void ItShouldNotReturnUserDetail()
+        public async Task ItShouldNotReturnUserDetail()
         {
             AppUserDetail appUserDetail = new()
             {
@@ -37,7 +37,7 @@ namespace DevPlatform.Tests.DevPlatform.Services.Tests.Identity
                 CoverPhotoPath = "http://placehold.it/1030x360"
             };
 
-            GetService<IUserDetailService>().Create(appUserDetail);
+            await GetService<IUserDetailService>().CreateAsync(appUserDetail);
 
             AppUser appUser = new()
             {
@@ -46,46 +46,46 @@ namespace DevPlatform.Tests.DevPlatform.Services.Tests.Identity
                 DetailId = appUserDetail.Id
             };
 
-            _userService.Create(appUser);
+            await _userService.CreateAsync(appUser);
 
-            var user = _userService.FindByUserName(appUser.UserName);
+            var user = await _userService.FindByUserNameAsync(appUser.UserName);
             user.UserDetail.Should().NotBeNull();
         }
 
         [Test]
-        public void ItShouldNotReturnUserDetailByUserName()
+        public async Task ItShouldNotReturnUserDetailByUserName()
         {
-            var user = _userService.FindByUserName("User");
+            var user = await _userService.FindByUserNameAsync("User");
             user.UserDetail.Should().NotBeNull();
         }
 
         [Test]
         public void ItShouldThrowExceptionIfUserNameIsNull()
         {
-            Assert.Throws(typeof(ArgumentNullException), () => _userService.FindByUserName(string.Empty));
+            Assert.Throws(typeof(ArgumentNullException), () => _userService.FindByUserNameAsync(string.Empty).Wait());
         }
 
         [Test]
         public void ItShouldThrowIfUserIsNullWhenInsertUser()
         {
-            Assert.Throws<ArgumentNullException>(() => _userService.Create(null));
+            Assert.Throws<ArgumentNullException>(() => _userService.CreateAsync(null));
         }
 
         [Test]
         public void ItShouldThrowIfUserIsNullWhenUpdateUser()
         {
-            Assert.Throws<ArgumentNullException>(() => _userService.Update(null));
+            Assert.Throws<ArgumentNullException>(() => _userService.UpdateAsync(null));
         }
 
         [Test]
-        public void ItShouldReturnAnErrorWhenPasswordsDoNotMatch()
+        public async Task ItShouldReturnAnErrorWhenPasswordsDoNotMatch()
         {
             RegisterApiRequest request = new();
 
             request.Password = "example";
             request.Password = "example2";
 
-            var serviceResponse = _userService.Register(request);
+            var serviceResponse = await _userService.RegisterAsync(request);
             serviceResponse.Data.Should().NotBeNull();
         }
     }

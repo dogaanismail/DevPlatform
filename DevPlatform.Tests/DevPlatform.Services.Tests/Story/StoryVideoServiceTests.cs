@@ -6,6 +6,7 @@ using FluentAssertions;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using StoryClass = DevPlatform.Core.Domain.Story.Story;
 
 namespace DevPlatform.Tests.DevPlatform.Services.Tests.Story
@@ -22,10 +23,10 @@ namespace DevPlatform.Tests.DevPlatform.Services.Tests.Story
         }
 
         [Test]
-        public void ItShouldInsertStoryVideo()
+        public async Task ItShouldInsertStoryVideo()
         {
-            var getStory = GetService<IRepository<StoryClass>>().GetList().First();
-            var user = GetService<IRepository<AppUser>>().GetList().First();
+            var getStory = GetService<IRepository<StoryClass>>().GetAll().First();
+            var user = GetService<IRepository<AppUser>>().GetAll().First();
 
             var storyVideo = new StoryVideo
             {
@@ -34,15 +35,15 @@ namespace DevPlatform.Tests.DevPlatform.Services.Tests.Story
                 CreatedBy = user.Id
             };
 
-            _storyVideoService.Create(storyVideo);
+            await _storyVideoService.CreateAsync(storyVideo);
             storyVideo.Id.Should().BeGreaterThan(0);
         }
 
         [Test]
-        public void ItShouldInsertStoryVideoWithList()
+        public async Task ItShouldInsertStoryVideoWithList()
         {
-            var getStory = GetService<IRepository<StoryClass>>().GetList().First();
-            var user = GetService<IRepository<AppUser>>().GetList().First();
+            var getStory = GetService<IRepository<StoryClass>>().GetAll().First();
+            var user = GetService<IRepository<AppUser>>().GetAll().First();
 
             List<StoryVideo> storyVideos = new();
             List<int> addedVideos = new();
@@ -58,7 +59,7 @@ namespace DevPlatform.Tests.DevPlatform.Services.Tests.Story
 
             foreach (var video in storyVideos)
             {
-                _storyVideoService.Create(video);
+                await _storyVideoService.CreateAsync(video);
                 addedVideos.Add(video.Id);
             }
 

@@ -4,6 +4,7 @@ using DevPlatform.Repository.Generic;
 using FluentAssertions;
 using NUnit.Framework;
 using System;
+using System.Threading.Tasks;
 
 namespace DevPlatform.Tests.DevPlatform.Services.Tests.Question
 {
@@ -19,39 +20,39 @@ namespace DevPlatform.Tests.DevPlatform.Services.Tests.Question
         }
 
         [Test]
-        public void ItShouldReturnNullQuestionCommentWhenQuestionCommentIdIsZero()
+        public async Task ItShouldReturnNullQuestionCommentWhenQuestionCommentIdIsZero()
         {
-            var comment = _questionCommentService.GetById(0);
+            var comment = await _questionCommentService.GetByIdAsync(0);
             comment.Should().BeNull();
         }
 
         [Test]
-        public void ItShouldReturnNullQuestionCommentAsDtoWhenQuestionCommentIdIsZero()
+        public async Task ItShouldReturnNullQuestionCommentAsDtoWhenQuestionCommentIdIsZero()
         {
-            var commentList = _questionCommentService.GetQuestionCommentsByQuestionId(0);
+            var commentList = await _questionCommentService.GetQuestionCommentsByQuestionIdAsync(0);
             commentList.Should().HaveCount(0);
         }
 
         [Test]
         public void ItShouldThrowExceptionIfQuestionCommentIsNullWhenQuestionComment()
         {
-            Assert.Throws(typeof(ArgumentNullException), () => _questionCommentService.Delete(null));
+            Assert.Throws(typeof(ArgumentNullException), () => _questionCommentService.DeleteAsync(null));
         }
 
         [Test]
         public void ItShouldThrowIfQuestionCommentIsNullWhenInsertQuestionComment()
         {
-            Assert.Throws<ArgumentNullException>(() => _questionCommentService.Create(new QuestionComment()));
+            Assert.Throws<ArgumentNullException>(() => _questionCommentService.CreateAsync(new QuestionComment()));
         }
 
         [Test]
         public void ItShouldThrowIfQuestionCommentIsNullWhenUpdateQuestionComment()
         {
-            Assert.Throws<ArgumentNullException>(() => _questionCommentService.Update(null));
+            Assert.Throws<ArgumentNullException>(() => _questionCommentService.UpdateAsync(null));
         }
 
         [Test]
-        public void ItShouldInsertQuestionComment()
+        public async Task ItShouldInsertQuestionComment()
         {
             var questionComment = new QuestionComment
             {
@@ -60,9 +61,9 @@ namespace DevPlatform.Tests.DevPlatform.Services.Tests.Question
                 CreatedBy = 1
             };
 
-            _questionCommentService.Create(questionComment);
+            await _questionCommentService.CreateAsync(questionComment);
             questionComment.Id.Should().BeGreaterThan(0);
-            GetService<IRepository<QuestionComment>>().Delete(questionComment);
+            await GetService<IRepository<QuestionComment>>().DeleteAsync(questionComment);
         }
     }
 }
