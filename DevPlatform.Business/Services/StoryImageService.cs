@@ -4,6 +4,7 @@ using DevPlatform.Domain.Common;
 using DevPlatform.Repository.Generic;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DevPlatform.Business.Services
 {
@@ -33,12 +34,12 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="createImageForStory"></param>
         /// <returns></returns>
-        public ResultModel Create(StoryImage createImageForStory)
+        public virtual async Task<ResultModel> CreateAsync(StoryImage createImageForStory)
         {
             if (createImageForStory == null)
                 throw new ArgumentNullException(nameof(createImageForStory));
 
-            _storyImageRepository.Insert(createImageForStory);
+            await _storyImageRepository.InsertAsync(createImageForStory);
             return new ResultModel { Status = true, Message = "Create Process Success ! " };
         }
 
@@ -47,12 +48,12 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="createImagesForStory"></param>
         /// <returns></returns>
-        public ResultModel Create(List<StoryImage> createImagesForStory)
+        public virtual async Task<ResultModel> CreateAsync(List<StoryImage> createImagesForStory)
         {
             if (createImagesForStory == null)
                 throw new ArgumentNullException(nameof(createImagesForStory));
 
-            _storyImageRepository.Insert(createImagesForStory);
+            await _storyImageRepository.InsertAsync(createImagesForStory);
             return new ResultModel { Status = true, Message = "Create Process Success ! " };
         }
 

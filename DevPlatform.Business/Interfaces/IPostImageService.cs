@@ -1,6 +1,7 @@
 ﻿using DevPlatform.Core.Domain.Portal;
 using DevPlatform.Domain.Common;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DevPlatform.Business.Interfaces
 {
@@ -14,13 +15,13 @@ namespace DevPlatform.Business.Interfaces
         /// </summary>
         /// <param name="createImageForPost"></param>
         /// <returns></returns>
-        ResultModel Create(PostImage createImageForPost);
+        Task<ResultModel> CreateAsync(PostImage createImageForPost);
 
         /// <summary>
         /// Creates post images by using bulk entities
         /// </summary>
         /// <param name="createImageForPost"></param>
         /// <returns></returns>
-        ResultModel Create(List<PostImage> createImageForPost);
+        Task<ResultModel> CreateAsync(List<PostImage> createImageForPost);
     }
 }

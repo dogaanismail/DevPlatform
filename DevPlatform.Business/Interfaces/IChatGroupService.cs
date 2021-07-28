@@ -1,6 +1,7 @@
 ﻿using DevPlatform.Domain.Common;
 using DevPlatform.Domain.Dto;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DevPlatform.Business.Interfaces
 {
@@ -13,19 +14,19 @@ namespace DevPlatform.Business.Interfaces
         /// Creates a chat group.
         /// </summary>
         /// <returns></returns>
-        ResultModel CreateChatGroup();
+        Task<ResultModel> CreateChatGroupAsync();
 
         /// <summary>
         /// Returns chat groups by username.
         /// </summary>
         /// <returns></returns>
-        IEnumerable<ChatGroupDto> GetChatGroups(string username);
+        Task<List<ChatGroupDto>> GetChatGroupsAsync(string username);
 
         /// <summary>
         /// Returns group member details by group name.
         /// </summary>
         /// <param name="groupName"></param>
         /// <returns></returns>
-        GroupMemberDetails GetMemberDetailsByGroupName(string groupName, string userName);
+        Task<GroupMemberDetails> GetMemberDetailsByGroupNameAsync(string groupName, string userName);
     }
 }

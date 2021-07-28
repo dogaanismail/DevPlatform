@@ -6,6 +6,7 @@ using FluentAssertions;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using StoryClass = DevPlatform.Core.Domain.Story.Story;
 
 namespace DevPlatform.Tests.DevPlatform.Services.Tests.Story
@@ -22,10 +23,10 @@ namespace DevPlatform.Tests.DevPlatform.Services.Tests.Story
         }
 
         [Test]
-        public void ItShouldInsertStoryImage()
+        public async Task ItShouldInsertStoryImage()
         {
-            var getStory = GetService<IRepository<StoryClass>>().GetList().First();
-            var user = GetService<IRepository<AppUser>>().GetList().First();
+            var getStory = GetService<IRepository<StoryClass>>().GetAll().First();
+            var user = GetService<IRepository<AppUser>>().GetAll().First();
 
             var storyImage = new StoryImage
             {
@@ -34,15 +35,15 @@ namespace DevPlatform.Tests.DevPlatform.Services.Tests.Story
                 CreatedBy = user.Id
             };
 
-            _storyImageService.Create(storyImage);
+            await _storyImageService.CreateAsync(storyImage);
             storyImage.Id.Should().BeGreaterThan(0);
         }
 
         [Test]
-        public void ItShouldInsertStoryImageWithList()
+        public async Task ItShouldInsertStoryImageWithList()
         {
-            var getStory = GetService<IRepository<StoryClass>>().GetList().First();
-            var user = GetService<IRepository<AppUser>>().GetList().First();
+            var getStory = GetService<IRepository<StoryClass>>().GetAll().First();
+            var user = GetService<IRepository<AppUser>>().GetAll().First();
 
             List<StoryImage> storyImages = new();
             List<int> addedImages = new();
@@ -58,7 +59,7 @@ namespace DevPlatform.Tests.DevPlatform.Services.Tests.Story
 
             foreach (var image in storyImages)
             {
-                _storyImageService.Create(image);
+                await _storyImageService.CreateAsync(image);
                 addedImages.Add(image.Id);
             }
 

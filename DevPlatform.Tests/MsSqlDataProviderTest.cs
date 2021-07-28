@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using DevPlatform.Core.Entities;
@@ -27,47 +26,154 @@ namespace DevPlatform.Tests
     /// </summary>
     public partial class MsSqlDataProviderTest : IDevPlatformDataProvider
     {
-
         #region Utils
 
         /// <summary>
-        /// Get SQL commands from the script
+        /// Gets an additional mapping schema
         /// </summary>
-        /// <param name="sql">SQL script</param>
-        /// <returns>List of commands</returns>
-        private static IList<string> GetCommandsFromScript(string sql)
+        private MappingSchema GetMappingSchema()
         {
-            var commands = new List<string>();
-
-            //origin from the Microsoft.EntityFrameworkCore.Migrations.SqlServerMigrationsSqlGenerator.Generate method
-            sql = Regex.Replace(sql, @"\\\r?\n", string.Empty);
-            var batches = Regex.Split(sql, @"^\s*(GO[ \t]+[0-9]+|GO)(?:\s+|$)", RegexOptions.IgnoreCase | RegexOptions.Multiline);
-
-            for (var i = 0; i < batches.Length; i++)
+            if (Singleton<MappingSchema>.Instance is null)
             {
-                if (string.IsNullOrWhiteSpace(batches[i]) || batches[i].StartsWith("GO", StringComparison.OrdinalIgnoreCase))
-                    continue;
-
-                var count = 1;
-                if (i != batches.Length - 1 && batches[i + 1].StartsWith("GO", StringComparison.OrdinalIgnoreCase))
+                Singleton<MappingSchema>.Instance = new MappingSchema(ConfigurationName)
                 {
-                    var match = Regex.Match(batches[i + 1], "([0-9]+)");
-                    if (match.Success)
-                        count = int.Parse(match.Value);
-                }
-
-                var builder = new StringBuilder();
-                for (var j = 0; j < count; j++)
-                {
-                    builder.Append(batches[i]);
-                    if (i == batches.Length - 1)
-                        builder.AppendLine();
-                }
-
-                commands.Add(builder.ToString());
+                    MetadataReader = new FluentMigratorMetadataReader()
+                };
             }
 
-            return commands;
+            return Singleton<MappingSchema>.Instance;
+        }
+
+        private static void UpdateParameterValue(DataConnection dataConnection, DataParameter parameter)
+        {
+            if (dataConnection is null)
+                throw new ArgumentNullException(nameof(dataConnection));
+
+            if (parameter is null)
+                throw new ArgumentNullException(nameof(parameter));
+
+            if (dataConnection.Command is IDbCommand command &&
+                command.Parameters.Count > 0 &&
+                command.Parameters.Contains(parameter.Name) &&
+                command.Parameters[parameter.Name] is IDbDataParameter param)
+            {
+                parameter.Value = param.Value;
+            }
+        }
+
+        private static void UpdateOutputParameters(DataConnection dataConnection, DataParameter[] dataParameters)
+        {
+            if (dataParameters is null || dataParameters.Length == 0)
+                return;
+
+            foreach (var dataParam in dataParameters.Where(p => p.Direction == ParameterDirection.Output))
+            {
+                UpdateParameterValue(dataConnection, dataParam);
+            }
+        }
+
+        /// <summary>
+        /// Gets a connection to the database for a current data provider
+        /// </summary>
+        /// <param name="connectionString">Connection string</param>
+        /// <returns>Connection to a database</returns>
+        protected static DbConnection GetInternalDbConnection(string connectionString)
+        {
+            if (string.IsNullOrEmpty(connectionString))
+                throw new ArgumentException(null, nameof(connectionString));
+
+            return new SqlConnection(connectionString);
+        }
+
+        /// <summary>
+        /// Creates the database connection
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected virtual async Task<DataConnection> CreateDataConnectionAsync()
+        {
+            return await CreateDataConnectionAsync(LinqToDbDataProvider);
+        }
+
+        /// <summary>
+        /// Creates the database connection
+        /// </summary>
+        protected virtual DataConnection CreateDataConnection()
+        {
+            return CreateDataConnection(LinqToDbDataProvider);
+        }
+
+        protected virtual SqlConnectionStringBuilder GetConnectionStringBuilder()
+        {
+            var connectionString = DataSettingsManager.LoadSettings().ConnectionString;
+
+            return new SqlConnectionStringBuilder(connectionString);
+        }
+
+
+        /// <summary>
+        /// Creates the database connection
+        /// </summary>
+        /// <param name="dataProvider">Data provider</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the database connection
+        /// </returns>
+        protected virtual async Task<DataConnection> CreateDataConnectionAsync(IDataProvider dataProvider)
+        {
+            if (dataProvider is null)
+                throw new ArgumentNullException(nameof(dataProvider));
+
+            var dataContext = new DataConnection(dataProvider, await CreateDbConnectionAsync(), GetMappingSchema())
+            {
+                CommandTimeout = await DataSettingsManager.GetSqlCommandTimeoutAsync()
+            };
+
+            return dataContext;
+        }
+
+        /// <summary>
+        /// Creates the database connection
+        /// </summary>
+        /// <param name="dataProvider">Data provider</param>
+        /// <returns>Database connection</returns>
+        protected virtual DataConnection CreateDataConnection(IDataProvider dataProvider)
+        {
+            if (dataProvider is null)
+                throw new ArgumentNullException(nameof(dataProvider));
+
+            var dataContext = new DataConnection(dataProvider, CreateDbConnection(), GetMappingSchema())
+            {
+                CommandTimeout = DataSettingsManager.GetSqlCommandTimeout()
+            };
+
+            return dataContext;
+        }
+
+        /// <summary>
+        /// Creates a connection to a database
+        /// </summary>
+        /// <param name="connectionString">Connection string</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the connection to a database
+        /// </returns>
+        protected virtual async Task<IDbConnection> CreateDbConnectionAsync(string connectionString = null)
+        {
+            var dbConnection = GetInternalDbConnection(!string.IsNullOrEmpty(connectionString) ? connectionString : await GetCurrentConnectionStringAsync());
+
+            return dbConnection;
+        }
+
+        /// <summary>
+        /// Creates a connection to a database
+        /// </summary>
+        /// <param name="connectionString">Connection string</param>
+        /// <returns>Connection to a database</returns>
+        protected virtual IDbConnection CreateDbConnection(string connectionString = null)
+        {
+            var dbConnection = GetInternalDbConnection(!string.IsNullOrEmpty(connectionString) ? connectionString : GetCurrentConnectionString());
+
+            return dbConnection;
         }
 
         #endregion
@@ -79,136 +185,89 @@ namespace DevPlatform.Tests
         /// </summary>
         public string ConfigurationName => LinqToDbDataProvider.Name;
 
-        public virtual SqlConnectionStringBuilder GetConnectionStringBuilder()
-        {
-            var connectionString = DataSettingsManager.LoadSettings().ConnectionString;
-
-            return new SqlConnectionStringBuilder(connectionString);
-        }
-
-        /// <summary>
-        /// Additional mapping schema
-        /// </summary>
-        protected MappingSchema AdditionalSchema
-        {
-            get
-            {
-                if (!(Singleton<MappingSchema>.Instance is null))
-                    return Singleton<MappingSchema>.Instance;
-
-                Singleton<MappingSchema>.Instance =
-                    new MappingSchema(ConfigurationName) { MetadataReader = new FluentMigratorMetadataReader() };
-
-                return Singleton<MappingSchema>.Instance;
-            }
-        }
-
-        /// <summary>
-        /// Sql server data provider
-        /// </summary>
-        public IDataProvider LinqToDbDataProvider => new SqlServerDataProvider(ProviderName.SqlServer, SqlServerVersion.v2017);
-
         /// <summary>
         /// Gets allowed a limit input value of the data for hashing functions, returns 0 if not limited
         /// </summary>
         public int SupportedLengthOfBinaryHash { get; } = 8000;
 
         /// <summary>
+        /// Sql server data provider
+        /// </summary>
+        public static IDataProvider LinqToDbDataProvider => new SqlServerDataProvider(ProviderName.SqlServer, SqlServerVersion.v2017);
+
+        /// <summary>
         /// Gets a value indicating whether this data provider supports backup
         /// </summary>
         public virtual bool BackupSupported => true;
 
-        public static string CurrentConnectionString => DataSettingsManager.LoadSettings().ConnectionString;
+        /// <summary>
+        /// Database connection string
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected async Task<string> GetCurrentConnectionStringAsync()
+        {
+            return (await DataSettingsManager.LoadSettingsAsync()).ConnectionString;
+        }
+
+        /// <summary>
+        /// Database connection string
+        /// </summary>
+        protected static string GetCurrentConnectionString()
+        {
+            return DataSettingsManager.LoadSettings().ConnectionString;
+        }
 
         #endregion
 
         #region Methods
 
         /// <summary>
-        /// Gets a connection to the database for a current data provider
-        /// </summary>
-        /// <param name="connectionString">Connection string</param>
-        /// <returns>Connection to a database</returns>
-        public IDbConnection GetInternalDbConnection(string connectionString)
-        {
-            if (string.IsNullOrEmpty(connectionString))
-                throw new ArgumentException(nameof(connectionString));
-
-            return new SqlConnection(connectionString);
-        }
-
-
-        /// <summary>
-        /// Creates a connection to a database
-        /// </summary>
-        /// <param name="connectionString">Connection string</param>
-        /// <returns>Connection to a database</returns>
-        public IDbConnection CreateDbConnection(string connectionString = null)
-        {
-            var dbConnection = GetInternalDbConnection(!string.IsNullOrEmpty(connectionString) ? connectionString : CurrentConnectionString);
-
-            if (!DataSettingsManager.DatabaseIsInstalled)
-                return dbConnection;
-
-            return dbConnection;
-        }
-
-
-        /// <summary>
         /// Creates a backup of the database
         /// </summary>
-        public void BackupDatabase(string fileName)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task BackupDatabaseAsync(string fileName)
         {
-            using var currentConnection = CreateDataConnection();
+            using var currentConnection = await CreateDataConnectionAsync();
             var commandText = $"BACKUP DATABASE [{currentConnection.Connection.Database}] TO DISK = '{fileName}' WITH FORMAT";
-            currentConnection.Execute(commandText);
+            await currentConnection.ExecuteAsync(commandText);
         }
 
-        public string BuildConnectionString(IDevPlatformConnectionStringInfo connectionStringInfo)
+        /// <summary>
+        /// Build the connection string
+        /// </summary>
+        /// <param name="nopConnectionString">Connection string info</param>
+        /// <returns>Connection string</returns>
+        public string BuildConnectionString(IDevPlatformConnectionStringInfo nopConnectionString)
         {
-            if (connectionStringInfo is null)
-                throw new ArgumentNullException(nameof(connectionStringInfo));
+            if (nopConnectionString is null)
+                throw new ArgumentNullException(nameof(nopConnectionString));
 
             var builder = new SqlConnectionStringBuilder
             {
-                DataSource = connectionStringInfo.ServerName,
-                InitialCatalog = connectionStringInfo.DatabaseName,
+                DataSource = nopConnectionString.ServerName,
+                InitialCatalog = nopConnectionString.DatabaseName,
                 PersistSecurityInfo = false,
-                IntegratedSecurity = connectionStringInfo.IntegratedSecurity
+                IntegratedSecurity = nopConnectionString.IntegratedSecurity
             };
 
-            if (!connectionStringInfo.IntegratedSecurity)
+            if (!nopConnectionString.IntegratedSecurity)
             {
-                builder.UserID = connectionStringInfo.Username;
-                builder.Password = connectionStringInfo.Password;
+                builder.UserID = nopConnectionString.Username;
+                builder.Password = nopConnectionString.Password;
             }
 
             return builder.ConnectionString;
         }
 
-        public void BulkDeleteEntities<TEntity>(IList<TEntity> entities) where TEntity : BaseEntity
-        {
-            using var dataContext = CreateDataConnection();
-            if (entities.All(entity => entity.Id == 0))
-                foreach (var entity in entities)
-                    dataContext.Delete(entity);
-            else
-                dataContext.GetTable<TEntity>()
-                    .Where(e => e.Id.In(entities.Select(x => x.Id)))
-                    .Delete();
-        }
-
-        public void BulkDeleteEntities<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : BaseEntity
-        {
-            using var dataContext = CreateDataConnection();
-            dataContext.GetTable<TEntity>()
-                .Where(predicate)
-                .Delete();
-        }
-
+        /// <summary>
+        /// Performs delete records in a table
+        /// </summary>
+        /// <param name="entities">Entities for delete operation</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task BulkDeleteEntitiesAsync<TEntity>(IList<TEntity> entities) where TEntity : BaseEntity
         {
-            using var dataContext = CreateDataConnection();
+            using var dataContext = await CreateDataConnectionAsync();
             if (entities.All(entity => entity.Id == 0))
                 foreach (var entity in entities)
                     await dataContext.DeleteAsync(entity);
@@ -218,29 +277,43 @@ namespace DevPlatform.Tests
                     .DeleteAsync();
         }
 
+        /// <summary>
+        /// Performs delete records in a table by a condition
+        /// </summary>
+        /// <param name="predicate">A function to test each element for a condition.</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the number of deleted records
+        /// </returns>
         public async Task<int> BulkDeleteEntitiesAsync<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : BaseEntity
         {
-            using var dataContext = CreateDataConnection();
+            using var dataContext = await CreateDataConnectionAsync();
             return await dataContext.GetTable<TEntity>()
                 .Where(predicate)
                 .DeleteAsync();
         }
 
-        public void BulkInsertEntities<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity
-        {
-            using var dataContext = CreateDataConnection(LinqToDbDataProvider);
-            dataContext.BulkCopy(new BulkCopyOptions(), entities.RetrieveIdentity(dataContext));
-        }
-
+        /// <summary>
+        /// Performs bulk insert operation for entity colllection.
+        /// </summary>
+        /// <param name="entities">Entities for insert operation</param>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <returns>A task that represents the asynchronous operation</returns>
         public async Task BulkInsertEntitiesAsync<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity
         {
-            using var dataContext = CreateDataConnection();
+            using var dataContext = await CreateDataConnectionAsync(LinqToDbDataProvider);
             await dataContext.BulkCopyAsync(new BulkCopyOptions(), entities.RetrieveIdentity(dataContext));
         }
 
+        /// <summary>
+        /// Create the database
+        /// </summary>
+        /// <param name="collation">Collation</param>
+        /// <param name="triesToConnect">Count of tries to connect to the database after creating; set 0 if no need to connect after creating</param>
         public void CreateDatabase(string collation, int triesToConnect = 10)
         {
-            if (IsDatabaseExists())
+            if (DatabaseExists())
                 return;
 
             var builder = GetConnectionStringBuilder();
@@ -251,32 +324,28 @@ namespace DevPlatform.Tests
             //now create connection string to 'master' dabatase. It always exists.
             builder.InitialCatalog = "master";
 
-            using (var connection = new SqlConnection(builder.ConnectionString))
+            using (var connection = GetInternalDbConnection(builder.ConnectionString))
             {
                 var query = $"CREATE DATABASE [{databaseName}]";
                 if (!string.IsNullOrWhiteSpace(collation))
                     query = $"{query} COLLATE {collation}";
 
-                var command = new SqlCommand(query, connection);
+                var command = connection.CreateCommand();
+                command.CommandText = query;
                 command.Connection.Open();
 
                 command.ExecuteNonQuery();
             }
 
-            //try connect
             if (triesToConnect <= 0)
                 return;
 
-            //sometimes on slow servers (hosting) there could be situations when database requires some time to be created.
-            //but we have already started creation of tables and sample data.
-            //as a result there is an exception thrown and the installation process cannot continue.
-            //that's why we are in a cycle of "triesToConnect" times trying to connect to a database with a delay of one second.
             for (var i = 0; i <= triesToConnect; i++)
             {
                 if (i == triesToConnect)
                     throw new Exception("Unable to connect to the new database. Please try one more time");
 
-                if (!IsDatabaseExists())
+                if (!DatabaseExists())
                     Thread.Sleep(1000);
                 else
                     break;
@@ -297,15 +366,59 @@ namespace DevPlatform.Tests
         }
 
         /// <summary>
-        /// Deletes record in table. Record to delete identified
-        /// by match on primary key value from obj value.
+        /// Creates a new temporary storage and populate it using data from provided query
         /// </summary>
-        /// <param name="entity">Entity for delete operation</param>
-        /// <typeparam name="TEntity">Entity type</typeparam>
-        public void DeleteEntity<TEntity>(TEntity entity) where TEntity : BaseEntity
+        /// <param name="storeKey">Name of temporary storage</param>
+        /// <param name="query">Query to get records to populate created storage with initial data</param>
+        /// <typeparam name="TItem">Storage record mapping class</typeparam>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the iQueryable instance of temporary storage
+        /// </returns>
+        public async Task<ITempDataStorage<TItem>> CreateTempDataStorageAsync<TItem>(string storeKey, IQueryable<TItem> query)
+            where TItem : class
         {
-            using var dataContext = CreateDataConnection();
-            dataContext.Delete(entity);
+            return new TempSqlDataStorage<TItem>(storeKey, query, await CreateDataConnectionAsync());
+        }
+
+        /// <summary>
+        /// Checks if the specified database exists, returns true if database exists
+        /// </summary>
+        /// <returns>Returns true if the database exists.</returns>
+        public bool DatabaseExists()
+        {
+            try
+            {
+                using var connection = GetInternalDbConnection(GetCurrentConnectionString());
+                connection.Open();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+
+        /// <summary>
+        /// Checks if the specified database exists, returns true if database exists
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the returns true if the database exists.
+        /// </returns>
+        public async Task<bool> DatabaseExistsAsync()
+        {
+            try
+            {
+                await using var connection = GetInternalDbConnection(await GetCurrentConnectionStringAsync());
+                await connection.OpenAsync();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         /// <summary>
@@ -317,55 +430,25 @@ namespace DevPlatform.Tests
         /// <returns>A task that represents the asynchronous operation</returns>
         public async Task DeleteEntityAsync<TEntity>(TEntity entity) where TEntity : BaseEntity
         {
-            using var dataContext = CreateDataConnection();
+            using var dataContext = await CreateDataConnectionAsync();
             await dataContext.DeleteAsync(entity);
         }
 
-        public int ExecuteNonQuery(string sqlStatement, params DataParameter[] dataParameters)
+        /// <summary>
+        /// Executes command asynchronously and returns number of affected records
+        /// </summary>
+        /// <param name="sql">Command text</param>
+        /// <param name="dataParameters">Command parameters</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the number of records, affected by command execution.
+        /// </returns>
+        public async Task<int> ExecuteNonQueryAsync(string sql, params DataParameter[] dataParameters)
         {
-            using var dataContext = CreateDataConnection();
-            var command = new CommandInfo(dataContext, sqlStatement, dataParameters);
-            var affectedRecords = command.Execute();
-
+            using var dataContext = await CreateDataConnectionAsync();
+            var command = new CommandInfo(dataContext, sql, dataParameters);
+            var affectedRecords = await command.ExecuteAsync();
             UpdateOutputParameters(dataContext, dataParameters);
-
-            return affectedRecords;
-        }
-
-        /// <summary>
-        /// Executes command using LinqToDB.Mapping.StoredProcedure command type and returns
-        /// single value
-        /// </summary>
-        /// <typeparam name="T">Result record type</typeparam>
-        /// <param name="procedureName">Procedure name</param>
-        /// <param name="parameters">Command parameters</param>
-        /// <returns>Resulting value</returns>
-        public T ExecuteStoredProcedure<T>(string procedureName, params DataParameter[] parameters)
-        {
-            using var dataContext = CreateDataConnection();
-            var command = new CommandInfo(dataContext, procedureName, parameters);
-
-            var result = command.ExecuteProc<T>();
-            UpdateOutputParameters(dataContext, parameters);
-
-            return result;
-        }
-
-        /// <summary>
-        /// Executes command using LinqToDB.Mapping.StoredProcedure command type and returns
-        /// number of affected records.
-        /// </summary>
-        /// <param name="procedureName">Procedure name</param>
-        /// <param name="parameters">Command parameters</param>
-        /// <returns>Number of records, affected by command execution.</returns>
-        public int ExecuteStoredProcedure(string procedureName, params DataParameter[] parameters)
-        {
-            using var dataContext = CreateDataConnection();
-            var command = new CommandInfo(dataContext, procedureName, parameters);
-
-            var affectedRecords = command.ExecuteProc();
-            UpdateOutputParameters(dataContext, parameters);
-
             return affectedRecords;
         }
 
@@ -376,9 +459,16 @@ namespace DevPlatform.Tests
         /// <returns>Mapping descriptor</returns>
         public EntityDescriptor GetEntityDescriptor<TEntity>() where TEntity : BaseEntity
         {
-            return AdditionalSchema?.GetEntityDescriptor(typeof(TEntity));
+            return GetMappingSchema()?.GetEntityDescriptor(typeof(TEntity));
         }
 
+
+        /// <summary>
+        /// Gets the name of an index
+        /// </summary>
+        /// <param name="targetTable">Target table name</param>
+        /// <param name="targetColumn">Target column name</param>
+        /// <returns>Name of an index</returns>
         public string GetIndexName(string targetTable, string targetColumn)
         {
             return $"IX_{targetTable}_{targetColumn}";
@@ -389,22 +479,39 @@ namespace DevPlatform.Tests
         /// mapped to database table or view.
         /// </summary>
         /// <typeparam name="TEntity">Entity type</typeparam>
-        /// <returns>Queryable source</returns>
-        public ITable<TEntity> GetTable<TEntity>() where TEntity : BaseEntity
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queryable source
+        /// </returns>
+        public async Task<ITable<TEntity>> GetTableAsync<TEntity>() where TEntity : BaseEntity
         {
-            return new DataContext(LinqToDbDataProvider, CurrentConnectionString) { MappingSchema = AdditionalSchema }
-               .GetTable<TEntity>();
+            return new DataContext(LinqToDbDataProvider, await GetCurrentConnectionStringAsync()) { MappingSchema = GetMappingSchema() }
+                .GetTable<TEntity>();
         }
 
         /// <summary>
+        /// Returns queryable source for specified mapping class for current connection,
+        /// mapped to database table or view.
+        /// </summary>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <returns>Queryable source</returns>
+        public ITable<TEntity> GetTable<TEntity>() where TEntity : BaseEntity
+        {
+            return new DataContext(LinqToDbDataProvider, GetCurrentConnectionString()) { MappingSchema = GetMappingSchema() }
+                .GetTable<TEntity>();
+        }
+        /// <summary>
         /// Get the current identity value
         /// </summary>
-        /// <typeparam name="T">Entity</typeparam>
-        /// <returns>Integer identity; null if cannot get the result</returns>
-        public int? GetTableIdent<TEntity>() where TEntity : BaseEntity
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the integer identity; null if cannot get the result
+        /// </returns>
+        public async Task<int?> GetTableIdentAsync<TEntity>() where TEntity : BaseEntity
         {
-            using var currentConnection = CreateDataConnection();
-            var tableName = currentConnection.GetTable<TEntity>().TableName;
+            using var currentConnection = await CreateDataConnectionAsync();
+            var tableName = GetEntityDescriptor<TEntity>().TableName;
 
             var result = currentConnection.Query<decimal?>($"SELECT IDENT_CURRENT('[{tableName}]') as Value")
                 .FirstOrDefault();
@@ -419,10 +526,6 @@ namespace DevPlatform.Tests
         {
             var migrationManager = EngineContext.Current.Resolve<IMigrationManager>();
             migrationManager.ApplyUpMigrations(typeof(DevPlatformDbStartup).Assembly);
-
-            //create stored procedures 
-            var fileProvider = EngineContext.Current.Resolve<IDevPlatformFileProvider>();
-            ExecuteSqlScriptFromFile(fileProvider, DevPlatformDataDefaults.SqlServerStoredProceduresFilePath);
         }
 
         /// <summary>
@@ -449,44 +552,9 @@ namespace DevPlatform.Tests
         /// </returns>
         public async Task<TEntity> InsertEntityAsync<TEntity>(TEntity entity) where TEntity : BaseEntity
         {
-            using var dataContext = CreateDataConnection();
+            using var dataContext = await CreateDataConnectionAsync();
             entity.Id = await dataContext.InsertWithInt32IdentityAsync(entity);
             return entity;
-        }
-
-        /// <summary>
-        /// Checks if the specified database exists, returns true if database exists
-        /// </summary>
-        /// <returns>Returns true if the database exists.</returns>
-        public bool IsDatabaseExists()
-        {
-            try
-            {
-                using (var connection = new SqlConnection(GetConnectionStringBuilder().ConnectionString))
-                {
-                    //just try to connect
-                    connection.Open();
-                }
-
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-        }
-
-        /// <summary>
-        /// Executes SQL command and returns results as collection of values of specified type
-        /// </summary>
-        /// <typeparam name="T">Type of result items</typeparam>
-        /// <param name="sql">SQL command text</param>
-        /// <param name="parameters">Parameters to execute the SQL command</param>
-        /// <returns>Collection of values of specified type</returns>
-        public IList<T> Query<T>(string sql, params DataParameter[] parameters)
-        {
-            using var dataContext = CreateDataConnection();
-            return dataContext.Query<T>(sql, parameters)?.ToList() ?? new List<T>();
         }
 
         /// <summary>
@@ -496,22 +564,42 @@ namespace DevPlatform.Tests
         /// <typeparam name="T">Result record type</typeparam>
         /// <param name="procedureName">Procedure name</param>
         /// <param name="parameters">Command parameters</param>
-        /// <returns>Returns collection of query result records</returns>
-        public IList<T> QueryProc<T>(string procedureName, params DataParameter[] parameters)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the returns collection of query result records
+        /// </returns>
+        public async Task<IList<T>> QueryProcAsync<T>(string procedureName, params DataParameter[] parameters)
         {
-            using var dataContext = CreateDataConnection();
+            using var dataContext = await CreateDataConnectionAsync();
             var command = new CommandInfo(dataContext, procedureName, parameters);
-            var rez = command.QueryProc<T>()?.ToList();
+            var rez = command.QueryProc<T>().ToList();
             UpdateOutputParameters(dataContext, parameters);
-            return rez ?? new List<T>();
+            return rez;
+        }
+
+        /// <summary>
+        /// Executes SQL command and returns results as collection of values of specified type
+        /// </summary>
+        /// <typeparam name="T">Type of result items</typeparam>
+        /// <param name="sql">SQL command text</param>
+        /// <param name="parameters">Parameters to execute the SQL command</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the collection of values of specified type
+        /// </returns>
+        public async Task<IList<T>> QueryAsync<T>(string sql, params DataParameter[] parameters)
+        {
+            using var dataContext = await CreateDataConnectionAsync();
+            return dataContext.Query<T>(sql, parameters).ToList();
         }
 
         /// <summary>
         /// Re-index database tables
         /// </summary>
-        public void ReIndexTables()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task ReIndexTablesAsync()
         {
-            using var currentConnection = CreateDataConnection();
+            using var currentConnection = await CreateDataConnectionAsync();
             var commandText = $@"
                     DECLARE @TableName sysname 
                     DECLARE cur_reindex CURSOR FOR
@@ -528,17 +616,17 @@ namespace DevPlatform.Tests
                     CLOSE cur_reindex
                     DEALLOCATE cur_reindex";
 
-            currentConnection.Execute(commandText);
+            await currentConnection.ExecuteAsync(commandText);
         }
-
 
         /// <summary>
         /// Restores the database from a backup
         /// </summary>
         /// <param name="backupFileName">The name of the backup file</param>
-        public void RestoreDatabase(string backupFileName)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task RestoreDatabaseAsync(string backupFileName)
         {
-            using var currentConnection = CreateDataConnection();
+            using var currentConnection = await CreateDataConnectionAsync();
             var commandText = string.Format(
                 "DECLARE @ErrorMessage NVARCHAR(4000)\n" +
                 "ALTER DATABASE [{0}] SET OFFLINE WITH ROLLBACK IMMEDIATE\n" +
@@ -556,25 +644,27 @@ namespace DevPlatform.Tests
                 currentConnection.Connection.Database,
                 backupFileName);
 
-            currentConnection.Execute(commandText);
+            await currentConnection.ExecuteAsync(commandText);
         }
 
         /// <summary>
         /// Set table identity (is supported)
         /// </summary>
-        /// <typeparam name="T">Entity</typeparam>
+        /// <typeparam name="TEntity">Entity type</typeparam>
         /// <param name="ident">Identity value</param>
-        public void SetTableIdent<T>(int ident) where T : BaseEntity
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public async Task SetTableIdentAsync<TEntity>(int ident) where TEntity : BaseEntity
         {
-            using var currentConnection = CreateDataConnection();
-            var currentIdent = GetTableIdent<T>();
+            using var currentConnection = await CreateDataConnectionAsync();
+            var currentIdent = await GetTableIdentAsync<TEntity>();
             if (!currentIdent.HasValue || ident <= currentIdent.Value)
                 return;
 
-            var tableName = currentConnection.GetTable<T>().TableName;
+            var tableName = GetEntityDescriptor<TEntity>().TableName;
 
-            currentConnection.Execute($"DBCC CHECKIDENT([{tableName}], RESEED, {ident})");
+            await currentConnection.ExecuteAsync($"DBCC CHECKIDENT([{tableName}], RESEED, {ident})");
         }
+
 
         /// <summary>
         /// Updates records in table, using values from entity parameter. 
@@ -585,20 +675,13 @@ namespace DevPlatform.Tests
         /// <returns>A task that represents the asynchronous operation</returns>
         public async Task UpdateEntitiesAsync<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity
         {
-            foreach (var entity in entities)
-                await UpdateEntityAsync(entity);
-        }
-
-        /// <summary>
-        /// Updates record in table, using values from entity parameter. 
-        /// Record to update identified by match on primary key value from obj value.
-        /// </summary>
-        /// <param name="entity">Entity with data to update</param>
-        /// <typeparam name="TEntity">Entity type</typeparam>
-        public void UpdateEntity<TEntity>(TEntity entity) where TEntity : BaseEntity
-        {
-            using var dataContext = CreateDataConnection();
-            dataContext.Update(entity);
+            using var dataContext = await CreateDataConnectionAsync();
+            await dataContext.GetTable<TEntity>()
+                .Merge()
+                .Using(entities)
+                .OnTargetKey()
+                .UpdateWhenMatched()
+                .MergeAsync();
         }
 
         /// <summary>
@@ -610,87 +693,8 @@ namespace DevPlatform.Tests
         /// <returns>A task that represents the asynchronous operation</returns>
         public async Task UpdateEntityAsync<TEntity>(TEntity entity) where TEntity : BaseEntity
         {
-            using var dataContext = CreateDataConnection();
+            using var dataContext = await CreateDataConnectionAsync();
             await dataContext.UpdateAsync(entity);
-        }
-
-        /// <summary>
-        /// Creates the database connection
-        /// </summary>
-        public DataConnection CreateDataConnection()
-        {
-            return CreateDataConnection(LinqToDbDataProvider);
-        }
-
-        /// <summary>
-        /// Creates the database connection
-        /// </summary>
-        /// <param name="dataProvider">Data provider</param>
-        /// <returns>Database connection</returns>
-        public DataConnection CreateDataConnection(IDataProvider dataProvider)
-        {
-            if (dataProvider is null)
-                throw new ArgumentNullException(nameof(dataProvider));
-
-            var dataContext = new DataConnection(dataProvider, CreateDbConnection());
-            dataContext.AddMappingSchema(AdditionalSchema);
-
-            return dataContext;
-        }
-
-        private void UpdateOutputParameters(DataConnection dataConnection, DataParameter[] dataParameters)
-        {
-            if (dataParameters is null || dataParameters.Length == 0)
-                return;
-
-            foreach (var dataParam in dataParameters.Where(p => p.Direction == ParameterDirection.Output))
-            {
-                UpdateParameterValue(dataConnection, dataParam);
-            }
-        }
-
-        private void UpdateParameterValue(DataConnection dataConnection, DataParameter parameter)
-        {
-            if (dataConnection is null)
-                throw new ArgumentNullException(nameof(dataConnection));
-
-            if (parameter is null)
-                throw new ArgumentNullException(nameof(parameter));
-
-            if (dataConnection.Command is IDbCommand command &&
-                command.Parameters.Count > 0 &&
-                command.Parameters.Contains(parameter.Name) &&
-                command.Parameters[parameter.Name] is IDbDataParameter param)
-            {
-                parameter.Value = param.Value;
-            }
-        }
-
-        /// <summary>
-        /// Execute commands from a file with SQL script against the context database
-        /// </summary>
-        /// <param name="fileProvider">File provider</param>
-        /// <param name="filePath">Path to the file</param>
-        protected void ExecuteSqlScriptFromFile(IDevPlatformFileProvider fileProvider, string filePath)
-        {
-            filePath = fileProvider.MapPath(filePath);
-            if (!fileProvider.FileExists(filePath))
-                return;
-
-            ExecuteSqlScript(fileProvider.ReadAllText(filePath, Encoding.Default));
-        }
-
-        /// <summary>
-        /// Execute commands from the SQL script
-        /// </summary>
-        /// <param name="sql">SQL script</param>
-        public void ExecuteSqlScript(string sql)
-        {
-            var sqlCommands = GetCommandsFromScript(sql);
-
-            using var currentConnection = CreateDataConnection();
-            foreach (var command in sqlCommands)
-                currentConnection.Execute(command);
         }
 
         #endregion

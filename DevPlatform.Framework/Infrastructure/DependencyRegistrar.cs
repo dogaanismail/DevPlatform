@@ -94,7 +94,7 @@ namespace DevPlatform.Framework.Infrastructure
             {
                 services.AddScoped(setting, serviceProvider =>
                 {
-                    return serviceProvider.GetRequiredService<ISettingService>().LoadSetting(setting);
+                    return serviceProvider.GetRequiredService<ISettingService>().LoadSettingAsync(setting).Result;
                 });
             }
 

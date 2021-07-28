@@ -1,4 +1,5 @@
-﻿using DevPlatform.Business.Interfaces;
+﻿using DevPlatform.Business.Common.Middlewares;
+using DevPlatform.Business.Interfaces;
 using DevPlatform.Core.Infrastructure;
 using DevPlatform.Data;
 using Microsoft.AspNetCore.Builder;
@@ -47,7 +48,7 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
 
                     try
                     {
-                        if (DataSettingsManager.DatabaseIsInstalled)
+                        if (await DataSettingsManager.IsDatabaseInstalledAsync())
                             await EngineContext.Current.Resolve<ILogService>().ErrorAsync(exception.Message, exception);
                     }
                     finally
@@ -165,6 +166,15 @@ namespace DevPlatform.Framework.Infrastructure.Extensions
         public static void UseDevPlatformRouting(this IApplicationBuilder application)
         {
             application.UseRouting();
+        }
+
+        /// <summary>
+        /// Configure middleware checking whether database is installed
+        /// </summary>
+        /// <param name="application">Builder for configuring an application's request pipeline</param>
+        public static void UseInstallUrl(this IApplicationBuilder application)
+        {
+            application.UseMiddleware<InstallUrlMiddleware>();
         }
 
         /// <summary>

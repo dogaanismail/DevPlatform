@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace DevPlatform.Business.Services
 {
@@ -63,12 +64,12 @@ namespace DevPlatform.Business.Services
         /// Deletes a story
         /// </summary>
         /// <param name="story"></param>
-        public virtual void Delete(Story story)
+        public virtual async Task DeleteAsync(Story story)
         {
             if (story == null)
                 throw new ArgumentNullException(nameof(story));
 
-            _storyRepository.Delete(story);
+            await _storyRepository.DeleteAsync(story);
         }
 
         /// <summary>
@@ -76,16 +77,16 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="storyId"></param>
         /// <returns></returns>
-        public virtual Story GetById(int storyId)
+        public virtual async Task<Story> GetByIdAsync(int storyId)
         {
             if (storyId == 0)
                 return null;
 
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(DevPlatformEntityCacheDefaults<Story>.ByIdCacheKey, storyId);
 
-            return _staticCacheManager.Get<Story>(cacheKey, () =>
+            return await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
-                return _storyRepository.GetById(storyId);
+                return await _storyRepository.GetByIdAsync(storyId);
             });
         }
 
@@ -93,12 +94,12 @@ namespace DevPlatform.Business.Services
         /// Inserts a story
         /// </summary>
         /// <param name="story"></param>
-        public virtual ResultModel Create(Story story)
+        public virtual async Task<ResultModel> CreateAsync(Story story)
         {
             if (story == null)
                 throw new ArgumentNullException(nameof(story));
 
-            _storyRepository.Insert(story);
+            await _storyRepository.InsertAsync(story);
             return new ResultModel { Status = true, Message = "Create Process Success ! " };
         }
 
@@ -107,145 +108,13 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="stories"></param>
         /// <returns></returns>
-        public ResultModel Create(List<Story> stories)
+        public virtual async Task<ResultModel> CreateAsync(List<Story> stories)
         {
             if (stories == null)
                 throw new ArgumentNullException(nameof(stories));
 
-            _storyRepository.Insert(stories);
+            await _storyRepository.InsertAsync(stories);
             return new ResultModel { Status = true, Message = "Create Process Success ! " };
-        }
-
-        /// <summary>
-        /// Updates a story
-        /// </summary>
-        /// <param name="story"></param>
-        public virtual void Update(Story story)
-        {
-            if (story == null)
-                throw new ArgumentNullException(nameof(story));
-
-            _storyRepository.Update(story);
-        }
-
-        /// <summary>
-        /// Returns a story by id as dto
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        public StoryListDto GetByIdAsDto(int id)
-        {
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(DevPlatformEntityCacheDefaults<Story>.ByIdCacheKey, id);
-
-            return _staticCacheManager.Get<StoryListDto>(cacheKey, () =>
-            {
-                var data = _storyRepository.Table.Where(x => x.Id == id).Select(p => new StoryListDto
-                {
-                    Id = p.Id,
-                    Title = p.Title,
-                    Description = p.Description,
-                    CreatedDate = p.CreatedDate,
-                    ImageUrl = p.StoryImages.FirstOrDefault().ImageUrl ?? "",
-                    VideoUrl = p.StoryVideos.FirstOrDefault().VideoUrl ?? "",
-                    CreatedByUserName = p.CreatedUser.UserName ?? "",
-                    CreatedByUserPhoto = p.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
-                    StoryType = p.StoryType,
-                    Comments = p.StoryComments.Select(y => new StoryCommentListDto
-                    {
-                        Text = y.Text,
-                        CreatedDate = y.CreatedDate,
-                        Id = y.Id,
-                        CreatedByUserName = y.CreatedUser.UserName ?? "",
-                        CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
-                        StoryId = y.StoryId
-                    }).ToList()
-                }).FirstOrDefault();
-
-                return data;
-            });
-        }
-
-        /// <summary>
-        /// Returns a list of stories as dto
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<StoryListDto> GetStoryList()
-        {
-            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(DevPlatformEntityCacheDefaults<Story>.AllCacheKey);
-
-            return _staticCacheManager.Get<IEnumerable<StoryListDto>>(cacheKey, () =>
-            {
-                var data = _storyRepository.Table.Select(p => new StoryListDto
-                {
-                    Id = p.Id,
-                    Title = p.Title,
-                    Description = p.Description,
-                    CreatedDate = p.CreatedDate,
-                    ImageUrl = p.StoryImages.FirstOrDefault().ImageUrl ?? "",
-                    VideoUrl = p.StoryVideos.FirstOrDefault().VideoUrl ?? "",
-                    CreatedByUserName = p.CreatedUser.UserName ?? "",
-                    CreatedByUserPhoto = p.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
-                    StoryType = p.StoryType,
-                    Comments = p.StoryComments.Select(y => new StoryCommentListDto
-                    {
-                        Text = y.Text,
-                        CreatedDate = y.CreatedDate,
-                        Id = y.Id,
-                        CreatedByUserName = y.CreatedUser.UserName ?? "",
-                        CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
-                        StoryId = y.StoryId
-                    }).ToList()
-                }).AsEnumerable();
-
-                return data;
-            });
-        }
-
-        /// <summary>
-        /// Returns a list of story by user Id
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <returns></returns>
-        public IEnumerable<Story> GetUserStoriesByUserId(int userId)
-        {
-            IEnumerable<Story> getStory = _storyRepository.Table.LoadWith(x => x.StoryImages)
-              .LoadWith(x => x.StoryVideos).LoadWith(x => x.StoryComments).ThenLoad(x => x.CreatedUser)
-              .ThenLoad(x => x.UserDetail).LoadWith(x => x.CreatedUser).ThenLoad(x => x.UserDetail)
-              .Where(y => y.CreatedBy == userId).ToList();
-
-            return getStory;
-        }
-
-        /// <summary>
-        /// Returns a list of story as dto by user Id
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <returns></returns>
-        public IEnumerable<StoryListDto> GetUserStoriesWithDto(int userId)
-        {
-            var data = _storyRepository.Table.Where(x => x.CreatedBy == userId).Select(p => new StoryListDto
-            {
-                Id = p.Id,
-                Title = p.Title,
-                Description = p.Description,
-                CreatedDate = p.CreatedDate,
-                ImageUrl = p.StoryImages.FirstOrDefault().ImageUrl ?? "",
-                VideoUrl = p.StoryVideos.FirstOrDefault().VideoUrl ?? "",
-                CreatedByUserName = p.CreatedUser.UserName ?? "",
-                CreatedByUserPhoto = p.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
-                StoryType = p.StoryType,
-                Comments = p.StoryComments.Select(y => new StoryCommentListDto
-                {
-                    Text = y.Text,
-                    CreatedDate = y.CreatedDate,
-                    Id = y.Id,
-                    CreatedByUserName = y.CreatedUser.UserName ?? "",
-                    CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
-                    StoryId = y.StoryId
-                }).ToList()
-            }).AsEnumerable();
-
-            return data;
         }
 
         /// <summary>
@@ -253,7 +122,7 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public ServiceResponse<CreateResponse> Create(StoryCreateApi model)
+        public virtual async Task<ServiceResponse<CreateResponse>> CreateAsync(StoryCreateApi model)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -265,7 +134,7 @@ namespace DevPlatform.Business.Services
 
             try
             {
-                var appUser = _userService.FindByUserName(_httpContextAccessor.HttpContext.User.Identity.Name);
+                var appUser = await _userService.FindByUserNameAsync(_httpContextAccessor.HttpContext.User.Identity.Name);
                 if (appUser == null)
                     return ServiceResponse((CreateResponse)null, new List<string> { "User not found!" });
 
@@ -281,9 +150,9 @@ namespace DevPlatform.Business.Services
                 #region ImageUploadingProcess
                 if (hasImage)
                 {
-                    imageUploadResult = _imageProcessingService.UploadImage(model.Photo);
+                    imageUploadResult = await _imageProcessingService.UploadImageAsync(model.Photo);
 
-                    _logService.InsertLogAsync(LogLevel.Information, $"StoryService- ImageUpload response from Cloudinary", JsonConvert.SerializeObject(imageUploadResult), appUser);
+                    _ = _logService.InsertLogAsync(LogLevel.Information, $"StoryService- ImageUpload response from Cloudinary", JsonConvert.SerializeObject(imageUploadResult), appUser);
 
                     if (imageUploadResult.Error != null)
                         return ServiceResponse((CreateResponse)null, new List<string> { imageUploadResult.Error.Message.ToString() });
@@ -295,9 +164,9 @@ namespace DevPlatform.Business.Services
 
                 if (hasVideo)
                 {
-                    videoUploadResult = _imageProcessingService.UploadVideo(model.Video);
+                    videoUploadResult = await _imageProcessingService.UploadVideoAsync(model.Video);
 
-                    _logService.InsertLogAsync(LogLevel.Information, $"StoryService- VideoUpload response from Cloudinary", JsonConvert.SerializeObject(imageUploadResult), appUser);
+                    _ = _logService.InsertLogAsync(LogLevel.Information, $"StoryService- VideoUpload response from Cloudinary", JsonConvert.SerializeObject(imageUploadResult), appUser);
 
                     if (videoUploadResult.Error != null)
                         return ServiceResponse((CreateResponse)null, new List<string> { videoUploadResult.Error.Message.ToString() });
@@ -317,7 +186,7 @@ namespace DevPlatform.Business.Services
                     CreatedBy = appUser.Id
                 };
 
-                ResultModel storyModel = Create(newStory);
+                ResultModel storyModel = await CreateAsync(newStory);
 
                 if (!storyModel.Status)
                     return ServiceResponse((CreateResponse)null, new List<string> { storyModel.Message });
@@ -332,7 +201,7 @@ namespace DevPlatform.Business.Services
                         CreatedBy = appUser.Id
                     };
 
-                    ResultModel storyImageModel = _storyImageService.Create(postImages);
+                    ResultModel storyImageModel = await _storyImageService.CreateAsync(postImages);
 
                     if (!storyImageModel.Status)
                         return ServiceResponse((CreateResponse)null, new List<string> { storyImageModel.Message });
@@ -350,7 +219,7 @@ namespace DevPlatform.Business.Services
                         VideoUrl = videoUploadResult.Url.ToString(),
                         CreatedBy = appUser.Id
                     };
-                    ResultModel storyVideoModel = _storyVideoService.Create(postVideos);
+                    ResultModel storyVideoModel = await _storyVideoService.CreateAsync(postVideos);
 
                     if (!storyVideoModel.Status)
                         return ServiceResponse((CreateResponse)null, new List<string> { storyVideoModel.Message });
@@ -380,7 +249,7 @@ namespace DevPlatform.Business.Services
             }
             catch (Exception ex)
             {
-                _logService.InsertLogAsync(LogLevel.Error, $"StoryService- Create Error: model {JsonConvert.SerializeObject(model)}", ex.Message.ToString());
+                await _logService.InsertLogAsync(LogLevel.Error, $"StoryService- Create Error: model {JsonConvert.SerializeObject(model)}", ex.Message.ToString());
                 serviceResponse.Success = false;
                 serviceResponse.ResultCode = ResultCode.Exception;
                 serviceResponse.Warnings.Add(ex.Message);
@@ -393,7 +262,7 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public virtual ServiceResponse<CreateResponse> Create(StoryCreateApi model, bool isCreateWithPost = true)
+        public virtual async Task<ServiceResponse<CreateResponse>> CreateAsync(StoryCreateApi model, bool isCreateWithPost = true)
         {
             if (model == null)
                 throw new ArgumentNullException(nameof(model));
@@ -405,7 +274,7 @@ namespace DevPlatform.Business.Services
 
             try
             {
-                var appUser = _userService.FindByUserName(_httpContextAccessor.HttpContext.User.Identity.Name);
+                var appUser = await _userService.FindByUserNameAsync(_httpContextAccessor.HttpContext.User.Identity.Name);
                 if (appUser == null)
                     return ServiceResponse((CreateResponse)null, new List<string> { "User not found!" });
 
@@ -434,7 +303,7 @@ namespace DevPlatform.Business.Services
                         break;
                 }
 
-                ResultModel storyModel = Create(newStory);
+                ResultModel storyModel = await CreateAsync(newStory);
 
                 if (!storyModel.Status)
                     return ServiceResponse((CreateResponse)null, new List<string> { storyModel.Message });
@@ -458,12 +327,137 @@ namespace DevPlatform.Business.Services
             }
             catch (Exception ex)
             {
-                _logService.InsertLogAsync(LogLevel.Error, $"StoryService- CreateForPost Error: model {JsonConvert.SerializeObject(model)}", ex.Message.ToString());
+                await _logService.InsertLogAsync(LogLevel.Error, $"StoryService- CreateForPost Error: model {JsonConvert.SerializeObject(model)}", ex.Message.ToString());
                 serviceResponse.Success = false;
                 serviceResponse.ResultCode = ResultCode.Exception;
                 serviceResponse.Warnings.Add(ex.Message);
                 return serviceResponse;
             }
+        }
+
+        /// <summary>
+        /// Updates a story
+        /// </summary>
+        /// <param name="story"></param>
+        public virtual async Task UpdateAsync(Story story)
+        {
+            if (story == null)
+                throw new ArgumentNullException(nameof(story));
+
+            await _storyRepository.UpdateAsync(story);
+        }
+
+        /// <summary>
+        /// Returns a story by id as dto
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public virtual async Task<StoryListDto> GetByIdAsDtoAsync(int id)
+        {
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(DevPlatformEntityCacheDefaults<Story>.ByIdCacheKey, id);
+
+            return await _staticCacheManager.GetAsync(cacheKey, async () =>
+            {
+                return await _storyRepository.Table.Where(x => x.Id == id).Select(p => new StoryListDto
+                {
+                    Id = p.Id,
+                    Title = p.Title,
+                    Description = p.Description,
+                    CreatedDate = p.CreatedDate,
+                    ImageUrl = p.StoryImages.FirstOrDefault().ImageUrl ?? "",
+                    VideoUrl = p.StoryVideos.FirstOrDefault().VideoUrl ?? "",
+                    CreatedByUserName = p.CreatedUser.UserName ?? "",
+                    CreatedByUserPhoto = p.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                    StoryType = p.StoryType,
+                    Comments = p.StoryComments.Select(y => new StoryCommentListDto
+                    {
+                        Text = y.Text,
+                        CreatedDate = y.CreatedDate,
+                        Id = y.Id,
+                        CreatedByUserName = y.CreatedUser.UserName ?? "",
+                        CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                        StoryId = y.StoryId
+                    }).ToList()
+                }).FirstOrDefaultAsyncMethod();
+            });
+        }
+
+        /// <summary>
+        /// Returns a list of stories as dto
+        /// </summary>
+        /// <returns></returns>
+        public virtual async Task<List<StoryListDto>> GetStoryListAsync()
+        {
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(DevPlatformEntityCacheDefaults<Story>.AllCacheKey);
+
+            return await _staticCacheManager.GetAsync(cacheKey, async () =>
+            {
+                return await _storyRepository.Table.Select(p => new StoryListDto
+                {
+                    Id = p.Id,
+                    Title = p.Title,
+                    Description = p.Description,
+                    CreatedDate = p.CreatedDate,
+                    ImageUrl = p.StoryImages.FirstOrDefault().ImageUrl ?? "",
+                    VideoUrl = p.StoryVideos.FirstOrDefault().VideoUrl ?? "",
+                    CreatedByUserName = p.CreatedUser.UserName ?? "",
+                    CreatedByUserPhoto = p.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                    StoryType = p.StoryType,
+                    Comments = p.StoryComments.Select(y => new StoryCommentListDto
+                    {
+                        Text = y.Text,
+                        CreatedDate = y.CreatedDate,
+                        Id = y.Id,
+                        CreatedByUserName = y.CreatedUser.UserName ?? "",
+                        CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                        StoryId = y.StoryId
+                    }).ToList()
+                }).ToListAsyncMethod();
+            });
+        }
+
+        /// <summary>
+        /// Returns a list of story by user Id
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public virtual async Task<List<Story>> GetUserStoriesByUserIdAsync(int userId)
+        {
+            return await _storyRepository.Table.Where(y => y.CreatedBy == userId)
+                .LoadWith(x => x.StoryImages)
+              .LoadWith(x => x.StoryVideos).LoadWith(x => x.StoryComments).ThenLoad(x => x.CreatedUser)
+              .ThenLoad(x => x.UserDetail).LoadWith(x => x.CreatedUser).ThenLoad(x => x.UserDetail)
+              .ToListAsyncMethod();
+        }
+
+        /// <summary>
+        /// Returns a list of story as dto by user Id
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public virtual async Task<List<StoryListDto>> GetUserStoriesWithDtoAsync(int userId)
+        {
+            return await _storyRepository.Table.Where(x => x.CreatedBy == userId).Select(p => new StoryListDto
+            {
+                Id = p.Id,
+                Title = p.Title,
+                Description = p.Description,
+                CreatedDate = p.CreatedDate,
+                ImageUrl = p.StoryImages.FirstOrDefault().ImageUrl ?? "",
+                VideoUrl = p.StoryVideos.FirstOrDefault().VideoUrl ?? "",
+                CreatedByUserName = p.CreatedUser.UserName ?? "",
+                CreatedByUserPhoto = p.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                StoryType = p.StoryType,
+                Comments = p.StoryComments.Select(y => new StoryCommentListDto
+                {
+                    Text = y.Text,
+                    CreatedDate = y.CreatedDate,
+                    Id = y.Id,
+                    CreatedByUserName = y.CreatedUser.UserName ?? "",
+                    CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                    StoryId = y.StoryId
+                }).ToList()
+            }).ToListAsyncMethod();
         }
 
         #endregion

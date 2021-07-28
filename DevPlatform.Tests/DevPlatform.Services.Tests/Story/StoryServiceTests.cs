@@ -4,6 +4,7 @@ using FluentAssertions;
 using NUnit.Framework;
 using System;
 using System.Data.SqlClient;
+using System.Threading.Tasks;
 using StoryClass = DevPlatform.Core.Domain.Story.Story;
 
 namespace DevPlatform.Tests.DevPlatform.Services.Tests.Story
@@ -20,39 +21,39 @@ namespace DevPlatform.Tests.DevPlatform.Services.Tests.Story
         }
 
         [Test]
-        public void ItShouldReturnNullStoryWhenStoryIdIsZero()
+        public async Task ItShouldReturnNullStoryWhenStoryIdIsZero()
         {
-            var story = _storyService.GetById(0);
+            var story = await _storyService.GetByIdAsync(0);
             story.Should().BeNull();
         }
 
         [Test]
-        public void ItShouldReturnNullStoryAsDtoWhenStoryIdIsZero()
+        public async Task ItShouldReturnNullStoryAsDtoWhenStoryIdIsZero()
         {
-            var story = _storyService.GetByIdAsDto(0);
+            var story = await _storyService.GetByIdAsDtoAsync(0);
             story.Should().BeNull();
         }
 
         [Test]
         public void ItShouldThrowExceptionIfStoryIsNullWhenStory()
         {
-            Assert.Throws(typeof(ArgumentNullException), () => _storyService.Delete(null));
+            Assert.Throws(typeof(ArgumentNullException), () => _storyService.DeleteAsync(null));
         }
 
         [Test]
         public void ItShouldThrowSqlExceptionIfStoryIsNullWhenInsertStory()
         {
-            Assert.Throws<SqlException>(() => _storyService.Create(new StoryClass()));
+            Assert.Throws<SqlException>(() => _storyService.CreateAsync(new StoryClass()));
         }
 
         [Test]
         public void ItShouldThrowIfStoryIsNullWhenUpdateStory()
         {
-            Assert.Throws<ArgumentNullException>(() => _storyService.Update(null));
+            Assert.Throws<ArgumentNullException>(() => _storyService.UpdateAsync(null));
         }
 
         [Test]
-        public void ItShouldInsertStory()
+        public async Task ItShouldInsertStory()
         {
             var story = new StoryClass
             {
@@ -62,7 +63,7 @@ namespace DevPlatform.Tests.DevPlatform.Services.Tests.Story
                 CreatedBy = 0
             };
 
-            _storyService.Create(story);
+            await _storyService.CreateAsync(story);
             story.Id.Should().BeGreaterThan(0);
         }
     }

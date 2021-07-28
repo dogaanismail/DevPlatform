@@ -1,6 +1,7 @@
 ﻿using DevPlatform.Domain.Common;
 using DevPlatform.Domain.Dto;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DevPlatform.Business.Interfaces
 {
@@ -13,21 +14,21 @@ namespace DevPlatform.Business.Interfaces
         /// Returns all chat messages in the system.
         /// </summary>
         /// <returns></returns>
-        IEnumerable<MessageDto> GetAllMessages();
+        Task<List<MessageDto>> GetAllMessagesAsync();
 
         /// <summary>
         /// Returns the messages by chatId.
         /// </summary>
         /// <param name="chatId"></param>
         /// <returns></returns>
-        MessageDto GetMessageById(int chatId);
+        Task<MessageDto> GetMessageByIdAsync(int chatId);
 
         /// <summary>
         /// Returns the messages by chat group name.
         /// </summary>
         /// <param name="chatId"></param>
         /// <returns></returns>
-        IEnumerable<MessageDto> GetMessagesByGroupName(string groupName);
+        Task<List<MessageDto>> GetMessagesByGroupNameAsync(string groupName);
 
 
         /// <summary>
@@ -35,6 +36,6 @@ namespace DevPlatform.Business.Interfaces
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        ResultModel Create(MessageDto message);
+        Task<ResultModel> CreateAsync(MessageDto message);
     }
 }

@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Threading;
+using System.Threading.Tasks;
 using DevPlatform.Common.Helpers;
 using DevPlatform.Core.Entities;
 using DevPlatform.Core.Infrastructure;
@@ -12,94 +12,41 @@ using DevPlatform.Data.Migrations;
 using LinqToDB;
 using LinqToDB.Data;
 using LinqToDB.DataProvider;
+using LinqToDB.DataProvider.MySql;
 using LinqToDB.SqlQuery;
 using MySql.Data.MySqlClient;
-using MySqlDevPlatformProvider = LinqToDB.DataProvider.MySql.MySqlDataProvider;
 
-namespace DevPlatform.Data
+namespace DevPlatform.Data.DataProviders
 {
-    public class MySqlDataProvider : BaseDataProvider, IDevPlatformDataProvider
+    public class MySqlDbDataProvider : BaseDataProvider, IDevPlatformDataProvider
     {
         #region Fields
 
         //it's quite fast hash (to cheaply distinguish between objects)
         private const string HASH_ALGORITHM = "SHA1";
+        private static readonly Lazy<IDataProvider> _dataProvider = new(() => new MySqlDataProvider(ProviderName.MySql), true);
 
         #endregion
 
         #region Utils
 
         /// <summary>
-        /// Configures the data context
+        /// Creates the database connection
         /// </summary>
-        /// <param name="dataContext">Data context to configure</param>
-        private void ConfigureDataContext(IDataContext dataContext)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        protected override async Task<DataConnection> CreateDataConnectionAsync()
         {
-            AdditionalSchema.SetDataType(
-                typeof(Guid),
-                new SqlDataType(DataType.NChar, typeof(Guid), 36));
+            var dataContext = await CreateDataConnectionAsync(LinqToDbDataProvider);
 
-            AdditionalSchema.SetConvertExpression<string, Guid>(strGuid => new Guid(strGuid));
+            dataContext.MappingSchema.SetDataType(typeof(Guid), new SqlDataType(DataType.NChar, typeof(Guid), 36));
+            dataContext.MappingSchema.SetConvertExpression<string, Guid>(strGuid => new Guid(strGuid));
+
+            return dataContext;
         }
 
         protected MySqlConnectionStringBuilder GetConnectionStringBuilder()
         {
-            return new MySqlConnectionStringBuilder(CurrentConnectionString);
-        }
-
-        /// <summary>
-        /// Get SQL commands from the script
-        /// </summary>
-        /// <param name="sql">SQL script</param>
-        /// <returns>List of commands</returns>
-        private static IList<string> GetCommandsFromScript(string sql)
-        {
-            var commands = new List<string>();
-
-            var batches = Regex.Split(sql, @"DELIMITER \;", RegexOptions.IgnoreCase | RegexOptions.Multiline);
-
-            if (batches.Length > 0)
-            {
-                commands.AddRange(
-                    batches
-                        .Where(b => !string.IsNullOrWhiteSpace(b))
-                        .Select(b =>
-                        {
-                            b = Regex.Replace(b, @"(DELIMITER )?\$\$", string.Empty);
-                            b = Regex.Replace(b, @"#(.*?)\r?\n", "/* $1 */");
-                            b = Regex.Replace(b, @"(\r?\n)|(\t)", " ");
-
-                            return b;
-                        }));
-            }
-
-            return commands;
-        }
-
-        /// <summary>
-        /// Execute commands from a file with SQL script against the context database
-        /// </summary>
-        /// <param name="fileProvider">File provider</param>
-        /// <param name="filePath">Path to the file</param>
-        protected void ExecuteSqlScriptFromFile(IDevPlatformFileProvider fileProvider, string filePath)
-        {
-            filePath = fileProvider.MapPath(filePath);
-            if (!fileProvider.FileExists(filePath))
-                return;
-
-            ExecuteSqlScript(fileProvider.ReadAllText(filePath, Encoding.Default));
-        }
-
-        /// <summary>
-        /// Creates the database connection
-        /// </summary>
-        protected override DataConnection CreateDataConnection()
-        {
-            var dataContext = CreateDataConnection(LinqToDbDataProvider);
-
-            ConfigureDataContext(dataContext);
-
-            return dataContext;
+            return new MySqlConnectionStringBuilder(GetCurrentConnectionString());
         }
 
         #endregion
@@ -111,7 +58,7 @@ namespace DevPlatform.Data
         /// </summary>
         /// <param name="connectionString">Connection string</param>
         /// <returns>Connection to a database</returns>
-        protected override IDbConnection GetInternalDbConnection(string connectionString)
+        protected override DbConnection GetInternalDbConnection(string connectionString)
         {
             if (string.IsNullOrEmpty(connectionString))
                 throw new ArgumentException(nameof(connectionString));
@@ -126,7 +73,7 @@ namespace DevPlatform.Data
         /// <param name="triesToConnect"></param>
         public void CreateDatabase(string collation, int triesToConnect = 10)
         {
-            if (IsDatabaseExists())
+            if (DatabaseExists())
                 return;
 
             var builder = GetConnectionStringBuilder();
@@ -137,9 +84,9 @@ namespace DevPlatform.Data
             //now create connection string to 'master' database. It always exists.
             builder.Database = null;
 
-            using (var connection = CreateDbConnection(builder.ConnectionString))
+            using (var connection = GetInternalDbConnection(builder.ConnectionString))
             {
-                var query = $"CREATE DATABASE IF NOT EXISTS {databaseName};";
+                var query = $"CREATE DATABASE IF NOT EXISTS {databaseName}";
                 if (!string.IsNullOrWhiteSpace(collation))
                     query = $"{query} COLLATE {collation}";
 
@@ -163,7 +110,7 @@ namespace DevPlatform.Data
                 if (i == triesToConnect)
                     throw new Exception("Unable to connect to the new database. Please try one more time");
 
-                if (!IsDatabaseExists())
+                if (!DatabaseExists())
                     Thread.Sleep(1000);
                 else
                     break;
@@ -173,16 +120,18 @@ namespace DevPlatform.Data
         /// <summary>
         /// Checks if the specified database exists, returns true if database exists
         /// </summary>
-        /// <returns>Returns true if the database exists.</returns>
-        public bool IsDatabaseExists()
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the returns true if the database exists.
+        /// </returns>
+        public async Task<bool> DatabaseExistsAsync()
         {
             try
             {
-                using (var connection = CreateDbConnection())
-                {
-                    //just try to connect
-                    connection.Open();
-                }
+                await using var connection = GetInternalDbConnection(await GetCurrentConnectionStringAsync());
+
+                //just try to connect
+                await connection.OpenAsync();
 
                 return true;
             }
@@ -193,16 +142,22 @@ namespace DevPlatform.Data
         }
 
         /// <summary>
-        /// Execute commands from the SQL script
+        /// Checks if the specified database exists, returns true if database exists
         /// </summary>
-        /// <param name="sql">SQL script</param>
-        public void ExecuteSqlScript(string sql)
+        /// <returns>Returns true if the database exists.</returns>
+        public bool DatabaseExists()
         {
-            var sqlCommands = GetCommandsFromScript(sql);
-            using (var currentConnection = CreateDataConnection())
+            try
             {
-                foreach (var command in sqlCommands)
-                    currentConnection.Execute(command);
+                using var connection = CreateDbConnection();
+                //just try to connect
+                connection.Open();
+
+                return true;
+            }
+            catch
+            {
+                return false;
             }
         }
 
@@ -213,55 +168,77 @@ namespace DevPlatform.Data
         {
             var migrationManager = EngineContext.Current.Resolve<IMigrationManager>();
             migrationManager.ApplyUpMigrations(typeof(DevPlatformDbStartup).Assembly);
-
-            //create stored procedures 
-            var fileProvider = EngineContext.Current.Resolve<DevPlatformFileProvider>();
-            ExecuteSqlScriptFromFile(fileProvider, DevPlatformDataDefaults.MySQLStoredProceduresFilePath);
         }
 
         /// <summary>
         /// Get the current identity value
         /// </summary>
-        /// <typeparam name="T">Entity</typeparam>
-        /// <returns>Integer identity; null if cannot get the result</returns>
-        public virtual int? GetTableIdent<T>() where T : BaseEntity
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the integer identity; null if cannot get the result
+        /// </returns>
+        public virtual async Task<int?> GetTableIdentAsync<TEntity>() where TEntity : BaseEntity
         {
-            using (var currentConnection = CreateDataConnection())
+            using var currentConnection = await CreateDataConnectionAsync();
+            var tableName = GetEntityDescriptor<TEntity>().TableName;
+            var databaseName = currentConnection.Connection.Database;
+
+            //we're using the DbConnection object until linq2db solve this issue https://github.com/linq2db/linq2db/issues/1987
+            //with DataContext we could be used KeepConnectionAlive option
+            await using var dbConnection = GetInternalDbConnection(await GetCurrentConnectionStringAsync());
+
+            dbConnection.StateChange += (sender, e) =>
             {
-                var tableName = currentConnection.GetTable<T>().TableName;
-                var databaseName = currentConnection.Connection.Database;
+                try
+                {
+                    if (e.CurrentState != ConnectionState.Open)
+                        return;
 
-                var result = currentConnection.Query<decimal?>($"SELECT AUTO_INCREMENT" +
-                    $" FROM information_schema.TABLES WHERE TABLE_SCHEMA = '{databaseName}' AND TABLE_NAME = '{tableName}'")
-                    .FirstOrDefault();
+                    var connection = (IDbConnection)sender;
+                    using var internalCommand = connection.CreateCommand();
+                    internalCommand.Connection = connection;
+                    internalCommand.CommandText = $"SET @@SESSION.information_schema_stats_expiry = 0;";
+                    internalCommand.ExecuteNonQuery();
+                }
+                //ignoring for older than 8.0 versions MySQL (#1193 Unknown system variable)
+                catch (MySqlException ex) when (ex.Number == 1193)
+                {
+                    //ignore
+                }
+            };
 
-                return result.HasValue ? Convert.ToInt32(result) : 1;
-            }
+            await using var command = dbConnection.CreateCommand();
+            command.Connection = dbConnection;
+            command.CommandText = $"SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = '{databaseName}' AND TABLE_NAME = '{tableName}'";
+            await dbConnection.OpenAsync();
+
+            return Convert.ToInt32((await command.ExecuteScalarAsync()) ?? 1);
         }
 
         /// <summary>
         /// Set table identity (is supported)
         /// </summary>
-        /// <typeparam name="T">Entity</typeparam>
+        /// <typeparam name="TEntity">Entity type</typeparam>
         /// <param name="ident">Identity value</param>
-        public virtual void SetTableIdent<T>(int ident) where T : BaseEntity
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task SetTableIdentAsync<TEntity>(int ident) where TEntity : BaseEntity
         {
-            var currentIdent = GetTableIdent<T>();
+            var currentIdent = await GetTableIdentAsync<TEntity>();
             if (!currentIdent.HasValue || ident <= currentIdent.Value)
                 return;
 
-            using (var currentConnection = CreateDataConnection())
-            {
-                var tableName = currentConnection.GetTable<T>().TableName;
+            using var currentConnection = await CreateDataConnectionAsync();
+            var tableName = GetEntityDescriptor<TEntity>().TableName;
 
-                currentConnection.Execute($"ALTER TABLE '{tableName}' AUTO_INCREMENT = {ident}");
-            }
+            await currentConnection.ExecuteAsync($"ALTER TABLE `{tableName}` AUTO_INCREMENT = {ident};");
         }
 
         /// <summary>
         /// Creates a backup of the database
         /// </summary>
-        public virtual void BackupDatabase(string fileName)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual Task BackupDatabaseAsync(string fileName)
         {
             throw new DataException("This database provider does not support backup");
         }
@@ -270,7 +247,8 @@ namespace DevPlatform.Data
         /// Restores the database from a backup
         /// </summary>
         /// <param name="backupFileName">The name of the backup file</param>
-        public virtual void RestoreDatabase(string backupFileName)
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual Task RestoreDatabaseAsync(string backupFileName)
         {
             throw new DataException("This database provider does not support backup");
         }
@@ -278,40 +256,37 @@ namespace DevPlatform.Data
         /// <summary>
         /// Re-index database tables
         /// </summary>
-        public virtual void ReIndexTables()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task ReIndexTablesAsync()
         {
-            using (var currentConnection = CreateDataConnection())
-            {
-                var tables = currentConnection.Query<string>($"SHOW TABLES FROM `{currentConnection.Connection.Database}`").ToList();
+            using var currentConnection = await CreateDataConnectionAsync();
+            var tables = currentConnection.Query<string>($"SHOW TABLES FROM `{currentConnection.Connection.Database}`").ToList();
 
-                if (tables.Count > 0)
-                {
-                    currentConnection.Execute($"OPTIMIZE TABLE `{string.Join("`, `", tables)}`");
-                }
-            }
+            if (tables.Count > 0)
+                await currentConnection.ExecuteAsync($"OPTIMIZE TABLE `{string.Join("`, `", tables)}`");
         }
 
         /// <summary>
         /// Build the connection string
         /// </summary>
-        /// <param name="connectionStringInfo">Connection string info</param>
+        /// <param name="nopConnectionString">Connection string info</param>
         /// <returns>Connection string</returns>
-        public virtual string BuildConnectionString(IDevPlatformConnectionStringInfo connectionStringInfo)
+        public virtual string BuildConnectionString(IDevPlatformConnectionStringInfo nopConnectionString)
         {
-            if (connectionStringInfo is null)
-                throw new ArgumentNullException(nameof(connectionStringInfo));
+            if (nopConnectionString is null)
+                throw new ArgumentNullException(nameof(nopConnectionString));
 
-            if (connectionStringInfo.IntegratedSecurity)
+            if (nopConnectionString.IntegratedSecurity)
                 throw new Exception("Data provider supports connection only with login and password");
 
             var builder = new MySqlConnectionStringBuilder
             {
-                Server = connectionStringInfo.ServerName,
+                Server = nopConnectionString.ServerName,
                 //Cast DatabaseName to lowercase to avoid case-sensitivity problems
-                Database = connectionStringInfo.DatabaseName.ToLower(),
+                Database = nopConnectionString.DatabaseName.ToLower(),
                 AllowUserVariables = true,
-                UserID = connectionStringInfo.Username,
-                Password = connectionStringInfo.Password,
+                UserID = nopConnectionString.Username,
+                Password = nopConnectionString.Password,
             };
 
             return builder.ConnectionString;
@@ -351,7 +326,7 @@ namespace DevPlatform.Data
         /// <summary>
         /// MySql data provider
         /// </summary>
-        protected override IDataProvider LinqToDbDataProvider => new MySqlDevPlatformProvider(CurrentConnectionString);
+        protected override IDataProvider LinqToDbDataProvider => _dataProvider.Value;
 
         /// <summary>
         /// Gets allowed a limit input value of the data for hashing functions, returns 0 if not limited

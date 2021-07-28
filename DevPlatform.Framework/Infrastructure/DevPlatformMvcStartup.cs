@@ -26,10 +26,7 @@ namespace DevPlatform.Framework.Infrastructure
 
             //add Fluent Validation validator
             services.AddMyValidator();
-
-            //add devPlatform Identity options
-            services.AddDevPlatformAuthentication(configuration);
-
+ 
             //add devPlatform swagger
             services.AddDevPlatformSwagger();
 
@@ -55,24 +52,18 @@ namespace DevPlatform.Framework.Infrastructure
             //used for environment
             application.UseDevPlatformEnvironment();
 
-            //used for exceptionhandler
-            application.UseDevPlatformExceptionHandler();
-
             //used for static files
             application.UseDevPlatformStaticFiles();
 
             //used for routing
             application.UseDevPlatformRouting();
 
-            //used for authentication
-            application.UseDevPlatformAuthentication();
-
-            //used for authorization
-            application.UseDevPlatformAuthorization();
+            //check whether database is installed
+            application.UseInstallUrl();
 
             //used for swagger
             application.UseDevPlatformSwagger();
-
+       
             //used for angular
             application.UseAngular();
 

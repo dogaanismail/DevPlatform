@@ -6,6 +6,7 @@ using FluentAssertions;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DevPlatform.Tests.DevPlatform.Services.Tests.Portal
 {
@@ -21,10 +22,10 @@ namespace DevPlatform.Tests.DevPlatform.Services.Tests.Portal
         }
 
         [Test]
-        public void ItShouldInsertPostImage()
+        public async Task ItShouldInsertPostImage()
         {
-            var getPost = GetService<IRepository<Post>>().GetList().First();
-            var user = GetService<IRepository<AppUser>>().GetList().First();
+            var getPost = GetService<IRepository<Post>>().GetAll().First();
+            var user = GetService<IRepository<AppUser>>().GetAll().First();
 
             var postImage = new PostImage
             {
@@ -33,16 +34,16 @@ namespace DevPlatform.Tests.DevPlatform.Services.Tests.Portal
                 CreatedBy = user.Id
             };
 
-            _postImageService.Create(postImage);
+            await _postImageService.CreateAsync(postImage);
             postImage.Id.Should().BeGreaterThan(0);
-            GetService<IRepository<PostImage>>().Delete(postImage);
+            await GetService<IRepository<PostImage>>().DeleteAsync(postImage);
         }
 
         [Test]
-        public void ItShouldInsertPostImageWithList()
+        public async Task ItShouldInsertPostImageWithList()
         {
-            var post = GetService<IRepository<Post>>().GetList().First();
-            var user = GetService<IRepository<AppUser>>().GetList().First();
+            var post = GetService<IRepository<Post>>().GetAll().First();
+            var user = GetService<IRepository<AppUser>>().GetAll().First();
 
             List<PostImage> postImages = new();
             List<int> addedImages = new();
@@ -58,9 +59,9 @@ namespace DevPlatform.Tests.DevPlatform.Services.Tests.Portal
 
             foreach (var image in postImages)
             {
-                _postImageService.Create(image);
+                await _postImageService.CreateAsync(image);
                 addedImages.Add(image.Id);
-                GetService<IRepository<PostImage>>().Delete(image);
+                await GetService<IRepository<PostImage>>().DeleteAsync(image);
             }
 
             addedImages.Should().NotBeNullOrEmpty();

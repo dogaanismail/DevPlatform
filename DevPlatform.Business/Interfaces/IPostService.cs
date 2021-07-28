@@ -4,6 +4,7 @@ using DevPlatform.Domain.Common;
 using DevPlatform.Domain.Dto;
 using DevPlatform.Domain.ServiceResponseModels.PostService;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DevPlatform.Business.Interfaces
 {
@@ -16,65 +17,65 @@ namespace DevPlatform.Business.Interfaces
         /// Inserts a post
         /// </summary>
         /// <param name="post"></param>
-        ResultModel Create(Post post);
+        Task<ResultModel> CreateAsync(Post post);
 
         /// <summary>
         /// Inserts posts by using bulk
         /// </summary>
         /// <param name="post"></param>
-        ResultModel Create(List<Post> posts);
-
-        /// <summary>
-        /// Deletes a post
-        /// </summary>
-        /// <param name="post"></param>
-        void Delete(Post post);
-
-        /// <summary>
-        /// Updates a post
-        /// </summary>
-        /// <param name="post"></param>
-        void Update(Post post);
-
-        /// <summary>
-        /// Gets a post by id
-        /// </summary>
-        /// <param name="postId"></param>
-        /// <returns></returns>
-        Post GetById(int postId);
-
-        /// <summary>
-        /// Returns a post as Dto by PostId
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        PostListDto GetByIdAsDto(int id);
-
-        /// <summary>
-        /// Returns the post lists
-        /// </summary>
-        /// <returns></returns>
-        IEnumerable<PostListDto> GetPostList();
-
-        /// <summary>
-        /// Returns posts of user by userId
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <returns></returns>
-        IEnumerable<Post> GetUserPostsByUserId(int userId);
-
-        /// <summary>
-        /// Returns posts of user by userId with dto
-        /// </summary>
-        /// <param name="userId"></param>
-        /// <returns></returns>
-        IEnumerable<PostListDto> GetUserPostsWithDto(int userId);
+        Task<ResultModel> CreateAsync(List<Post> posts);
 
         /// <summary>
         /// Inserts posts and returns service response
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        ServiceResponse<CreateResponse> Create(PostCreateApi model);
+        Task<ServiceResponse<CreateResponse>> CreateAsync(PostCreateApi model);
+
+        /// <summary>
+        /// Deletes a post
+        /// </summary>
+        /// <param name="post"></param>
+        Task DeleteAsync(Post post);
+
+        /// <summary>
+        /// Updates a post
+        /// </summary>
+        /// <param name="post"></param>
+        Task UpdateAsync(Post post);
+
+        /// <summary>
+        /// Gets a post by id
+        /// </summary>
+        /// <param name="postId"></param>
+        /// <returns></returns>
+        Task<Post> GetByIdAsync(int postId);
+
+        /// <summary>
+        /// Returns a post as Dto by PostId
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        Task<PostListDto> GetByIdAsDtoAsync(int id);
+
+        /// <summary>
+        /// Returns the post lists
+        /// </summary>
+        /// <returns></returns>
+        Task<List<PostListDto>> GetPostListAsync();
+
+        /// <summary>
+        /// Returns posts of user by userId
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        Task<List<Post>> GetUserPostsByUserIdAsync(int userId);
+
+        /// <summary>
+        /// Returns posts of user by userId with dto
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        Task<List<PostListDto>> GetUserPostsWithDtoAsync(int userId);
     }
 }

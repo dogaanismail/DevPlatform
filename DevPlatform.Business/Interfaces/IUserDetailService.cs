@@ -1,6 +1,7 @@
 ﻿using DevPlatform.Core.Domain.Identity;
 using DevPlatform.Domain.Common;
 using DevPlatform.Domain.Dto;
+using System.Threading.Tasks;
 
 namespace DevPlatform.Business.Interfaces
 {
@@ -13,20 +14,20 @@ namespace DevPlatform.Business.Interfaces
         /// Creates a user detail
         /// </summary>
         /// <param name="appUserDetail"></param>
-        ResultModel Create(AppUserDetail appUserDetail);
+        Task<ResultModel> CreateAsync(AppUserDetail appUserDetail);
 
         /// <summary>
         /// Returns a user detail by username
         /// </summary>
         /// <param name="username"></param>
         /// <returns></returns>
-        AppUserDetailDto GetUserDetailByUserName(string username);
+        Task<AppUserDetailDto> GetUserDetailByUserNameAsync(string username);
 
         /// <summary>
         /// Updates signed user detail.
         /// </summary>
         /// <param name="detailDto"></param>
         /// <returns></returns>
-        ResultModel Update(SignedUserDetailDto detailDto);
+        Task<ResultModel> UpdateAsync(SignedUserDetailDto detailDto);
     }
 }

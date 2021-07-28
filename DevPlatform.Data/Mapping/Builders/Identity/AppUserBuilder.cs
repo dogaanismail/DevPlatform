@@ -31,7 +31,8 @@ namespace DevPlatform.Data.Mapping.Builders.Identity
                 .WithColumn(nameof(AppUser.CreatedDate)).AsDateTime().NotNullable()
                 .WithColumn(nameof(AppUser.ModifiedDate)).AsDateTime().Nullable()
                 .WithColumn(nameof(AppUser.StatusId)).AsInt32().Nullable()
-                .WithColumn(nameof(AppUser.DetailId)).AsInt32().NotNullable().ForeignKey<AppUserDetail>(onDelete: Rule.None);
+                .WithColumn(nameof(AppUser.DetailId)).AsInt32().NotNullable().ForeignKey<AppUserDetail>(onDelete: Rule.None)
+                .WithColumn(nameof(AppUser.Deleted)).AsBoolean().WithDefaultValue(0).NotNullable();
         }
 
     }

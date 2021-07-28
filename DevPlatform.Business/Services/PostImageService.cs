@@ -4,6 +4,7 @@ using DevPlatform.Domain.Common;
 using DevPlatform.Repository.Generic;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DevPlatform.Business.Services
 {
@@ -29,12 +30,12 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="createImageForPost"></param>
         /// <returns></returns>
-        public ResultModel Create(PostImage createImageForPost)
+        public virtual async Task<ResultModel> CreateAsync(PostImage createImageForPost)
         {
             if (createImageForPost == null)
                 throw new ArgumentNullException(nameof(createImageForPost));
 
-            _postImageRepository.Insert(createImageForPost);
+            await _postImageRepository.InsertAsync(createImageForPost);
             return new ResultModel { Status = true, Message = "Create Process Success ! " };
         }
 
@@ -43,12 +44,12 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="createImageForPost"></param>
         /// <returns></returns>
-        public ResultModel Create(List<PostImage> createImageForPost)
+        public virtual async Task<ResultModel> CreateAsync(List<PostImage> createImageForPost)
         {
             if (createImageForPost == null)
                 throw new ArgumentNullException(nameof(createImageForPost));
 
-            _postImageRepository.Insert(createImageForPost);
+            await _postImageRepository.InsertAsync(createImageForPost);
             return new ResultModel { Status = true, Message = "Create Process Success ! " };
         }
     }

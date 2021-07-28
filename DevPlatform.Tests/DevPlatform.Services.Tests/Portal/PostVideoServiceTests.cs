@@ -6,6 +6,7 @@ using FluentAssertions;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DevPlatform.Tests.DevPlatform.Services.Tests.Portal
 {
@@ -21,10 +22,10 @@ namespace DevPlatform.Tests.DevPlatform.Services.Tests.Portal
         }
 
         [Test]
-        public void ItShouldInsertPostVideo()
+        public async Task ItShouldInsertPostVideo()
         {
-            var getPost = GetService<IRepository<Post>>().GetList().First();
-            var user = GetService<IRepository<AppUser>>().GetList().First();
+            var getPost = GetService<IRepository<Post>>().GetAll().First();
+            var user = GetService<IRepository<AppUser>>().GetAll().First();
 
             var postVideo = new PostVideo
             {
@@ -33,16 +34,16 @@ namespace DevPlatform.Tests.DevPlatform.Services.Tests.Portal
                 CreatedBy = user.Id
             };
 
-            _postVideoService.Create(postVideo);
+            await _postVideoService.CreateAsync(postVideo);
             postVideo.Id.Should().BeGreaterThan(0);
-            GetService<IRepository<PostVideo>>().Delete(postVideo);
+            await GetService<IRepository<PostVideo>>().DeleteAsync(postVideo);
         }
 
         [Test]
-        public void ItShouldInsertPostImageWithList()
+        public async Task ItShouldInsertPostImageWithList()
         {
-            var post = GetService<IRepository<Post>>().GetList().First();
-            var user = GetService<IRepository<AppUser>>().GetList().First();
+            var post = GetService<IRepository<Post>>().GetAll().First();
+            var user = GetService<IRepository<AppUser>>().GetAll().First();
 
             List<PostVideo> postVideos = new();
             List<int> addedVideos = new();
@@ -58,9 +59,9 @@ namespace DevPlatform.Tests.DevPlatform.Services.Tests.Portal
 
             foreach (var video in postVideos)
             {
-                _postVideoService.Create(video);
+                await _postVideoService.CreateAsync(video);
                 addedVideos.Add(video.Id);
-                GetService<IRepository<PostVideo>>().Delete(video);
+                await GetService<IRepository<PostVideo>>().DeleteAsync(video);
             }
 
             addedVideos.Should().NotBeNullOrEmpty();

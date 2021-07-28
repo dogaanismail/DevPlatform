@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DevPlatform.Data
+﻿namespace DevPlatform.Data
 {
     /// <summary>
     /// Represents default values related to DevPlatformDataDefaults 

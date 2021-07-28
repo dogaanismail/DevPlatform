@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DevPlatform.Api.Controllers
 {
@@ -36,15 +37,15 @@ namespace DevPlatform.Api.Controllers
 
         [HttpPost("createstory")]
         [Authorize]
-        public virtual JsonResult CreateStory([FromForm] StoryCreateApi model)
+        public virtual async Task<JsonResult> CreateStoryAsync([FromForm] StoryCreateApi model)
         {
-            _logService.InsertLogAsync(LogLevel.Information, $"StoriesController- Create Story Request", JsonConvert.SerializeObject(model));
+            _ = _logService.InsertLogAsync(LogLevel.Information, $"StoriesController- Create Story Request", JsonConvert.SerializeObject(model));
 
-            var serviceResponse = _storyService.Create(model);
+            var serviceResponse = await _storyService.CreateAsync(model);
 
             if (serviceResponse.Warnings.Count > 0 || serviceResponse.Warnings.Any())
             {
-                _logService.InsertLogAsync(LogLevel.Error, $"StoriesController- Create Story Error", JsonConvert.SerializeObject(serviceResponse));
+                _ = _logService.InsertLogAsync(LogLevel.Error, $"StoriesController- Create Story Error", JsonConvert.SerializeObject(serviceResponse));
 
                 return BadResponse(new ResultModel
                 {
@@ -70,17 +71,18 @@ namespace DevPlatform.Api.Controllers
 
         [HttpGet("storylist")]
         [AllowAnonymous]
-        public virtual JsonResult GetStoryList()
+        public virtual async Task<JsonResult> GetStoryListAsync()
         {
-            var data = _storyService.GetStoryList();
+            var data = await _storyService.GetStoryListAsync();
+
             return OkResponse(data);
         }
 
         [HttpGet("id/{id}")]
         [AllowAnonymous]
-        public virtual JsonResult GetById(int id)
+        public virtual async Task<JsonResult> GetByIdAsync(int id)
         {
-            var data = _storyService.GetByIdAsDto(id);
+            var data = await _storyService.GetByIdAsDtoAsync(id);
 
             return OkResponse(data);
         }

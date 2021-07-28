@@ -19,7 +19,8 @@ namespace DevPlatform.Data.Mapping.Builders.Question
                .WithColumn(nameof(QuestionClass.ModifiedBy)).AsInt32().Nullable().ForeignKey<AppUser>(onDelete: Rule.None)
                .WithColumn(nameof(QuestionClass.CreatedDate)).AsDateTime().NotNullable()
                .WithColumn(nameof(QuestionClass.ModifiedDate)).AsDateTime().Nullable()
-               .WithColumn(nameof(QuestionClass.StatusId)).AsInt32().Nullable();
+               .WithColumn(nameof(QuestionClass.StatusId)).AsInt32().Nullable()
+               .WithColumn(nameof(QuestionClass.Deleted)).AsBoolean().WithDefaultValue(0).NotNullable();
             #endregion
         }
     }

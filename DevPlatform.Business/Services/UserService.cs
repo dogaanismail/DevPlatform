@@ -15,6 +15,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DevPlatform.Business.Services
 {
@@ -57,13 +58,12 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="appUser"></param>
         /// <returns></returns>
-        public virtual IdentityResult Create(AppUser appUser)
+        public virtual async Task<IdentityResult> CreateAsync(AppUser appUser)
         {
             if (appUser == null)
                 throw new ArgumentNullException(nameof(appUser));
 
-            var result = _userManager.CreateAsync(appUser).Result;
-            return result;
+           return await _userManager.CreateAsync(appUser);
         }
 
         /// <summary>
@@ -71,13 +71,12 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="appUser"></param>
         /// <returns></returns>
-        public virtual IdentityResult Delete(AppUser appUser)
+        public virtual async Task<IdentityResult> DeleteAsync(AppUser appUser)
         {
             if (appUser == null)
                 throw new ArgumentNullException(nameof(appUser));
 
-            IdentityResult result = _userManager.DeleteAsync(appUser).Result;
-            return result;
+            return await _userManager.DeleteAsync(appUser);
         }
 
         /// <summary>
@@ -85,16 +84,16 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="email"></param>
         /// <returns></returns>
-        public virtual AppUser FindByEmail(string email)
+        public virtual async Task<AppUser> FindByEmailAsync(string email)
         {
             if (string.IsNullOrEmpty(email))
                 throw new ArgumentNullException(nameof(email));
 
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(AppUserCacheKeys.UserByEmailCacheKey, email);
 
-            return _staticCacheManager.Get<AppUser>(cacheKey, () =>
+            return await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
-                return _appUserRepository.Table.LoadWith(detail => detail.UserDetail).Where(x => x.Email == email).FirstOrDefault();
+                return await _appUserRepository.Table.Where(x => x.Email == email).LoadWith(detail => detail.UserDetail).FirstOrDefaultAsyncMethod();
             });
         }
 
@@ -103,13 +102,13 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public AppUser FindById(int id)
+        public virtual async Task<AppUser> FindByIdAsync(int id)
         {
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(DevPlatformEntityCacheDefaults<AppUser>.ByIdCacheKey, id);
 
-            return _staticCacheManager.Get<AppUser>(cacheKey, () =>
+            return await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
-                return _appUserRepository.Table.LoadWith(detail => detail.UserDetail).Where(x => x.Id == id).FirstOrDefault();
+                return await _appUserRepository.Table.Where(x => x.Id == id).LoadWith(detail => detail.UserDetail).FirstOrDefaultAsyncMethod();
 
             });
         }
@@ -119,31 +118,30 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="userName"></param>
         /// <returns></returns>
-        public AppUser FindByUserName(string userName)
+        public virtual async Task<AppUser> FindByUserNameAsync(string userName)
         {
             if (string.IsNullOrEmpty(userName))
                 throw new ArgumentNullException(nameof(userName));
 
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(AppUserCacheKeys.UserByUserNameCacheKey, userName);
 
-            return _staticCacheManager.Get<AppUser>(cacheKey, () =>
+            return await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
-                return _appUserRepository.Table.LoadWith(detail => detail.UserDetail).Where(x => x.UserName == userName).FirstOrDefault();
+                return await _appUserRepository.Table.Where(x => x.UserName == userName).LoadWith(detail => detail.UserDetail).FirstOrDefaultAsyncMethod();
             });
         }
-
 
         /// <summary>
         /// Updates an appUser
         /// </summary>
         /// <param name="appUser"></param>
         /// <returns></returns>
-        public IdentityResult Update(AppUser appUser)
+        public virtual async Task<IdentityResult> UpdateAsync(AppUser appUser)
         {
             if (appUser == null)
                 throw new ArgumentNullException(nameof(appUser));
 
-            return _userManager.UpdateAsync(appUser).Result;
+            return await _userManager.UpdateAsync(appUser);
         }
 
         /// <summary>
@@ -151,7 +149,7 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
-        public virtual ServiceResponse<RegisterResponse> Register(RegisterApiRequest model)
+        public virtual async Task<ServiceResponse<RegisterResponse>> RegisterAsync(RegisterApiRequest model)
         {
             if (!model.RePassword.Equals(model.Password))
                 return ServiceResponse((RegisterResponse)null, new List<string> { "Repassword must match password!" });
@@ -171,7 +169,7 @@ namespace DevPlatform.Business.Services
                     CoverPhotoPath = "https://via.placeholder.com/1030x360"
                 };
 
-                ResultModel resultModel = CreateUserDetail(appUserDetail);
+                ResultModel resultModel = await CreateUserDetailAsync(appUserDetail);
 
                 if (!resultModel.Status)
                     return ServiceResponse((RegisterResponse)null, new List<string> { resultModel.Message });
@@ -183,11 +181,11 @@ namespace DevPlatform.Business.Services
                     DetailId = appUserDetail.Id
                 };
 
-                IdentityResult result = _userManager.CreateAsync(userEntity, model.Password).Result;
+                IdentityResult result = await _userManager.CreateAsync(userEntity, model.Password);
 
                 if (!result.Succeeded && result.Errors != null && result.Errors.Any())
                 {
-                    _logService.InsertLogAsync(LogLevel.Error, $"UserService- Register Error", JsonConvert.SerializeObject(result));
+                    _ = _logService.InsertLogAsync(LogLevel.Error, $"UserService- Register Error", JsonConvert.SerializeObject(result));
 
                     serviceResponse.Warnings = result.Errors.Select(x => x.Description).ToList();
                     return serviceResponse;
@@ -204,7 +202,7 @@ namespace DevPlatform.Business.Services
             }
             catch (Exception ex)
             {
-                _logService.InsertLogAsync(LogLevel.Error, $"UserService- Register Exception Error: model {JsonConvert.SerializeObject(model)}", ex.Message.ToString());
+                await _logService.InsertLogAsync(LogLevel.Error, $"UserService- Register Exception Error: model {JsonConvert.SerializeObject(model)}", ex.Message.ToString());
                 serviceResponse.Success = false;
                 serviceResponse.ResultCode = ResultCode.Exception;
                 serviceResponse.Warnings.Add(ex.Message);
@@ -217,7 +215,7 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="userName"></param>
         /// <returns>Returns user's detail, such as personal informations, user posts, user albums</returns>
-        public virtual AppUserProfileDto GetUserDetailByUserName(string userName)
+        public virtual async Task<AppUserProfileDto> GetUserDetailByUserNameAsync(string userName)
         {
             if (string.IsNullOrEmpty(userName))
                 throw new ArgumentNullException(nameof(userName));
@@ -226,10 +224,10 @@ namespace DevPlatform.Business.Services
 
             var detailDto = new AppUserProfileDto
             {
-                AppUserDetail = _userDetailService.GetUserDetailByUserName(userName)
+                AppUserDetail = await _userDetailService.GetUserDetailByUserNameAsync(userName)
             };
 
-            detailDto.UserPosts = postService.GetUserPostsWithDto(detailDto.AppUserDetail.Id);
+            detailDto.UserPosts = await postService.GetUserPostsWithDtoAsync(detailDto.AppUserDetail.Id);
 
             return detailDto;
         }
@@ -241,12 +239,12 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="appUserDetail"></param>
         /// <returns></returns>
-        public virtual ResultModel CreateUserDetail(AppUserDetail appUserDetail)
+        public virtual async Task<ResultModel> CreateUserDetailAsync(AppUserDetail appUserDetail)
         {
             if (appUserDetail == null)
                 throw new ArgumentNullException(nameof(appUserDetail));
 
-            _appUserDetailRepository.Insert(appUserDetail);
+            await _appUserDetailRepository.InsertAsync(appUserDetail);
             return new ResultModel { Status = true, Message = "Create Process Success ! " };
         }
 

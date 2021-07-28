@@ -9,6 +9,7 @@ using RestSharp;
 using System;
 using System.Diagnostics;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace DevPlatform.Business.Services
 {
@@ -52,7 +53,7 @@ namespace DevPlatform.Business.Services
         /// <param name="apiEndPoint"></param>
         /// <param name="method"></param>
         /// <returns></returns>
-        private TResponse CreateRequest<TResponse>(string apiEndPoint, Method method) where TResponse : new()
+        private async Task<TResponse> CreateRequestAsync<TResponse>(string apiEndPoint, Method method) where TResponse : new()
         {
             Stopwatch sw = new();
             sw.Start();
@@ -65,7 +66,7 @@ namespace DevPlatform.Business.Services
 
             request.AddHeader("Content-type", "application/json");
 
-            var response = _client.Execute(request);
+            var response = await _client.ExecuteAsync(request);
             sw.Stop();
 
             if (response != null)
@@ -77,7 +78,7 @@ namespace DevPlatform.Business.Services
                         TResponse data = JsonSerializer.Deserialize<TResponse>(response.Content);
 
                         if (_openWeatherSettings.EnabledLogging)
-                            _logService.InsertLogAsync(LogLevel.Information, $"OpenWeatherMap rest api process has finished! Millisecond: {sw.ElapsedMilliseconds}", Newtonsoft.Json.JsonConvert.SerializeObject(data));
+                            _ = _logService.InsertLogAsync(LogLevel.Information, $"OpenWeatherMap rest api process has finished! Millisecond: {sw.ElapsedMilliseconds}", Newtonsoft.Json.JsonConvert.SerializeObject(data));
 
                         return data;
                     }
@@ -101,17 +102,17 @@ namespace DevPlatform.Business.Services
         /// Returns current weather by city
         /// </summary>
         /// <returns>Current weather</returns>
-        public virtual WeatherResponseDto GetCurrentWeather()
+        public virtual async Task<WeatherResponseDto> GetCurrentWeatherAsync()
         {
             string currentIpAddress = _webHelper.GetCurrentIpAddress();
 
             var key = _staticCacheManager.PrepareKeyForDefaultCache(CommonCacheKeys.WeatherByIpAddressCacheKey, currentIpAddress);
 
-            return _staticCacheManager.Get<WeatherResponseDto>(key, () =>
+            return await _staticCacheManager.GetAsync<WeatherResponseDto>(key, async () =>
             {
-                var locationInformation = _geoLookupService.GetCityAndCountryInformations(currentIpAddress);
+                var locationInformation = await _geoLookupService.GetCityAndCountryInformationsAsync(currentIpAddress);
                 var endPoint = $"{_openWeatherSettings.ApiUrl}/weather?q={locationInformation.CurrentCityName}&appid={_openWeatherSettings.ApiKey}";
-                var response = CreateRequest<RootObject>(endPoint, Method.GET);
+                var response = await CreateRequestAsync<RootObject>(endPoint, Method.GET);
 
                 if (response != null)
                 {
@@ -133,7 +134,6 @@ namespace DevPlatform.Business.Services
             });
         }
 
-
         #endregion
 
         #region Private Methods
@@ -152,10 +152,10 @@ namespace DevPlatform.Business.Services
         /// Returns forecast by city
         /// </summary>
         /// <returns>Forecast for the city</returns>
-        private object GetForecast(string city)
+        private async Task<object> GetForecast(string city)
         {
             var endPoint = $"{_openWeatherSettings.ApiUrl}/forecast?q={city}&appid={_openWeatherSettings.ApiKey}";
-            var response = CreateRequest<object>(endPoint, Method.GET);
+            var response = await CreateRequestAsync<object>(endPoint, Method.GET);
 
             return response;
         }

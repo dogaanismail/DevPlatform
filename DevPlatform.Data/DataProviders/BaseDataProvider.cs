@@ -1,4 +1,5 @@
-﻿using DevPlatform.Core.Entities;
+﻿using DevPlatform.Core.Configuration.Configs;
+using DevPlatform.Core.Entities;
 using DevPlatform.Core.Infrastructure;
 using DevPlatform.Data.Mapping;
 using LinqToDB;
@@ -6,14 +7,17 @@ using LinqToDB.Data;
 using LinqToDB.DataProvider;
 using LinqToDB.Mapping;
 using LinqToDB.Tools;
+using StackExchange.Profiling;
+using StackExchange.Profiling.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
-namespace DevPlatform.Data
+namespace DevPlatform.Data.DataProviders
 {
     /// <summary>
     /// Base data provider abstract class
@@ -22,7 +26,7 @@ namespace DevPlatform.Data
     {
         #region Utils
 
-        // <summary>
+        /// <summary>
         /// Gets an additional mapping schema
         /// </summary>
         private MappingSchema GetMappingSchema()
@@ -35,10 +39,23 @@ namespace DevPlatform.Data
                 };
             }
 
+            if (MiniProfillerEnabled)
+            {
+                var mpMappingSchema = new MappingSchema(new[] { Singleton<MappingSchema>.Instance });
+
+                mpMappingSchema.SetConvertExpression<ProfiledDbConnection, IDbConnection>(db => db.WrappedConnection);
+                mpMappingSchema.SetConvertExpression<ProfiledDbDataReader, IDataReader>(db => db.WrappedReader);
+                mpMappingSchema.SetConvertExpression<ProfiledDbTransaction, IDbTransaction>(db => db.WrappedTransaction);
+                mpMappingSchema.SetConvertExpression<ProfiledDbCommand, IDbCommand>(db => db.InternalCommand);
+
+                return mpMappingSchema;
+            }
+
             return Singleton<MappingSchema>.Instance;
+
         }
 
-        private static void UpdateParameterValue(DataConnection dataConnection, DataParameter parameter)
+        private void UpdateParameterValue(DataConnection dataConnection, DataParameter parameter)
         {
             if (dataConnection is null)
                 throw new ArgumentNullException(nameof(dataConnection));
@@ -71,50 +88,7 @@ namespace DevPlatform.Data
         /// </summary>
         /// <param name="connectionString">Connection string</param>
         /// <returns>Connection to a database</returns>
-        protected abstract IDbConnection GetInternalDbConnection(string connectionString);
-
-        /// <summary>
-        /// Creates the database connection
-        /// </summary>
-        protected virtual DataConnection CreateDataConnection()
-        {
-            return CreateDataConnection(LinqToDbDataProvider);
-        }
-
-        /// <summary>
-        /// Creates the database connection
-        /// </summary>
-        /// <param name="dataProvider">Data provider</param>
-        /// <returns>Database connection</returns>
-        protected virtual DataConnection CreateDataConnection(IDataProvider dataProvider)
-        {
-            if (dataProvider is null)
-                throw new ArgumentNullException(nameof(dataProvider));
-
-            var dataContext = new DataConnection(dataProvider, CreateDbConnection());
-            dataContext.AddMappingSchema(AdditionalSchema);
-
-            return dataContext;
-        }
-
-        #endregion
-
-        #region Methods
-
-        /// <summary>
-        /// Creates a connection to a database
-        /// </summary>
-        /// <param name="connectionString">Connection string</param>
-        /// <returns>Connection to a database</returns>
-        public virtual IDbConnection CreateDbConnection(string connectionString = null)
-        {
-            var dbConnection = GetInternalDbConnection(!string.IsNullOrEmpty(connectionString) ? connectionString : CurrentConnectionString);
-
-            if (!DataSettingsManager.DatabaseIsInstalled)
-                return dbConnection;
-
-            return dbConnection;
-        }
+        protected abstract DbConnection GetInternalDbConnection(string connectionString);
 
         /// <summary>
         /// Creates the database connection
@@ -123,6 +97,14 @@ namespace DevPlatform.Data
         protected virtual async Task<DataConnection> CreateDataConnectionAsync()
         {
             return await CreateDataConnectionAsync(LinqToDbDataProvider);
+        }
+
+        /// <summary>
+        /// Creates the database connection
+        /// </summary>
+        protected virtual DataConnection CreateDataConnection()
+        {
+            return CreateDataConnection(LinqToDbDataProvider);
         }
 
         /// <summary>
@@ -147,6 +129,24 @@ namespace DevPlatform.Data
         }
 
         /// <summary>
+        /// Creates the database connection
+        /// </summary>
+        /// <param name="dataProvider">Data provider</param>
+        /// <returns>Database connection</returns>
+        protected virtual DataConnection CreateDataConnection(IDataProvider dataProvider)
+        {
+            if (dataProvider is null)
+                throw new ArgumentNullException(nameof(dataProvider));
+
+            var dataContext = new DataConnection(dataProvider, CreateDbConnection(), GetMappingSchema())
+            {
+                CommandTimeout = DataSettingsManager.GetSqlCommandTimeout()
+            };
+
+            return dataContext;
+        }
+
+        /// <summary>
         /// Creates a connection to a database
         /// </summary>
         /// <param name="connectionString">Connection string</param>
@@ -158,7 +158,39 @@ namespace DevPlatform.Data
         {
             var dbConnection = GetInternalDbConnection(!string.IsNullOrEmpty(connectionString) ? connectionString : await GetCurrentConnectionStringAsync());
 
-            return dbConnection;
+            return MiniProfillerEnabled ? new ProfiledDbConnection((DbConnection)dbConnection, MiniProfiler.Current) : dbConnection;
+        }
+
+        /// <summary>
+        /// Creates a connection to a database
+        /// </summary>
+        /// <param name="connectionString">Connection string</param>
+        /// <returns>Connection to a database</returns>
+        protected virtual IDbConnection CreateDbConnection(string connectionString = null)
+        {
+            var dbConnection = GetInternalDbConnection(!string.IsNullOrEmpty(connectionString) ? connectionString : GetCurrentConnectionString());
+
+            return MiniProfillerEnabled ? new ProfiledDbConnection((DbConnection)dbConnection, MiniProfiler.Current) : dbConnection;
+        }
+
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Creates a new temporary storage and populate it using data from provided query
+        /// </summary>
+        /// <param name="storeKey">Name of temporary storage</param>
+        /// <param name="query">Query to get records to populate created storage with initial data</param>
+        /// <typeparam name="TItem">Storage record mapping class</typeparam>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the iQueryable instance of temporary storage
+        /// </returns>
+        public virtual async Task<ITempDataStorage<TItem>> CreateTempDataStorageAsync<TItem>(string storeKey, IQueryable<TItem> query)
+            where TItem : class
+        {
+            return new TempSqlDataStorage<TItem>(storeKey, query, await CreateDataConnectionAsync());
         }
 
         /// <summary>
@@ -168,7 +200,22 @@ namespace DevPlatform.Data
         /// <returns>Mapping descriptor</returns>
         public EntityDescriptor GetEntityDescriptor<TEntity>() where TEntity : BaseEntity
         {
-            return AdditionalSchema?.GetEntityDescriptor(typeof(TEntity));
+            return GetMappingSchema()?.GetEntityDescriptor(typeof(TEntity));
+        }
+
+        /// <summary>
+        /// Returns queryable source for specified mapping class for current connection,
+        /// mapped to database table or view.
+        /// </summary>
+        /// <typeparam name="TEntity">Entity type</typeparam>
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the queryable source
+        /// </returns>
+        public virtual async Task<ITable<TEntity>> GetTableAsync<TEntity>() where TEntity : BaseEntity
+        {
+            return new DataContext(LinqToDbDataProvider, await GetCurrentConnectionStringAsync()) { MappingSchema = GetMappingSchema() }
+                .GetTable<TEntity>();
         }
 
         /// <summary>
@@ -179,21 +226,8 @@ namespace DevPlatform.Data
         /// <returns>Queryable source</returns>
         public virtual ITable<TEntity> GetTable<TEntity>() where TEntity : BaseEntity
         {
-            return new DataContext(LinqToDbDataProvider, CurrentConnectionString) { MappingSchema = AdditionalSchema }
+            return new DataContext(LinqToDbDataProvider, GetCurrentConnectionString()) { MappingSchema = GetMappingSchema() }
                 .GetTable<TEntity>();
-        }
-
-        /// <summary>
-        /// Inserts record into table. Returns inserted entity with identity
-        /// </summary>
-        /// <param name="entity"></param>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <returns>Inserted entity</returns>
-        public TEntity InsertEntity<TEntity>(TEntity entity) where TEntity : BaseEntity
-        {
-            using var dataContext = CreateDataConnection();
-            entity.Id = dataContext.InsertWithInt32Identity(entity);
-            return entity;
         }
 
         /// <summary>
@@ -207,33 +241,22 @@ namespace DevPlatform.Data
         /// </returns>
         public virtual async Task<TEntity> InsertEntityAsync<TEntity>(TEntity entity) where TEntity : BaseEntity
         {
-            using var dataContext = CreateDataConnection();
+            using var dataContext = await CreateDataConnectionAsync();
             entity.Id = await dataContext.InsertWithInt32IdentityAsync(entity);
             return entity;
         }
 
         /// <summary>
-        /// Performs bulk insert operation for entity colllection.
+        /// Inserts record into table. Returns inserted entity with identity
         /// </summary>
-        /// <param name="entities">Entities for insert operation</param>
-        /// <typeparam name="TEntity">Entity type</typeparam>
-        /// <returns>A task that represents the asynchronous operation</returns>
-        public virtual async Task BulkInsertEntitiesAsync<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity
+        /// <param name="entity"></param>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <returns>Inserted entity</returns>
+        public virtual TEntity InsertEntity<TEntity>(TEntity entity) where TEntity : BaseEntity
         {
             using var dataContext = CreateDataConnection();
-            await dataContext.BulkCopyAsync(new BulkCopyOptions(), entities.RetrieveIdentity(dataContext));
-        }
-
-        /// <summary>
-        /// Updates record in table, using values from entity parameter. 
-        /// Record to update identified by match on primary key value from obj value.
-        /// </summary>
-        /// <param name="entity">Entity with data to update</param>
-        /// <typeparam name="TEntity">Entity type</typeparam>
-        public void UpdateEntity<TEntity>(TEntity entity) where TEntity : BaseEntity
-        {
-            using var dataContext = CreateDataConnection();
-            dataContext.Update(entity);
+            entity.Id = dataContext.InsertWithInt32Identity(entity);
+            return entity;
         }
 
         /// <summary>
@@ -245,7 +268,7 @@ namespace DevPlatform.Data
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateEntityAsync<TEntity>(TEntity entity) where TEntity : BaseEntity
         {
-            using var dataContext = CreateDataConnection();
+            using var dataContext = await CreateDataConnectionAsync();
             await dataContext.UpdateAsync(entity);
         }
 
@@ -258,6 +281,8 @@ namespace DevPlatform.Data
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task UpdateEntitiesAsync<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity
         {
+            //we don't use the Merge API on this level, because this API not support all databases.
+            //you may see all supported databases by the following link: https://linq2db.github.io/articles/sql/merge/Merge-API.html#supported-databases
             foreach (var entity in entities)
                 await UpdateEntityAsync(entity);
         }
@@ -271,7 +296,7 @@ namespace DevPlatform.Data
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task DeleteEntityAsync<TEntity>(TEntity entity) where TEntity : BaseEntity
         {
-            using var dataContext = CreateDataConnection();
+            using var dataContext = await CreateDataConnectionAsync();
             await dataContext.DeleteAsync(entity);
         }
 
@@ -283,7 +308,7 @@ namespace DevPlatform.Data
         /// <returns>A task that represents the asynchronous operation</returns>
         public virtual async Task BulkDeleteEntitiesAsync<TEntity>(IList<TEntity> entities) where TEntity : BaseEntity
         {
-            using var dataContext = CreateDataConnection();
+            using var dataContext = await CreateDataConnectionAsync();
             if (entities.All(entity => entity.Id == 0))
                 foreach (var entity in entities)
                     await dataContext.DeleteAsync(entity);
@@ -304,52 +329,10 @@ namespace DevPlatform.Data
         /// </returns>
         public virtual async Task<int> BulkDeleteEntitiesAsync<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : BaseEntity
         {
-            using var dataContext = CreateDataConnection();
+            using var dataContext = await CreateDataConnectionAsync();
             return await dataContext.GetTable<TEntity>()
                 .Where(predicate)
                 .DeleteAsync();
-        }
-
-        /// <summary>
-        /// Deletes record in table. Record to delete identified
-        /// by match on primary key value from obj value.
-        /// </summary>
-        /// <param name="entity">Entity for delete operation</param>
-        /// <typeparam name="TEntity">Entity type</typeparam>
-        public void DeleteEntity<TEntity>(TEntity entity) where TEntity : BaseEntity
-        {
-            using var dataContext = CreateDataConnection();
-            dataContext.Delete(entity);
-        }
-
-        /// <summary>
-        /// Performs delete records in a table
-        /// </summary>
-        /// <param name="entities">Entities for delete operation</param>
-        /// <typeparam name="TEntity">Entity type</typeparam>
-        public void BulkDeleteEntities<TEntity>(IList<TEntity> entities) where TEntity : BaseEntity
-        {
-            using var dataContext = CreateDataConnection();
-            if (entities.All(entity => entity.Id == 0))
-                foreach (var entity in entities)
-                    dataContext.Delete(entity);
-            else
-                dataContext.GetTable<TEntity>()
-                    .Where(e => e.Id.In(entities.Select(x => x.Id)))
-                    .Delete();
-        }
-
-        /// <summary>
-        /// Performs delete records in a table by a condition
-        /// </summary>
-        /// <param name="predicate">A function to test each element for a condition.</param>
-        /// <typeparam name="TEntity">Entity type</typeparam>
-        public void BulkDeleteEntities<TEntity>(Expression<Func<TEntity, bool>> predicate) where TEntity : BaseEntity
-        {
-            using var dataContext = CreateDataConnection();
-            dataContext.GetTable<TEntity>()
-                .Where(predicate)
-                .Delete();
         }
 
         /// <summary>
@@ -357,63 +340,28 @@ namespace DevPlatform.Data
         /// </summary>
         /// <param name="entities">Entities for insert operation</param>
         /// <typeparam name="TEntity">Entity type</typeparam>
-        public void BulkInsertEntities<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity
+        /// <returns>A task that represents the asynchronous operation</returns>
+        public virtual async Task BulkInsertEntitiesAsync<TEntity>(IEnumerable<TEntity> entities) where TEntity : BaseEntity
         {
-            using var dataContext = CreateDataConnection(LinqToDbDataProvider);
-            dataContext.BulkCopy(new BulkCopyOptions(), entities.RetrieveIdentity(dataContext));
+            using var dataContext = await CreateDataConnectionAsync(LinqToDbDataProvider);
+            await dataContext.BulkCopyAsync(new BulkCopyOptions(), entities.RetrieveIdentity(dataContext));
         }
 
         /// <summary>
-        /// Executes command returns number of affected records.
+        /// Executes command asynchronously and returns number of affected records
         /// </summary>
-        /// <param name="sqlStatement">Command text</param>
+        /// <param name="sql">Command text</param>
         /// <param name="dataParameters">Command parameters</param>
-        /// <returns>Number of records, affected by command execution.</returns>
-        public int ExecuteNonQuery(string sqlStatement, params DataParameter[] dataParameters)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the number of records, affected by command execution.
+        /// </returns>
+        public virtual async Task<int> ExecuteNonQueryAsync(string sql, params DataParameter[] dataParameters)
         {
-            using var dataContext = CreateDataConnection();
-            var command = new CommandInfo(dataContext, sqlStatement, dataParameters);
-            var affectedRecords = command.Execute();
-
+            using var dataContext = await CreateDataConnectionAsync();
+            var command = new CommandInfo(dataContext, sql, dataParameters);
+            var affectedRecords = await command.ExecuteAsync();
             UpdateOutputParameters(dataContext, dataParameters);
-
-            return affectedRecords;
-        }
-
-        /// <summary>
-        /// Executes command using LinqToDB.Mapping.StoredProcedure command type and returns
-        /// single value
-        /// </summary>
-        /// <typeparam name="T">Result record type</typeparam>
-        /// <param name="procedureName">Procedure name</param>
-        /// <param name="parameters">Command parameters</param>
-        /// <returns>Resulting value</returns>
-        public T ExecuteStoredProcedure<T>(string procedureName, params DataParameter[] parameters)
-        {
-            using var dataContext = CreateDataConnection();
-            var command = new CommandInfo(dataContext, procedureName, parameters);
-
-            var result = command.ExecuteProc<T>();
-            UpdateOutputParameters(dataContext, parameters);
-
-            return result;
-        }
-
-        /// <summary>
-        /// Executes command using LinqToDB.Mapping.StoredProcedure command type and returns
-        /// number of affected records.
-        /// </summary>
-        /// <param name="procedureName">Procedure name</param>
-        /// <param name="parameters">Command parameters</param>
-        /// <returns>Number of records, affected by command execution.</returns>
-        public int ExecuteStoredProcedure(string procedureName, params DataParameter[] parameters)
-        {
-            using var dataContext = CreateDataConnection();
-            var command = new CommandInfo(dataContext, procedureName, parameters);
-
-            var affectedRecords = command.ExecuteProc();
-            UpdateOutputParameters(dataContext, parameters);
-
             return affectedRecords;
         }
 
@@ -424,14 +372,17 @@ namespace DevPlatform.Data
         /// <typeparam name="T">Result record type</typeparam>
         /// <param name="procedureName">Procedure name</param>
         /// <param name="parameters">Command parameters</param>
-        /// <returns>Returns collection of query result records</returns>
-        public IList<T> QueryProc<T>(string procedureName, params DataParameter[] parameters)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the returns collection of query result records
+        /// </returns>
+        public virtual async Task<IList<T>> QueryProcAsync<T>(string procedureName, params DataParameter[] parameters)
         {
-            using var dataContext = CreateDataConnection();
+            using var dataContext = await CreateDataConnectionAsync();
             var command = new CommandInfo(dataContext, procedureName, parameters);
-            var rez = command.QueryProc<T>()?.ToList();
+            var rez = command.QueryProc<T>().ToList();
             UpdateOutputParameters(dataContext, parameters);
-            return rez ?? new List<T>();
+            return rez;
         }
 
         /// <summary>
@@ -440,11 +391,14 @@ namespace DevPlatform.Data
         /// <typeparam name="T">Type of result items</typeparam>
         /// <param name="sql">SQL command text</param>
         /// <param name="parameters">Parameters to execute the SQL command</param>
-        /// <returns>Collection of values of specified type</returns>
-        public IList<T> Query<T>(string sql, params DataParameter[] parameters)
+        /// <returns>
+        /// A task that represents the asynchronous operation
+        /// The task result contains the collection of values of specified type
+        /// </returns>
+        public virtual async Task<IList<T>> QueryAsync<T>(string sql, params DataParameter[] parameters)
         {
-            using var dataContext = CreateDataConnection();
-            return dataContext.Query<T>(sql, parameters)?.ToList() ?? new List<T>();
+            using var dataContext = await CreateDataConnectionAsync();
+            return dataContext.Query<T>(sql, parameters).ToList();
         }
 
         #endregion
@@ -456,41 +410,33 @@ namespace DevPlatform.Data
         /// </summary>
         protected abstract IDataProvider LinqToDbDataProvider { get; }
 
-        /// <summary>
-        /// Additional mapping schema
-        /// </summary>
-        protected MappingSchema AdditionalSchema
-        {
-            get
-            {
-                if (!(Singleton<MappingSchema>.Instance is null))
-                    return Singleton<MappingSchema>.Instance;
-
-                Singleton<MappingSchema>.Instance =
-                    new MappingSchema(ConfigurationName) { MetadataReader = new FluentMigratorMetadataReader() };
-
-                return Singleton<MappingSchema>.Instance;
-            }
-        }
 
         /// <summary>
-        /// Database connection string
+        /// Gets or sets a value that indicates whether should use MiniProfiler for the current connection
         /// </summary>
-        protected static string CurrentConnectionString => DataSettingsManager.LoadSettings().ConnectionString;
-
-        /// <summary>
-        /// Name of database provider
-        /// </summary>
-        public string ConfigurationName => LinqToDbDataProvider.Name;
+        protected bool MiniProfillerEnabled => Singleton<AppConfigs>.Instance.CommonConfig.MiniProfilerEnabled;
 
         /// <summary>
         /// Database connection string
         /// </summary>
         /// <returns>A task that represents the asynchronous operation</returns>
-        protected static async Task<string> GetCurrentConnectionStringAsync()
+        protected async Task<string> GetCurrentConnectionStringAsync()
         {
             return (await DataSettingsManager.LoadSettingsAsync()).ConnectionString;
         }
+
+        /// <summary>
+        /// Database connection string
+        /// </summary>
+        protected string GetCurrentConnectionString()
+        {
+            return DataSettingsManager.LoadSettings().ConnectionString;
+        }
+
+        /// <summary>
+        /// Name of database provider
+        /// </summary>
+        public string ConfigurationName => LinqToDbDataProvider.Name;
 
         #endregion
     }

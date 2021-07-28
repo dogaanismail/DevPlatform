@@ -4,6 +4,7 @@ using DevPlatform.Domain.Enumerations;
 using FluentAssertions;
 using NUnit.Framework;
 using System;
+using System.Threading.Tasks;
 
 namespace DevPlatform.Tests.DevPlatform.Services.Tests.Portal
 {
@@ -19,39 +20,39 @@ namespace DevPlatform.Tests.DevPlatform.Services.Tests.Portal
         }
 
         [Test]
-        public void ItShouldReturnNullPostWhenPostIdIsZero()
+        public async Task ItShouldReturnNullPostWhenPostIdIsZero()
         {
-            var post = _postService.GetById(0);
+            var post = await _postService.GetByIdAsync(0);
             post.Should().BeNull();
         }
 
         [Test]
-        public void ItShouldReturnNullPostAsDtoWhenPostIdIsZero()
+        public async Task ItShouldReturnNullPostAsDtoWhenPostIdIsZero()
         {
-            var post = _postService.GetByIdAsDto(0);
+            var post = await _postService.GetByIdAsDtoAsync(0);
             post.Should().BeNull();
         }
 
         [Test]
         public void ItShouldThrowExceptionIfPostIsNullWhenPost()
         {
-            Assert.Throws(typeof(ArgumentNullException), () => _postService.Delete(null));
+            Assert.Throws(typeof(ArgumentNullException), () => _postService.DeleteAsync(null));
         }
 
         [Test]
         public void ItShouldThrowIfPostIsNullWhenInsertPost()
         {
-            Assert.Throws<ArgumentNullException>(() => _postService.Create(new Post()));
+            Assert.Throws<ArgumentNullException>(() => _postService.CreateAsync(new Post()));
         }
 
         [Test]
         public void ItShouldThrowIfPostIsNullWhenUpdatePost()
         {
-            Assert.Throws<ArgumentNullException>(() => _postService.Update(null));
+            Assert.Throws<ArgumentNullException>(() => _postService.UpdateAsync(null));
         }
 
         [Test]
-        public void ItShouldInsertPost()
+        public async Task ItShouldInsertPost()
         {
             var post = new Post
             {
@@ -60,7 +61,7 @@ namespace DevPlatform.Tests.DevPlatform.Services.Tests.Portal
                 CreatedBy = 0
             };
 
-            _postService.Create(post);
+            await _postService.CreateAsync(post);
             post.Id.Should().BeGreaterThan(0);
         }
     }

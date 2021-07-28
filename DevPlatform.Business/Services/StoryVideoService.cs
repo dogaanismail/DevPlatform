@@ -3,6 +3,7 @@ using DevPlatform.Core.Domain.Story;
 using DevPlatform.Domain.Common;
 using DevPlatform.Repository.Generic;
 using System;
+using System.Threading.Tasks;
 
 namespace DevPlatform.Business.Services
 {
@@ -31,12 +32,12 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="createVideoForStory"></param>
         /// <returns></returns>
-        public ResultModel Create(StoryVideo createVideoForStory)
+        public virtual async Task<ResultModel> CreateAsync(StoryVideo createVideoForStory)
         {
             if (createVideoForStory == null)
                 throw new ArgumentNullException(nameof(createVideoForStory));
 
-            _storyVideoRepository.Insert(createVideoForStory);
+            await _storyVideoRepository.InsertAsync(createVideoForStory);
 
             return new ResultModel { Status = true, Message = "Create Process Success ! " };
         }

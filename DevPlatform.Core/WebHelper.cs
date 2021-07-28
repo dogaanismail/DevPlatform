@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Mvc.Routing;
-using DevPlatform.Core.Configuration.Settings.Common;
+using DevPlatform.Core.Configuration.Configs;
 
 namespace DevPlatform.Core
 {
@@ -26,7 +26,7 @@ namespace DevPlatform.Core
         private readonly IHostApplicationLifetime _hostApplicationLifetime;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUrlHelperFactory _urlHelperFactory;
-        private readonly CommonSettings _commonSettings;
+        private readonly AppConfigs _appConfigs;
 
         #endregion
 
@@ -36,13 +36,13 @@ namespace DevPlatform.Core
             IHostApplicationLifetime hostApplicationLifetime,
             IHttpContextAccessor httpContextAccessor,
             IUrlHelperFactory urlHelperFactory,
-            CommonSettings commonSettings)
+            AppConfigs appConfigs)
         {
             _actionContextAccessor = actionContextAccessor;
             _hostApplicationLifetime = hostApplicationLifetime;
             _httpContextAccessor = httpContextAccessor;
             _urlHelperFactory = urlHelperFactory;
-            _commonSettings = commonSettings;
+            _appConfigs = appConfigs;
         }
 
         #endregion
@@ -124,12 +124,12 @@ namespace DevPlatform.Core
             //some of the validation
             if (result != null && result.Equals(IPAddress.IPv6Loopback.ToString(), StringComparison.InvariantCultureIgnoreCase))
             {
-                if (_commonSettings.UseDefaultIpAddressForLocal && !string.IsNullOrEmpty(_commonSettings.DefaultIpAddress))
-                    result = _commonSettings.DefaultIpAddress;
+                if (_appConfigs.CommonConfig.UseDefaultIpAddressForLocal && !string.IsNullOrEmpty(_appConfigs.CommonConfig.DefaultIpAddress))
+                    result = _appConfigs.CommonConfig.DefaultIpAddress;
                 else
                     result = IPAddress.Loopback.ToString();
             }
-                
+
             //"TryParse" doesn't support IPv4 with port number
             if (IPAddress.TryParse(result ?? string.Empty, out var ip))
                 //IP address is valid 

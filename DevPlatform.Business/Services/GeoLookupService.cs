@@ -9,6 +9,7 @@ using MaxMind.GeoIP2.Model;
 using MaxMind.GeoIP2.Responses;
 using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace DevPlatform.Business.Services
 {
@@ -45,7 +46,7 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="ipAddress">IP address</param>
         /// <returns>Current country informations</returns>
-        protected virtual CountryResponse GetCountryInformation(string ipAddress)
+        protected virtual async Task<CountryResponse> GetCountryInformationAsync(string ipAddress)
         {
             if (string.IsNullOrEmpty(ipAddress))
                 return null;
@@ -60,19 +61,19 @@ namespace DevPlatform.Business.Services
                 sw.Stop();
 
                 if (_geoLookupSettings.EnabledLogging)
-                    _logService.InsertLogAsync(LogLevel.Information, $"MaxMind.GeoIP2 current country reading process has finished! Millisecond: {sw.ElapsedMilliseconds}", ipAddress);
+                    _ = _logService.InsertLogAsync(LogLevel.Information, $"MaxMind.GeoIP2 current country reading process has finished! Millisecond: {sw.ElapsedMilliseconds}", ipAddress);
 
-                return currentCountry;
+                return await Task.FromResult(currentCountry);
             }
 
             catch (GeoIP2Exception)
             {
-                _logService.InsertLogAsync(LogLevel.Error, $"Cannot load MaxMind record!", ipAddress);
+                await _logService.InsertLogAsync(LogLevel.Error, $"Cannot load MaxMind record!", ipAddress);
                 return null;
             }
             catch (Exception exc)
             {
-                _logService.WarningAsync("Cannot load MaxMind record", exc);
+                await _logService.WarningAsync("Cannot load MaxMind record", exc);
                 return null;
             }
         }
@@ -82,7 +83,7 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="ipAddress"></param>
         /// <returns>Current city informations</returns>
-        protected virtual CityResponse GetCityInformation(string ipAddress)
+        protected virtual async Task<CityResponse> GetCityInformationAsync(string ipAddress)
         {
             if (string.IsNullOrEmpty(ipAddress))
                 return null;
@@ -97,19 +98,19 @@ namespace DevPlatform.Business.Services
                 sw.Stop();
 
                 if (_geoLookupSettings.EnabledLogging)
-                    _logService.InsertLogAsync(LogLevel.Information, $"MaxMind.GeoIP2 current city reading process has finished! Millisecond: {sw.ElapsedMilliseconds}", $"Ip address: {ipAddress}");
+                    _ = _logService.InsertLogAsync(LogLevel.Information, $"MaxMind.GeoIP2 current city reading process has finished! Millisecond: {sw.ElapsedMilliseconds}", $"Ip address: {ipAddress}");
 
-                return currentCity;
+                return await Task.FromResult(currentCity);
             }
 
             catch (GeoIP2Exception)
             {
-                _logService.InsertLogAsync(LogLevel.Error, $"Cannot load MaxMind record!", ipAddress);
+                await _logService.InsertLogAsync(LogLevel.Error, $"Cannot load MaxMind record!", ipAddress);
                 return null;
             }
             catch (Exception exc)
             {
-                _logService.WarningAsync("Cannot load MaxMind record", exc);
+                await _logService.WarningAsync("Cannot load MaxMind record", exc);
                 return null;
             }
         }
@@ -123,13 +124,13 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="ipAddress">IP address</param>
         /// <returns>Country name</returns>
-        public virtual string LookupCountryIsoCode(string ipAddress)
+        public virtual async Task<string> LookupCountryIsoCodeAsync(string ipAddress)
         {
-            var response = GetCountryInformation(ipAddress);
+            var response = await GetCountryInformationAsync(ipAddress);
             if (response?.Country != null)
-                return response.Country.IsoCode;
+                return await Task.FromResult(response.Country.IsoCode);
 
-            return string.Empty;
+            return await Task.FromResult(string.Empty);
         }
 
         /// <summary>
@@ -137,13 +138,13 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="ipAddress">IP address</param>
         /// <returns>Country name</returns>
-        public virtual string LookupCountryName(string ipAddress)
+        public virtual async Task<string> LookupCountryNameAsync(string ipAddress)
         {
-            var response = GetCountryInformation(ipAddress);
+            var response = await GetCountryInformationAsync(ipAddress);
             if (response?.Country != null)
-                return response.Country.Name;
+                return await Task.FromResult(response.Country.Name);
 
-            return string.Empty;
+            return await Task.FromResult(string.Empty);
         }
 
         /// <summary>
@@ -151,13 +152,13 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="ipAddress"></param>
         /// <returns>Current city informations</returns>
-        public virtual City GetCurrentCityInformations(string ipAddress)
+        public virtual async Task<City> GetCurrentCityInformationsAsync(string ipAddress)
         {
-            var response = GetCityInformation(ipAddress);
+            var response = await GetCityInformationAsync(ipAddress);
             if (response?.City != null)
-                return response.City;
+                return await Task.FromResult(response.City);
 
-            return new City();
+            return await Task.FromResult(new City());
         }
 
         /// <summary>
@@ -165,13 +166,13 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="ipAddress"></param>
         /// <returns>Current country informations</returns>
-        public virtual Country GetCurrentCountryInformations(string ipAddress)
+        public virtual async Task<Country> GetCurrentCountryInformationsAsync(string ipAddress)
         {
-            var response = GetCountryInformation(ipAddress);
+            var response = await GetCountryInformationAsync(ipAddress);
             if (response?.Country != null)
-                return response.Country;
+                return await Task.FromResult(response.Country);
 
-            return new Country();
+            return await Task.FromResult(new Country());
         }
 
         /// <summary>
@@ -179,12 +180,12 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="ipAddress"></param>
         /// <returns>Current city and country informations</returns>
-        public GeoLookupDto GetCityAndCountryInformations(string ipAddress)
+        public virtual async Task<GeoLookupDto> GetCityAndCountryInformationsAsync(string ipAddress)
         {
-            var response = GetCityInformation(ipAddress);
+            var response = await GetCityInformationAsync(ipAddress);
             if (response?.Country != null && response?.City != null)
             {
-                return new GeoLookupDto
+                return await Task.FromResult(new GeoLookupDto
                 {
                     CurrentCountryName = response.Country?.Name,
                     CurrentCityName = response.City?.Name,
@@ -196,9 +197,9 @@ namespace DevPlatform.Business.Services
                     Longitude = response.Location?.Longitude?.ToString(),
                     TimeZone = response.Location?.TimeZone,
                     IsInEuropeanUnion = response?.RegisteredCountry?.IsInEuropeanUnion,
-                };
+                });
             }
-            return new GeoLookupDto();
+            return await Task.FromResult(new GeoLookupDto());
         }
 
         #endregion

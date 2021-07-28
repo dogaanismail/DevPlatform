@@ -5,6 +5,7 @@ using DevPlatform.Domain.Common;
 using DevPlatform.Domain.Enumerations;
 using DevPlatform.Domain.ServiceResponseModels.DatabaseService;
 using System;
+using System.Threading.Tasks;
 
 namespace DevPlatform.Business.Services
 {
@@ -34,7 +35,7 @@ namespace DevPlatform.Business.Services
         /// Installs a database according to giving informations
         /// </summary>
         /// <returns></returns>
-        public ServiceResponse<InstallResponse> InstallDatabase()
+        public virtual async Task<ServiceResponse<InstallResponse>> InstallDatabaseAsync()
         {
             var serviceResponse = new ServiceResponse<InstallResponse>
             {
@@ -46,18 +47,18 @@ namespace DevPlatform.Business.Services
                 var dataProvider = DataProviderManager.GetDataProvider(DataProviderType.SqlServer);
                 var connectionString = "Data Source=DESKTOP-STEV1LL\\SQLEXPRESS;Initial Catalog=DevPlatformDB;Integrated Security=True";
 
-                DataSettingsManager.SaveSettings(new DataSettings
+                await DataSettingsManager.SaveSettingsAsync(new DataSettings
                 {
                     DataProvider = DataProviderType.SqlServer,
                     ConnectionString = connectionString
                 }, _fileProvider);
 
-                DataSettingsManager.LoadSettings(reloadSettings: true);
+                await DataSettingsManager.LoadSettingsAsync(reloadSettings: true);
                 dataProvider.CreateDatabase(string.Empty);
 
                 dataProvider.InitializeDatabase();
 
-                if (DataSettingsManager.DatabaseIsInstalled)
+                if (await DataSettingsManager.IsDatabaseInstalledAsync())
                 {
                     serviceResponse.Success = true;
                     serviceResponse.ResultCode = ResultCode.Success;
@@ -85,7 +86,7 @@ namespace DevPlatform.Business.Services
             }
             catch (Exception ex)
             {
-                _logService.InsertLogAsync(LogLevel.Error, $"DatabaseService- Create Error", ex.Message.ToString());
+                await _logService.InsertLogAsync(LogLevel.Error, $"DatabaseService- Create Error", ex.Message.ToString());
                 serviceResponse.Success = false;
                 serviceResponse.ResultCode = ResultCode.Exception;
                 serviceResponse.Warnings.Add(ex.Message);

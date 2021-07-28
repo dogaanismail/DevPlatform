@@ -1,5 +1,6 @@
 ﻿using DevPlatform.Domain.Common;
 using DevPlatform.Domain.ServiceResponseModels.DatabaseService;
+using System.Threading.Tasks;
 
 namespace DevPlatform.Business.Interfaces
 {
@@ -12,6 +13,6 @@ namespace DevPlatform.Business.Interfaces
         /// Installs a database according to giving informations
         /// </summary>
         /// <returns></returns>
-        ServiceResponse<InstallResponse> InstallDatabase();
+        Task<ServiceResponse<InstallResponse>> InstallDatabaseAsync();
     }
 }

@@ -1,4 +1,5 @@
 ﻿using DevPlatform.Domain.Dto.CommonDto;
+using System.Threading.Tasks;
 
 namespace DevPlatform.Business.Interfaces
 {
@@ -11,6 +12,6 @@ namespace DevPlatform.Business.Interfaces
         /// Returns current weather by city
         /// </summary>
         /// <returns>Current weather</returns>
-        WeatherResponseDto GetCurrentWeather();
+        Task<WeatherResponseDto> GetCurrentWeatherAsync();
     }
 }

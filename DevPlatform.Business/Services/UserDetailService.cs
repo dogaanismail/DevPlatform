@@ -9,6 +9,7 @@ using LinqToDB;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DevPlatform.Business.Services
 {
@@ -38,17 +39,19 @@ namespace DevPlatform.Business.Services
         }
         #endregion
 
+        #region Methods
+
         /// <summary>
         /// Creates an user detail
         /// </summary>
         /// <param name="appUserDetail"></param>
         /// <returns></returns>
-        public ResultModel Create(AppUserDetail appUserDetail)
+        public virtual async Task<ResultModel> CreateAsync(AppUserDetail appUserDetail)
         {
             if (appUserDetail == null)
                 throw new ArgumentNullException(nameof(appUserDetail));
 
-            _appUserDetailRepository.Insert(appUserDetail);
+            await _appUserDetailRepository.InsertAsync(appUserDetail);
             return new ResultModel { Status = true, Message = "Create Process Success ! " };
         }
 
@@ -57,16 +60,16 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="userName"></param>
         /// <returns></returns>
-        public AppUserDetailDto GetUserDetailByUserName(string userName)
+        public virtual async Task<AppUserDetailDto> GetUserDetailByUserNameAsync(string userName)
         {
             if (string.IsNullOrEmpty(userName))
                 return null;
 
             var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(AppUserCacheKeys.UserDetailByUserNameCacheKey, userName);
 
-            return _staticCacheManager.Get<AppUserDetailDto>(cacheKey, () =>
+            return await _staticCacheManager.GetAsync(cacheKey, async () =>
             {
-                var appUser = _appUserRepository.Table.Where(x => x.UserName == userName)
+                return await _appUserRepository.Table.Where(x => x.UserName == userName)
                 .Select(user => new AppUserDetailDto
                 {
                     Id = user.Id,
@@ -74,9 +77,7 @@ namespace DevPlatform.Business.Services
                     CoverPhotoUrl = user.UserDetail.CoverPhotoPath,
                     ProfilePhotoUrl = user.UserDetail.ProfilePhotoPath,
                     RegisteredDate = user.CreatedDate,
-                }).FirstOrDefault();
-
-                return appUser;
+                }).FirstOrDefaultAsyncMethod();
             });
         }
 
@@ -85,7 +86,7 @@ namespace DevPlatform.Business.Services
         /// </summary>
         /// <param name="detailDto"></param>
         /// <returns></returns>
-        public ResultModel Update(SignedUserDetailDto detailDto)
+        public virtual async Task<ResultModel> UpdateAsync(SignedUserDetailDto detailDto)
         {
             //TODO: Code needs to be refactored
             if (detailDto == null)
@@ -108,8 +109,10 @@ namespace DevPlatform.Business.Services
             detail.CompanyName = detailDto.CompanyName;
             detail.Designation = detailDto.Designation;
             detail.ModifiedDate = DateTime.Now;
-            _appUserDetailRepository.Update(detail);
+            await _appUserDetailRepository.UpdateAsync(detail);
             return new ResultModel { Status = true, Message = "Update Process Success ! " };
         }
+
+        #endregion
     }
 }
