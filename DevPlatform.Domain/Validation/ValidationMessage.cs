@@ -6,6 +6,7 @@
         public const string RequiredEmail = "Email address is wrong !";
         public const string RequiredDate = "Date Format is wrong !ş";
         public const string RequiredPhone = "Phone Number is wrong !";
+        public const string InvalidValue = "{0} field is invalid!";
 
         public static string MaxLength(int length)
         {

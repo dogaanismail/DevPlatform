@@ -143,7 +143,7 @@ namespace DevPlatform.Business.Services
 
             try
             {
-                if (string.IsNullOrEmpty(model.Text))
+                if (string.IsNullOrEmpty(model.Text) || model.Text.Equals("undefined"))
                     return ServiceResponse((CreateResponse)null, new List<string> { "Text can not be null !" });
 
                 var appUser = await _userService.FindByUserNameAsync(_httpContextAccessor.HttpContext.User.Identity.Name);
