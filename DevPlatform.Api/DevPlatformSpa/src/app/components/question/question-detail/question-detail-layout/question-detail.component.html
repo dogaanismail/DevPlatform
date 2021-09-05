@@ -43,6 +43,10 @@
                   <!-- Content -->
                   <div class="question-text">
                     <div [innerHTML]="question.description | noSanitize"></div>
+
+                    <div class="tags" *ngIf="question.tags.length > 0">
+                      <span class="tag" *ngFor="let tag of question.tags">{{tag}}</span>
+                    </div>                  
                   </div>
                   <!-- Footer -->
                   <div class="question-footer">

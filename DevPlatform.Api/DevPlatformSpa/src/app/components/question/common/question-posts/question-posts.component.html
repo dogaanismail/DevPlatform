@@ -20,11 +20,8 @@
 
     <div [innerHTML]="question.description | noSanitize"></div>
 
-    <div class="tags">
-      <span class="tag">stylesheets</span>
-      <span class="tag">sass</span>
-      <span class="tag">mixins</span>
-      <span class="tag">bourbon</span>
+    <div class="tags" *ngIf="question.tags.length > 0">
+      <span class="tag" *ngFor="let tag of question.tags">{{tag}}</span>
     </div>
   </div>
   <!-- Footer -->

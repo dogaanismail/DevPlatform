@@ -1,5 +1,4 @@
-﻿using DevPlatform.Domain.Common;
-using DevPlatform.Domain.Dto.QuestionDto;
+﻿using DevPlatform.Domain.Dto.QuestionDto;
 using System;
 using System.Collections.Generic;
 
@@ -12,14 +11,14 @@ namespace DevPlatform.Domain.ServiceResponseModels.QuestionService
     {
         public CreateResponse()
         {
-            Tags = new List<TagsModel>();
+            Tags = new List<string>();
             Comments = new List<QuestionCommentListDto>();
         }
 
         public int Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public List<TagsModel> Tags { get; set; }
+        public List<string> Tags { get; set; }
         public string CreatedByUserName { get; set; }
         public string CreatedByUserPhoto { get; set; }
         public DateTime CreatedDate { get; set; }

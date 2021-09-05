@@ -126,7 +126,7 @@ namespace DevPlatform.Business.Services
                     Id = newQuestion.Id,
                     Title = newQuestion.Title,
                     Description = newQuestion.Description,
-                    Tags = newQuestion.Tags.Split(',').Select(x => new TagsModel { Display = x, Value = x }).ToList(),
+                    Tags = newQuestion.Tags.Split(',', StringSplitOptions.None).ToList(),
                     CreatedByUserName = appUser?.UserName,
                     CreatedByUserPhoto = appUser?.UserDetail.ProfilePhotoPath,
                     CreatedDate = newQuestion.CreatedDate,
@@ -207,6 +207,7 @@ namespace DevPlatform.Business.Services
                     CreatedDate = p.CreatedDate,
                     CreatedByUserName = p.CreatedUser.UserName ?? "",
                     CreatedByUserPhoto = p.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                    Tags = p.Tags.Split(',', StringSplitOptions.None).ToList(),
                     Comments = p.QuestionComments.Select(y => new QuestionCommentListDto
                     {
                         Text = y.Text,
@@ -238,6 +239,7 @@ namespace DevPlatform.Business.Services
                     CreatedDate = p.CreatedDate,
                     CreatedByUserName = p.CreatedUser.UserName ?? "",
                     CreatedByUserPhoto = p.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                    Tags = p.Tags.Split(',', StringSplitOptions.None).ToList(),
                     Comments = p.QuestionComments.Select(y => new QuestionCommentListDto
                     {
                         Text = y.Text,
@@ -266,6 +268,7 @@ namespace DevPlatform.Business.Services
                 CreatedDate = p.CreatedDate,
                 CreatedByUserName = p.CreatedUser.UserName ?? "",
                 CreatedByUserPhoto = p.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                Tags = p.Tags.Split(',', StringSplitOptions.None).ToList(),
                 Comments = p.QuestionComments.Select(y => new QuestionCommentListDto
                 {
                     Text = y.Text,
@@ -293,6 +296,7 @@ namespace DevPlatform.Business.Services
                 CreatedDate = p.CreatedDate,
                 CreatedByUserName = p.CreatedUser.UserName ?? "",
                 CreatedByUserPhoto = p.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                Tags = p.Tags.Split(',', StringSplitOptions.None).ToList(),
                 Comments = p.QuestionComments.Select(y => new QuestionCommentListDto
                 {
                     Text = y.Text,
