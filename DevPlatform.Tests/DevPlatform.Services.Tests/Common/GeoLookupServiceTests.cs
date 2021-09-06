@@ -1,4 +1,4 @@
-﻿using DevPlatform.Business.Interfaces;
+﻿using DevPlatform.Business.Interfaces.Common;
 using DevPlatform.Core;
 using FluentAssertions;
 using NUnit.Framework;

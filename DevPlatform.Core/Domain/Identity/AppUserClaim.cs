@@ -3,6 +3,7 @@ using DevPlatform.Core.Entities;
 using LinqToDB.Mapping;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
+using LinqToDBAssociation = LinqToDB.Mapping;
 
 namespace DevPlatform.Core.Domain.Identity
 {
@@ -10,8 +11,7 @@ namespace DevPlatform.Core.Domain.Identity
     {
         [Required, Identity]
         [Key]
-        public new int Id { get; set; }
-
+        public override int Id { get => base.Id; set => base.Id = value; }
         public int UserId { get; set; }
         public string ClaimType { get; set; }
         public string ClaimValue { get; set; }
@@ -34,5 +34,8 @@ namespace DevPlatform.Core.Domain.Identity
         {
             return new Claim(ClaimType, ClaimValue);
         }
+
+        [LinqToDBAssociation.Association(ThisKey = nameof(UserId), OtherKey = nameof(AppUser.Id), CanBeNull = false)]
+        public virtual AppUser UserClaim { get; set; }
     }
 }

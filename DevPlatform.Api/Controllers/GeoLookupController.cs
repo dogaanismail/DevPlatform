@@ -1,4 +1,4 @@
-﻿using DevPlatform.Business.Interfaces;
+﻿using DevPlatform.Business.Interfaces.Common;
 using DevPlatform.Core;
 using DevPlatform.Framework.Controllers;
 using Microsoft.AspNetCore.Authorization;

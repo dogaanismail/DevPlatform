@@ -22,9 +22,6 @@ namespace DevPlatform.Core.Domain.Identity
         [ForeignKey("UserDetail")]
         public int DetailId { get; set; }
 
-        [LinqToDBAssociation.Association(ThisKey = nameof(DetailId), OtherKey = nameof(AppUserDetail.Id), CanBeNull = false)]
-        public virtual AppUserDetail UserDetail { get; set; }
-
         public string UserName { get; set; }
         public string NormalizedUserName { get; set; }
         public string PasswordHash { get; set; }
@@ -44,6 +41,9 @@ namespace DevPlatform.Core.Domain.Identity
         /// Gets or sets a value indicating whether the entity has been deleted
         /// </summary>
         public bool Deleted { get; set; }
+
+        [LinqToDBAssociation.Association(ThisKey = nameof(DetailId), OtherKey = nameof(AppUserDetail.Id), CanBeNull = false)]
+        public virtual AppUserDetail UserDetail { get; set; }
 
         [LinqToDBAssociation.Association(ThisKey = nameof(Id), OtherKey = nameof(Post.CreatedBy), CanBeNull = true)]
         public virtual IEnumerable<Post> UserPosts { get; set; }

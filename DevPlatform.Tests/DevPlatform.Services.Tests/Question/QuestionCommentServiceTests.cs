@@ -1,4 +1,4 @@
-﻿using DevPlatform.Business.Interfaces;
+﻿using DevPlatform.Business.Interfaces.Question;
 using DevPlatform.Core.Domain.Question;
 using DevPlatform.Repository.Generic;
 using FluentAssertions;

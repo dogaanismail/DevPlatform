@@ -1,4 +1,5 @@
-﻿using DevPlatform.Business.Interfaces;
+﻿using DevPlatform.Business.Interfaces.Album;
+using DevPlatform.Business.Interfaces.Logging;
 using DevPlatform.Domain.Api.AlbumApi;
 using DevPlatform.Domain.Common;
 using DevPlatform.Domain.Enumerations;

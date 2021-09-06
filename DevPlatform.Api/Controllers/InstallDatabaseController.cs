@@ -1,4 +1,6 @@
 ﻿using DevPlatform.Business.Interfaces;
+using DevPlatform.Business.Interfaces.Configuration;
+using DevPlatform.Business.Interfaces.Logging;
 using DevPlatform.Domain.Common;
 using DevPlatform.Domain.Enumerations;
 using DevPlatform.Framework.Controllers;

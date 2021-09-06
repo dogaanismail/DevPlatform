@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using DevPlatform.Business.Interfaces;
+using DevPlatform.Business.Interfaces.Identity;
+using DevPlatform.Business.Interfaces.Logging;
 using DevPlatform.Core.Domain.Identity;
 using DevPlatform.Core.Security;
 using DevPlatform.Domain.Api;

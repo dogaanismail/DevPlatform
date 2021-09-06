@@ -20,7 +20,8 @@ namespace DevPlatform.Data.Mapping.Builders.Identity
                 .WithColumn(nameof(AppRole.ModifiedBy)).AsInt32().Nullable().ForeignKey<AppUser>(onDelete: Rule.None)
                 .WithColumn(nameof(AppRole.CreatedDate)).AsDateTime().NotNullable()
                 .WithColumn(nameof(AppRole.ModifiedDate)).AsDateTime().Nullable()
-                .WithColumn(nameof(AppRole.StatusId)).AsInt32().Nullable();
+                .WithColumn(nameof(AppRole.StatusId)).AsInt32().Nullable()
+                .WithColumn(nameof(AppUser.Deleted)).AsBoolean().WithDefaultValue(0).NotNullable();
             #endregion
         }
     }

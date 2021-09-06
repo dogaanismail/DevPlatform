@@ -1,4 +1,4 @@
-﻿using DevPlatform.Business.Interfaces;
+﻿using DevPlatform.Business.Interfaces.Logging;
 using DevPlatform.Core.Events;
 using DevPlatform.Core.Infrastructure;
 using System;

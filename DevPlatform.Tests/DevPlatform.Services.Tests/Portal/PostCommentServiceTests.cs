@@ -1,4 +1,4 @@
-﻿using DevPlatform.Business.Interfaces;
+﻿using DevPlatform.Business.Interfaces.Portal;
 using DevPlatform.Core.Domain.Portal;
 using DevPlatform.Repository.Generic;
 using FluentAssertions;

@@ -1,4 +1,4 @@
-﻿using DevPlatform.Business.Interfaces;
+﻿using DevPlatform.Business.Interfaces.Story;
 using DevPlatform.Core.Domain.Identity;
 using DevPlatform.Core.Domain.Story;
 using DevPlatform.Repository.Generic;

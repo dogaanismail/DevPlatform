@@ -1,5 +1,5 @@
 ﻿using DevPlatform.Business.Common.Middlewares;
-using DevPlatform.Business.Interfaces;
+using DevPlatform.Business.Interfaces.Logging;
 using DevPlatform.Core.Infrastructure;
 using DevPlatform.Data;
 using Microsoft.AspNetCore.Builder;

@@ -1,0 +1,452 @@
+﻿using DevPlatform.Core.Domain.Identity;
+using DevPlatform.Core.Domain.Portal;
+using DevPlatform.Domain.Common;
+using DevPlatform.Domain.Dto;
+using DevPlatform.Repository.Generic;
+using System;
+using System.Collections.Generic;
+using DevPlatform.Domain.Api;
+using DevPlatform.Common.Helpers;
+using CloudinaryDotNet.Actions;
+using DevPlatform.Domain.Enumerations;
+using System.Net;
+using Microsoft.AspNetCore.Http;
+using DevPlatform.Domain.ServiceResponseModels.PostService;
+using Newtonsoft.Json;
+using DevPlatform.Domain.Api.StoryApi;
+using StoryCreateResponse = DevPlatform.Domain.ServiceResponseModels.StoryService.CreateResponse;
+using DevPlatform.Core.Caching;
+using DevPlatform.Business.Common.CacheKeys.Portal;
+using System.Threading.Tasks;
+using LinqToDB;
+using System.Linq;
+using DevPlatform.Business.Interfaces.Portal;
+using DevPlatform.Business.Interfaces.Story;
+using DevPlatform.Business.Interfaces.Common;
+using DevPlatform.Business.Interfaces.Identity;
+using DevPlatform.Business.Interfaces.Logging;
+
+namespace DevPlatform.Business.Services.Portal
+{
+    /// <summary>
+    /// Post service
+    /// </summary>
+    public partial class PostService : ServiceExecute, IPostService
+    {
+        #region Fields
+        private readonly IRepository<Post> _postRepository;
+        private readonly IRepository<AppUser> _userRepository;
+        private readonly IRepository<AppUserDetail> _userDetailRepository;
+        private readonly IUserService _userService;
+        private readonly IPostImageService _postImageService;
+        private readonly IPostVideoService _postVideoService;
+        private readonly IImageProcessingService _imageProcessingService;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ILogService _logService;
+        private readonly IStoryService _storyService;
+        private readonly IStaticCacheManager _staticCacheManager;
+
+        #endregion
+
+        #region Ctor
+        public PostService(IRepository<Post> postRepository,
+            IRepository<AppUser> userRepository,
+            IRepository<AppUserDetail> userDetailRepository,
+            IUserService userService,
+            IPostImageService postImageService,
+            IPostVideoService postVideoService,
+            IHttpContextAccessor httpContextAccessor,
+            IImageProcessingService imageProcessingService,
+            ILogService logService,
+            IStoryService storyService,
+            IStaticCacheManager staticCacheManager)
+        {
+            _postRepository = postRepository;
+            _userRepository = userRepository;
+            _userDetailRepository = userDetailRepository;
+            _userService = userService;
+            _postImageService = postImageService;
+            _postVideoService = postVideoService;
+            _imageProcessingService = imageProcessingService;
+            _httpContextAccessor = httpContextAccessor;
+            _logService = logService;
+            _storyService = storyService;
+            _staticCacheManager = staticCacheManager;
+        }
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Deletes a post
+        /// </summary>
+        /// <param name="post"></param>
+        public virtual async Task DeleteAsync(Post post)
+        {
+            if (post == null)
+                throw new ArgumentNullException(nameof(post));
+
+            await _postRepository.DeleteAsync(post);
+        }
+
+        /// <summary>
+        /// Gets a post by id
+        /// </summary>
+        /// <param name="postId"></param>
+        /// <returns></returns>
+        public virtual async Task<Post> GetByIdAsync(int postId)
+        {
+            if (postId == 0)
+                return null;
+
+            return await _postRepository.GetByIdAsync(postId, cache => default);
+        }
+
+        /// <summary>
+        /// Inserts a post
+        /// </summary>
+        /// <param name="post"></param>
+        public virtual async Task<ResultModel> CreateAsync(Post post)
+        {
+            if (post == null)
+                throw new ArgumentNullException(nameof(post));
+
+            await _postRepository.InsertAsync(post);
+            return new ResultModel { Status = true, Message = "Create Process Success ! " };
+        }
+
+        /// <summary>
+        /// Inserts posts by using bulk
+        /// </summary>
+        /// <param name="posts"></param>
+        /// <returns></returns>
+        public virtual async Task<ResultModel> CreateAsync(List<Post> posts)
+        {
+            if (posts == null)
+                throw new ArgumentNullException(nameof(posts));
+
+            await _postRepository.InsertAsync(posts);
+            return new ResultModel { Status = true, Message = "Create Process Success ! " };
+        }
+
+
+        /// <summary>
+        /// Inserts posts and returns service response
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        public virtual async Task<ServiceResponse<CreateResponse>> CreateAsync(PostCreateApi model)
+        {
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+
+            var serviceResponse = new ServiceResponse<CreateResponse>
+            {
+                Success = false
+            };
+
+            try
+            {
+                if (string.IsNullOrEmpty(model.Text) || model.Text.Equals("undefined"))
+                    return ServiceResponse((CreateResponse)null, new List<string> { "Text can not be null !" });
+
+                var appUser = await _userService.FindByUserNameAsync(_httpContextAccessor.HttpContext.User.Identity.Name);
+                if (appUser == null)
+                    return ServiceResponse((CreateResponse)null, new List<string> { "User not found!" });
+
+                #region CloudinaryProcess
+
+                var imageUploadResult = new List<ImageUploadResult>();
+                var videoUploadResult = new VideoUploadResult();
+
+                bool hasImage = CheckItemType.HasItemImage(model);
+                bool hasVideo = CheckItemType.HasItemVideo(model);
+
+                #region ImageUploadingProcess
+
+                if (hasImage)
+                {
+                    imageUploadResult = await _imageProcessingService.UploadImageAsync(model.Images);
+
+                    _ = _logService.InsertLogAsync(LogLevel.Information, $"PostService- ImageUpload response from Cloudinary", JsonConvert.SerializeObject(imageUploadResult), appUser);
+
+                    if (imageUploadResult.Any(x => x.Error != null))
+                        return ServiceResponse((CreateResponse)null, new List<string> { string.Join(Environment.NewLine, imageUploadResult.Select(err => string.Join(Environment.NewLine, err.Error.Message))) });
+                }
+
+                #endregion
+
+                #region VideoUploadingProcess
+
+                if (hasVideo)
+                {
+                    videoUploadResult = await _imageProcessingService.UploadVideoAsync(model.Video);
+
+                    _ = _logService.InsertLogAsync(LogLevel.Information, $"PostService- VideoUpload response from Cloudinary", JsonConvert.SerializeObject(imageUploadResult), appUser);
+
+                    if (videoUploadResult.Error != null)
+                        return ServiceResponse((CreateResponse)null, new List<string> { videoUploadResult.Error.Message.ToString() });
+                }
+
+                #endregion
+
+                #endregion
+
+                #region POST CRUD
+
+                var newPost = new Post
+                {
+                    Text = model.Text,
+                    PostType = GetPostType(hasImage, hasVideo),
+                    CreatedBy = appUser.Id
+                };
+
+                ResultModel postModel = await CreateAsync(newPost);
+
+                if (!postModel.Status)
+                    return ServiceResponse((CreateResponse)null, new List<string> { postModel.Message });
+
+                #endregion
+
+                #region PostImages
+
+                if (imageUploadResult != null && imageUploadResult.Count > 0 && hasImage)
+                {
+                    foreach (var uploadResult in imageUploadResult)
+                    {
+                        var postImages = new PostImage
+                        {
+                            PostId = newPost.Id,
+                            ImageUrl = uploadResult.Url.ToString(),
+                            CreatedBy = appUser.Id
+                        };
+
+                        ResultModel postImageModel = await _postImageService.CreateAsync(postImages);
+
+                        if (!postImageModel.Status)
+                            return ServiceResponse((CreateResponse)null, new List<string> { postImageModel.Message });
+                    }
+                }
+
+                #endregion
+
+                #region PostVideos
+
+                if (videoUploadResult != null && videoUploadResult.StatusCode == HttpStatusCode.OK)
+                {
+                    var postVideos = new PostVideo
+                    {
+                        PostId = newPost.Id,
+                        VideoUrl = videoUploadResult.Url.ToString(),
+                        CreatedBy = appUser.Id
+                    };
+                    ResultModel postVideoModel = await _postVideoService.CreateAsync(postVideos);
+
+                    if (!postVideoModel.Status)
+                        return ServiceResponse((CreateResponse)null, new List<string> { postVideoModel.Message });
+                }
+
+                #endregion
+
+                #region Story CRUD
+
+                StoryCreateResponse storyCreateResponse = null;
+
+                if (model.IsStory.GetValueOrDefault() && (model.Images != null || model.Video != null))
+                {
+                    var storyCreateModel = new StoryCreateApi()
+                    {
+                        Title = model.Text,
+                        Description = model.Text,
+                        PhotoUrl = imageUploadResult?.Select(x => x.Url.ToString()).FirstOrDefault(),
+                        VideoUrl = videoUploadResult?.Url?.ToString()
+                    };
+
+                    _ = _logService.InsertLogAsync(LogLevel.Information, $"PostService - Create Story Request", JsonConvert.SerializeObject(storyCreateModel));
+
+                    var storyServiceResponse = await _storyService.CreateAsync(storyCreateModel, isCreateWithPost: true);
+
+                    if (storyServiceResponse.Warnings.Any())
+                    {
+                        _ = _logService.InsertLogAsync(LogLevel.Information, $"PostService - Create Story Error Response ", JsonConvert.SerializeObject(storyServiceResponse));
+
+                        //TODO : Story create error process must be handled!
+                    }
+
+                    storyCreateResponse = storyServiceResponse.Data;
+                }
+
+                #endregion
+
+                serviceResponse.Success = true;
+                serviceResponse.ResultCode = ResultCode.Success;
+                serviceResponse.Data = new CreateResponse
+                {
+                    Id = newPost.Id,
+                    Text = newPost.Text,
+                    ImageUrlList = imageUploadResult?.Select(x => x.Url.ToString()).ToList(),
+                    CreatedByUserName = appUser?.UserName,
+                    CreatedByUserPhoto = appUser?.UserDetail.ProfilePhotoPath,
+                    CreatedDate = newPost.CreatedDate,
+                    VideoUrl = videoUploadResult?.Url?.ToString(),
+                    PostType = newPost.PostType,
+                    Comments = null,
+                    StoryCreateResponse = storyCreateResponse
+                };
+
+                return serviceResponse;
+            }
+            catch (Exception ex)
+            {
+                await _logService.InsertLogAsync(LogLevel.Error, $"PostService- Create Error: model {JsonConvert.SerializeObject(model)}", ex.Message.ToString());
+                serviceResponse.Success = false;
+                serviceResponse.ResultCode = ResultCode.Exception;
+                serviceResponse.Warnings.Add(ex.Message);
+                return serviceResponse;
+            }
+        }
+
+        /// <summary>
+        /// Updates a post
+        /// </summary>
+        /// <param name="post"></param>
+        public virtual async Task UpdateAsync(Post post)
+        {
+            if (post == null)
+                throw new ArgumentNullException(nameof(post));
+
+            await _postRepository.UpdateAsync(post);
+        }
+
+        /// <summary>
+        /// Returns a post by id as dto
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public virtual async Task<PostListDto> GetByIdAsDtoAsync(int id)
+        {
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(DevPlatformEntityCacheDefaults<Post>.ByIdCacheKey, id);
+
+            return await _staticCacheManager.GetAsync(cacheKey, async () =>
+            {
+                return await _postRepository.Table.Where(x => x.Id == id).Select(p => new PostListDto
+                {
+                    Id = p.Id,
+                    Text = p.Text,
+                    CreatedDate = p.CreatedDate,
+                    ImageUrlList = p.PostImages.Select(x => x.ImageUrl).ToList(),
+                    VideoUrl = p.PostVideos.FirstOrDefault().VideoUrl ?? "",
+                    CreatedByUserName = p.CreatedUser.UserName ?? "",
+                    CreatedByUserPhoto = p.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                    PostType = p.PostType,
+                    FancyboxData = $"post{p.Id}",
+                    Comments = p.PostComments.Select(y => new PostCommentListDto
+                    {
+                        Text = y.Text,
+                        CreatedDate = y.CreatedDate,
+                        Id = y.Id,
+                        CreatedByUserName = y.CreatedUser.UserName ?? "",
+                        CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                        PostId = y.PostId
+                    }).ToList()
+                }).FirstOrDefaultAsyncMethod();
+            });
+        }
+
+        /// <summary>
+        /// Returns a list of posts as dto
+        /// </summary>
+        /// <returns></returns>
+        public virtual async Task<List<PostListDto>> GetPostListAsync()
+        {
+            var cacheKey = _staticCacheManager.PrepareKeyForDefaultCache(PostCacheKeys.PostsAllCacheKey);
+
+            return await _staticCacheManager.GetAsync(cacheKey, async () =>
+            {
+                return await _postRepository.Table.Select(p => new PostListDto
+                {
+                    Id = p.Id,
+                    Text = p.Text,
+                    CreatedDate = p.CreatedDate,
+                    ImageUrlList = p.PostImages.Select(x => x.ImageUrl).ToList(),
+                    VideoUrl = p.PostVideos.FirstOrDefault().VideoUrl ?? "",
+                    CreatedByUserName = p.CreatedUser.UserName ?? "",
+                    CreatedByUserPhoto = p.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                    PostType = p.PostType,
+                    FancyboxData = $"post{p.Id}",
+                    Comments = p.PostComments.Select(y => new PostCommentListDto
+                    {
+                        Text = y.Text,
+                        Id = y.Id,
+                        PostId = y.PostId,
+                        CreatedDate = y.CreatedDate,
+                        CreatedByUserName = y.CreatedUser.UserName ?? "",
+                        CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath ?? ""
+                    }).ToList()
+                }).ToListAsyncMethod();
+            });
+        }
+
+        /// <summary>
+        /// Returns a list of post by user Id
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public virtual async Task<List<Post>> GetUserPostsByUserIdAsync(int userId)
+        {
+            return await _postRepository.Table.Where(y => y.CreatedBy == userId)
+                .LoadWith(x => x.PostImages)
+              .LoadWith(x => x.PostVideos).LoadWith(x => x.PostComments).ThenLoad(x => x.CreatedUser)
+              .ThenLoad(x => x.UserDetail).LoadWith(x => x.CreatedUser).ThenLoad(x => x.UserDetail).ToListAsyncMethod();
+        }
+
+        /// <summary>
+        /// Returns a list of post as dto by user Id
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public virtual async Task<List<PostListDto>> GetUserPostsWithDtoAsync(int userId)
+        {
+            return await _postRepository.Table.Where(x => x.CreatedBy == userId).Select(p => new PostListDto
+            {
+                Id = p.Id,
+                Text = p.Text,
+                CreatedDate = p.CreatedDate,
+                ImageUrlList = p.PostImages.Select(x => x.ImageUrl).ToList(),
+                VideoUrl = p.PostVideos.FirstOrDefault().VideoUrl ?? "",
+                CreatedByUserName = p.CreatedUser.UserName ?? "",
+                CreatedByUserPhoto = p.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                PostType = p.PostType,
+                FancyboxData = $"post{p.Id}",
+                Comments = p.PostComments.Select(y => new PostCommentListDto
+                {
+                    Text = y.Text,
+                    CreatedDate = y.CreatedDate,
+                    Id = y.Id,
+                    CreatedByUserName = y.CreatedUser.UserName ?? "",
+                    CreatedByUserPhoto = y.CreatedUser.UserDetail.ProfilePhotoPath ?? "",
+                    PostId = y.PostId
+                }).ToList()
+            }).ToListAsyncMethod();
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        /// <summary>
+        /// Returns PostType by PostTypeId
+        /// </summary>
+        /// <param name="hasImage"></param>
+        /// <param name="hasVideo"></param>
+        /// <returns></returns>
+        private static int GetPostType(bool hasImage, bool hasVideo)
+        {
+            return hasImage == true ? (int)PostTypeEnum.PostImage
+                : hasVideo == true ? (int)PostTypeEnum.PostVideo
+                : (int)PostTypeEnum.PostText;
+        }
+
+        #endregion
+    }
+}
